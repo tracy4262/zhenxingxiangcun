@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.CmsArticleMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.CmsArticle">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="author" property="author" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="visitor" property="visitor" jdbcType="INTEGER" />
+		<result column="label" property="label" jdbcType="VARCHAR" />
+		<result column="content_url" property="contentUrl" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, author, title, type, create_time, visitor, label, content_url
+	</sql>
+	<select id="findArticle" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from cms_article
+
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from cms_article
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.CmsArticle">
+		insert into cms_article (id, author, title,
+		type, create_time, visitor,
+		label, content_url)
+		values (#{id,jdbcType=INTEGER}, #{author,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR},
+		#{type,jdbcType=INTEGER},now(), #{visitor,jdbcType=INTEGER},
+		#{label,jdbcType=VARCHAR}, #{contentUrl,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.ovit.nswy.member.model.CmsArticle">
+		insert into cms_article
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="author != null">
+				author,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="visitor != null">
+				visitor,
+			</if>
+			<if test="label != null">
+				label,
+			</if>
+			<if test="contentUrl != null">
+				content_url,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="author != null">
+				#{author,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				now(),
+			</if>
+			<if test="visitor != null">
+				#{visitor,jdbcType=INTEGER},
+			</if>
+			<if test="label != null">
+				#{label,jdbcType=VARCHAR},
+			</if>
+			<if test="contentUrl != null">
+				#{contentUrl,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ovit.nswy.member.model.CmsArticle">
+		update cms_article
+		<set>
+			<if test="author != null">
+				author = #{author,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time =now(),
+			</if>
+			<if test="visitor != null">
+				visitor = #{visitor,jdbcType=INTEGER},
+			</if>
+			<if test="label != null">
+				label = #{label,jdbcType=VARCHAR},
+			</if>
+			<if test="contentUrl != null">
+				content_url = #{contentUrl,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.CmsArticle">
+		update cms_article
+		set author = #{author,jdbcType=VARCHAR},
+		title = #{title,jdbcType=VARCHAR},
+		type = #{type,jdbcType=INTEGER},
+		create_time =now(),
+		visitor = #{visitor,jdbcType=INTEGER},
+		label = #{label,jdbcType=VARCHAR},
+		content_url = #{contentUrl,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

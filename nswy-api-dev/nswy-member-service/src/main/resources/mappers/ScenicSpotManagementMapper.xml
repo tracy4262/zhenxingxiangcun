@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ScenicSpotManagementMapper">
+
+	<select id="findScenicSpotList" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+			s.scenic_spot_id as id,
+			s.account,
+			s.ticket_name as ticketName,
+			s.ticket_price as ticketPrice,
+			s.discount_price as discountPrice,
+			s.discount_proportion as discountProportion,
+			case s.status when '0' then '已停售'
+			else '热卖中' end as status,
+			s.scenic_describe as scenicDescribe,
+			s.create_time,
+			s.update_time,
+			case when  p.id is not null then p.id else 0 end as flag,
+			p.type
+
+		from scenic_spot_management s left join product_management p on s.scenic_spot_id = p.management_id
+
+		where 1=1
+		<if test="account !='' and account!=null">
+			and s.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and s.scenic_spot_id = #{id}
+		</if>
+
+		<if test="ticketName !='' and ticketName!=null">
+			and s.ticket_name = #{ticketName}
+		</if>
+
+		<if test="status !='' and status!=null">
+			and s.status = #{status}
+		</if>
+		group by s.ticket_name
+
+		order by s.update_time desc
+
+	</select>
+
+
+	<select id="findList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			s.scenic_spot_id as id,
+			s.account,
+			s.ticket_name as ticketName,
+			s.ticket_price as ticketPrice,
+			s.discount_price as discountPrice,
+			s.discount_proportion as discountProportion,
+			case s.status when '0' then '已停售'
+			else '热卖中' end as status,
+			s.scenic_describe as scenicDescribe,
+			s.create_time,
+			s.update_time
+		FROM scenic_spot_management s
+
+		where 1=1
+		<if test="account !='' and account!=null">
+			and s.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and s.scenic_spot_id = #{id}
+		</if>
+
+		<if test="ticketName !='' and ticketName!=null">
+			and s.ticket_name = #{ticketName}
+		</if>
+
+		<if test="status !='' and status!=null">
+			and s.status = #{status}
+		</if>
+
+		order by s.update_time desc
+
+	</select>
+
+	<select id="findListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM scenic_spot_management s
+
+		where 1=1
+
+		<if test="ticketName !='' and ticketName!=null">
+			and s.ticket_name = #{ticketName}
+		</if>
+
+		<if test="account !='' and account!=null">
+			and s.account = #{account}
+		</if>
+
+
+	</select>
+
+
+	<insert id="insertScenicSpot" parameterType="java.util.Map">
+		insert into scenic_spot_management(
+			account,
+			ticket_name,
+			ticket_price,
+			discount_price,
+			discount_proportion,
+			status,
+			scenic_describe,
+			create_time
+		) value (
+		#{account},
+		#{ticketName},
+		#{ticketPrice},
+		#{discountPrice},
+		#{discountProportion},
+		#{status},
+		#{scenicDescribe},
+		now()
+		)
+	</insert>
+
+	<update id="updateScenicSpot" parameterType="java.util.Map">
+		update scenic_spot_management
+		<set>
+			<if test="ticketName!=null">
+				ticket_name =#{ticketName},
+			</if>
+			<if test="ticketPrice!=null">
+				ticket_price =#{ticketPrice},
+			</if>
+			<if test="discountPrice!=null">
+				discount_price =#{discountPrice},
+			</if>
+			<if test="discountProportion!=null">
+				discount_proportion =#{discountProportion},
+			</if>
+			<if test="status!=null">
+				status =#{status},
+			</if>
+			<if test="scenicDescribe!=null">
+				scenic_describe =#{scenicDescribe},
+			</if>
+			account = #{account}
+		</set>
+		where scenic_spot_id = #{id}
+	</update>
+
+	<delete id="deleteScenicSpot" parameterType="java.util.Map">
+		delete from scenic_spot_management where scenic_spot_id = #{id}
+	</delete>
+
+</mapper>

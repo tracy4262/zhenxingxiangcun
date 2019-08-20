@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: nswy-shop-service
+  cloud:
+    config:
+      enabled: true
+      uri: http://${http.config.uri}:8888
+      profile: ${http.config.profile}
+
+http:
+ config:
+   uri: 127.0.0.1
+   profile: dev
+
+info:
+  app:
+    name: "nswy-shop-service"
+    description: "农事无忧商城"
+    version: "1.0-SNAPSHOT"
+    spring-boot-version: "1.0-SNAPSHOT"

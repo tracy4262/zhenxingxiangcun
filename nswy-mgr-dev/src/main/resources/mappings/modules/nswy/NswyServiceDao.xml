@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.NswyServiceDao">
+
+	<select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.NswyServiceInfo" resultType="com.ovit.manager.modules.nswy.entity.NswyServiceInfo">
+        SELECT s.id,
+			s.account,
+			s.currency_service_name,
+			s.trade_class_id,
+			s.service_class_id,
+			s.service_name,
+			s.simple_describe,
+			s.online_preview,
+			s.image_url,
+			s.service_describe,
+			s.service_dot,
+			s.contact_name,
+			s.qq_number,
+			s.phone,
+			s.address,
+			s.coordinate,
+			s.traffic_lead,
+			s.service_time,
+			s.mattres_need_attention,
+			s.promise_content,
+			s.email,
+			s.addrs,
+			s.type,
+            DATE_FORMAT(s.create_time,"%Y-%m-%d") AS createTime,
+            s.is_to_page,
+            s.is_nav_display,
+            s.order_num,
+			d.label as trade_label,
+			c.label as service_label,
+			p.id as setMealId,
+			p.product_id as productId,
+			p.set_meal_name as setMealName,
+			p.promotion_plan as promotionPlan,
+			case when p.set_meal_price is null then '' else p.set_meal_price end as setMealPrice,
+			p.payType,
+			p.money,
+			p.end_date as endDate,
+			p.total_price as totalPrice,
+			p.room_id as roomId,
+			p.dining_time as diningTime
+
+
+		FROM fishing_service s
+		left join (SELECT t1.dict_id AS dict_id,t1.dict_name AS label FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+		WHERE t2.type_name = '行业分类') d on s.trade_class_id = d.dict_id
+
+		left join (SELECT t1.dict_id AS dict_id,t1.dict_name AS label FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+		WHERE t2.type_name = '服务分类') c on s.service_class_id = c.dict_id
+
+		left join product_management_service p on s.id = p.fish_service_id
+
+
+		where s.status = 1
+
+        <if test="serviceName !='' and serviceName !=null">
+            and s.service_name LIKE CONCAT("%",#{serviceName},"%")
+        </if>
+
+        order by  s.create_time desc
+
+	</select>
+
+    <update id="serviceDel" parameterType="map" >
+        UPDATE fishing_service SET status = '2' WHERE id = #{id}
+    </update>
+
+
+    <update id="serviceUpdateHome" parameterType="map" >
+        UPDATE fishing_service SET is_to_page = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="serviceUpdateNavDisplay" parameterType="map">
+        UPDATE fishing_service SET is_nav_display = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="serviceSetOrderNum" parameterType="map">
+        UPDATE fishing_service SET order_num = #{orderNum} WHERE id = #{id}
+    </update>
+</mapper>

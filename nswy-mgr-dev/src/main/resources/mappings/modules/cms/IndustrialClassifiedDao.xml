@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ovit.manager.modules.cms.dao.IndustrialClassifiedDao">
+
+	<resultMap id="BaseResultMap"
+		type="com.ovit.manager.modules.cms.entity.IndustrialClassified">
+		<id column="FId" jdbcType="VARCHAR" property="fid" />
+		<result column="Name" jdbcType="VARCHAR" property="fname" />
+		<result column="PId" jdbcType="VARCHAR" property="fpid" />
+		<result column="Path" jdbcType="VARCHAR" property="fpath" />
+		<result column="Depth" jdbcType="INTEGER" property="fdepth" />
+		<result column="Remarks" jdbcType="VARCHAR" property="fremarks" />
+		<result column="Pinyin" jdbcType="VARCHAR" property="fpinyin" />
+		<result column="State" jdbcType="INTEGER" property="fstate" />
+		<result column="Create_Time" jdbcType="TIMESTAMP" property="fcreatetime" />
+		<!-- <result column="Category" jdbcType="VARCHAR" property="fcategory" /> -->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		Id, Name, PId, Path, Depth, Remarks, Pinyin, State, Create_Time
+	</sql>
+
+	<insert id="insert"
+		parameterType="com.ovit.manager.modules.cms.entity.IndustrialClassified">
+		insert into industrial (Id, Name, PId,
+		Path, Depth, Remarks,
+		Pinyin, State, Create_Time
+		)
+		values (#{fid,jdbcType=VARCHAR}, #{fname,jdbcType=VARCHAR},
+		#{fpid,jdbcType=VARCHAR},
+		#{fpath,jdbcType=VARCHAR}, #{fdepth,jdbcType=INTEGER}, #{fremarks,jdbcType=VARCHAR},
+		#{fpinyin,jdbcType=VARCHAR}, #{fstate,jdbcType=INTEGER},
+		now()
+		}
+		)
+	</insert>
+
+	<update id="update"
+		parameterType="com.ovit.manager.modules.cms.entity.IndustrialClassified">
+		update industrial
+		set Name = #{fname,jdbcType=VARCHAR},
+		PId = #{fpid,jdbcType=VARCHAR},
+		Path = #{fpath,jdbcType=VARCHAR},
+		Depth = #{fdepth,jdbcType=INTEGER},
+		Remarks = #{fremarks,jdbcType=VARCHAR},
+		Pinyin = #{fpinyin,jdbcType=VARCHAR},
+		State = #{fstate,jdbcType=INTEGER}		
+		where Id = #{fid,jdbcType=VARCHAR}
+	</update>
+
+	<select id="get"
+		parameterType="com.ovit.manager.modules.cms.entity.IndustrialClassified"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM industrial
+		WHERE Id = #{fid}
+	</select>
+
+	<select id="findAllList"
+		parameterType="com.ovit.manager.modules.cms.entity.IndustrialClassified"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM industrial
+		<where>
+			State = "0"
+			<if test="fpid != null and fpid != ''">
+				AND PId = #{fpid}
+			</if>
+		<!-- 	<if test="fcategory != null and fcategory != ''">
+				AND Category = #{fcategory}
+			</if> -->
+		</where>
+		ORDER BY Id ASC
+	</select>
+
+</mapper>

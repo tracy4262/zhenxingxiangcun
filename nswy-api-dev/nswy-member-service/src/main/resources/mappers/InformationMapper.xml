@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.InformationMapper">
+    <resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.Information" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="information_detail_id" property="informationDetailId" jdbcType="INTEGER" />
+        <result column="business_information" property="businessInformation" jdbcType="VARCHAR" />
+        <result column="all_range" property="allRange" jdbcType="VARCHAR" />
+        <result column="business_nature" property="businessNature" jdbcType="VARCHAR" />
+        <result column="all_business" property="allBusiness" jdbcType="VARCHAR" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="image_add" property="imageAdd" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="comment_num" property="commentNum" jdbcType="INTEGER" />
+        <result column="label" property="label" jdbcType="VARCHAR" />
+        <result column="article_id" property="articleId" jdbcType="VARCHAR" />
+        <result column="industrial_id" property="industrialId" jdbcType="VARCHAR" />
+        <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+        <result column="column_type" property="columnType" jdbcType="VARCHAR" />
+        <result column="classified_id" property="classifiedId" jdbcType="VARCHAR" />
+        <result column="abstracts" property="abstracts" jdbcType="CLOB" />
+        <result column="is_to_page" property="isToPage" jdbcType="INTEGER" />
+        <result column="species_id" property="speciesId" jdbcType="VARCHAR" />
+        <result column="species_name" property="speciesName" jdbcType="VARCHAR" />
+        <result column="product" property="product" jdbcType="VARCHAR" />
+        <result column="service" property="service" jdbcType="VARCHAR" />
+        <result column="examine" property="examine" jdbcType="VARCHAR" />
+        <result column="friend_reminding" property="friendReminding" jdbcType="VARCHAR" />
+        <result column="reminding_content" property="remindingContent" jdbcType="VARCHAR" />
+        <result column="is_sms" property="isSms" jdbcType="INTEGER" />
+        <result column="is_publish" property="isPublish" jdbcType="INTEGER" />
+        <result column="componsation" property="componsation" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, information_detail_id, business_information, all_range, business_nature, all_business,
+        title, image_add, create_time, comment_num, label, article_id, industrial_id, CASE doc_type
+		WHEN '020101' THEN '行业动态'
+		WHEN '020102' THEN '企业动态'
+		WHEN '020103' THEN '专家动态'
+		WHEN '020104' THEN '乡村动态'
+		WHEN '020105' THEN '群协动态'
+		WHEN '020106' THEN '国际动态'
+		WHEN '020107' THEN '会员动态'
+		WHEN '020108' THEN '城乡互动'
+		ELSE '资讯' END
+		AS doc_type,
+        column_type, classified_id, abstracts, is_to_page, species_id, species_name, product,
+        service, examine, friend_reminding, reminding_content, is_sms, is_publish, componsation
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap"
+            parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from information
+        where id = #{id,jdbcType=INTEGER} ORDER BY create_time desc
+    </select>
+
+    <!-- 查询资讯表，并在后台通过PAGE实现分页 -->
+    <select id="findInForMation" resultMap="BaseResultMap"
+            parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from information where is_nav_display = 0  AND approve_status = 2 ORDER BY order_num,create_time DESC
+    </select>
+
+    <!-- 查询资讯表前20条 -->
+    <select id="find" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from information where is_to_page = 0
+        AND approve_status = 2
+        <if test="docType != null">
+            and  doc_type =#{docType}
+        </if>
+        ORDER BY order_num,create_time DESC limit 20
+    </select>
+    <select id="findInformationByDetailId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        *
+        from information
+        where information_detail_id = #{id,jdbcType=INTEGER}
+    </select>
+    <!-- 无忧首页显示资讯 -->
+    <select id="findInformationTitle" resultType="com.ovit.nswy.member.model.Information" parameterType="com.ovit.nswy.member.model.Information">
+        SELECT
+            t11.id,
+            t11.information_detail_id,
+            t11.title,
+            t11.create_time,
+            t11.species_name,
+            t11.column_type ,
+            t11.is_to_page,
+            t11.approve_status,
+            CASE t11.doc_type
+                WHEN '020101' THEN '行业动态'
+                WHEN '020102' THEN '企业动态'
+                WHEN '020103' THEN '专家动态'
+                WHEN '020104' THEN '乡村动态'
+                WHEN '020105' THEN '群协动态'
+                WHEN '020106' THEN '国际动态'
+                WHEN '020107' THEN '会员动态'
+                WHEN '020108' THEN '城乡互动'
+                ELSE '资讯' END
+            AS docType,
+            count(t2.id) AS commentNum
+        FROM (
+            SELECT
+            t1.*
+            FROM information t1
+            WHERE t1.is_to_page = 0 AND t1.approve_status = 2
+        <if test="title != null and title != ''">
+            AND t1.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="allRange != null and allRange != ''">
+            AND t1.all_range like CONCAT('%',#{allRange},'%')
+        </if>
+        <if test="speciesId != null and speciesId != ''">
+            AND t1.species_id LIKE CONCAT('%',#{speciesId},'%')
+        </if>
+        <if test="industrialId != null and industrialId != ''">
+            AND t1.industrial_id LIKE CONCAT('%',#{industrialId},'%')
+        </if>
+        <if test="product != null and product != ''">
+            AND t1.product LIKE CONCAT('%',#{product},'%')
+        </if>
+        <if test="service != null and service != ''">
+            AND t1.service LIKE CONCAT('%',#{service},'%')
+        </if>
+        <if test="columnType != null and columnType != ''">
+            AND t1.column_type LIKE CONCAT('%',#{columnType},'%')
+        </if>
+        <if test="classifiedId != null and classifiedId != ''">
+            AND t1.classified_id LIKE CONCAT('%',#{classifiedId},'%')
+        </if>
+        <if test="docType != null and docType != ''">
+            AND t1.doc_type = #{docType}
+        </if>
+        ) t11 LEFT JOIN info_comment t2 ON t11.information_detail_id = t2.information_detail_id
+        GROUP BY t11.id ORDER BY t11.order_num, t11.create_time desc
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from information
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+    <insert id="insert" parameterType="com.ovit.nswy.member.model.Information">
+		insert into information (id, information_detail_id, business_information,
+      all_range, business_nature, all_business,
+      title, image_add, create_time,
+      comment_num, label, article_id,
+      industrial_id, doc_type, column_type,
+      classified_id, abstracts, is_to_page,
+      species_id, species_name, product,
+      service, examine, friend_reminding,
+      reminding_content, is_sms, is_publish,
+      componsation)
+    values (#{id,jdbcType=INTEGER}, #{informationDetailId,jdbcType=INTEGER}, #{businessInformation,jdbcType=VARCHAR},
+      #{allRange,jdbcType=VARCHAR}, #{businessNature,jdbcType=VARCHAR}, #{allBusiness,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR}, #{imageAdd,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{commentNum,jdbcType=INTEGER}, #{label,jdbcType=VARCHAR}, #{articleId,jdbcType=VARCHAR},
+      #{industrialId,jdbcType=VARCHAR}, #{docType,jdbcType=VARCHAR}, #{columnType,jdbcType=VARCHAR},
+      #{classifiedId,jdbcType=VARCHAR}, #{abstracts,jdbcType=CLOB}, #{isToPage,jdbcType=INTEGER},
+      #{speciesId,jdbcType=VARCHAR}, #{speciesName,jdbcType=VARCHAR}, #{product,jdbcType=VARCHAR},
+      #{service,jdbcType=VARCHAR}, #{examine,jdbcType=VARCHAR}, #{friendReminding,jdbcType=VARCHAR},
+      #{remindingContent,jdbcType=VARCHAR}, #{isSms,jdbcType=INTEGER}, #{isPublish,jdbcType=INTEGER},
+      #{componsation,jdbcType=VARCHAR})
+	</insert>
+    <select id="getBriefNews" resultType="map">
+        select
+        id AS id,
+        information_detail_id AS informationDetailId,
+        title AS title
+        from information
+        where column_type = '短信' AND is_nav_display = 0
+        ORDER BY order_num,create_time DESC
+        limit 0,6
+    </select>
+    
+    <select id="dynamicCoverList" parameterType="string" resultType="map">
+        select a.id, a.title, b.image_add as image, b.id as informationId, b.column_type as columnType
+        from information_detail a left join information b on a.id = b.information_detail_id
+        where a.account = #{account} and b.image_add is not null and b.image_add != ''
+        order by a.create_time desc limit 5
+    </select>
+
+
+</mapper>

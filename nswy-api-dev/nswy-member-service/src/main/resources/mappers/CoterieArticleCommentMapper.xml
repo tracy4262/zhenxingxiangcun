@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.CoterieArticleCommentMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.CoterieArticleComment">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="article_id" property="articleId" jdbcType="INTEGER" />
+		<result column="creater_account" property="createrAccount"
+			jdbcType="VARCHAR" />
+		<result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+		<result column="like_num" property="likeNum" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="category" property="category" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.ovit.nswy.member.model.CoterieArticleComment"
+		extends="BaseResultMap">
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, article_id, creater_account, creator_name, like_num,
+		create_time,category
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from coterie_article_comment
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findAll" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from coterie_article_comment
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from coterie_article_comment
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.CoterieArticleComment">
+		insert into coterie_article_comment (id, article_id, creater_account,
+		creator_name, like_num, create_time,
+		content)
+		values (#{id,jdbcType=INTEGER}, #{articleId,jdbcType=INTEGER},
+		#{createrAccount,jdbcType=VARCHAR},
+		#{creatorName,jdbcType=VARCHAR}, #{likeNum,jdbcType=INTEGER},now(),
+		#{content,jdbcType=LONGVARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.CoterieArticleComment">
+		update coterie_article_comment
+		set article_id = #{articleId,jdbcType=INTEGER},
+		creater_account = #{createrAccount,jdbcType=VARCHAR},
+		creator_name = #{creatorName,jdbcType=VARCHAR},
+		like_num = #{likeNum,jdbcType=INTEGER},
+		create_time =now()
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

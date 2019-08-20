@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryNationalityDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryNationality"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryNationality">
+        select
+               p.id,
+        p.nationality_name as name,
+        p.parent_id as pid,
+        p.level,
+        p.value,
+        p.remark,
+        p.create_time as createTime
+        from nationality p left join nationality i on p.parent_id = i.id
+        where 1=1
+        <if test="name!=null and name!=''">
+            and p.nationality_name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+        order by p.create_time desc
+    </select>
+
+    <insert id="saveNationality" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryNationality">
+        insert into nationality(
+            id,
+            nationality_name,
+            parent_id,
+            level,
+            value,
+            remark,
+            create_time
+        )values (
+                    #{id},
+                    #{name},
+                    #{pid},
+                    #{level},
+                    #{value},
+                    #{remark},
+                    now()
+                );
+    </insert>
+
+    <update id="updateNationality" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryNationality">
+        update nationality
+        set
+            nationality_name = #{name},
+            value = #{value},
+            remark = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNationality" parameterType="java.lang.String">
+        delete from nationality where id= #{id}
+    </delete>
+
+</mapper>

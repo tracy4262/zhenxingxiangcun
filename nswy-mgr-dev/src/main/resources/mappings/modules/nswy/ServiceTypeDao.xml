@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ServiceTypeDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.ServiceTypeInfo" resultType="com.ovit.manager.modules.nswy.entity.ServiceTypeInfo">
+        select
+          dict_id  as id,
+          dict_value as dictValue,
+          dict_name as dictName
+
+        from system_dict
+
+        where dict_type='d2389207-0661-11e8-ab8c-005056bc3817'
+        <if test="dictName !=null and dictName !=''">
+            and dict_name like CONCAT('%',#{dictName},'%')
+        </if>
+        <if test="id !=null and id !=''">
+            and dict_id =#{id}
+        </if>
+
+        order by dict_value asc
+
+    </select>
+
+    <select id="findServiceType" parameterType="map" resultType="map">
+        select
+          dict_id,
+          dict_name
+        from system_dict
+        where dict_type='d2389207-0661-11e8-ab8c-005056bc3817'
+
+    </select>
+
+    <insert id="saveServiceType" parameterType="com.ovit.manager.modules.nswy.entity.ServiceTypeInfo">
+        insert into system_dict(
+            dict_id,
+            dict_name,
+            dict_type,
+            dict_value,
+            create_time
+        )
+        values (
+                   #{id},
+                   #{dictName},
+                   #{dictType},
+                   #{dictValue},
+                   now()
+               );
+    </insert>
+
+    <update id="updateServiceType" parameterType="com.ovit.manager.modules.nswy.entity.ServiceTypeInfo">
+        update system_dict
+          <set>
+              <if test="dictName !=null">
+                  dict_name = #{dictName}
+              </if>
+
+          </set>
+
+        where dict_id = #{id}
+    </update>
+
+    <delete id="deleteServiceType" parameterType="java.lang.String">
+        delete
+        from system_dict
+        where dict_id = #{id}
+    </delete>
+
+</mapper>

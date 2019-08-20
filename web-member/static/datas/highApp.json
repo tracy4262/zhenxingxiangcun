@@ -1,0 +1,18 @@
+{
+    "code": 200,
+    "msg": "数据请求成功",
+    "data": [
+        {
+            "src": "/static/datas/img/app-icon.png",
+            "title": "物种百科",
+            "subtitle": "物种百科",
+            "url": "/wiki"
+        },
+        {
+            "src": "/static/datas/img/app-icon.png",
+            "title": "应用资讯",
+            "subtitle": "农业资讯",
+            "url": "/"
+        }
+    ]
+}

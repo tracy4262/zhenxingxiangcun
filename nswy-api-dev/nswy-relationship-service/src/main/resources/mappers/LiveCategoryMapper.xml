@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.relationship.mapper.LiveCategoryMapper">
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.relationship.model.LiveCategory">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="live_category_id" jdbcType="INTEGER" property="liveCategoryId" />
+    <result column="province_id" jdbcType="VARCHAR" property="provinceId" />
+    <result column="live_area" jdbcType="VARCHAR" property="liveArea" />
+    <result column="live_species" jdbcType="VARCHAR" property="liveSpecies" />
+    <result column="species_id" jdbcType="VARCHAR" property="speciesId" />
+    <result column="live_industry" jdbcType="VARCHAR" property="liveIndustry" />
+    <result column="industry_id" jdbcType="VARCHAR" property="industryId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="city_id" jdbcType="VARCHAR" property="cityId" />
+    <result column="town_id" jdbcType="VARCHAR" property="townId" />
+    <result column="county_id" jdbcType="VARCHAR" property="countyId" />
+    <result column="street_id" jdbcType="VARCHAR" property="streetId" />
+  </resultMap>
+</mapper>

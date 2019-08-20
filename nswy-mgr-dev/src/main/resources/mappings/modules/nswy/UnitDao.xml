@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.UnitDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.UnitInfo" resultType="com.ovit.manager.modules.nswy.entity.UnitInfo">
+        select
+            u.id as unitId,
+            u.unit_name as unitName,
+            u. unit_type as unitType,
+            u. calculate_unit as calculateUnit,
+            u. modulus,
+            i.unit_type_name as unitTypeName
+
+        from unit u left join reversion_unit_type_info i on u.unit_type = i.unit_type
+
+        where 1=1
+       <if test="unitName!=null and unitName!=''">
+           and u.unit_name like concat('%',#{unitName},'%')
+       </if>
+
+        <if test="unitId !=null and unitId !=''">
+             and u.id = #{unitId}
+        </if>
+
+       order by u.id desc
+
+    </select>
+
+    <select id="findUnitType" parameterType="map" resultType="map">
+        select
+            id as unitTypeId,
+            unit_type as unitType,
+            unit_type_name as unitTypeName
+
+        from reversion_unit_type_info
+
+
+
+    </select>
+
+    <insert id="saveUnit" parameterType="com.ovit.manager.modules.nswy.entity.UnitInfo">
+        insert into unit(
+
+          unit_name,
+          unit_type,
+          calculate_unit,
+          modulus
+        )values (
+
+          #{unitName},
+          #{unitType},
+          #{calculateUnit},
+          #{modulus}
+        );
+    </insert>
+
+    <update id="updateUnit" parameterType="com.ovit.manager.modules.nswy.entity.UnitInfo">
+        update unit
+          <set>
+              <if test="unitName !=null">
+                  unit_name = #{unitName},
+              </if>
+              <if test="unitType !=null">
+                  unit_type = #{unitType},
+              </if>
+              <if test="calculateUnit !=null">
+                  calculate_unit = #{calculateUnit},
+              </if>
+              <if test="modulus !=null">
+                  modulus = #{modulus},
+              </if>
+
+          </set>
+
+        where id = #{unitId}
+    </update>
+
+    <delete id="deleteUnit" parameterType="java.lang.Integer">
+        delete from unit where id= #{deleteUnit}
+    </delete>
+
+</mapper>

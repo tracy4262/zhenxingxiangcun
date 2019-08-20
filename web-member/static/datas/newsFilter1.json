@@ -1,0 +1,84 @@
+{
+  "rangeList": [
+    {
+      "value": "f1r1",
+      "label": "行业资讯"
+    },
+    {
+      "value": "f1r2",
+      "label": "企业资讯"
+    },
+    {
+      "value": "f1r3",
+      "label": "专家资讯"
+    },
+    {
+      "value": "f1r4",
+      "label": "乡村资讯"
+    },
+    {
+      "value": "f1r5",
+      "label": "群协资讯"
+    },
+    {
+      "value": "f1r6",
+      "label": "国际资讯"
+    }
+  ],
+  "natureList": [
+    {
+      "value": "f1n1",
+      "label": "生产行业"
+    },
+    {
+      "value": "f1n2",
+      "label": "服务行业"
+    }
+  ],
+  "allTradeList": [
+    {
+      "value": "f1a1",
+      "label": "农业"
+    },
+    {
+      "value": "f1a2",
+      "label": "林业"
+    },
+    {
+      "value": "f1a3",
+      "label": "畜牧"
+    },
+    {
+      "value": "f1a4",
+      "label": "渔业"
+    },
+    {
+      "value": "f1a5",
+      "label": "农药"
+    },
+    {
+      "value": "f1a6",
+      "label": "肥料"
+    },
+    {
+      "value": "f1a7",
+      "label": "兽药"
+    },
+    {
+      "value": "f1a8",
+      "label": "饲料"
+    },
+    {
+      "value": "f1a9",
+      "label": "食品"
+    },
+    {
+      "value": "f1a10",
+      "label": "农机农具"
+    },
+    {
+      "value": "f1a11",
+      "label": "农业用品"
+    }
+  ]
+}

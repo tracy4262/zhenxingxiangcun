@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.RealNameDao">
+
+
+	<select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.RealName" resultType="com.ovit.manager.modules.nswy.entity.RealName">
+        select
+            a.member_aptitude_real_info_id as realId,a.user_id as userId,a.member_name as memberName,a.member_abbreviation as memberAbbreviation
+            ,o.status as status
+        from
+            reversion_member_aptitude_real_info a left join reversion_user_official_info o on a.user_id=o.account
+        where 1=1
+        <if test="userId !='' and userId !=null">
+            and a.user_id like CONCAT('%',#{userId},'%')
+        </if>
+	</select>
+
+    <select id="findByUserId" parameterType="java.lang.String" resultType="com.ovit.manager.modules.nswy.entity.RealName">
+        select
+            user_id as userId,template_id,location as location,location_id
+        from
+        reversion_member_contact_info
+        where 1=1
+        <if test="_parameter !='' and _parameter !=null">
+            and  user_id = #{userId}
+        </if>
+        order by create_time limit 0,1
+
+    </select>
+
+	<select id="findById" parameterType="java.lang.String" resultType="com.ovit.manager.modules.nswy.entity.RealName" >
+        select
+            a.member_aptitude_real_info_id as realId,a.member_class as memberClass,a.member_name as memberName,a.member_name_pinyin as memberNamePinyin,a.member_abbreviation as memberAbbreviation,a.abbreviation_pinyin as abbreviationPinyin,a.aptitude_name as aptitudeName,a.aptitude_number as aptitudeNumber,a.aptitude_image as aptitudeImage,a.remark as remark
+            ,c.contact_name as contactName,c.card as card,c.seat_phone as seatPhone,c.phone as phone,c.qq_number as qqNumber,c.wechat_number as wechatNumber,c.email as email,c.website_url as websiteUrl,c.postal_code as postalCode,c.image as image,c.location as location,c.address as address,c.house_number as houseNumber
+            ,i.name as name,i.sex as sex,i.phone as pesonPhone,i.card as pesonCard,i.job as job,i.job_title as jobTitle,i.email as pesonEmail,i.duty as duty,i.card_image as cardImage
+            ,d.name as adminName,d.sex as adminSex,d.phone as adminPhone,d.card as adminCard,d.job as adminJob,d.job_title as adminJobTitle,d.email as adminEmail,d.duty as adminDuty,d.card_image as adminCardImage,d.empower_image as empowerImage
+        from
+            reversion_member_aptitude_real_info a
+                left join reversion_member_contact_info c on a.member_aptitude_real_info_id = c.member_name_id
+                left join reversion_member_identity_info i on a.member_aptitude_real_info_id = i.member_name_id
+                left join reversion_member_administrator_info d on i.member_identity_info_id =d.member_name_id
+        where 1=1
+        <if test="_parameter != null and _parameter !=''">
+            and a.member_aptitude_real_info_id = #{realId}
+        </if>
+	</select>
+
+    <insert id="saveRealName" parameterType="com.ovit.manager.modules.nswy.entity.RealName">
+        insert into reversion_user_official_info(
+            account,
+            location,
+            template_id,
+            location_id
+        )value (
+            #{userId},
+            #{location},
+            #{templateId},
+            #{locationId}
+        )
+
+    </insert>
+
+    <update id="deleteRealName" parameterType="java.lang.String">
+        update reversion_user_official_info
+        set status = 0
+        where account = #{userId};
+    </update>
+
+    <update id="updateRealName" parameterType="java.lang.String">
+        update reversion_user_official_info
+        set status = 1
+        where account = #{userId};
+    </update>
+    
+</mapper>

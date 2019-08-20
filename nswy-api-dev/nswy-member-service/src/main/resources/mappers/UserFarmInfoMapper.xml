@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.UserFarmInfoMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.UserFarmInfo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="farmlan" property="farmlan" jdbcType="INTEGER" />
+		<result column="species" property="species" jdbcType="LONGVARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="types" property="types" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, farmlan, species,status,types
+	</sql>
+	<select id="findUserFarmInfo" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.UserFarmInfo">
+		select
+		<include refid="Base_Column_List" />
+		from user_farm_info
+		where account = #{account,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.UserFarmInfo">
+		<![CDATA[
+		insert into user_farm_info (id, account, farmlan,
+		species,status,types)
+		values
+		]]>
+		<foreach collection="list" index="index" item="item"  separator=",">
+		(#{item.id}, #{item.account},#{item.farmlan},
+			#{item.species},#{item.status},#{item.types})
+		</foreach>
+	</insert>
+
+	<update id="updateUserFarmInfo" parameterType="com.ovit.nswy.member.model.UserFarmInfo">
+		update user_farm_info
+		<set>
+			<if test="farmlan != null">
+				farmlan = #{farmlan,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="species != null">
+				species = #{species,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="types != null">
+				types = #{types,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where account = #{account,jdbcType=VARCHAR}
+	</update>
+	<delete id="deleteByAccount" parameterType="java.lang.String">
+		DELETE  from user_farm_info where account=#{account,jdbcType=VARCHAR}
+	</delete>
+</mapper>

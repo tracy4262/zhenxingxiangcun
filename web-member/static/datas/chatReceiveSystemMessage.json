@@ -1,0 +1,10 @@
+{
+  "emit": "chatMessage"
+  ,"data": 
+  {
+  	"system": true
+	,"id": 1111111
+	,"type": "friend"
+	,"content": "对方已掉线"
+  }
+}

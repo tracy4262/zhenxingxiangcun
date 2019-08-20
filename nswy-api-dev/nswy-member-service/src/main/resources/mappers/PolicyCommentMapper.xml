@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.PolicyCommentMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.PolicyComment">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="information_detail_id" property="informationDetailId"
+			jdbcType="INTEGER" />
+		<result column="user_account" property="userAccount" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="thumb_up_num" property="thumbUpNum" jdbcType="INTEGER" />
+		<result column="post_id" property="postId" jdbcType="INTEGER" />
+		<result column="docType" property="docType" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.ovit.nswy.member.model.PolicyComment"
+		extends="BaseResultMap">
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, information_detail_id, user_account, user_name, create_time,
+		thumb_up_num,post_id
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from policy_comment
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 查询评论结果 -->
+	<select id="findPolicyComment" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.PolicyComment">
+		SELECT
+			t1.id,t1.information_detail_id,t1.user_account,t1.user_name,
+			t1.create_time,t1.thumb_up_num,t1.post_id,count(t2.post_id) AS postNum,
+			t1.content,t3.avatar
+		FROM policy_comment t1 LEFT JOIN policy_comment t2 ON t1.id = t2.post_id
+		LEFT JOIN login_user t3 ON t1.user_account = t3.login_account
+		GROUP BY t1.id
+		<if test="informationDetailId != null">
+			HAVING t1.information_detail_id = #{informationDetailId}
+		</if>
+	</select>
+
+	<select id="findPolicyComments" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select c.* from policy_detail d LEFT JOIN policy_comment c
+		on
+		d.id=c.information_detail_id where 1=1
+		<if test="account != null">
+			and c.user_account = #{account}
+		</if>
+		<if test="label != null">
+			and d.label = #{label}
+		</if>
+		and d.id=#{id}
+		order by create_time desc
+	</select>
+
+	<select id="listComment" resultMap="BaseResultMap"
+		parameterType="map">
+		SELECT c.*,t1.avatar,count(d.post_id) AS postNum FROM policy_comment c
+		LEFT JOIN policy_comment d ON c.id = d.post_id
+		LEFT JOIN login_user t1 ON c.user_account = t1.login_account
+		GROUP BY c.id
+		HAVING c.user_account = #{account}
+		<if test="lists != null and lists.size()>0">
+			and c.information_detail_id in
+			<foreach collection="lists" item="item" index="index"
+				separator="," open="(" close=")">
+				#{item.id}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="findPolicyCommentId" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.PolicyComment">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from policy_comment
+		where id = #{id}
+	</select>
+
+	<!-- 查询我的评论 -->
+	<select id="findMyComment" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.PolicyComment">
+		SELECT
+			t1.id,t1.information_detail_id,t1.user_account,t1.user_name,
+			t1.create_time,t1.thumb_up_num,t1.post_id,count(t2.post_id) AS postNum,
+			t1.content,t3.avatar
+		FROM policy_comment t1 LEFT JOIN policy_comment t2 ON t1.id = t2.post_id
+		LEFT JOIN login_user t3 ON t1.user_account = t3.login_account
+		GROUP BY t1.id
+		HAVING t1.information_detail_id = #{informationDetailId}
+		AND t1.user_account = #{userAccount}
+	</select>
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.PolicyComment">
+		insert into policy_comment (id, information_detail_id, user_account,
+		user_name, content, create_time, post_id,
+		thumb_up_num)
+		values (#{id,jdbcType=INTEGER}, #{informationDetailId,jdbcType=INTEGER},
+		#{userAccount,jdbcType=VARCHAR},
+		#{userName,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+		#{postId,jdbcType=INTEGER},#{thumbUpNum,jdbcType=INTEGER})
+	</insert>
+
+	<update id="updateThumbUpNum" parameterType="com.ovit.nswy.member.model.PolicyComment">
+		update policy_comment
+		set
+		thumb_up_num = thumb_up_num + 1
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+    <!--回复成功后的回调-->
+    <select id="replylist" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT * FROM policy_comment WHERE user_account=#{userAccount,jdbcType=VARCHAR} AND information_detail_id=#{informationDetailId,jdbcType=INTEGER}
+    </select>
+    <!--回复他人的评论-->
+    <select id="replyToOther" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT * FROM policy_comment WHERE post_id=#{postId}
+    </select>
+
+</mapper>

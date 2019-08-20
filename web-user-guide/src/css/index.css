@@ -1,0 +1,369 @@
+     .layout {
+      	background: #fff;
+    }
+
+   /* header样式开始*/
+    header {
+        height: 81px;
+        background: #FFFFFF;
+        border-bottom: 1px solid #e7e7e7;
+    }
+    .container{
+        width: 1196px;
+        margin: 0 auto;
+    }
+
+    .header-top {
+        height: 81px;
+    }
+    .region{
+        // float: left;
+        // margin-left: 14px;
+        width: 80px;
+        margin-top: 26px;
+        height: 36px;
+
+    }
+    /* .nav-center{
+        margin-left: 20px;
+    } */
+    .nav-r{
+        float: right;
+        margin-top: 26px;
+
+
+    }
+    .btn1{
+
+        height: 36px;
+
+        margin-left: 12px;
+
+    }
+    
+    .banner{
+        min-width:1200px;
+        background: url("../img/index-banner.png") center top no-repeat;
+        height: 512px;
+        background-size: cover;
+    }
+    .banner-main{
+        width: 802px;
+        padding: 24px;
+        background: #272727;
+        border-radius: 4px;
+        opacity: 0.7;
+        margin-top: 80px;
+        margin: auto;
+    }
+    .banner-main.ivu-card:hover{
+        box-shadow: 0 25px 20px 0 rgba(18,88,48,0.09);
+    }
+    .banner-logo{
+        width: 109px;
+        margin: 20px auto;
+    }
+    .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
+        margin: 0;
+        margin-right: 14px;
+        height: 31px;
+        padding: 5px 16px 4px;
+        border: 1px solid #d7dde4;
+        border-bottom: 0;
+        border-radius: 4px 4px 0 0;
+        transition: all .3s ease-in-out;
+        background: #f5f7f9;
+    }
+    .ivu-input {
+        display: inline-block;
+        width: 100%;
+        height: 41px;
+        line-height: 1.5;
+        padding: 4px 7px;
+        font-size: 12px;
+        border: 1px solid #d7dde4;
+        border-radius: 4px;
+        color: #657180;
+        background-color: #fff;
+        background-image: none;
+        position: relative;
+        cursor: text;
+        transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
+    }
+    .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active {
+        height: 32px;
+        padding-bottom: 5px;
+        background: #fd1212;
+        transform: translateZ(0);
+        border-color: #d7dde4;
+        color: #39f;
+    }
+
+
+
+    /*header样式结束*/
+    .ivu-tabs-nav .ivu-tabs-tab-active {
+        color: #fff;
+    }
+    .search{
+        margin: 0px 0px;
+        border-radius: 0 4px 4px 0 ;
+        width: 94px;
+        margin-left: -4px;
+    }
+
+    /*app样式开始*/
+    .app{
+        position: relative;
+    }
+    .title-h5{
+        font-size: 34px;
+        font-weight: normal;
+        color:#4a4a4a;
+    }
+    .app p{
+        font-size: 14px;
+        text-align: center;
+        color: #666;
+        font-size: 16px;
+    }
+    .title{
+        height: 100px;
+        /* border-top: 1px solid #949494; */
+        padding-top: 72px;
+
+    }
+    /* .text{
+        text-align: center;
+        background: #fff;
+        position: absolute;
+        top: -26px;
+        left: 0px;
+        right: 0;
+        margin: auto;
+        width: 200px;
+
+    } */
+    .app-list{
+    }
+    .app1-l{
+        float: left;
+    }
+    .app1-text{
+        float: left;
+        /*padding: 0px 0 0 20px;*/
+        margin-left: 4px;
+        margin-top: 4px;
+    }
+
+
+    .app1{
+        width: 214px;
+        margin: 0 auto;
+    }
+    .app1-text h5{
+        font-size: 24px;
+        font-weight: 400;
+        color: #333;
+    }
+    .app1-text p{
+        font-size: 14px;
+    }
+    .app-more{
+        width: 36px;
+        margin: 0 auto;
+        margin-top: -20px;
+    }
+
+
+
+    /*app样式结束*/
+    .main{
+        width:1200px;
+        margin: 10px auto 0;
+    }
+    .main-title{
+        position: relative;
+        height: 100px;
+        /* border-top: 1px solid #949494; */
+        margin-top: 98px;
+    }
+    .main-text{
+        text-align: center;
+        background: #fff;
+        position: absolute;
+        top: -26px;
+        left: 0px;
+        right: 0;
+
+        margin: auto;
+        width: 200px;
+
+    }
+
+    .main-title-h5{
+        font-size: 34px;
+        font-weight: normal;
+        color:#4a4a4a;
+    }
+    .mian p{
+        font-size: 14px;
+        line-height: 36px;
+
+    }
+
+
+
+
+    /*mian*/
+    .ivu-menu-dark {
+        background: #fff;
+    }
+    .ivu-menu-dark.ivu-menu-horizontal .ivu-menu-item-active, .ivu-menu-dark.ivu-menu-horizontal .ivu-menu-item:hover, .ivu-menu-dark.ivu-menu-horizontal .ivu-menu-submenu-active, .ivu-menu-dark.ivu-menu-horizontal .ivu-menu-submenu:hover {
+        color: #00c587;
+    }
+    .nav-padding{
+        float: left;
+        padding: 0 48px;
+        position: relative;
+        cursor: pointer;
+        z-index: 3;
+        transition: all .2s ease-in-out;
+        border-top: 6px solid #fff;
+    }
+    .new-tab{
+        border: 1px solid #00c587 !important;
+        color:#00c587 !important;
+        float: left;
+        margin-right: 6px;
+    }
+    .main-time{
+        padding: 0 8px;
+        border-left: 1px solid #ccc;
+        color: #949494;
+        font-size: 12px;
+    }
+    .new-last{
+        margin-top: 32px;
+    }
+    .new-last li {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 20px;
+    }
+    .new-last .h4{
+        font-size: 18px;
+    }
+    .new-last li a{
+        color:#333;
+    }
+    .main-nav .new-last li a:hover{
+        color:#666;
+    }
+    .new-title-h5{
+        font-size: 24px;
+        font-weight: normal;
+    }
+    .new-text{
+        text-align: center;
+        background: #fff;
+        position: absolute;
+        top: -20px;
+        left: 0px;
+        right: 0;
+        margin: auto;
+        width: 80px;
+
+    }
+    .new-last .detial{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 12px;
+        color: #666;
+        cursor: pointer;
+    }
+    .news-text-2{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+    .new2 ul li{
+        width: 410px;
+        margin: 0 auto;
+        font-size: 18px;
+        border-bottom: 1px dashed #ccc;
+        padding: 15px 0;
+
+    }
+    .new2 ul li a{
+        color:#666;
+        font-size: 18px;
+    }
+    .main-nav .new2 ul li a:hover{
+        color:#666;
+    }
+    .new-more{
+        width: 100%;
+        height: 50px;
+    }
+    .new2{
+        height: 515px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    .top{
+        padding: 10px;
+        background: #00c587;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        bottom: 30px;
+    }
+
+    .cardList{
+        width:1000px;
+        margin:10px auto;
+        box-shadow:2px 2px 5px #efefef,-2px -2px 5px #efefef;
+    }
+    .ivu-card-head{
+        border-bottom:none;
+    }
+    .ivu-card-head h3{
+        text-align:center;
+        font-size:22px;
+        font-family:normal;
+        color:#000;
+    }
+    .cardList-content h3{
+        margin-bottom:20px;
+        padding-bottom:10px;
+        border-bottom:1px solid #efefef;
+        text-align: left;
+        padding-left: 10px;
+        margin-top:20px;
+    }
+    .cardList-content h3 span{
+        padding-left:10px;
+        border-left:4px solid #00c587;
+    }
+    .cardList-content{
+        padding-bottom: 30px;
+    }
+    .forgetPassWord{
+        float:right;
+    }
+    .loginList{
+        text-align:center;
+    }
+    .loginList li{
+        display:inline-block;
+        margin:0 15px;
+    }
+    .loginTab  .ivu-tabs-bar{
+        border-bottom:1px solid #f3f3f3;
+    }
+
+.block{
+    display: block;
+}

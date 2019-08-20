@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.RelationshipCircleMapper">
+    <select id="findRelationshipDictInfo" parameterType="map" resultType="map">
+        select
+
+          r.id,r.name as groupName,r.parent_id as pid
+
+        from reversion_relationship_circle_dict_info r order by create_time desc
+    </select>
+
+
+    <select id="findGroupList" parameterType="map" resultType="map">
+        select
+          r.id,
+          r.account,
+          r.template_id as templateId,
+          r.group_name as groupName,
+          r.parent_id as pid,
+          r.number,
+          r.is_default as isDefault,
+          r.status
+        from reversion_relationship_circle_group_info r left join reversion_relationship_circle_group_info g on r.parent_id = g.id
+
+       where 1=1
+           <if test="account!= null and account!=''">
+               and r.account = #{account}
+           </if>
+
+           <if test="templateId!= null and templateId!=''">
+               and r.template_id = #{templateId}
+           </if>
+
+           <if test="id!=null and id!=''">
+                and r.id = #{id}
+           </if>
+
+        order by r.create_time desc
+    </select>
+
+    <select id="findGroupByGroupName" parameterType="map" resultType="map">
+        select
+        r.id,
+        r.account,
+        r.template_id as templateId,
+        r.group_name as groupName,
+        r.parent_id as pid,
+        r.number,
+        r.is_default as isDefault,
+        r.status
+        from reversion_relationship_circle_group_info r
+
+        where 1=1
+        <if test="account!= null and account!=''">
+            and r.account = #{account}
+        </if>
+
+        <if test="templateId!= null and templateId!=''">
+            and r.template_id = #{templateId}
+        </if>
+
+        <if test="groupName!=null and groupName!=''">
+            and r.group_name = #{groupName}
+        </if>
+
+        order by r.create_time desc
+    </select>
+
+
+    <select id="findGroupByPid" parameterType="map" resultType="map">
+         select
+          r.id,
+          r.account,
+          r.template_id as templateId,
+          r.group_name as groupName,
+          r.parent_id as pid,
+          r.number,
+          r.is_default as isDefault
+        from reversion_relationship_circle_group_info r
+
+        where  1=1
+        <if test="pid!=null and pid!=''">
+           and id = #{pid}
+        </if>
+
+
+
+    </select>
+
+
+    <select id="findLoginByAccount" parameterType="map" resultType="map">
+        select
+          case when l.signature is null then '' else l.signature end as sign,
+		  l.`avatar`,
+		  l.id
+
+		from login_user l
+
+		where l.login_account = #{friendAccount}
+    </select>
+
+    <select id="findGroupById" parameterType="map" resultType="map">
+        select
+        r.id,
+        r.account,
+        r.template_id as templateId,
+        r.group_name as groupName,
+        r.parent_id as pid,
+        r.number,
+        r.is_default as isDefault
+        from reversion_relationship_circle_group_info r
+
+        where  1=1
+
+        <if test="id!=null and id!=''">
+            and parent_id = #{id}
+        </if>
+
+
+
+    </select>
+
+    <update id="updateGroup" parameterType="map">
+        update reversion_relationship_circle_group_info set number = #{number} where id = #{id}
+    </update>
+
+    <insert id="saveGroup" parameterType="map">
+        replace into reversion_relationship_circle_group_info (
+           id,
+           account,
+           template_id,
+           group_name,
+           parent_id,
+           is_default,
+           create_time
+        ) values (
+            #{id},
+            #{account},
+            #{templateId},
+            #{groupName},
+            #{pid},
+            #{isDefault},
+            now()
+        );
+    </insert>
+
+    <delete id="deleteGroup" parameterType="map">
+        delete from reversion_relationship_circle_group_info where id= #{id}
+    </delete>
+
+
+    <select id="findGroupFriendInfo" parameterType="map" resultType="map">
+		select
+		  r.id,
+		  r.account,
+		  r.group_friend_account as friendAccount,
+		  (select memberName from (select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left 				join (select u.template_id as templateId,u.account
+			from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+			group by m.user_id
+			order by m.create_time asc ) m  where m.account = r.group_friend_account) as memberName,
+		  r.invite,
+		  r.group_id as groupId
+
+		from reversion_relationship_group_friend_info r
+
+		where r.account = #{account}
+        <if test="invite !=null and invite!=''">
+            and r.invite = #{invite}
+        </if>
+
+
+	</select>
+
+    <select id="findGroupFriendList" parameterType="map" resultType="map">
+        select f.* from (select
+            f.id,
+            f.account,
+            f.group_friend_account as groupFriendAccount,
+            (select memberName from (select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left 				join (select u.template_id as templateId,u.account
+            from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+            group by m.user_id
+            order by m.create_time asc ) m  where m.account = f.group_friend_account) as memberName,
+            f.invite,
+            f.group_id as groupId,
+            l.avatar as groupFriendAvatar,
+            f.create_time as createTime,
+            (select m.member_name as memberName from  reversion_member_aptitude_real_info m where m.user_id = f.account and m.template_id = ( select
+            template_id from reversion_user_template_manage u  where u.account = f.account and u.status = 1) order by m.create_time asc LIMIT 1) as groupFriendAccountName,
+            f.create_time
+        from reversion_relationship_group_friend_info f  left join login_user l on f.group_friend_account = l.login_account) f
+
+        where 1=1
+        <if test="account !=null and account!=''">
+            and  f.account = #{account}
+        </if>
+        <if test="groupFriendAccount !=null and groupFriendAccount!=''">
+            and  f.groupFriendAccount = #{groupFriendAccount}
+        </if>
+        <if test="groupId !=null and groupId!=''">
+            and  f.groupId = #{groupId}
+        </if>
+
+        <if test="keyword !=null and keyword!=''">
+            and (f.groupFriendAccount like concat('%',#{keyword},'%') or f.memberName  like concat('%',#{keyword},'%') )
+
+        </if>
+        <if test="invite !=null and invite!=''">
+            and f.invite = #{invite}
+        </if>
+
+
+        order by f.create_time desc
+
+
+    </select>
+
+    <insert id="insertGroupFriendInfo" parameterType="map">
+		insert into reversion_relationship_group_friend_info (
+			account,
+			group_friend_account,
+			member_name,
+			invite,
+			group_id,
+			create_time
+		) values (
+			#{account},
+			#{friendAccount},
+			#{memberName},
+			#{invite},
+			#{groupId},
+			now()
+		);
+	</insert>
+
+    <update id="updateGroupFriendInfo" parameterType="map">
+        update reversion_relationship_group_friend_info set invite = #{invite} where id = #{id}
+    </update>
+
+    <update id="moveGroupFriendInfo" parameterType="map">
+        update reversion_relationship_group_friend_info set group_id = #{newGroupId} where id = #{id}
+    </update>
+
+    <update id="updateGroupStatus" parameterType="map">
+        update reversion_relationship_circle_group_info set status = 1 where id = #{id}
+    </update>
+
+    <delete id="deleteGroupFriendInfo" parameterType="map">
+        delete from reversion_relationship_group_friend_info where id= #{id}
+    </delete>
+</mapper>

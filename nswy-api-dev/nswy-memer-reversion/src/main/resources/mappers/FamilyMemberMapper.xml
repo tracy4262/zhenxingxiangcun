@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.FamilyMemberMapper">
+
+    <select id="find" parameterType="map" resultType="map">
+        select id, year_file_id as yearId, name, relationship, gender,
+        birthday, phone, skill, status,template_id as templateId
+        from reversion_family_member
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </select>
+
+    <insert id="save" parameterType="map">
+        replace into reversion_family_member (
+        id,
+        account,
+        year_file_id,
+        name,
+        relationship,
+        gender,
+        birthday,
+        phone,
+        skill,
+        template_id,
+        status
+        )values (
+        #{id},
+        #{account},
+        #{yearId},
+        #{name},
+        #{relationship},
+        #{gender},
+        #{birthday},
+        #{phone},
+        #{skill},
+        #{templateId},
+        #{status}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from reversion_family_member where id = #{id}
+    </delete>
+
+</mapper>

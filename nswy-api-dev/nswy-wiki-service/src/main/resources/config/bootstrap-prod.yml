@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: nswy-wiki-service
+  cloud:
+    config:
+      enabled: true
+      uri: http://${http.config.uri}:8888
+      profile: ${http.config.profile}
+
+http:
+ config:
+   uri: 127.0.0.1
+   profile: prod
+
+
+
+info:
+  app:
+    name: "nswy-wiki-service"
+    description: "物种百科模块"
+    version: "1.0-SNAPSHOT"
+    spring-boot-version: "1.0-SNAPSHOT"

@@ -1,0 +1,15 @@
+{
+  "emit": "chatMessage"
+  ,"data": 
+  {
+	"username": "纸飞机"
+	,"avatar": "http://tp1.sinaimg.cn/1571889140/180/40030060651/1"
+	,"id": "100000"
+	,"type": "friend"
+	,"content": "嗨，你好！本消息系离线消息。"
+	,"cid": 0
+	,"mine": false
+	,"fromid": "100000"
+	,"timestamp": 1467475443306
+  }
+}

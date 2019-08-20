@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.IndividuationMapper">
+
+	<select id="selectByLeib" resultType="String">
+		select FName from species where FClassifiedId =#{fieldName}
+		<!-- <foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach> -->
+	</select>
+	<select id="selectByName" resultType="String">
+		select FClassifiedId from species where FName = #{fieldName}
+	</select>
+</mapper>

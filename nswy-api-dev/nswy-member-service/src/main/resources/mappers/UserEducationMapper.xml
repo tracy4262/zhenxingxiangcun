@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="UserEducationMapper">
+	<sql id="Base_Column_List">
+		id,account,education,create_time
+	</sql>
+	<select id="selectByAccount" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+        <include refid="Base_Column_List" />
+        from user_education where account = #{account,jdbcType=VARCHAR}
+	</select>
+	<insert id="insert" parameterType="map">
+		 INSERT into user_education (account,education,create_time)
+    		values(#{account,jdbcType=VARCHAR},#{education,jdbcType=VARCHAR},now())
+	</insert>
+  <delete id="deleteByAccount" parameterType="java.util.Map">
+       DELETE FROM user_education WHERE account=#{account,jdbcType=VARCHAR}
+    </delete>
+</mapper>

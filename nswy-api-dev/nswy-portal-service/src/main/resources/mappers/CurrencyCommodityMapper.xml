@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.CurrencyCommodityMapper">
+
+    <select id="findCommodityById" resultType="map">
+        SELECT t1.id AS id,
+                t1.currency_commodity_name AS commodityName,
+                t1.currency_commodity_pinyin AS commodityPinyin,
+                IFNULL(t1.commodity_alias, "") AS commodityAlias,
+                t1.industry_type_id AS industryTypeId,
+                t1.product_type_id AS productTypeId,
+                t3.dict_name AS industryType,
+                t2.classification_name AS productType,
+                t1.related_species_id AS relatedSpeciesId,
+                IFNULL(t1.remark, "") AS remark,
+                IFNULL(t1.traceability_type, "") AS traceaType,
+                t1.image AS image,
+                IFNULL(t1.is_main_product, "") AS isMainProduct,
+                t1.create_time AS createTime,
+                t1.quality_custom_content AS qualityCustomContent,
+                t1.safety_custom_content AS safetyCustomContent,
+                t1.service_id as serviceId,
+                (select s.currency_commodity_name from shop_currency_commodity s where s.id = t1.service_id) as service,
+                t1.service_class_id as serviceClassId,
+                t1.service_people_name as servicePeopleName
+        FROM shop_currency_commodity t1
+        LEFT JOIN product_classification t2 ON t1.product_type_id = t2.classification_code
+        LEFT JOIN system_dict t3 ON t1.industry_type_id = t3.dict_value
+        WHERE t1.id = #{id}
+    </select>
+
+    <delete id="deleteCommodityById" parameterType="java.util.Map">
+        DELETE FROM shop_currency_commodity
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="insertCommodityInfo" parameterType="java.util.Map">
+        replace into shop_currency_commodity (
+        id,
+        account,
+        currency_commodity_name,
+        currency_commodity_pinyin,
+        commodity_alias,
+        industry_type_id,
+        product_type_id,
+        related_species_id,
+        remark,
+        aduit_status,
+        image,
+        traceability_type,
+        is_main_product,
+        refuse_reason,
+        quality_custom_content,
+        safety_custom_content,
+        type,
+        service_class_id,
+        service_people_name,
+        service_id,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityName},
+        #{commodityPinyin},
+        #{commodityAlias},
+        #{industryTypeId},
+        #{productTypeId},
+        #{relatedSpeciesId},
+        #{remark},
+        #{aduitStatus},
+        #{image},
+        #{traceaType},
+        #{isMainProduct},
+        #{refuseReason},
+        #{qualityCustomContent},
+        #{safetyCustomContent},
+        #{type},
+        #{serviceClassId},
+        #{servicePeopleName},
+        #{serviceId},
+        #{createTime}
+        )
+    </insert>
+    
+    <select id="findMallClass" parameterType="map" resultType="map">
+        select id,classification_name as productCategory,parent_id as pid,classification_code from mall_classification
+
+        where 1=1
+
+        <if test="productTypeId!=null and productTypeId!=''">
+            and classification_code = #{productTypeId}
+        </if>
+        <if test="pid!=null and pid!=null">
+            and id = #{pid}
+        </if>
+    </select>
+
+</mapper>

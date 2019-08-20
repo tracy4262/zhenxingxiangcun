@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ProxyMapper">
+	<select id="queryList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			t1.id AS id,
+			t1.${name} AS name,
+			t2.login_account AS account,
+			t2.${logo_url} as logo_url,
+			<if test="TABLE_NAME =='proxy_gov_info'">
+				t1.country_type as proxyType,
+			</if>
+			<if test="TABLE_NAME =='proxy_corp_info'">
+				t1.corp_type as proxyType,
+			</if>
+            DATE_FORMAT(t1.create_time,"%Y-%m-%d") AS createTime
+		FROM
+			${TABLE_NAME} t1 LEFT JOIN ${info_name} t2 ON t1.info_id=t2.id
+		WHERE 1=1
+			AND t2.approve_status = '3'
+			AND t1.approve_status = #{approve_status}
+		<if test="approve_status !='0' and approve_status!=''">
+			AND t1.login_account = #{loginAccount}
+		</if>
+		<if test="keyName != null and keyName != ''">
+			AND t1.${name} LIKE CONCAT('%',#{keyName},'%')
+		</if>
+
+		<if test="location != null and location != ''">
+			AND t1.location LIKE CONCAT('%',#{location},'%')
+		</if>
+		order by t1.create_time desc
+	</select>
+
+	<delete id="delProxy" parameterType="java.util.Map">
+		DELETE FROM
+			${TABLE_NAME}
+		WHERE
+			id = #{id}
+	</delete>
+
+	<update id="updateInfos" parameterType="java.util.Map">
+		update ${INFO_NAME} set approve_status= 1 where id=(select info_id from ${TABLE_NAME} where id = #{id})
+	</update>
+
+	<select id="findInfoAccount" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from  ${INFO_NAME}  where id=(select info_id from ${TABLE_NAME} where id = #{id})
+
+	</select>
+
+	<update id="updateLoginPassWd" parameterType="java.util.Map">
+		update login_user set login_passwd = #{login_passwd} where login_account = #{login_account}
+	</update>
+
+	<delete id="delLoginUser" parameterType="java.util.Map">
+		DELETE FROM
+		login_user
+		WHERE
+		login_account = (SELECT login_account FROM ${TABLE_NAME} WHERE id=#{id})
+	</delete>
+
+
+	<select id="queryStatus" parameterType="java.util.Map" resultType="java.util.Map">
+		 SELECT t.id,
+		 	 CASE t.infoType
+		 	 WHEN '1' THEN  '企业'
+		 	 WHEN '3' THEN  '机关'
+		 	 WHEN '5' THEN  '乡村'
+		 	 END as infoType,
+		 	 t.name,
+			 CASE t.approveStatus
+			 WHEN "0" THEN "待审核"
+			 WHEN "1" THEN "审核通过"
+			 WHEN "2" THEN "审核未通过"
+			 WHEN "3" THEN "审核通过"
+			 END  AS approveStatus,
+			 t.location,
+			  t.create_time,
+			 t.remark
+			 FROM (
+			SELECT c.id AS id,c.corp_type AS infoType,c.corp_name AS NAME,c.approve_status AS approveStatus,c.location as location,c.create_time as create_time,c.remark  FROM proxy_corp_info c WHERE c.login_account = #{login_account}
+			UNION ALL
+			SELECT g.id AS id,g.country_type AS infoType ,g.gov_name AS NAME ,g.approve_status AS approveStatus,g.location as location,g.create_time as create_time,g.remark  FROM proxy_gov_info g WHERE g.login_account = #{login_account}) t
+
+			WHERE 1=1
+
+			<if test="name != null and name != '' ">
+				AND t.name like concat(concat('%',#{name}),'%')
+			</if>
+
+			<if test="location != null and location != '' ">
+				AND t.location like concat(concat('%',#{location}),'%')
+			</if>
+
+		 order by t.create_time desc
+
+	</select>
+
+	<select id="queryStatusCorpDetail" parameterType="map" resultType="map">
+		SELECT 	id,
+			login_account,
+			corp_name,
+			business_scope,
+			credit_code,
+			legal_person,
+			identification_card,
+			identification_card_url,
+			create_time,
+			approve_status,
+			registered_capital,
+			establish_date,
+			busniss_term,
+			location,
+			company_type,
+			business_license_url,
+			company_address,
+			info_id,
+			corp_type,
+			addr_detail as addrDetail
+		FROM
+		proxy_corp_info
+		WHERE
+		id = #{id}
+	</select>
+
+	<select id="queryStatusGovDetail" parameterType="map" resultType="map">
+		SELECT
+			id,
+			gov_name,
+			login_account,
+			organization_code,
+			create_time,
+			approve_status,
+			gov_type,
+			gov_level,
+			location,
+			qualification_certificate_picture_list,
+			unit_person_picture_list,
+			address,
+			country_type,
+			info_id,
+			addr_detail as addrDetail
+		FROM
+			proxy_gov_info
+		WHERE
+			id = #{id}
+	</select>
+
+	<select id="queryInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		 SELECT
+		 	t.id,
+		 	CASE t.infoType
+		 	 WHEN '1' THEN  '企业'
+		 	 WHEN '3' THEN  '机关'
+		 	 WHEN '5' THEN  '乡村'
+		 	 END as infoType,
+		 	 t.name,
+			 CASE t.approveStatus
+			 WHEN "0" THEN "待审核"
+			 WHEN "1" THEN "审核通过"
+			 WHEN "2" THEN "审核未通过"
+			 WHEN "3" THEN "审核通过"
+			 END  AS approveStatus,
+			 t.location,
+			t.create_time,
+		     t.remark
+		 FROM (
+
+		SELECT c.id AS id,c.corp_type AS infoType,c.corp_name AS NAME,c.approve_status AS approveStatus,c.location as location,c.create_time as create_time,c.remark  FROM corp_info c WHERE c.agencyer = #{agencyer}
+
+		UNION ALL
+
+		SELECT g.id AS id,g.country_type AS infoType ,g.gov_name AS NAME ,g.approve_status AS approveStatus,g.location as location,g.create_time as create_time,g.remark  FROM gov_info g WHERE g.agencyer = #{agencyer}) t
+
+		WHERE 1=1
+
+		<if test="name != null and name != '' ">
+			AND 	t.name like concat(concat('%',#{name}),'%')
+		</if>
+
+		<if test="location != null and location != '' ">
+			AND  t.location like concat(concat('%',#{location}),'%')
+		</if>
+		order by t.create_time desc
+	</select>
+
+	<update id="updateInfo" parameterType="map">
+	  UPDATE
+	  	${TABLE_NAME}
+	  SET
+		approve_status = 3
+	  WHERE
+		id = #{id} ;
+	</update>
+
+	<select id="queryInfoCorpDetail" parameterType="map" resultType="map">
+		SELECT
+			id,
+			login_account,
+			corp_name,
+			business_scope,
+			credit_code,
+			legal_person,
+			mobile,
+			phone,
+			identification_card,
+			email,
+			identification_card_url,
+			create_time,
+			approve_status,
+			legal_person_introduce,
+			legal_person_url,
+			registered_capital,
+			establish_date,
+			busniss_term,
+			industry_type,
+			location,
+			company_type,
+			related_species,
+			related_product,
+			related_service,
+			company_profile,
+			logo_url,
+			business_license_url,
+			coordinate,
+			company_address,
+			corp_type,
+			agencyer,
+		addr_detail as addrDetail
+		FROM
+			corp_info
+		WHERE 1=1
+		  <if test="id !=null and id !=''">
+			 and id = #{id}
+		  </if>
+
+		 <if test="login_account !=null and login_account !=''">
+			and login_account = #{login_account}
+		 </if>
+
+
+	</select>
+
+	<select id="queryInfoGovDetail" parameterType="map" resultType="map">
+
+		SELECT
+			id,
+			gov_name,
+			login_account,
+			organization_code,
+			create_time,
+			approve_status,
+			gov_type,
+			gov_level,
+			location,
+			logo_picture_list,
+			qualification_certificate_picture_list,
+			unit_person_picture_list,
+			coordinate,
+			address,
+			country_type,
+			phone,
+			gov_profile,
+			agencyer,
+		addr_detail as addrDetail
+		FROM
+			gov_info
+	    WHERE 1=1
+			<if test="id !=null and id !=''">
+				and id = #{id}
+			</if>
+
+			<if test="login_account !=null and login_account !=''">
+				and login_account = #{login_account}
+			</if>
+
+	</select>
+
+
+	<select id="queryStatusById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			id AS id ,
+			type AS type ,
+			NAME AS NAME ,
+			account AS account ,
+			legal_name AS legal_name ,
+			credit_code AS credit_code ,
+			audit_status AS audit_status
+		FROM
+			agency_audit
+		WHERE
+			id = #{id}
+	</select>
+
+	<delete id="delProxyById" parameterType="java.lang.Integer">
+		DELETE FROM
+			agency_audit
+		WHERE
+			id = #{id}
+	</delete>
+
+	<insert id="addProxy" parameterType="java.util.Map">
+		INSERT INTO
+			agency_audit
+		(
+			type,
+			name,
+			account,
+			agencyer,
+			credit_code,
+			legal_name,
+			phone,
+			register_address,
+			agent_agreement_picture_list,
+			business_license_picture_list,
+			agent_identity_card_picture_list,
+			legal_identity_card_picture_list,
+			create_time
+		)
+		VALUES
+		(
+			#{type},
+			#{name},
+			#{account},
+			#{loginAccount},
+			#{creditCode},
+			#{legalName},
+			#{phone},
+			#{registerAddress},
+			#{agentAgreementPictureList},
+			#{businessLicensePictureList},
+			#{agentIdentityCardPictureList},
+			#{legalIdentityCardPictureList},
+			NOW()
+		)
+	</insert>
+
+	<select id="queryNameFromCorpOrGov" parameterType="map" resultType="map">
+		SELECT ${name} AS name,login_account AS proxyName FROM ${TABLE_NAME} WHERE info_id = #{id}
+	</select>
+	<select id="queryInfoById" parameterType="map" resultType="map">
+		SELECT
+			i.${name} AS name,
+			c.login_account as account,
+			i.login_account as agencyer,
+            t2.mobile,
+            t3.login_passwd AS loginPassword,
+            t3.display_name AS displayName
+        FROM
+            ${TABLE_NAME}  i left join ${INFO_NAME} c on i.info_id=c.id
+		LEFT JOIN certification t2 ON c.agencyer = t2.user_account
+        LEFT JOIN login_user t3 ON c.login_account = t3.login_account
+        WHERE
+			i.id = #{id}
+	</select>
+</mapper>

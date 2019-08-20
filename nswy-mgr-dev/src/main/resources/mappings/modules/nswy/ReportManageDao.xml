@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ReportManangeDao">
+	<select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.ReportManageInfo" resultType="com.ovit.manager.modules.nswy.entity.ReportManageInfo">
+        SELECT
+            id as reportId,
+            report_type as reportType,
+            report_type_name as reportTypeName,
+            user_type as userType,
+            user_type_name as userTypeName,
+            report_name as reportName,
+            report_remark as reportRemark,
+            report_file as reportFile,
+            report_file_name as reportFileName,
+            report_file_pdf as reportFilePdf,
+            create_time
+
+        FROM
+            reversion_report_manage_info
+
+        ORDER BY create_time desc
+    </select>
+
+    <select id="findReport" parameterType="java.lang.Integer" resultType="com.ovit.manager.modules.nswy.entity.ReportManageInfo">
+        SELECT
+            id as reportId,
+            report_type as reportType,
+            report_type_name as reportTypeName,
+            user_type as userType,
+            user_type_name as userTypeName,
+            report_name as reportName,
+            report_remark as reportRemark,
+            report_file as reportFile,
+            report_file_name as reportFileName,
+            report_file_pdf as reportFilePdf,
+            create_time
+
+        FROM
+            reversion_report_manage_info
+
+            where id = #{reportId,jdbcType=INTEGER}
+
+        ORDER BY create_time desc
+    </select>
+
+    <insert id="savePicture" parameterType="map">
+        INSERT INTO reversion_report_manage_info(
+          report_type,
+          report_type_name,
+          user_type,
+          user_type_name,
+          report_name,
+          report_remark,
+          report_file,
+          report_file_name,
+          report_file_pdf,
+          create_time
+        ) VALUES (
+          #{reportType},
+          #{reportTypeName},
+          #{userType},
+          #{userTypeName},
+          #{reportName},
+          #{reportRemark},
+          #{reportFile},
+          #{reportFileName},
+          #{reportFilePdf},
+          NOW()
+        )
+    </insert>
+
+    <update id="updateReport" parameterType="map">
+        update reversion_report_manage_info
+        <set>
+            <if test="reportType!=null">
+                report_type = #{reportType},
+            </if>
+            <if test="reportTypeName!=null">
+                report_type_name = #{reportTypeName},
+            </if>
+
+            <if test="userType!=null">
+                user_type = #{userType},
+            </if>
+            <if test="userTypeName!=null">
+                user_type_name = #{userTypeName},
+            </if>
+            <if test="reportName!=null">
+                report_name = #{reportName},
+            </if>
+            <if test="reportRemark!=null">
+                report_remark = #{reportRemark},
+            </if>
+            <if test="reportFile!=null">
+                report_file = #{reportFile},
+            </if>
+            <if test="reportFileName!=null">
+                report_file_name = #{reportFileName},
+            </if>
+            <if test="reportFilePdf!=null">
+                report_file_pdf = #{reportFilePdf},
+            </if>
+            create_time = now()
+        </set>
+
+        where id = #{reportId}
+    </update>
+
+
+    <insert id="saveReportType" parameterType="map">
+        INSERT INTO reversion_report_type_info(
+          report_type,
+          report_type_name,
+          create_time
+        ) VALUES (
+          #{reportType},
+          #{reportTypeName},
+          NOW()
+        )
+    </insert>
+
+    <select id="findReportType" parameterType="map" resultType="map">
+        select
+            report_type as reportType,
+            report_type_name as reportTypeName
+        from reversion_report_type_info
+
+        where 1=1
+        <if test="reportType!='' and reportType!=null">
+            and report_type = #{reportType};
+        </if>
+
+    </select>
+
+    <delete id="deleteReport" parameterType="java.lang.Integer">
+        delete from  reversion_report_manage_info  where id = #{id}
+    </delete>
+
+    <delete id="deleteReportType" parameterType="java.lang.Integer">
+        delete from  reversion_report_type_info  where id = #{id}
+    </delete>
+
+</mapper>

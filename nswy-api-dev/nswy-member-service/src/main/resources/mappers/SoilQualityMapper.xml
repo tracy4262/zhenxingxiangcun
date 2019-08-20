@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.SoilQualityMapper" >
+  <select id="query" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+      soil_id AS soilId,
+      cadmium_drought_range AS cadmiumDroughtRange,
+      cadmium_drought_content AS cadmiumDroughtContent,
+      cadmium_water_range AS cadmiumWaterRange,
+      cadmium_water_content AS cadmiumWaterContent,
+      mercury_drought_range AS mercuryDroughtRange,
+      mercury_water_range AS mercuryWaterRange,
+      mercury_water_content AS mercuryWaterContent,
+      arsenic_drought_range AS arsenicDroughtRange,
+      arsenic_drought_content AS arsenicDroughtContent,
+      arsenic_water_range AS arsenicWaterRange,
+      arsenic_water_content AS arsenicWaterContent,
+      lead_drought_range AS leadDroughtRange,
+      lead_drought_content AS leadDroughtContent,
+      lead_water_range AS leadWaterRange,
+      lead_water_content AS leadWaterContent,
+      chrome_drought_range AS chromeDroughtRange,
+      chrome_drought_content AS chromeDroughtContent,
+      chrome_water_range AS chromeWaterRange,
+      chrome_water_content AS chromeWaterContent,
+      copper_drought_range AS copperDroughtRange,
+      copper_drought_content AS copperDroughtContent,
+      copper_water_range AS copperWaterRange,
+      copper_water_content AS copperWaterContent,
+      mercury_drought_content AS mercuryDroughtContent
+    FROM
+      soil_quality
+    WHERE
+      product_id = #{productId}
+  </select>
+
+  <update id="update" parameterType="java.util.Map">
+      UPDATE
+        soil_quality
+      SET
+        cadmium_drought_range = #{cadmiumDroughtRange},
+        cadmium_drought_content = #{cadmiumDroughtContent},
+        cadmium_water_range = #{cadmiumWaterRange},
+        cadmium_water_content = #{cadmiumWaterContent},
+        mercury_drought_range = #{mercuryDroughtRange},
+        mercury_water_range = #{mercuryWaterRange},
+        mercury_water_content = #{mercuryWaterContent},
+        arsenic_drought_range = #{arsenicDroughtRange},
+        arsenic_drought_content = #{arsenicDroughtContent},
+        arsenic_water_range = #{arsenicWaterRange},
+        arsenic_water_content = #{arsenicWaterContent},
+        lead_drought_range = #{leadDroughtRange},
+        lead_drought_content = #{leadDroughtContent},
+        lead_water_range = #{leadWaterRange},
+        lead_water_content = #{leadWaterContent},
+        chrome_drought_range = #{chromeDroughtRange},
+        chrome_drought_content = #{chromeDroughtContent},
+        chrome_water_range = #{chromeWaterRange},
+        chrome_water_content = #{chromeWaterContent},
+        copper_drought_range = #{copperDroughtRange},
+        copper_drought_content = #{copperDroughtContent},
+        copper_water_range = #{copperWaterRange},
+        copper_water_content = #{copperWaterContent},
+        mercury_drought_content = #{mercuryDroughtContent}
+      WHERE
+        soil_id = #{soilId}
+  </update>
+
+  <insert id="add" parameterType="java.util.Map">
+      INSERT INTO
+        soil_quality
+      (
+        soil_id,
+        product_id,
+        cadmium_drought_range,
+        cadmium_drought_content,
+        cadmium_water_range,
+        cadmium_water_content,
+        mercury_drought_range,
+        mercury_water_range,
+        mercury_water_content,
+        arsenic_drought_range,
+        arsenic_drought_content,
+        arsenic_water_range,
+        arsenic_water_content,
+        lead_drought_range,
+        lead_drought_content,
+        lead_water_range,
+        lead_water_content,
+        chrome_drought_range,
+        chrome_drought_content,
+        chrome_water_range,
+        chrome_water_content,
+        copper_drought_range,
+        copper_drought_content,
+        copper_water_range,
+        copper_water_content,
+        mercury_drought_content
+      )
+      VALUES
+      (
+        UUID(),
+        #{productId},
+        #{cadmiumDroughtRange},
+        #{cadmiumDroughtContent},
+        #{cadmiumWaterRange},
+        #{cadmiumWaterContent},
+        #{mercuryDroughtRange},
+        #{mercuryWaterRange},
+        #{mercuryWaterContent},
+        #{arsenicDroughtRange},
+        #{arsenicDroughtContent},
+        #{arsenicWaterRange},
+        #{arsenicWaterContent},
+        #{leadDroughtRange},
+        #{leadDroughtContent},
+        #{leadWaterRange},
+        #{leadWaterContent},
+        #{chromeDroughtRange},
+        #{chromeDroughtContent},
+        #{chromeWaterRange},
+        #{chromeWaterContent},
+        #{copperDroughtRange},
+        #{copperDroughtContent},
+        #{copperWaterRange},
+        #{copperWaterContent},
+        #{mercuryDroughtContent}
+      )
+  </insert>
+</mapper>

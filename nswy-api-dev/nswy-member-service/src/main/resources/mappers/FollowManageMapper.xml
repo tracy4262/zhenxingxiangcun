@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.FollowManageMapper">
+
+
+	<select id="findSpecByAccount" parameterType="java.util.Map" resultType="map">
+		SELECT id, account, species_name as speciesName, field_name as fieldName, type, create_time, template_id as templateId FROM favorite_species
+		WHERE 1=1
+		<if test="account != null and account != ''">
+			AND account = #{account}
+		</if>
+		<if test="templateId != null and templateId != ''">
+			AND template_id = #{templateId}
+		</if>
+	</select>
+
+	<select id="findFllowDict" parameterType="map" resultType="map">
+		SELECT c.follow_id,c.sys_follow_dict_id as id ,c.follow_label as name,c.create_time ,c.account,f.value,f.label,f.parent_id as pid
+		FROM follow_info c
+		left join
+		(select s.label,s.value,d.id,d.parent_id from sys_follow_dict d left join sys_follow_dict s on d.parent_id = s.id  )
+
+		f on c.sys_follow_dict_id = f.id
+
+		WHERE 1=1
+		<if test="account !='' and account!=null">
+			AND c.account = #{account}
+		</if>
+		<if test="infoType !='' and infoType!=null">
+			AND c.follow_type = #{infoType}
+		</if>
+		<if test="templateId != null and templateId != ''">
+			AND c.template_id = #{templateId}
+		</if>
+	</select>
+
+	<select id="findFollowInfoByParentId" parameterType="map" resultType="map">
+		select f.label as name,f.value,f.parent_id as pid,f.id from sys_follow_dict f where id = #{pid}
+	</select>
+
+	<select id="findList" parameterType="map" resultType="map">
+        SELECT c.id, c.parent_id, c.label as name, c.value, c.type, c.create_time, c.remark
+        FROM sys_follow_dict c
+        WHERE c.type=#{follow_type} and c.parent_id=0
+    </select>
+
+	<select id="findFollowList" parameterType="map" resultType="map">
+		select
+			id,
+			account,
+			template_id as templateId,
+			label,
+			follow_value as value,
+			type,
+			follow_type as followType
+		from reversion_follow_manage_info
+
+		WHERE 1=1
+
+		<if test="type !='' and type !=null">
+			and type = #{type}
+		</if>
+
+		<if test="followType !='' and followType !=null">
+			and follow_type = #{followType}
+		</if>
+
+		<if test="label !='' and label !=null">
+			AND label LIKE CONCAT('%', #{label}, '%')
+
+		</if>
+
+		<if test="value !='' and value !=null">
+			AND follow_value  = #{value}
+
+		</if>
+
+		<if test="account !='' and account !=null">
+			and account = #{account}
+		</if>
+
+		<if test="templateId !='' and templateId !=null">
+			and template_id = #{templateId}
+		</if>
+
+		<if test="status !='' and status !=null">
+			and status = #{status}
+		</if>
+
+
+		order by create_time desc
+
+	</select>
+
+
+	<select id="findCountFollowManageInfo" parameterType="map" resultType="java.lang.Integer">
+		select count(*) as total from reversion_follow_manage_info where 1=1
+		<if test="account !='' and account !=null">
+			and account = #{account}
+		</if>
+
+		<if test="templateId !='' and templateId !=null">
+			and template_id = #{templateId}
+		</if>
+		<if test="followType !='' and followType !=null">
+			and follow_type = #{followType}
+		</if>
+		<if test="status !='' and status !=null">
+			and status = #{status}
+		</if>
+	</select>
+
+
+	<insert id="saveFollowInfo" parameterType="map">
+		insert into reversion_follow_manage_info (
+			account,
+			template_id,
+			label,
+			follow_value,
+			type,
+			follow_type,
+			create_time
+		)values (
+			#{account},
+			#{templateId},
+			#{label},
+			#{value},
+			#{type},
+			#{followType},
+			now()
+		);
+
+	</insert>
+
+
+	<delete id="deleteFollowInfo" parameterType="map">
+	  	update reversion_follow_manage_info set status = 1 where id = #{id}
+	</delete>
+
+
+
+	<select id="findLoginByMember" parameterType="map" resultType="map">
+		select
+		case when l.avatar is null then '' else l.avatar end as avatar,
+		l.login_account as account,
+		case when c.city is null then '' else c.city end as city,
+
+		case when m.memberName is null then '' else m.memberName end as memberName,
+
+		case when m.memberClass is null then '' else m.memberClass end as memberClass,
+
+		'0' as 'followType'
+
+
+		from
+
+		login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+		(select u.template_id as templateId,u.account
+
+		from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+		c on l.login_account  = c.account
+
+
+		left join (
+		select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+		(select u.template_id as templateId,u.account
+
+		from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+		group by m.user_id
+
+		order by m.create_time asc
+
+		) m on l.login_account = m.account
+
+		<if test="trade !=null and trade!=''">
+			left join (
+			select e.account,e.name,e.template_id as templateId from  reversion_eco_industry_info e left join
+
+			(select u.template_id as templateId,u.account
+
+			from reversion_user_template_manage u  where u.status = 1) s on e.account = s.account and e.`template_id`=s.templateid  where e.template_id is not null and s.templateId is not null
+			)
+
+			ei on l.login_account = ei.account
+		</if>
+
+		<if test="species !=null and species!=''">
+			left join (
+			select e.account,e.speci_name,e.template_id as templateId from  reversion_eco_breed_info e left join
+
+			(select u.template_id as templateId,u.account
+
+			from reversion_user_template_manage u  where u.status = 1) s on e.account = s.account and e.`template_id`=s.templateid  where e.template_id is not null and s.templateId is not null
+			)
+
+			eb on l.login_account = eb.account
+		</if>
+
+		<if test="service !=null and service!=''">
+			left join (
+			select e.account,e.service_name,e.template_id as templateId from  reversion_eco_service_product e left join
+
+			(select u.template_id as templateId,u.account
+
+			from reversion_user_template_manage u  where u.status = 1) s on e.account = s.account and e.`template_id`=s.templateid  where e.template_id is not null and s.templateId is not null
+			)
+
+			es on l.login_account = es.account
+		</if>
+
+		<if test="product !=null and product!=''">
+			left join (
+
+			select e.account,e.product_name,e.template_id as templateId from  (select f.product_name,f.account,f.template_id  from reversion_eco_farm_product f
+
+			union all
+
+			select t.product_name,t.account,t.template_id  from reversion_eco_technical_product t ) e left join
+
+			(select u.template_id as templateId,u.account
+
+			from reversion_user_template_manage u  where u.status = 1) s on e.account = s.account and e.`template_id`=s.templateid  where e.template_id is not null and s.templateId is not null
+
+			)
+
+			et on l.login_account = et.account
+		</if>
+
+
+		where 1=1
+		<if test="city !=null and city!=''">
+			and c.city like concat('%',#{city},'%')
+		</if>
+		<if test="trade !=null and trade!=''">
+			and ei.name  like concat('%',#{trade},'%')
+		</if>
+		<if test="species !=null and species!=''">
+			and eb.speci_name  like concat('%',#{species},'%')
+		</if>
+		<if test="service !=null and service!=''">
+			and es.service_name  like concat('%',#{service},'%')
+		</if>
+		<if test="product !=null and product!=''">
+			and et.product_name  like concat('%',#{product},'%')
+		</if>
+
+		<if test="keyword !=null and keyword!=''">
+			and l.login_account like concat('%',#{keyword},'%')
+
+			union all
+
+			select
+
+			case when l.avatar is null then '' else l.avatar end as avatar,
+			l.login_account as account,
+			case when c.city is null then '' else c.city end as city,
+
+			case when m.memberName is null then '' else m.memberName end as memberName,
+
+			case when m.memberClass is null then '' else m.memberClass end as memberClass,'0' as 'followType'
+
+			from login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+			(select u.template_id as templateId,u.account
+
+			from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+			c on l.login_account  = c.account
+
+
+			left join (
+			select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+			(select u.template_id as templateId,u.account
+
+			from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+			group by m.user_id
+
+			order by m.create_time asc
+			) m on l.login_account = m.account
+			<if test="trade !=null and trade!=''">
+				left join (
+				select e.account,e.name,e.template_id as templateId from  reversion_eco_industry_info e left join
+
+				(select u.template_id as templateId,u.account
+
+				from reversion_user_template_manage u  where u.status = 1) s on e.account = s.account and e.`template_id`=s.templateid  where e.template_id is not null and s.templateId is not null
+				)
+			</if>
+
+			<if test="species !=null and species!=''">
+				left join (
+				select e.account,e.speci_name,e.template_id as templateId from  reversion_eco_breed_info e left join
+
+				(select u.template_id as templateId,u.account
+
+				from reversion_user_template_manage u  where u.status = 1) s on e.account = s.account and e.`template_id`=s.templateid  where e.template_id is not null and s.templateId is not null
+				)
+
+				eb on l.login_account = eb.account
+			</if>
+
+			<if test="service !=null and service!=''">
+				left join (
+				select e.account,e.service_name,e.template_id as templateId from  reversion_eco_service_product e left join
+
+				(select u.template_id as templateId,u.account
+
+				from reversion_user_template_manage u  where u.status = 1) s on e.account = s.account and e.`template_id`=s.templateid  where e.template_id is not null and s.templateId is not null
+				)
+
+				es on l.login_account = es.account
+			</if>
+
+			<if test="product !=null and product!=''">
+				left join (
+
+				select e.account,e.product_name,e.template_id as templateId from  (select f.product_name,f.account,f.template_id  from reversion_eco_farm_product f
+
+				union all
+
+				select t.product_name,t.account,t.template_id  from reversion_eco_technical_product t ) e left join
+
+				(select u.template_id as templateId,u.account
+
+				from reversion_user_template_manage u  where u.status = 1) s on e.account = s.account and e.`template_id`=s.templateid  where e.template_id is not null and s.templateId is not null
+
+				)
+
+				et on l.login_account = et.account
+			</if>
+
+
+			where m.memberName like concat('%',#{keyword},'%')
+			<if test="city !=null and city!=''">
+				and c.city like concat('%',#{city},'%')
+			</if>
+			<if test="trade !=null and trade!=''">
+				and ei.name  like concat('%',#{trade},'%')
+			</if>
+			<if test="species !=null and species!=''">
+				and eb.speci_name  like concat('%',#{species},'%')
+			</if>
+			<if test="service !=null and service!=''">
+				and es.service_name  like concat('%',#{service},'%')
+			</if>
+			<if test="product !=null and product!=''">
+				and et.product_name  like concat('%',#{product},'%')
+			</if>
+		</if>
+
+		<if test="memberClass !=nul and memberClass!=''">
+			and m.memberClass like  concat('%',#{memberClass},'%')
+		</if>
+		<if test="companyType !=nul and companyType!=''">
+			and m.memberClass like  concat('%',#{companyType},'%')
+		</if>
+		<if test="organType !=nul and organType!=''">
+			and m.memberClass like  concat('%',#{organType},'%')
+		</if>
+
+	</select>
+
+	<select id="findFollowMemberInfo" parameterType="map" resultType="map">
+		select id,account,follow_account as followAccount,member_name as memberName from reversion_follow_member_info where account = #{account}
+
+	</select>
+
+	<select id="findLoginByMemberList" parameterType="map" resultType="map">
+		select * from (select
+			f.id,
+			f.account,
+			f.follow_account as followAccount,
+			(select memberName from (select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left 				join (select u.template_id as templateId,u.account
+			from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+			group by m.user_id
+			order by m.create_time asc ) m  where m.account = f.follow_account) as memberName,
+			l.avatar,
+			(select o.avatar from login_user o where o.login_account = f.account ) as followAvatar,
+			(select m.member_name as memberName from  reversion_member_aptitude_real_info m where m.user_id = f.account and m.template_id = (select
+				template_id from reversion_user_template_manage u  where u.account = f.account and u.status = 1) order by m.create_time asc LIMIT 1) as followAccountName,
+			f.create_time
+		from reversion_follow_member_info f  left join login_user l on f.follow_account = l.login_account) f
+
+		where 1=1
+		<if test="account !=null and account!=''">
+			and  f.account = #{account}
+		</if>
+		<if test="followAccount !=null and followAccount!=''">
+			and  f.followAccount = #{followAccount}
+		</if>
+
+		<if test="keyword !=null and keyword!=''">
+			and (f.account like concat('%',#{keyword},'%') or f.memberName  like concat('%',#{keyword},'%') or f.followAccount like concat('%',#{keyword},'%'))
+
+		</if>
+
+		order by f.create_time desc
+
+
+	</select>
+
+
+
+	<insert id="insertFollowMemberInfo" parameterType="map">
+		insert into reversion_follow_member_info (
+			account,
+			follow_account,
+			member_name,
+			create_time
+		) values (
+			#{account},
+			#{followAccount},
+			#{memberName},
+			now()
+		);
+	</insert>
+
+	<update id="updateFollowMemberInfo" parameterType="map">
+		update reversion_follow_member_info set follow_status =#{followType}   where id = #{id}
+	</update>
+
+	<delete id="deleteFollowMemberInfo" parameterType="map" >
+		delete from reversion_follow_member_info where id = #{id}
+	</delete>
+
+
+	<select id="findExpertInfo" parameterType="map" resultType="map">
+		select e.account,e.expert_name as memberName,
+
+		case when l.avatar is null then '' else l.avatar end as avatar,
+
+		case when l.city is null then '' else l.city end as city,'0' as 'followType'
+
+		from reversion_expert_auth e left join
+
+		(select u.avatar,u.login_account,c.city   from
+
+		login_user u left join certification c on u.login_account  = c.user_account) l
+
+
+		on e.account = l.login_account
+
+		where 1=1
+		<if test="city !=null and city!=''">
+			and l.city like concat('%',#{city},'%')
+		</if>
+		<if test="keyword !=null and keyword!=''">
+			and (e.account like concat('%',#{keyword},'%') or e.expert_name  like concat('%',#{keyword},'%'))
+		</if>
+		<if test="expertType !=null and expertType!=''">
+			and e.expert_type like concat('%',#{expertType},'%')
+		</if>
+		<if test="expertise !=null and expertise!=''">
+			and e.adept_field like concat('%',#{expertise},'%')
+		</if>
+		<if test="trade !=null and trade!=''">
+			and e.related_industry like concat('%',#{trade},'%')
+		</if>
+		<if test="species !=null and species!=''">
+			and e.related_species like concat('%',#{species},'%')
+		</if>
+		<if test="service !=null and service!=''">
+			and e.related_service like concat('%',#{service},'%')
+		</if>
+
+	</select>
+
+</mapper>

@@ -1,0 +1,137 @@
+
+//字体图标
+//-----------------------------------------------------
+$font-icon-path              : '/static/font/iconfont';
+$font-icon-name              : 'iconfont';
+$font-svg-id                 : 'iconfont';
+
+// @include font-face($font-icon-name,$font-icon-path,normal,normal);
+@font-face {
+    font-family: iconfont;
+    font-weight: 400;
+    font-style: normal;
+    src: url('#{$font-icon-path}.eot');
+    src: url('#{$font-icon-path}.eot?#iefix') format('eot'),
+         url('#{$font-icon-path}.svg#iconfont') format('svg'),
+         url('#{$font-icon-path}.woff') format('woff'),
+         url('#{$font-icon-path}.ttf') format('truetype')
+}
+
+[class^="icon-"],
+[class*=" icon-"]{
+    position: relative;
+    line-height: 1;
+    &:before{
+        display: inline-block;
+        vertical-align: middle;
+        font-family: $font-icon-name;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+.icon-phone:before { content: "\e600"; }
+
+.icon-icon:before { content: "\e610"; }
+
+.icon-msnui-share:before { content: "\e677"; }
+
+.icon-farming:before { content: "\e620"; }
+
+.icon-instr:before { content: "\e6da"; }
+
+.icon-jiage:before { content: "\e615"; }
+
+.icon-followus:before { content: "\e649"; }
+
+.icon-bianji:before { content: "\e669"; }
+
+.icon-solid-man:before { content: "\e63c"; }
+
+.icon-solid-house:before { content: "\e60e"; }
+
+.icon-cuowu:before { content: "\e62d"; }
+
+.icon-certificate:before { content: "\e65b"; }
+
+.icon-agent:before { content: "\e63f"; }
+
+.icon-pick:before { content: "\e63e"; }
+
+.icon-solie-ruler:before { content: "\e645"; }
+
+.icon-label:before { content: "\e627"; }
+
+.icon-record:before { content: "\e80b"; }
+
+.icon-trophy:before { content: "\e6aa"; }
+
+.icon-rice:before { content: "\e694"; }
+
+.icon-solid-line:before { content: "\e636"; }
+
+.icon-warehouse:before { content: "\e613"; }
+
+.icon-fishing:before { content: "\e60c"; }
+
+.icon-workshop:before { content: "\e60f"; }
+
+.icon-desk:before { content: "\e6a8"; }
+
+.icon-notice:before { content: "\e61a"; }
+
+.icon-confirm-password:before { content: "\e6a7"; }
+
+.icon-desc:before { content: "\e605"; }
+
+.icon-asce:before { content: "\e606"; }
+
+.icon-xiugai:before { content: "\e70e"; }
+
+.icon-produce:before { content: "\e63b"; }
+
+.icon-holl-gold:before { content: "\e854"; }
+
+.icon-holl-team:before { content: "\e604"; }
+
+.icon-drawer:before { content: "\e619"; }
+
+.icon-gift:before { content: "\e601"; }
+
+.icon-desc-default:before { content: "\e607"; }
+
+.icon-gov:before { content: "\e60b"; }
+
+.icon-dingwei:before { content: "\e612"; }
+
+.icon-laud:before { content: "\e60d"; }
+
+.icon-arrow-right:before { content: "\e602"; }
+
+.icon-book:before { content: "\e611"; }
+
+.icon-holl-hammer:before { content: "\e603"; }
+
+.icon-field:before { content: "\e608"; }
+
+.icon-machine:before { content: "\e609"; }
+
+.icon-shucaiguaguo:before { content: "\e60a"; }
+
+.icon-company:before { content: "\e68f"; }
+
+.icon-relation:before { content: "\e717"; }
+
+.icon-solid-hat:before { content: "\e679"; }
+
+.icon-news:before { content: "\e621"; }
+
+.icon-recruit:before { content: "\e614"; }
+
+.icon-spade:before { content: "\e617"; }
+
+.icon-file:before { content: "\e661"; }
+
+.icon-star:before { content: "\e640"; }
+

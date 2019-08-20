@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.LandEnvironmentalMapper">
+    <select id="queryLandInfoEnvironmental" parameterType="map" resultType="map">
+        SELECT
+            environmental_indicators_id AS environmentalIndicatorsId,
+            land_id AS landId,
+            soil_ph AS soilPH,
+            ground_water_depth AS groundWaterDepth,
+            gradient AS gradient,
+            network_forest AS networkForest,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM
+            land_environmental_indicators_info
+        WHERE
+            land_id = #{landId}
+    </select>
+
+    <insert id="saveOrUpdateLandInfoEnvironmental" parameterType="map">
+        <!--查询记录是否存在-->
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(land_id) FROM land_environmental_indicators_info WHERE land_id = #{landId}
+        </selectKey>
+        <!--存在则修改-->
+        <if test="count > 0">
+            UPDATE
+                land_environmental_indicators_info
+            SET
+                environmental_indicators_id = #{environmentalIndicatorsId},
+                land_id = #{landId},
+                soil_ph = #{soilPH},
+                ground_water_depth = #{groundWaterDepth},
+                gradient = #{gradient},
+                network_forest = #{networkForest}
+            WHERE
+                land_id = #{landId}
+        </if>
+        <!--不存在则新增-->
+        <if test="count ==0">
+            INSERT INTO land_environmental_indicators_info (
+                environmental_indicators_id,
+                land_id,
+                soil_ph,
+                ground_water_depth,
+                gradient,
+                network_forest,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{landId},
+                #{soilPH},
+                #{groundWaterDepth},
+                #{gradient},
+                #{networkForest},
+                NOW()
+            )
+        </if>
+    </insert>
+
+    <select id="queryIsExit" parameterType="map" resultType="map">
+        SELECT
+            soil_ph AS soilPH,
+            ground_water_depth AS groundWaterDepth,
+            gradient AS gradient,
+            network_forest AS networkForest
+        FROM
+            land_environmental_indicators_info
+        WHERE
+            land_id = #{landId}
+    </select>
+
+</mapper>

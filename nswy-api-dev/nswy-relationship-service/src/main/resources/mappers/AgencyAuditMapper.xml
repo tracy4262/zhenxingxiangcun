@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.relationship.mapper.AgencyAuditMapper">
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.relationship.model.AgencyAudit">
+    <id column="audit_id" jdbcType="INTEGER" property="auditId" />
+    <result column="auditor" jdbcType="VARCHAR" property="auditor" />
+    <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
+    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+  </resultMap>
+
+  <select id="findAgencyAuditDetail" resultType="com.ovit.nswy.relationship.model.response.AgencyAuditDTO">
+    select agency.agency_type as agencyType,
+      agency.agency_name AS agencyName,
+   agency.agent_account AS agentAccount,
+    agency.legal_person AS legalPerson,
+    agency.credit_code AS creditCode,
+    agencyAudit.audit_id AS auditId,
+    agencyAudit.audit_status AS auditStatus
+    from agency AS agency LEFT JOIN agency_audit AS agencyAudit ON agency.agency_id=agencyAudit.agency_id
+    where 1=1
+    <if test="userId != null" >
+      agencyAudit.auditor=#{userId}
+    </if>
+  </select>
+</mapper>

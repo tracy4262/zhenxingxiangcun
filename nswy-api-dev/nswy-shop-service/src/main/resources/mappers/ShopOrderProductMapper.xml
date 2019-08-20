@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.shop.pushTemplate.mapper.ShopOrderProductMapper" >
+
+
+  <select id="findByOrderCode" resultType="map" parameterType="java.lang.String">
+    SELECT id,order_code_id as orderCodeId,commodity_type_info_id as commodityId,product_name as productName,product_pic as productPic
+    ,amount,`number`, case when logistic_amount is null then 0.00 else logistic_amount end  as logisticAmount,
+    product_output_unit as productOutputUnit,seller_account as sellerAccount
+    FROM  shop_order_product
+    WHERE
+    order_code_id =  #{code}
+  </select>
+
+  <select id="findExtendByOrderCode" resultType="map" parameterType="java.lang.String">
+    SELECT id,product_name as productName,product_pic as productPic
+    ,amount,`number`, case when logistic_amount is null then 0.00 else logistic_amount end  as logisticAmount,product_output_unit as productOutputUnit
+    ,seller_account as sellerAccount
+    FROM  shop_order_product
+    WHERE
+    order_code_id =  #{code}
+  </select>
+
+  <select id="selectExtendByOrderCode" resultType="map" parameterType="map">
+    SELECT id,order_code_id as orderCode,commodity_type_info_id as commodityId,product_name as productName,product_pic as productPic
+    ,amount,`number`, case when logistic_amount is null then 0.00 else logistic_amount end  as logisticAmount,product_output_unit as productOutputUnit
+      ,seller_account as sellerAccount
+    FROM  shop_order_product
+    WHERE 1=1
+      <if test="code!=null and code!=''">
+          and order_code_id =  #{code}
+      </if>
+
+      <if test="account!=null and account!=''">
+          and seller_account = #{account}
+      </if>
+
+      <if test="productName!=null and productName!=''">
+          and product_name like CONCAT('%',#{productName,jdbcType=VARCHAR},'%')
+      </if>
+
+  </select>
+
+
+    <select id="selectByOrderCodeBuy" resultType="map" parameterType="map">
+        SELECT id,order_code_id as orderCode,commodity_type_info_id as commodityId,product_name as productName,product_pic as productPic
+        ,amount,`number`, case when logistic_amount is null then 0.00 else logistic_amount end  as logisticAmount,product_output_unit as productOutputUnit
+        ,seller_account as sellerAccount
+        FROM  shop_order_product
+        WHERE 1=1
+        <if test="code!=null and code!=''">
+            and order_code_id =  #{code}
+        </if>
+
+        <if test="sellerAccount!=null and sellerAccount!=''">
+            and seller_account = #{sellerAccount}
+        </if>
+
+
+        <if test="productName!=null and productName!=''">
+            and product_name like CONCAT('%',#{productName,jdbcType=VARCHAR},'%')
+        </if>
+
+    </select>
+
+  <insert id="saveShopOrderProduct" parameterType="map">
+    insert into shop_order_product (
+      order_code_id,
+      commodity_type_info_id,
+      seller_account,
+      product_name,
+      product_pic,
+      amount,
+      `number`,
+      logistic_amount,
+      product_output_unit
+    )values
+    (
+          #{orderCodeId},
+          #{commodityId},
+          #{sellerAccount},
+          #{productName},
+          #{productPic},
+          #{amount},
+          #{number},
+          #{logisticAmount},
+          #{productOutputUnit}
+        )
+  </insert>
+</mapper>

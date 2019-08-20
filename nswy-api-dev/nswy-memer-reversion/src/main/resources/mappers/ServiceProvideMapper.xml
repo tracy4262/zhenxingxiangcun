@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.ServiceProvideMapper">
+
+    <select id="find" parameterType="map" resultType="map">
+        select id, year_file_id as yearId, provide_status as status, service_name as serviceName,
+        classification, create_time as createTimes, picture as pictureList,template_id as templateId
+        from reversion_provide_service
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </select>
+
+    <insert id="save" parameterType="map">
+        replace into reversion_provide_service (
+        id,
+        account,
+        year_file_id,
+        provide_status,
+        service_name,
+        classification,
+        create_time,
+        picture,
+        template_id
+        )values (
+        #{id},
+        #{account},
+        #{yearId},
+        #{status},
+        #{serviceName},
+        #{classification},
+        #{createTimes},
+        #{pictureList},
+        #{templateId}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from reversion_provide_service where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.PolicyDetailMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.PolicyDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="browse_number" property="browseNumber" jdbcType="INTEGER" />
+		<result column="is_report" property="isReport" jdbcType="INTEGER" />
+		<result column="editer" property="editer" jdbcType="VARCHAR" />
+		<result column="previous_id" property="previousId" jdbcType="INTEGER" />
+		<result column="previous_title" property="previousTitle" jdbcType="VARCHAR" />
+		<result column="next_id" property="nextId" jdbcType="INTEGER" />
+		<result column="next_title" property="nextTitle" jdbcType="VARCHAR" />
+		<result column="thumb_up_num" property="thumbUpNum" jdbcType="INTEGER" />
+		<result column="label" property="label" jdbcType="VARCHAR" />
+        <result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="ycauthor" property="ycAuthor" jdbcType="VARCHAR"/>
+		<result column="summary" property="summary" jdbcType="VARCHAR"/>
+		<result column="imageAdd" property="imageAdd" jdbcType="VARCHAR"/>
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.ovit.nswy.member.model.PolicyDetail"
+		extends="BaseResultMap">
+        <result column="informationDetailId" property="information_detail_id" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="LONGVARBINARY" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, title, create_time, source, browse_number, is_report, editer,
+		previous_id, previous_title,
+		next_id, next_title,thumb_up_num,label,account,ycauthor
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from policy_detail
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findPolicyDetail" resultType="java.util.Map" parameterType="java.lang.Integer">
+		SELECT
+		i.id as id, i.title, i.create_time as createTime, i.source, i.browse_number as browseNumber, i.is_report as isReport, i.editer,
+		i.previous_id as previousId, i.previous_title as previousTitle,
+		i.next_id as nextId, i.next_title as nextTitle, i.thumb_up_num as thumbUpNum,i.label,i.account,i.ycauthor,i.content
+		,f.column_type AS columnType,f.doc_type AS docType,f.id AS informationId,f.abstracts
+
+	   	FROM  policy_detail i LEFT JOIN policy f ON i.id=f.information_detail_id
+
+		where i.id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findColumnPolicy" resultMap="ResultMapWithBLOBs"
+		parameterType="com.ovit.nswy.member.model.PolicyDetail">
+		select
+		t1.id, t1.title, t1.create_time, t1.source, t1.browse_number, t1.is_report, t1.editer,
+		t1.previous_id, t1.previous_title,
+		t1.next_id, t1.next_title,t1.thumb_up_num,t1.label,t1.account,t1.ycauthor,t1.content,
+		t2.column_type
+		from policy_detail t1
+		LEFT JOIN policy t2 ON t1.id = t2.information_detail_id
+		where t1.account=#{account}
+		<if test="label != '全部'">
+			and t1.label like concat(concat('%',#{label}),'%')
+		</if>
+		order by t1.create_time desc
+	</select>
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.PolicyDetail" useGeneratedKeys="true" keyProperty="id">
+		insert into policy_detail (id, title, create_time,
+		source, browse_number, is_report,
+		editer, previous_id, previous_title,
+		next_id, next_title, content,label,account,ycauthor
+		)
+		values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{source,jdbcType=VARCHAR}, 0, #{isReport,jdbcType=INTEGER},
+		#{editer,jdbcType=VARCHAR}, #{previousId,jdbcType=INTEGER},
+		#{previousTitle,jdbcType=VARCHAR},
+		#{nextId,jdbcType=INTEGER}, #{nextTitle,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARBINARY}
+		,#{label,jdbcType=VARCHAR},#{account,jdbcType=VARCHAR},#{ycAuthor,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateThumbUpNum" parameterType="com.ovit.nswy.member.model.PolicyDetail">
+		update policy_detail
+		set
+		thumb_up_num = thumb_up_num + 1
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="findBySpeciesName" parameterType="map" resultType="com.ovit.nswy.member.model.PolicyDetail">
+		SELECT i.*,f.column_type AS columnType, CASE f.doc_type WHEN '030201' THEN '政策法规'
+		WHEN '030202' THEN '政策解读'
+		WHEN '030203' THEN '通知公告'
+		WHEN '030209' THEN '党务动态'
+		WHEN '030210' THEN '政务动态'
+		WHEN '030204' THEN '村务公开'
+		WHEN '030205' THEN '党务公开'
+		WHEN '030306' THEN '公告公示'
+		WHEN '030207' THEN '政务法规'
+		WHEN '030208' THEN '政务公开'
+		ELSE '政策' END as docType, f.id AS informationId,f.abstracts,b.cover_photo,b.author
+		FROM  policy_detail i LEFT JOIN policy f ON i.id=f.information_detail_id
+		LEFT JOIN information_book_info b ON i.id= b.information_detail_id  where
+		<foreach collection="list" item="item" index="index" separator="or" open="("  close=")">
+			(f.species_name like concat(concat('%',#{item}),'%'))
+		</foreach>
+		<if test="key !='' and key!=null">
+			and i.title like concat(concat('%',#{key},'%'))
+		</if>
+		order by create_time desc
+	</select>
+    <select id="newpolicy" resultMap="ResultMapWithBLOBs">
+        SELECT * FROM policy WHERE approve_status = 2 ORDER BY create_time DESC LIMIT 5;
+    </select>
+
+	<select id="selectMinId" resultType="java.lang.Integer" >
+		select min(id) from policy_detail
+	</select>
+	<select id="selectMaxId" resultType="java.lang.Integer" >
+		select max(id) from policy_detail
+	</select>
+
+	<select id="findPolicyDetailLeftPolicy" resultMap="ResultMapWithBLOBs" parameterType="java.util.Map">
+		SELECT
+		i.*,f.column_type AS columnType,CASE f.doc_type WHEN '030201' THEN '政策法规'
+		WHEN '030202' THEN '政策解读'
+		WHEN '030203' THEN '通知公告'
+		WHEN '030209' THEN '党务动态'
+		WHEN '030210' THEN '政务动态'
+		WHEN '030204' THEN '村务公开'
+		WHEN '030205' THEN '党务公开'
+		WHEN '030306' THEN '公告公示'
+		WHEN '030207' THEN '政务法规'
+		WHEN '030208' THEN '政务公开'
+		ELSE '政策' END as docType,f.id as informationId,f.abstracts as summary,b.cover_photo as coverPhoto,b.author,i.create_time as createTime,f.imageAdd
+		FROM policy_detail i
+		LEFT JOIN (SELECT id,doc_type,column_type,information_detail_id,abstracts,image_add as imageAdd FROM policy  WHERE information_detail_id IN (SELECT id FROM policy_detail  WHERE account=#{account}) ) f
+		ON i.id=f.information_detail_id
+		LEFT JOIN information_book_info b ON i.id=b.information_detail_id
+		where i.account=#{account}
+		<if test="label != '全部'">
+			and i.label like concat(concat('%',#{label}),'%')
+		</if>
+		<if test ="docType !=null and docType !=''">
+			and f.doc_type = #{docType}
+		</if>
+		order by i.create_time desc
+	</select>
+
+	<select id="relevantPolicy" parameterType="map" resultType="com.ovit.nswy.member.model.PolicyDetail">
+		SELECT i.*,f.column_type AS columnType, CASE f.doc_type WHEN '030201' THEN '政策法规'
+		WHEN '030202' THEN '政策解读'
+		WHEN '030203' THEN '通知公告'
+		WHEN '030209' THEN '党务动态'
+		WHEN '030210' THEN '政务动态'
+		WHEN '030204' THEN '村务公开'
+		WHEN '030205' THEN '党务公开'
+		WHEN '030306' THEN '公告公示'
+		WHEN '030207' THEN '政务法规'
+		WHEN '030208' THEN '政务公开'
+		ELSE '政策' END as docType, f.id AS informationId,f.abstracts,b.cover_photo,b.author
+		FROM  policy_detail i LEFT JOIN policy f ON i.id=f.information_detail_id
+		LEFT JOIN information_book_info b ON i.id= b.information_detail_id
+		where f.species_id like concat('%',#{speciesId},'%')
+		and f.approve_status = 2
+		order by create_time desc
+	</select>
+
+</mapper>

@@ -1,0 +1,1044 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.shop.plantInfo.mapper.PlantInfoMapper">
+
+    <select id="findPlantYearInfo" parameterType="map" resultType="map">
+        select
+            id,
+            account,
+            year_file_name as fileName
+        from reversion_plant_year_info
+
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="fileName !=null and fileName!=''">
+            and year_file_name = #{fileName}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and id = #{yearId}
+        </if>
+        order by year_file_name
+
+    </select>
+
+    <insert id="savePlantYearInfo" parameterType="map">
+        insert into reversion_plant_year_info (
+        id,
+        account,
+        year_file_name
+        ) values (
+        #{id},
+        #{account},
+        #{fileName}
+        )
+    </insert>
+
+    <delete id="deletePlantYearInfo" parameterType="map">
+        delete from reversion_plant_year_info where id = #{id}
+    </delete>
+
+
+    <select id="findPlantSpeciesInfo" parameterType="map" resultType="map">
+        select
+            id,
+            account,
+            year_id as yearId,
+            species_id as speciesId,
+            species_name as speciesName,
+            species_image as image
+
+        from reversion_plant_wiki_info
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="speciesId!=null and speciesId!=''">
+            and species_id = #{speciesId}
+        </if>
+
+
+        order by create_time desc
+
+    </select>
+
+    <insert id="savePlantSpeciesInfo" parameterType="map">
+        insert into reversion_plant_wiki_info(
+            id,
+            account,
+            year_id,
+            species_id,
+            species_name,
+            species_image,
+            create_time
+        )values (
+            #{id},
+            #{account},
+            #{yearId},
+            #{speciesId},
+            #{speciesName},
+            #{image},
+            now()
+        );
+    </insert>
+
+    <delete id="deletePlantSpeciesInfo" parameterType="map">
+        delete from reversion_plant_wiki_info where id = #{id}
+    </delete>
+    
+    <select id="findPlantProductionInfo" parameterType="map" resultType="map">
+        select  p.id,
+                p.account,
+                p.year_id as yearId,
+                y.year_file_name as fileName,
+                p.serial_number as serialNumber,
+                p.wiki_id as wikiId,
+                w.species_id as speciesId,
+                w.species_name as species,
+                p.variety_id as varietyNameId,
+                p.variety_name as varietyName,
+                p.variety_source as varietySource,
+                p.sown_area as sownArea,
+                p.sown_time as sowingTime,
+                p.base_id as baseId
+        from reversion_plant_production_info p
+
+        left join reversion_plant_wiki_info w on p.wiki_id = w.id
+
+        left join reversion_plant_year_info y on p.year_id = y.id
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and p.account = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and p.year_id = #{yearId}
+        </if>
+        <if test="wikiId!=null and wikiId!=''">
+            and p.wiki_id = #{wikiId}
+        </if>
+        <if test="serialNumber!=null and serialNumber!=''">
+            and p.serial_number = #{serialNumber}
+        </if>
+
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+        order by p.create_time desc
+    </select>
+
+
+    <select id="findProductionBase" parameterType="map" resultType="map">
+        select
+            id as baseId,
+            base_name as baseName,
+            land_id as landId,
+            land
+        from reversion_production_base
+
+        where 1=1
+        <if test="baseId !=null and baseId!=''">
+            and id = #{baseId}
+        </if>
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+
+    </select>
+
+
+    <select id="findMaxId" parameterType="map" resultType="map">
+        select max(id) as id from reversion_plant_production_info
+    </select>
+
+    <insert id="saveOrUpdatePlantProduction" parameterType="map">
+        replace into reversion_plant_production_info(
+                id,
+                account,
+                year_id,
+                serial_number,
+                wiki_id,
+                species,
+                variety_id,
+                variety_name,
+                variety_source,
+                sown_area,
+                sown_time,
+                base_id,
+                create_time
+        )values (
+                #{id},
+                #{account},
+                #{yearId},
+                #{serialNumber},
+                #{wikiId},
+                #{species},
+                #{varietyNameId},
+                #{varietyName},
+                #{varietySource},
+                #{sownArea},
+                #{sowingTime},
+                #{baseId},
+                now()
+        );
+    </insert>
+
+    <delete id="deletePlantProductionInfo" parameterType="map">
+        delete from reversion_plant_production_info where id = #{id}
+    </delete>
+
+    <select id="findPlantOutputInfo" parameterType="map" resultType="map">
+
+        select
+
+        		o.id,
+                o.account,
+                o.year_id as yearId,
+                o.wiki_id as wikiId,
+                o.reward_type as rewardType,
+                o.output_time as outputTime,
+                o.product_name as productName,
+                o.production,
+        		o.production_id as productionId,
+        		o.serial_number as serialNumber,
+                o.unit,
+        		p.variety_id as varietyNameId,
+                p.variety_name as varietyName,
+                p.variety_source as varietySource,
+                p.sown_area as sownArea,
+                p.sown_time as sowingTime,
+                p.species,
+                p.base_id as baseId
+
+        from reversion_plant_output_calculation_info o
+
+        left join reversion_plant_production_info p on o.production_id = p.id
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and o.account = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and o.year_id = #{yearId}
+        </if>
+        <if test="wikiId!=null and wikiId!=''">
+            and o.wiki_id = #{wikiId}
+        </if>
+        <if test="productionId!=null and productionId!=''">
+            and o.production_id = #{productionId}
+        </if>
+        <if test="serialNumber!=null and serialNumber!=''">
+            and o.serial_number =#{serialNumber}
+        </if>
+        <if test="productName!=null and productName!=''">
+            and o.product_name like concat('%',#{productName},'%')
+        </if>
+
+        <if test="id!=null and id!=''">
+            and o.id = #{id}
+        </if>
+        order by o.create_time desc
+    </select>
+
+
+    <insert id="saveOrUpdatePlantOutputInfo" parameterType="map">
+        replace into reversion_plant_output_calculation_info(
+                id,
+                account,
+                year_id,
+                wiki_id,
+                reward_type,
+                output_time,
+                product_name,
+                production,
+        		production_id,
+        		serial_number,
+        		unit,
+                create_time
+        )values (
+                #{id},
+                #{account},
+                #{yearId},
+                #{wikiId},
+                #{rewardType},
+                #{outputTime},
+                #{productName},
+                #{production},
+                #{productionId},
+                #{serialNumber},
+                #{unit},
+                now()
+        );
+    </insert>
+
+    <delete id="deletePlantOutputInfo" parameterType="map">
+        delete from reversion_plant_output_calculation_info where id = #{id}
+    </delete>
+
+    <select id="findPlantTitleInfo" parameterType="map" resultType="map">
+        select
+          id,
+          title_name as name,
+          value
+
+        from reversion_plant_production_title_info
+
+        order by order_number asc
+    </select>
+
+    <select id="findPlantSowInfo" parameterType="map" resultType="map">
+
+        select
+
+            s.id,
+            s.account,
+            s.year_id as yearId,
+            s.wiki_id as wikiId,
+            s.sowing_count as sowingCount,
+            s.sown_user as sownUser,
+            s.seed_code as seedCode,
+            s.seed_name as seedName,
+            s.producer,
+            s.production_id as productionId,
+            s.serial_number as serialNumber,
+            s.unit,
+            p.variety_id as varietyNameId,
+            p.variety_source as varietySource,
+            p.sown_area as sownArea,
+            p.sown_time as sowingTime,
+            p.species,
+            p.base_id as baseId
+
+        from reversion_plant_sow_info s
+
+        left join reversion_plant_production_info p on s.production_id = p.id
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and s.account = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and s.year_id = #{yearId}
+        </if>
+        <if test="wikiId!=null and wikiId!=''">
+            and s.wiki_id = #{wikiId}
+        </if>
+        <if test="productionId!=null and productionId!=''">
+            and s.production_id = #{productionId}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            <![CDATA[ and p.sown_time  >=  #{beginTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+
+            <![CDATA[ and p.sown_time  <=  #{endTime}  ]]>
+        </if>
+
+        <if test="sowingTime!=null and sowingTime!=''">
+            and p.sown_time =#{sowingTime}
+        </if>
+
+        <if test="serialNumber!=null and serialNumber!=''">
+            and s.serial_number =#{serialNumber}
+        </if>
+        <if test="seedName!=null and seedName!=''">
+            and s.seed_name like concat('%',#{seedName},'%')
+        </if>
+
+        <if test="id!=null and id!=''">
+            and s.id = #{id}
+        </if>
+        order by s.create_time desc
+    </select>
+
+
+    <insert id="saveOrUpdatePlantSowInfo" parameterType="map">
+        replace into reversion_plant_sow_info(
+                id,
+                account,
+                year_id,
+                wiki_id,
+                sowing_count,
+                sown_user,
+                seed_code,
+                seed_name,
+                producer,
+        		production_id,
+        		serial_number,
+        		unit,
+                create_time
+        )values (
+                #{id},
+                #{account},
+                #{yearId},
+                #{wikiId},
+                #{sowingCount},
+                #{sownUser},
+                #{seedCode},
+                #{seedName},
+                #{producer},
+                #{productionId},
+                #{serialNumber},
+                #{unit},
+                now()
+        );
+    </insert>
+    
+
+
+    <delete id="deletePlantSowInfo" parameterType="map">
+        delete from reversion_plant_sow_info where id = #{id}
+    </delete>
+
+
+    <select id="findTextPreviewInfo" parameterType="map" resultType="map">
+         select
+            id as previewId,
+            account,
+            year_id as yearId,
+            wiki_id as wikiId,
+            text_preview as textPreview,
+            serial_number as serialNumber,
+            plant_id as plantId,
+            plant_parent_id as plantParentId
+
+        from reversion_plant_text_preview
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and account =#{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and year_id =#{yearId}
+        </if>
+        <if test="wikiId!=null and wikiId!=''">
+            and wiki_id =#{wikiId}
+        </if>
+        <if test="serialNumber!=null and serialNumber!=''">
+            and serial_number =#{serialNumber}
+        </if>
+        <if test="plantId!=null and plantId!=''">
+            and plant_id =#{plantId}
+        </if>
+        <if test="plantParentId!=null and plantParentId!=''">
+            and plant_parent_id =#{plantParentId}
+        </if>
+        <if test="previewId!=null and previewId!=''">
+            and id = #{previewId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveOrUpdateTextPreviewInfo" parameterType="map" >
+        replace into reversion_plant_text_preview(
+            id,
+            account,
+            year_id,
+            wiki_id,
+            text_preview,
+            serial_number,
+            plant_id,
+            plant_parent_id,
+            create_time
+        ) values (
+            #{id},
+            #{account},
+            #{yearId},
+            #{wikiId},
+            #{textPreview},
+            #{serialNumber},
+            #{plantId},
+            #{plantParentId},
+            now()
+        )
+    </insert>
+
+
+    <select id="findAllTextPreviewList" parameterType="map" resultType="map">
+        select
+        id as previewId,
+        account,
+        year_id as yearId,
+        wiki_id as wikiId,
+        text_preview as textPreview,
+        serial_number as serialNumber,
+        plant_id as plantId,
+        plant_parent_id as plantParentId
+
+        from reversion_plant_all_text_preview
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and account =#{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and year_id =#{yearId}
+        </if>
+        <if test="wikiId!=null and wikiId!=''">
+            and wiki_id =#{wikiId}
+        </if>
+        <if test="serialNumber!=null and serialNumber!=''">
+            and serial_number =#{serialNumber}
+        </if>
+        <if test="plantId!=null and plantId!=''">
+            and plant_id =#{plantId}
+        </if>
+        <if test="plantParentId!=null and plantParentId!=''">
+            and plant_parent_id =#{plantParentId}
+        </if>
+        <if test="previewId!=null and previewId!=''">
+            and id = #{previewId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveOrUpdateAllTextPreview" parameterType="map" >
+        replace into reversion_plant_all_text_preview(
+            id,
+            account,
+            year_id,
+            wiki_id,
+            text_preview,
+            serial_number,
+            plant_id,
+            plant_parent_id,
+            create_time
+        ) values (
+            #{id},
+            #{account},
+            #{yearId},
+            #{wikiId},
+            #{textPreview},
+            #{serialNumber},
+            #{plantId},
+            #{plantParentId},
+            now()
+        )
+    </insert>
+
+    <select id="findPlantFertilizeInfo" parameterType="map" resultType="map">
+
+        select
+
+            s.id,
+            s.account,
+            s.year_id as yearId,
+            s.wiki_id as wikiId,
+            s.fertilize_time as fertilizeTime,
+            s.fertilize_count as fertilizeCount,
+            s.fertilize_user as fertilizeUser,
+            s.fertilize_code as fertilizeCode,
+            s.fertilize_name as fertilizeName,
+            s.producer,
+            s.production_id as productionId,
+            s.serial_number as serialNumber,
+            s.unit,
+            p.variety_id as varietyNameId,
+            p.variety_name as varietyName,
+            p.variety_source as varietySource,
+            p.sown_area as sownArea,
+            p.sown_time as sowingTime,
+            p.species,
+            p.base_id as baseId
+
+        from reversion_plant_fertilize_info s
+
+        left join reversion_plant_production_info p on s.production_id = p.id
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and s.account = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and s.year_id = #{yearId}
+        </if>
+        <if test="wikiId!=null and wikiId!=''">
+            and s.wiki_id = #{wikiId}
+        </if>
+        <if test="productionId!=null and productionId!=''">
+            and s.production_id = #{productionId}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            <![CDATA[ and s.fertilize_time  >=  #{beginTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+
+            <![CDATA[ and s.fertilize_time  <=  #{endTime}  ]]>
+        </if>
+        <if test="fertilizeTime!=null and fertilizeTime!=''">
+            and s.fertilize_time =#{fertilizeTime}
+        </if>
+
+        <if test="serialNumber!=null and serialNumber!=''">
+            and s.serial_number =#{serialNumber}
+        </if>
+        <if test="fertilizeName!=null and fertilizeName!=''">
+            and s.fertilize_name like concat('%',#{fertilizeName},'%')
+        </if>
+
+        <if test="id!=null and id!=''">
+            and s.id = #{id}
+        </if>
+        order by s.create_time desc
+    </select>
+
+
+    <insert id="saveOrUpdatePlantFertilizeInfo" parameterType="map">
+        replace into reversion_plant_fertilize_info(
+                id,
+                account,
+                year_id,
+                wiki_id,
+                fertilize_time,
+                fertilize_count,
+                fertilize_user,
+                fertilize_code,
+                fertilize_name,
+                producer,
+        		production_id,
+        		serial_number,
+        		unit,
+                create_time
+        )values (
+                #{id},
+                #{account},
+                #{yearId},
+                #{wikiId},
+                #{fertilizeTime},
+                #{fertilizeCount},
+                #{fertilizeUser},
+                #{fertilizeCode},
+                #{fertilizeName},
+                #{producer},
+                #{productionId},
+                #{serialNumber},
+                #{unit},
+                now()
+        );
+    </insert>
+
+
+
+    <delete id="deletePlantFertilizeInfo" parameterType="map">
+        delete from reversion_plant_fertilize_info where id = #{id}
+    </delete>
+
+
+    <select id="findPlantMedicineInfo" parameterType="map" resultType="map">
+
+        select
+
+        s.id,
+        s.account,
+        s.year_id as yearId,
+        s.wiki_id as wikiId,
+        s.medicine_time as medicineTime,
+        s.medicine_count as medicineCount,
+        s.medicine_user as medicineUser,
+        s.medicine_code as medicineCode,
+        s.medicine_name as medicineName,
+        s.prevent,
+        s.concentration,
+        s.concentration_unit as concentrationUnit,
+        s.producer,
+        s.production_id as productionId,
+        s.serial_number as serialNumber,
+        s.medicine_count_unit as medicineCountUnit,
+        p.variety_id as varietyNameId,
+        p.variety_name as varietyName,
+        p.variety_source as varietySource,
+        p.sown_area as sownArea,
+        p.sown_time as sowingTime,
+        p.species,
+        p.base_id as baseId
+
+        from reversion_plant_medicine_info s
+
+        left join reversion_plant_production_info p on s.production_id = p.id
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and s.account = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and s.year_id = #{yearId}
+        </if>
+        <if test="wikiId!=null and wikiId!=''">
+            and s.wiki_id = #{wikiId}
+        </if>
+        <if test="productionId!=null and productionId!=''">
+            and s.production_id = #{productionId}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            <![CDATA[ and s.medicine_time  >=  #{beginTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+
+            <![CDATA[ and s.medicine_time  <=  #{endTime}  ]]>
+        </if>
+
+        <if test="medicineTime!=null and medicineTime!=''">
+            and s.medicine_time =#{medicineTime}
+        </if>
+
+        <if test="serialNumber!=null and serialNumber!=''">
+            and s.serial_number =#{serialNumber}
+        </if>
+        <if test="medicineName!=null and medicineName!=''">
+            and s.medicine_name like concat('%',#{medicineName},'%')
+        </if>
+
+        <if test="id!=null and id!=''">
+            and s.id = #{id}
+        </if>
+        order by s.create_time desc
+    </select>
+
+
+    <insert id="saveOrUpdatePlantMedicineInfo" parameterType="map">
+        replace into reversion_plant_medicine_info(
+                id,
+                account,
+                year_id,
+                wiki_id,
+                medicine_time,
+                medicine_count,
+                medicine_user,
+                medicine_code,
+                medicine_name,
+                prevent,
+                concentration,
+                concentration_unit,
+                producer,
+        		production_id,
+        		serial_number,
+        		medicine_count_unit,
+                create_time
+        )values (
+                #{id},
+                #{account},
+                #{yearId},
+                #{wikiId},
+                #{medicineTime},
+                #{medicineCount},
+                #{medicineUser},
+                #{medicineCode},
+                #{medicineName},
+                #{prevent},
+                #{concentration},
+                #{concentrationUnit},
+                #{producer},
+                #{productionId},
+                #{serialNumber},
+                #{medicineCountUnit},
+                now()
+        );
+    </insert>
+
+
+
+    <delete id="deletePlantMedicineInfo" parameterType="map">
+        delete from reversion_plant_medicine_info where id = #{id}
+    </delete>
+
+    <select id="findPlantResearchInfo" parameterType="map" resultType="map">
+
+        select
+
+        s.id,
+        s.account,
+        s.year_id as yearId,
+        s.wiki_id as wikiId,
+        o.product_name as productName,
+        s.product_name_id as productNameId,
+        s.research_time as researchTime,
+        s.research_count as researchType,
+        s.research_area as researchArea,
+        s.all_research as allResearch,
+        s.research_output as researchOutput,
+        s.research_reason as researchReason,
+        s.unit,
+        s.production_id as productionId,
+        s.serial_number as serialNumber,
+        p.variety_id as varietyNameId,
+        p.variety_name as varietyName,
+        p.variety_source as varietySource,
+        p.sown_area as sownArea,
+        p.sown_time as sowingTime,
+        p.species,
+        p.base_id as baseId,
+        o.production
+
+        from reversion_plant_research_info s
+
+        left join reversion_plant_production_info p on s.production_id = p.id
+
+        left join reversion_plant_output_calculation_info o on s.product_name_id = o.id
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and s.account = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and s.year_id = #{yearId}
+        </if>
+        <if test="wikiId!=null and wikiId!=''">
+            and s.wiki_id = #{wikiId}
+        </if>
+        <if test="productionId!=null and productionId!=''">
+            and s.production_id = #{productionId}
+        </if>
+
+        <if test="beginTime != null and beginTime != ''">
+            <![CDATA[ and s.research_time  >=  #{beginTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+
+            <![CDATA[ and s.research_time  <=  #{endTime}  ]]>
+        </if>
+
+        <if test="researchTime!=null and researchTime!=''">
+            and s.research_time =#{researchTime}
+        </if>
+
+        <if test="serialNumber!=null and serialNumber!=''">
+            and s.serial_number =#{serialNumber}
+        </if>
+        <if test="productName!=null and productName!=''">
+            and s.product_name like concat('%',#{productName},'%')
+        </if>
+
+        <if test="id!=null and id!=''">
+            and s.id = #{id}
+        </if>
+        order by s.create_time desc
+    </select>
+
+
+    <insert id="saveOrUpdatePlantResearchInfo" parameterType="map">
+        replace into reversion_plant_research_info(
+                id,
+                account,
+                year_id,
+                wiki_id,
+                product_name,
+                product_name_id,
+                research_time,
+                research_count,
+                research_area,
+                all_research,
+                research_output,
+                research_reason,
+                unit,
+        		production_id,
+        		serial_number,
+                create_time
+        )values (
+                #{id},
+                #{account},
+                #{yearId},
+                #{wikiId},
+                #{productName},
+                #{productNameId},
+                #{researchTime},
+                #{researchType},
+                #{researchArea},
+                #{allResearch},
+                #{researchOutput},
+                #{researchReason},
+                #{unit},
+                #{productionId},
+                #{serialNumber},
+                now()
+        );
+    </insert>
+
+
+
+    <delete id="deletePlantResearchInfo" parameterType="map">
+        delete from reversion_plant_research_info where id = #{id}
+    </delete>
+
+
+    <select id="findPlantHarvestInfo" parameterType="map" resultType="map">
+
+        select
+
+        s.id,
+        s.account,
+        s.year_id as yearId,
+        s.wiki_id as wikiId,
+        s.product_name as productName,
+        s.product_name_id as productNameId,
+        s.harvest_time as harvestTime,
+        s.harvest_product as harvestProduct,
+        s.harvest_area as harvestArea,
+        s.harvest_plot as harvestPlot,
+        s.harvest_total as harvestTotal,
+        s.average_output as averageOutput,
+        s.harvest_user as harvestUser,
+        s.harvest_product_code as harvestProductCode,
+        s.unit,
+        s.production_id as productionId,
+        s.serial_number as serialNumber,
+        p.variety_id as varietyNameId,
+        p.variety_name as varietyName,
+        p.variety_source as varietySource,
+        p.sown_area as sownArea,
+        p.sown_time as sowingTime,
+        p.species,
+        p.base_id as baseId
+
+        from reversion_plant_harvest_info s
+
+        left join reversion_plant_production_info p on s.production_id = p.id
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and s.account = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and s.year_id = #{yearId}
+        </if>
+        <if test="wikiId!=null and wikiId!=''">
+            and s.wiki_id = #{wikiId}
+        </if>
+        <if test="productionId!=null and productionId!=''">
+            and s.production_id = #{productionId}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            <![CDATA[ and s.harvest_time  >=  #{beginTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+
+            <![CDATA[ and s.harvest_time  <=  #{endTime}  ]]>
+        </if>
+        <if test="harvestTime!=null and harvestTime!=''">
+            and s.harvest_time =#{harvestTime}
+        </if>
+
+        <if test="serialNumber!=null and serialNumber!=''">
+            and s.serial_number =#{serialNumber}
+        </if>
+        <if test="productName!=null and productName!=''">
+            and s.product_name like concat('%',#{productName},'%')
+        </if>
+        <if test="harvestProduct!=null and harvestProduct!=''">
+            and s.harvest_product like concat('%',#{harvestProduct},'%')
+        </if>
+
+        <if test="id!=null and id!=''">
+            and s.id = #{id}
+        </if>
+        order by s.create_time desc
+    </select>
+
+
+    <insert id="saveOrUpdatePlantHarvestInfo" parameterType="map">
+        replace into reversion_plant_harvest_info(
+                id,
+                account,
+                year_id,
+                wiki_id,
+                product_name,
+                product_name_id,
+                harvest_time,
+                harvest_product,
+                harvest_area,
+                harvest_plot,
+                harvest_total,
+                average_output,
+                harvest_user,
+                unit,
+        		production_id,
+        		serial_number,
+        		harvest_product_code,
+                create_time
+        )values (
+                #{id},
+                #{account},
+                #{yearId},
+                #{wikiId},
+                #{productName},
+                #{productNameId},
+                #{harvestTime},
+                #{harvestProduct},
+                #{harvestArea},
+                #{harvestPlot},
+                #{harvestTotal},
+                #{averageOutput},
+                #{harvestUser},
+                #{unit},
+                #{productionId},
+                #{serialNumber},
+                #{harvestProductCode},
+                now()
+        );
+    </insert>
+
+
+
+    <delete id="deletePlantHarvestInfo" parameterType="map">
+        delete from reversion_plant_harvest_info where id = #{id}
+    </delete>
+
+
+    <select id="findPlantCustomInfo" parameterType="map" resultType="map">
+
+        select
+
+        s.id,
+        s.account,
+        s.year_id as yearId,
+        s.wiki_id as wikiId,
+        s.custom_file as custom
+
+        from reversion_plant_custom_info s
+
+        where 1=1
+        <if test="account!=null and account!=''">
+            and s.account = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and s.year_id = #{yearId}
+        </if>
+        <if test="wikiId!=null and wikiId!=''">
+            and s.wiki_id = #{wikiId}
+        </if>
+
+        <if test="id!=null and id!=''">
+            and s.id = #{id}
+        </if>
+        order by s.create_time desc
+    </select>
+
+
+    <insert id="saveOrUpdatePlantCustomInfo" parameterType="map">
+        replace into reversion_plant_custom_info(
+                id,
+                account,
+                year_id,
+                wiki_id,
+                custom_file,
+                create_time
+        )values (
+                #{id},
+                #{account},
+                #{yearId},
+                #{wikiId},
+                #{custom},
+                now()
+        );
+    </insert>
+
+
+
+    <delete id="deletePlantCustomInfo" parameterType="map">
+        delete from reversion_plant_custom_info where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.UserHonorMapper" >
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.UserHonor" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="honor" property="honor" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, account, time, honor, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_honor
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectByAccount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from user_honor
+        where account = #{account,jdbcType=VARCHAR}
+    </select>
+  <delete id="deleteByAccount" parameterType="java.lang.String" >
+    delete from user_honor
+    where account = #{account,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.ovit.nswy.member.model.UserHonor" >
+    <![CDATA[insert into user_honor (id, account, time,
+      honor, status)
+    values
+    ]]>
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.id}, #{item.account}, #{item.time},
+      #{item.honor}, #{item.status})
+    </foreach>
+
+  </insert>
+
+
+
+</mapper>

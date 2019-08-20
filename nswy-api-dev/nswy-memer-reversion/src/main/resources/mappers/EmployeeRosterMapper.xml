@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.EmployeeRosterMapper">
+
+    <select id="findEmployeeRoster" parameterType="map" resultType="map">
+        select
+
+        id,user_id,employee_roster_name,number,name,sex,card,date_of_birth,householder,job,phone,
+
+        nation,partisan,faith,special_crowd,address,house_number,custom_field,
+
+        status,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,
+        year_id,template_id as templateId
+
+        from reversion_employee_roster  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <update id="updateEmployeeRosterName" parameterType="map">
+        update reversion_employee_roster set employee_roster_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveEmployeeRoster" parameterType="map">
+          replace into reversion_employee_roster (
+                id,
+                user_id,
+                staff_account,
+                employee_roster_name,
+                number,
+                name,
+                sex,
+                card,
+                date_of_birth,
+                householder,
+                job,
+                phone,
+                nation,
+                partisan,
+                faith,
+                special_crowd,
+                address,
+                house_number,
+                custom_field,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{staffAccount},
+                #{employee_roster_name},
+                #{number},
+                #{name},
+                #{sex},
+                #{card},
+                #{date_of_birth},
+                #{householder},
+                #{job},
+                #{phone},
+                #{nation},
+                #{partisan},
+                #{faith},
+                #{special_crowd},
+                #{address},
+                #{house_number},
+                #{custom_field},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+    <delete id="deleteEmployeeRoster" parameterType="map">
+
+        delete from reversion_employee_roster where id = #{id}
+    </delete>
+
+    <delete id="deleteListOfExtraStaff" parameterType="map">
+
+        delete from reversion_list_of_extra_staff where id = #{id}
+    </delete>
+
+
+
+    <select id="findListOfExtraStaff" parameterType="map" resultType="map">
+        select
+
+        id,user_id,list_of_extra_staff_name,number,name,sex,card,date_of_birth,householder,phone,
+
+        nation,partisan,faith,address,house_number,custom_field,
+
+        status,year_id,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,template_id as templateId
+
+        from reversion_list_of_extra_staff  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <update id="updateListOfExtraStaffName" parameterType="map">
+        update reversion_list_of_extra_staff set list_of_extra_staff_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveListOfExtraStaff" parameterType="map">
+          replace into reversion_list_of_extra_staff (
+                id,
+                user_id,
+                list_of_extra_staff_name,
+                number,
+                name,
+                sex,
+                card,
+                date_of_birth,
+                householder,
+                phone,
+                nation,
+                partisan,
+                faith,
+                address,
+                house_number,
+                custom_field,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{list_of_extra_staff_name},
+                #{number},
+                #{name},
+                #{sex},
+                #{card},
+                #{date_of_birth},
+                #{householder},
+                #{phone},
+                #{nation},
+                #{partisan},
+                #{faith},
+                #{address},
+                #{house_number},
+                #{custom_field},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+    <insert id="insertLogin" parameterType="java.util.Map">
+		insert into login_user ( unique_id, login_account,display_name,
+		login_passwd, register_time,user_type
+		)
+		values (
+		#{unique_id},#{farm_account},#{name},#{login_passwd},now(),#{user_type}
+		)
+	</insert>
+
+</mapper>

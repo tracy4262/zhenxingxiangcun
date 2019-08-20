@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.ShopInvoicePersonalMapper">
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.portal.model.ShopInvoicePersonal">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <resultMap id="DetailResultMap" type="com.ovit.nswy.portal.model.ShopInvoicePersonal">
+  <!--
+    WARNING - @mbggenerated
+  -->
+  <id column="id" jdbcType="INTEGER" property="id" />
+  <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+  <result column="email" jdbcType="VARCHAR" property="email" />
+</resultMap>
+
+  <select id="findByAccount" resultMap="DetailResultMap" parameterType="java.lang.String">
+    SELECT t1.id,t1.mobile,t1.email
+    FROM  shop_invoice_personal t1
+    WHERE
+    t1.account =  #{account}
+    limit 1
+  </select>
+</mapper>

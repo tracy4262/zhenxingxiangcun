@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.FavoritePolicyMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.FavoritePolicy">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="refer_species" property="referSpecies"
+			jdbcType="INTEGER" />
+		<result column="refer_service" property="referService"
+			jdbcType="INTEGER" />
+		<result column="refer_product" property="referProduct"
+			jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.ovit.nswy.member.model.FavoritePolicy"
+		extends="BaseResultMap">
+		<result column="category" property="category" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, refer_species, refer_service, refer_product, create_time
+	</sql>
+	<sql id="Blob_Column_List">
+		category
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from favorite_policy
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByAccount" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from favorite_policy
+		where account = #{account,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.FavoritePolicy">
+		replace into favorite_policy (id, account, refer_species,
+		refer_service, refer_product, create_time,
+		category)
+		values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR},
+		#{referSpecies,jdbcType=INTEGER},
+		#{referService,jdbcType=INTEGER}, #{referProduct,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+		#{category,jdbcType=LONGVARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.FavoritePolicy">
+		update favorite_policy
+		set account = #{account,jdbcType=VARCHAR},
+		refer_species = #{referSpecies,jdbcType=INTEGER},
+		refer_service = #{referService,jdbcType=INTEGER},
+		refer_product = #{referProduct,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

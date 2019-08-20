@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.LandPhysicalMapper">
+    <select id="queryLandInfoPhysical" parameterType="map" resultType="map">
+        SELECT
+            physical_id AS physicalId,
+            land_id AS landId,
+            `character` AS physicalCharacter,
+            volume_weight AS volumeWeight,
+            waterstable_aggregate AS waterstableAggregate,
+            porosity AS porosity,
+            plough_temperature AS ploughTemperature,
+            soil_thickness AS soilThickness,
+            soil_water_content AS soilWaterContent,
+            clay_content AS clayContent,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM
+            land_physical_info
+        WHERE
+            land_id = #{landId}
+    </select>
+
+    <insert id="saveOrUpdateLandInfoPhysical" parameterType="map">
+        <!--查询记录是否存在-->
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(land_id) FROM land_physical_info WHERE land_id = #{landId}
+        </selectKey>
+        <!--存在则修改-->
+        <if test="count > 0">
+            UPDATE
+                land_physical_info
+            SET
+                land_id = #{landId},
+                `character` = #{physicalCharacter},
+                volume_weight = #{volumeWeight},
+                waterstable_aggregate = #{waterstableAggregate},
+                porosity = #{porosity},
+                plough_temperature = #{ploughTemperature},
+                soil_thickness = #{soilThickness},
+                soil_water_content = #{soilWaterContent},
+                clay_content = #{clayContent}
+            WHERE
+                land_id = #{landId}
+        </if>
+        <!--不存在则新增-->
+        <if test="count ==0">
+            INSERT INTO land_physical_info (
+                physical_id,
+                land_id,
+                `character`,
+                volume_weight,
+                waterstable_aggregate,
+                porosity,
+                plough_temperature,
+                soil_thickness,
+                soil_water_content,
+                clay_content,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{landId},
+                #{physicalCharacter},
+                #{volumeWeight},
+                #{waterstableAggregate},
+                #{porosity},
+                #{ploughTemperature},
+                #{soilThickness},
+                #{soilWaterContent},
+                #{clayContent},
+                NOW()
+            )
+        </if>
+    </insert>
+
+    <select id="queryIsExit" parameterType="map" resultType="map">
+        SELECT
+            `character` AS physicalCharacter,
+            volume_weight AS volumeWeight,
+            waterstable_aggregate AS waterstableAggregate,
+            porosity AS porosity,
+            plough_temperature AS ploughTemperature,
+            soil_thickness AS soilThickness,
+            soil_water_content AS soilWaterContent,
+            clay_content AS clayContent
+        FROM
+            land_physical_info
+        WHERE
+            land_id = #{landId}
+    </select>
+
+</mapper>

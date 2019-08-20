@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryUnitDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryUnit"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryUnit">
+
+       select * from (
+            select id+(select unit_type from reversion_unit_type_info order by id desc limit 0,1) as id,unit_name as name,level,unit_type as pid,remark,calculate_unit as calculateUnit,modulus,value from unit
+            union all
+            select unit_type as id,unit_type_name as name,level,'0' as pid,null,null,null,null from reversion_unit_type_info) u
+        where 1=1
+        <if test="id!=null and id!=''">
+            and id = #{id}
+        </if>
+        <if test="name!=null and name!=''">
+            and name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="level!=null and level!=''">
+            and level = #{level}
+        </if>
+
+    </select>
+
+    <select id="findUnit" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryUnit"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryUnit">
+        select id+(select unit_type from reversion_unit_type_info order by id desc limit 0,1) as id ,unit_name as name,level,unit_type as pid,remark,calculate_unit as calculateUnit,modulus,value from unit
+    </select>
+
+    <select id="findTopUnit" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryUnit"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryUnit">
+        select unit_type as id,unit_type_name as name,level,'0' as pid from reversion_unit_type_info
+    </select>
+
+    <select id="findUnitType" parameterType="map" resultType="map">
+        select
+            unit_type as unitType,
+            unit_type_name as unitTypeName
+
+        from reversion_unit_type_info
+
+
+    </select>
+
+    <select id="findMaxUnitType" resultType="java.lang.Integer">
+        select unit_type as unitType from reversion_unit_type_info order by id desc limit 0,1
+    </select>
+
+
+    <insert id="saveUnit" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryUnit">
+        insert into unit(
+
+            unit_name,
+            unit_type,
+            calculate_unit,
+            modulus,
+            value,
+            remark,
+            level
+        )values (
+
+                    #{name},
+                    #{unitType},
+                    #{calculateUnit},
+                    #{modulus},
+                    #{value},
+                    #{remark},
+                    #{level}
+                );
+    </insert>
+
+    <insert id="saveTopUnit" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryUnit">
+        insert into reversion_unit_type_info(
+            unit_type_name,
+            unit_type,
+            remark,
+            level
+        )values (
+
+                    #{name},
+                    #{unitType},
+                    #{remark},
+                    #{level}
+                );
+    </insert>
+
+    <update id="updateUnit" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryUnit">
+        update unit
+        <set>
+            <if test="name !=null">
+                unit_name = #{name},
+            </if>
+            <if test="unitType !=null">
+                unit_type = #{unitType},
+            </if>
+            <if test="calculateUnit !=null">
+                calculate_unit = #{calculateUnit},
+            </if>
+            <if test="modulus !=null">
+                modulus = #{modulus},
+            </if>
+            <if test="value != null">
+                value = #{value},
+            </if>
+            <if test="remark != null">
+                remark = #{remark}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateTopUnit" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryUnit">
+        update reversion_unit_type_info
+        <set>
+            <if test="name !=null">
+                unit_type_name = #{name}
+            </if>
+        </set>
+        where unit_type = #{id}
+    </update>
+
+    <delete id="deleteUnit" parameterType="java.lang.String">
+        delete from unit where id = #{id}
+    </delete>
+
+    <delete id="deleteTopUnit" parameterType="java.lang.String">
+        delete from reversion_unit_type_info where unit_type = #{id}
+    </delete>
+</mapper>

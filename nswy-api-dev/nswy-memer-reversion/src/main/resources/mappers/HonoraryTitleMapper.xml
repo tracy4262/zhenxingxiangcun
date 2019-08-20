@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.HonoraryTitleMapper">
+
+    <select id="findHonoraryTitle" parameterType="map" resultType="java.util.Map">
+        select
+            h.id,
+            h.user_id,
+            h.honorary_name as honorName,
+            h.honorary_time as year,
+            h.issuing_department as awardUnit,
+            h.image as honorPictureList,
+            h.status,
+            h.year_id as yearId,
+            DATE_FORMAT(h.create_time,"%Y-%m-%d %T")as create_time,
+            template_id as templateId,
+            honorary_reason as reason,
+            honorary_level as honorRank,
+            honorary_unit as unitName,
+            honorary_unit_rank as unitRank,
+            honorary_person_rank as personalRank,
+            honorary_person as personalNameList,
+            issuing_time as awardTime,
+            issuing_number as awardNumber
+
+        from reversion_honorary_title_info h
+        where 1=1
+        <if test="user_id !='' and user_id!=null">
+            and h.user_id = #{user_id}
+        </if>
+        <if test="year_id !='' and year_id!=null">
+            and h.year_id = #{yearId}
+        </if>
+        <if test="templateId !='' and templateId!=null">
+            and h.template_id = #{templateId}
+        </if>
+        order by h.create_time desc
+    </select>
+
+
+    <update id="updateHonoraryTitleName" parameterType="map">
+        update reversion_honorary_title_info set honorary_title_name = #{honorName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveHonoraryTitle" parameterType="map">
+        replace into reversion_honorary_title_info (
+                id,
+                user_id,
+                honorary_name,
+                honorary_time,
+                issuing_department,
+                image,
+                status,
+                year_id,
+                template_id,
+                create_time,
+                honorary_reason,
+                honorary_level,
+                honorary_unit,
+                honorary_unit_rank,
+                honorary_person_rank,
+                honorary_person,
+                issuing_time,
+                issuing_number
+          )values (
+                #{id},
+                #{user_id},
+                #{honorName},
+                #{year},
+                #{awardUnit},
+                #{honorPictureList},
+                #{status},
+                #{yearId},
+                #{templateId},
+                now(),
+                #{reason},
+                #{honorRank},
+                #{unitName},
+                #{unitRank},
+                #{personalRank},
+                #{personalNameList},
+                #{awardTime},
+                #{awardNumber}
+          )
+    </insert>
+
+    <delete id="deleteHonoraryTitle" parameterType="map">
+        delete from reversion_honorary_title_info where  id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.LandBiologicalMapper">
+    <select id="queryLandInfoBiological" parameterType="map" resultType="map">
+        SELECT
+            biological_indicator_id AS biologicalIndicatorId,
+            land_id AS landId,
+            organic_matter AS organicMatter,
+            humic_acid AS humicAcid,
+            soil_microbial_biomass_carbon AS soilMicrobialBiomassCarbon,
+            soil_microbial_nitrogen AS soilMicrobialNitrogen,
+            soil_enzyme_activity AS soilEnzymeActivity,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM
+            land_biological_indicator_info
+        WHERE
+            land_id = #{landId}
+    </select>
+
+    <insert id="saveOrUpdateLandInfoBiological" parameterType="map">
+        <!--查询记录是否存在-->
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(land_id) FROM land_biological_indicator_info WHERE land_id = #{landId}
+        </selectKey>
+        <!--存在则修改-->
+        <if test="count > 0">
+            UPDATE
+                land_biological_indicator_info
+            SET
+                biological_indicator_id = #{biologicalIndicatorId},
+                land_id = #{landId},
+                organic_matter = #{organicMatter},
+                humic_acid = #{humicAcid},
+                soil_microbial_biomass_carbon = #{soilMicrobialBiomassCarbon},
+                soil_microbial_nitrogen = #{soilMicrobialNitrogen},
+                soil_enzyme_activity = #{soilEnzymeActivity}
+            WHERE
+                land_id = #{landId}
+        </if>
+        <!--不存在则新增-->
+        <if test="count ==0">
+            INSERT INTO land_biological_indicator_info (
+                biological_indicator_id,
+                land_id,
+                organic_matter,
+                humic_acid,
+                soil_microbial_biomass_carbon,
+                soil_microbial_nitrogen,
+                soil_enzyme_activity,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{landId},
+                #{organicMatter},
+                #{humicAcid},
+                #{soilMicrobialBiomassCarbon},
+                #{soilMicrobialNitrogen},
+                #{soilEnzymeActivity},
+                NOW()
+            )
+        </if>
+    </insert>
+
+    <select id="queryIsExit" parameterType="map" resultType="map">
+        SELECT
+            organic_matter AS organicMatter,
+            humic_acid AS humicAcid,
+            soil_microbial_biomass_carbon AS soilMicrobialBiomassCarbon,
+            soil_microbial_nitrogen AS soilMicrobialNitrogen,
+            soil_enzyme_activity AS soilEnzymeActivity
+        FROM
+          land_biological_indicator_info
+        WHERE
+          land_id = #{landId}
+    </select>
+</mapper>

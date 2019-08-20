@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.TownMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.Town">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+		<!--<result column="code" property="code" jdbcType="VARCHAR" />-->
+		<!--<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />-->
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, name, parent_Id
+	</sql>
+	<select id="findTownByParentId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from town
+		where parent_id = #{parentId,jdbcType=VARCHAR} ORDER BY order_num
+	</select>
+    <select id="findAllTown" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from town
+        order by  order_num
+    </select>
+</mapper>

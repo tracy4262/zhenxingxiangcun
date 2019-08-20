@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.SignInMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.SignIn">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, sign_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sign_in
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from sign_in
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="findCountSignIn" resultType="int"
+		parameterType="com.ovit.nswy.member.model.SignIn">
+		select
+		count(*) as num
+		from sign_in
+		where account = #{userId,jdbcType=VARCHAR} AND DATE(sign_time)=DATE(NOW())
+	</select>
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.SignIn">
+		insert into sign_in (account, sign_time)
+		values ( #{account,jdbcType=VARCHAR}, now())
+	</insert>
+	<insert id="insertSelective" parameterType="com.ovit.nswy.member.model.SignIn">
+		insert into sign_in
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="account != null">
+				account,
+			</if>
+			<if test="signTime != null">
+				sign_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="account != null">
+				#{account,jdbcType=VARCHAR},
+			</if>
+			<if test="signTime != null">
+				#{signTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ovit.nswy.member.model.SignIn">
+		update sign_in
+		<set>
+			<if test="account != null">
+				account = #{account,jdbcType=VARCHAR},
+			</if>
+			<if test="signTime != null">
+				sign_time = #{signTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.SignIn">
+		update sign_in
+		set account = #{account,jdbcType=VARCHAR},
+		sign_time = #{signTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

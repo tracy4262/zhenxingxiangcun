@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.UpMarketingBasicInfoMapper">
+
+    <insert id="insertCommodityMarketingInfo" parameterType="java.util.Map">
+        replace into shop_commodity_supply_info (
+            id,
+            account,
+            commodity_type_info_id,
+            product_state,
+            product_packing,
+            packing_mode,
+            <if test="netWeight != '' and netWeight != null">
+                product_weight,
+            </if>
+            product_weight_unit,
+            <if test="packageWeight != '' and packageWeight != null">
+                packing_weight,
+            </if>
+            packing_weight_unit,
+            <if test="output != '' and output != null">
+                product_output,
+            </if>
+            product_output_unit,
+            <if test="productAvailability != '' and productAvailability != null">
+                product_vbep,
+            </if>
+            product_vbep_unit,
+            <if test="productSalesVolume != '' and productSalesVolume != null">
+                product_volume,
+            </if>
+            product_volume_unit,
+            <if test="maximumSingleShipment != '' and maximumSingleShipment != null">
+                max_supply_becomes,
+            </if>
+            max_supply_unit,
+            product_address,
+            address,
+            product_position,
+            create_time
+
+        ) values (
+          #{id},
+          #{account},
+          #{commodityId},
+          #{productStatus},
+          #{productPackaging},
+          #{Packing},
+          <if test="netWeight != '' and netWeight != null">
+              #{netWeight},
+          </if>
+          #{netWeightUnits},
+          <if test="packageWeight != '' and packageWeight != null">
+              #{packageWeight},
+          </if>
+          #{packageWeightUnits},
+          <if test="output != '' and output != null">
+              #{output},
+          </if>
+          #{outputUnits},
+          <if test="productAvailability != '' and productAvailability != null">
+              #{productAvailability},
+          </if>
+          #{productAvailabilityUnits},
+          <if test="productSalesVolume != '' and productSalesVolume != null">
+              #{productSalesVolume},
+          </if>
+          #{productSalesVolumeUnits},
+          <if test="maximumSingleShipment != '' and maximumSingleShipment != null">
+              #{maximumSingleShipment},
+          </if>
+          #{maximumUnits},
+          #{productLocation},
+          #{location},
+          #{productOriginAddress},
+          #{createTime}
+
+        )
+    </insert>
+
+    <insert id="insertAssuranceInfo" parameterType="java.util.Map">
+        replace into shop_commodity_assurance_info (
+        id,
+        account,
+        commodity_type_info_id,
+        assurance_date,
+        recovery_date,
+        production_date,
+        quality_guarantee_period,
+        guarantee_quality_date,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{date},
+        #{harvestDate},
+        #{productionDate},
+        #{shelfLife},
+        #{shelfLifeTo},
+        #{createTime}
+        )
+    </insert>
+
+    <insert id="insertPricingInfo" parameterType="java.util.Map">
+        replace into shop_commodity_price_info (
+        id,
+        account,
+        commodity_type_info_id,
+        sale_date,
+        goods_supply_date,
+        price_method,
+        <if test="currentPrice != '' and currentPrice != null">
+            time_price,
+        </if>
+        <if test="discountPrice != '' and discountPrice != null">
+            discount_price,
+        </if>
+        discount_date,
+        <if test="wholesaleVolume != '' and wholesaleVolume != null">
+            batches,
+        </if>
+        batches_unit,
+        <if test="wholesalePrice != '' and wholesalePrice != null">
+            trade_price,
+        </if>
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{salesTime},
+        #{availability},
+        #{pricingMethod},
+        <if test="currentPrice != '' and currentPrice != null">
+            #{currentPrice},
+        </if>
+        <if test="discountPrice != '' and discountPrice != null">
+            #{discountPrice},
+        </if>
+        #{discountPeriod},
+        <if test="wholesaleVolume != '' and wholesaleVolume != null">
+            #{wholesaleVolume},
+        </if>
+        #{wholesaleVolumeUnits},
+        <if test="wholesalePrice != '' and wholesalePrice != null">
+            #{wholesalePrice},
+        </if>
+        #{createTime}
+        )
+    </insert>
+
+    <insert id="insertDeliveryInfo" parameterType="java.util.Map">
+        replace into shop_product_delivery_info (
+        id,
+        account,
+        commodity_type_info_id,
+        delivery_mode,
+        deliver_mode,
+        distribution_scope,
+        payment_mode,
+        agreement_freight,
+        <if test="freight != '' and freight != null">
+            freight,
+        </if>
+        pickup_address,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{deliveryMethods},
+        #{transportMethods},
+        #{deliveryArea},
+        #{paymentMethod},
+        #{negotiationFreight},
+        <if test="freight != '' and freight != null">
+            #{freight},
+        </if>
+        #{pickupLocation},
+        #{createTime}
+        )
+    </insert>
+
+    <insert id="insertAfterSalesInfo" parameterType="java.util.Map">
+        replace into shop_product_after_info (
+        id,
+        account,
+        commodity_type_info_id,
+        after_service_policy,
+        after_network,
+        return_policy,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{servicePolicy},
+        #{aftermarketOutlets},
+        #{returnAndRepair},
+        #{createTime}
+        )
+    </insert>
+
+    <insert id="insertTraceableInfo" parameterType="java.util.Map">
+        replace into shop_product_traceable_info (
+        id,
+        account,
+        commodity_type_info_id,
+        is_traceable,
+        product_production_unit,
+        purchase_product_unit,
+        is_production_plan,
+        production_plan,
+        is_production_environment,
+        production_base,
+        production_environment,
+        counterfeit_information,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{isRetrospect},
+        #{productUnit},
+        #{unitName},
+        #{isRelatedProductionPlan},
+        #{productionPlan},
+        #{isRelatedProductionBase},
+        #{productionBase},
+        #{productionEnvironment},
+        #{securityInformation},
+        #{createTime}
+        )
+    </insert>
+
+    <insert id="insertCommitmentInfo" parameterType="java.util.Map">
+        replace into shop_product_commitment_info (
+        id,
+        account,
+        commodity_type_info_id,
+        is_faith_commitment,
+        faith_commitment,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{integrity},
+        #{money},
+        #{createTime}
+        )
+    </insert>
+
+    <select id="getCommodityMarketingInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, product_state as productStatus, product_packing as productPackaging, packing_mode as Packing, packing_weight as packageWeight,
+        packing_weight_unit as packageWeightUnits, product_weight as netWeight, product_weight_unit as netWeightUnits,
+        product_output as output, product_output_unit as outputUnits, product_vbep as productAvailability, product_vbep_unit as productAvailabilityUnits,
+        product_volume as productSalesVolume, product_volume_unit as productSalesVolumeUnits, max_supply_becomes as maximumSingleShipment,
+        max_supply_unit as maximumUnits, product_address as productLocation, address as location, product_position as productOriginAddress, create_time
+        from shop_commodity_supply_info
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="getAssuranceInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, assurance_date as date, recovery_date as harvestDate, production_date as productionDate, quality_guarantee_period as shelfLife,
+        guarantee_quality_date as shelfLifeTo, create_time
+        from shop_commodity_assurance_info
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="getPricingInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, sale_date as salesTime, goods_supply_date as availability, price_method as pricingMethod, time_price as currentPrice,
+        discount_price as discountPrice, discount_date as discountPeriod, batches as wholesaleVolume, batches_unit as wholesaleVolumeUnits,
+        trade_price as wholesalePrice, create_time
+        from shop_commodity_price_info
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="getDeliveryInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, delivery_mode as deliveryMethods, deliver_mode as transportMethods, distribution_scope as deliveryArea, payment_mode as paymentMethod,
+        agreement_freight as negotiationFreight, freight, pickup_address as pickupLocation, create_time
+        from shop_product_delivery_info
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="getAfterSalesInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, after_service_policy as servicePolicy, after_network as aftermarketOutlets, return_policy as returnAndRepair, create_time
+        from shop_product_after_info
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="getTraceableInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, is_traceable as isRetrospect, product_production_unit as productUnit, purchase_product_unit as unitName, is_production_plan as isRelatedProductionPlan,
+        production_plan as productionPlan, is_production_environment as isRelatedProductionBase, production_base as productionBase,
+        production_environment as productionEnvironment, counterfeit_information as securityInformation, create_time
+        from shop_product_traceable_info
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="findTraceableInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT
+            t.id,
+            t.is_traceable AS isRetrospect,
+            t.product_production_unit AS productUnit,
+            t.purchase_product_unit AS unitName,
+            t.is_production_plan AS isRelatedProductionPlan,
+            t.production_plan AS productionPlan,
+            t.is_production_environment AS isRelatedProductionBase,
+            t.production_base AS productionBase,
+            p.base_name as productionBaseName,
+            t.production_environment AS productionEnvironment,
+            t.counterfeit_information AS securityInformation,
+            t.create_time
+        FROM
+            shop_product_traceable_info t left join product_base_info p on t.production_base = p.product_id
+
+        where t.account = #{account} AND t.commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="getCommitmentInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, is_faith_commitment as integrity, faith_commitment as money, create_time
+        from shop_product_commitment_info
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+</mapper>

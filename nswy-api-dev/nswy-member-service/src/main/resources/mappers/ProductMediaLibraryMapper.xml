@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ProductMediaLibraryMapper">
+    <insert id="saveProductMediaLibrary"  parameterType="map">
+        INSERT INTO media_library (
+            media_type,
+            create_time,
+            image_url,
+            update_time,
+            media_name,
+            account
+            ) VALUES (
+                #{mediaType},
+                NOW(),
+                #{imageUrl},
+                NULL,
+                #{mediaName},
+                #{account}
+            )
+    </insert>
+
+    <update id="setMediaLibraryCover" parameterType="map" >
+        UPDATE media_library SET  image_url = #{imageUrl} WHERE media_id = #{mediaId}
+    </update>
+
+    <update id="updateMediaLibrary" parameterType="map">
+        UPDATE media_library SET media_name = #{mediaName} WHERE media_id = #{mediaId}
+    </update>
+
+    <delete id="deleteMediaLibrary" parameterType="map">
+        DELETE FROM media_library WHERE media_id = #{mediaId}
+    </delete>
+
+    <select id="queryAllMediaLibrary" parameterType="map" resultType="map">
+        SELECT
+          t1.media_id AS mediaId,
+          t1.media_type AS mediaType,
+          t1.media_name AS mediaName,
+          t1.image_url AS imageUrl,
+          t1.update_time AS updateTime,
+          t1.create_time AS createTime,
+          t1.account AS account,
+          count(t2.id) AS detailCount
+        FROM media_library t1
+        LEFT JOIN media_library_detail t2 ON t1.media_id = t2.media_id
+        WHERE t1.account = #{account} AND t1.media_type = #{mediaType} GROUP BY t1.media_name ORDER BY t1.media_id
+    </select>
+
+    <select id="queryByMediaName" parameterType="map" resultType="map">
+        SELECT * FROM media_library WHERE media_name = #{mediaName} AND account = #{account} AND media_type = #{mediaType}
+    </select>
+
+    <select id="queryMediaLibrary" resultType="map" parameterType="map">
+        SELECT
+            media_id AS mediaId,
+            media_type AS mediaType,
+            media_name AS mediaName,
+            image_url AS imageUrl
+        FROM
+            media_library
+        WHERE
+            account = #{account}
+        AND
+            media_type = #{mediaType}
+    </select>
+
+    <select id="specialMediaLibraryList" resultType="map" parameterType="com.ovit.nswy.member.model.request.MediaLibraryListQuery">
+        SELECT media_id AS mediaId,media_type AS mediaType,create_time AS createTime,
+        image_url AS imageUrl,update_time AS updateTime,media_name AS mediaName,account
+        FROM media_library
+        WHERE account = #{account} AND media_type = 1
+    </select>
+
+    <select id="queryMediaLibraryCover" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT media_url AS mediaUrl FROM media_library_detail WHERE media_id = #{mediaId} ORDER BY create_time DESC  LIMIT 1
+    </select>
+
+    <select id="queryTotal" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(media_id) AS CNT FROM  media_library_detail WHERE media_id = #{mediaId}
+    </select>
+</mapper>

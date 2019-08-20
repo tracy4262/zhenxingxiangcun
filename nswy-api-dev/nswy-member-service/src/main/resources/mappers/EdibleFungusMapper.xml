@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.EdibleFungusMapper" >
+  <select id="query" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+      edible_id AS edibleId,
+      mercury_first AS mercuryFirst,
+      mercury_second AS mercurySecond,
+      arsenic_first AS arsenicFirst,
+      arsenic_second AS arsenicSecond,
+      cadmium_first AS cadmiumFirst,
+      cadmium_second AS cadmiumSecond,
+      lead_first AS leadFirst,
+      lead_second AS leadSecond
+    FROM
+      edible_fungus
+    WHERE
+      product_id = #{productId}
+  </select>
+
+  <update id="update" parameterType="java.util.Map">
+    UPDATE
+      edible_fungus
+    SET
+      edible_id = #{edibleId},
+      mercury_first = #{mercuryFirst},
+      mercury_second = #{mercurySecond},
+      arsenic_first = #{arsenicFirst},
+      arsenic_second = #{arsenicSecond},
+      cadmium_first = #{cadmiumFirst},
+      cadmium_second = #{cadmiumSecond},
+      lead_first = #{leadFirst},
+      lead_second = #{leadSecond}
+    WHERE
+      edible_id = #{edibleId}
+  </update>
+
+  <insert id="add" parameterType="java.util.Map">
+    INSERT INTO
+      edible_fungus
+    (
+      edible_id,
+      product_id,
+      mercury_first,
+      mercury_second,
+      arsenic_first,
+      arsenic_second,
+      cadmium_first,
+      cadmium_second,
+      lead_first,
+      lead_second
+    )
+    VALUES
+    (
+      UUID(),
+      #{productId},
+      #{mercuryFirst},
+      #{mercurySecond},
+      #{arsenicFirst},
+      #{arsenicSecond},
+      #{cadmiumFirst},
+      #{cadmiumSecond},
+      #{leadFirst},
+      #{leadSecond}
+    )
+  </insert>
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.StandardMapper">
+    <select id="queryStandardList" parameterType="map" resultType="map">
+        SELECT
+            t1.standard_id AS standardId,
+            t1.standard_detail_id AS standardDetailId,
+            t1.title,
+            CASE t2.standard_characteristic
+                WHEN "M" THEN "强制性标准"
+                WHEN "R" THEN "推荐性标准"
+            END AS standardTrait,
+            CASE t2.standard_status
+                WHEN "A" THEN "现行"
+                WHEN "F" THEN "即将实施"
+            END AS standardStatus,
+            t2.chinese_name AS chineseStandardName,
+            t2.standard_number AS standardNumber,
+            CASE t1.approve_status
+                WHEN "0" THEN "待审核"
+                WHEN "1" THEN "删除"
+                WHEN "2" THEN "已审核"
+                WHEN "3" THEN "审核不通过"
+            END AS approveStatus,
+            DATE_FORMAT(t1.create_time,'%Y-%m-%d %T') AS createTime,
+            t1.abstracts
+        FROM
+            standard t1
+        LEFT JOIN standard_detail t2 ON t1.standard_detail_id = t2.standard_detail_id
+        WHERE t1.approve_status = 2 AND t1.account = #{account}
+        <if test="label != null and label != ''">
+            AND t1.label = #{label}
+        </if>
+        ORDER BY t1.create_time DESC
+    </select>
+
+    <select id="findResidueStandard" resultType="map">
+        SELECT name, consult, value FROM pesticide_residue_standard
+        WHERE 1=1
+        <if test="name != null and name != ''">
+            AND name LIKE CONCAT('%', #{name}, '%')
+        </if>
+    </select>
+
+    <select id="findCurrencyCommodity" resultType="map">
+        SELECT t1.id AS id, t1.currency_commodity_name AS commodityName, t1.product_type_id AS productCode,
+               IFNULL(t1.related_species_id, "") AS relatedspecies, IFNULL(t2.classification_name, "") AS classificationName,
+               IFNULL(t1.remark, "") AS remark, IFNULL(t1.refuse_reason, "") AS refuseReason, IFNULL(t1.traceability_type, "") AS traceaType,
+               IFNULL(t1.is_main_product, "") AS isMainProduct, t1.image AS image, IFNULL(t3.dict_name, "") AS industryName, IFNULL(t1.commodity_alias, "") AS commodityAlias,
+               t1.quality_custom_content AS qualityCustomContent, t1.safety_custom_content AS safetyCustomContent,
+               CASE t1.aduit_status
+                WHEN 0 THEN '待审核'
+                WHEN 1 THEN '审核通过'
+                WHEN 2 THEN '审核未通过'
+               END AS aduitStatus,
+            t1.service_id as serviceId,
+            t1.service_class_id as serviceClassId,
+            t1.service_people_name as servicePeopleName
+        FROM shop_currency_commodity t1
+        LEFT JOIN product_classification t2 ON t1.product_type_id = t2.classification_code
+        LEFT JOIN system_dict t3 ON t1.industry_type_id = t3.dict_value
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND t1.account = #{account}
+        </if>
+        <if test='type == "1"'>
+            AND (t1.type = 1 OR t1.type = 3)
+        </if>
+        <if test='type == "2"'>
+            AND t1.type = 2
+        </if>
+        <if test="name != null and name != ''">
+            AND t1.currency_commodity_name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <!--<if test="fullName != null and fullName != ''">
+            AND t1.currency_commodity_name = #{fullName}
+        </if>-->
+        <if test="productType != null and productType != ''">
+            AND t1.product_type_id = #{productType}
+        </if>
+        <if test="relatedSpecies != null and relatedSpecies != ''">
+            AND t1.related_species_id = #{relatedSpecies}
+        </if>
+        <if test="industryType != null and industryType != ''">
+            AND t1.industry_type_id = #{industryType}
+        </if>
+        <if test="serviceClassId != null and serviceClassId != ''">
+            AND t1.service_class_id = #{serviceClassId}
+        </if>
+        <if test="servicePeopleName != null and servicePeopleName != ''">
+            AND t1.service_people_name = #{servicePeopleName}
+        </if>
+        <if test="aduitStatus != null and aduitStatus != ''">
+            AND t1.aduit_status = #{aduitStatus}
+        </if>
+        ORDER BY t1.update_time DESC
+    </select>
+
+    <select id="findUnitStandard" resultType="map">
+        SELECT unit_name, calculate_unit FROM unit
+        WHERE 1=1
+        <if test="name != null and name != ''">
+            AND unit_name LIKE CONCAT('%', #{name}, '%') OR calculate_unit LIKE CONCAT('%', #{name}, '%')
+        </if>
+    </select>
+
+    <select id="findUnit" resultType="map">
+        select * from (
+                          select id as classId,unit_name as className,unit_type as pid from unit
+        union all
+        select unit_type as classId,unit_type_name as className,'0' as pid from reversion_unit_type_info) u
+        where u.pid = #{parentid}
+    </select>
+
+    <select id="findBasicUnit" parameterType="map" resultType="map">
+
+        select id as value,unit_name as label from unit
+       where 1=1
+        <if test="id != null and id != ''">
+            AND unit_type = #{id}
+        </if>
+        <if test="keywords != null and keywords != ''">
+        AND label LIKE CONCAT('%', #{keywords}, '%')
+        </if>
+
+    </select>
+
+    <select id="findProductClassification" resultType="map">
+        SELECT id, classification_name as className, classification_code as productCode FROM product_classification
+        WHERE 1=1
+        <if test="productCode != null and productCode != ''">
+            AND classification_code = #{productCode}
+        </if>
+        <if test="name != null and name != ''">
+            AND classification_name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        ORDER BY classification_code
+    </select>
+
+    <select id="findMallClassification" resultType="map">
+        SELECT id, classification_name as className, classification_code as productCode, parent_id as parentId FROM mall_classification
+        WHERE 1=1
+        <if test="parentId != null and parentId != ''">
+            AND parent_id = #{parentId}
+        </if>
+        <if test="parentId == null || parentId == ''">
+            AND (parent_id IS NULL OR  parent_id = '')
+        </if>
+        <if test="code != null and code != ''">
+            AND classification_code LIKE CONCAT(#{code}, '%')
+        </if>
+        ORDER BY classification_code
+    </select>
+
+    <select id="isExist" resultType="map">
+        SELECT t1.*
+        FROM shop_currency_commodity t1
+        WHERE 1=1
+        <if test='type == "1"'>
+            AND (t1.type = 1 OR t1.type = 3)
+        </if>
+        <if test='type == "2"'>
+            AND t1.type = 2
+        </if>
+        <if test="fullName != null and fullName != ''">
+            AND t1.currency_commodity_name = #{fullName}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.ShopStorageInfoMapper">
+
+    <select id="getShopStorageList" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT A.commodity_type_info_id AS commodityId, E.commodity_image AS commodityImage, A.commodity_name AS commodityName, C.time_price AS timePrice,
+               IFNULL(C.discount_price, '') AS discountPrice, C.discount_date AS discountDate, B.product_vbep AS productVbep, A.storage_status AS storageStatus,
+               D.approve_status AS approveStatus, D.create_time AS createTime, A.update_time AS deleteTime, A.on_sale_time AS onSaleTime, B.product_vbep_unit AS unit
+        FROM shop_product_commitment_info D
+        LEFT JOIN shop_commodity_info A ON A.`commodity_type_info_id` = D.`commodity_type_info_id`
+        LEFT JOIN shop_commodity_supply_info B ON A.`commodity_type_info_id` = B.`commodity_type_info_id`
+        LEFT JOIN shop_commodity_price_info C ON A.`commodity_type_info_id` = C.`commodity_type_info_id`
+        LEFT JOIN shop_commodity_type_info E ON A.`commodity_type_info_id` = E.`id`
+        LEFT JOIN shop_currency_commodity F ON E.`currency_commodity_id` = F.`id`
+        WHERE 1=1
+        <if test="isDelete !=null and isDelete !=''">
+            AND A.is_delete = #{isDelete}
+        </if>
+        <if test="account !=null and account !=''">
+            AND A.account = #{account}
+        </if>
+        <if test="commodityName !=null and commodityName !=''">
+            AND A.commodity_name LIKE CONCAT('%', #{commodityName} ,'%')
+        </if>
+        <if test="productTypeId !=null and productTypeId !=''">
+            AND F.product_type_id = #{productTypeId}
+        </if>
+        <if test='storageStatus == "0"'>
+            <!-- 0：未上架-->
+            AND A.storage_status = #{storageStatus}
+        </if>
+        <if test='storageStatus == "1"'>
+            <!-- 1：我下架的-->
+            AND A.storage_status = #{storageStatus}
+        </if>
+        <if test='storageStatus == "2"'>
+            <!-- 2：售完下架-->
+            AND A.storage_status = #{storageStatus}
+        </if>
+        <if test='storageStatus == "3"'>
+            <!-- 3：上架-->
+            AND A.storage_status = #{storageStatus}
+        </if>
+        <if test='storageStatus == "4"'>
+            <!-- 4：查询全部-->
+            AND A.storage_status != '3'
+        </if>
+        <if test='storageStatus == "5"'>
+            <!-- 5：查询全部的下架数据-->
+            AND (A.storage_status = '1' OR A.storage_status = '2')
+        </if>
+        <!-- 商品审核状态 approveStatus为4时表示查询全部-->
+        <if test='approveStatus !=null and approveStatus !="" and approveStatus != "4"'>
+            AND D.approve_status = #{approveStatus}
+        </if>
+        <!--<if test="startPrice != null and startPrice != ''">
+            AND C.time_price >= #{startPrice}
+        </if>
+        <if test="endPrice != null and endPrice != ''">
+            AND C.time_price &lt;= #{endPrice}
+        </if>-->
+        <if test='storageSort == "0"'>
+            <!-- 0：降序-->
+            ORDER BY B.product_vbep DESC
+        </if>
+        <if test='storageSort == "1"'>
+            <!-- 1：升序-->
+            ORDER BY B.product_vbep
+        </if>
+        <if test='timeSort == "0"'>
+            <!-- 0：降序-->
+            ORDER BY D.create_time DESC
+        </if>
+        <if test='timeSort == "1"'>
+            <!-- 1：升序-->
+            ORDER BY D.create_time
+        </if>
+        <if test='deleteTime == "0"'>
+            <!-- 0：降序-->
+            ORDER BY A.update_time DESC
+        </if>
+        <if test='deleteTime == "1"'>
+            <!-- 1：升序-->
+            ORDER BY A.update_time
+        </if>
+        <if test='onSaleTime == "0"'>
+            <!-- 0：根据上架时间降序-->
+            ORDER BY A.update_time DESC
+        </if>
+        <if test='onSaleTime == "1"'>
+            <!-- 1：根据上架时间升序-->
+            ORDER BY A.update_time
+        </if>
+    </select>
+
+    <update id="batchUpdateStorage" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            UPDATE shop_commodity_info SET
+            <if test="item.storageStatus !=null and item.storageStatus !=''">
+                storage_status = #{item.storageStatus},
+            </if>
+            <if test='item.storageStatus == "3"'>
+                <!-- 若是上架操作，则更新下上架时间 -->
+                on_sale_time = NOW(),
+            </if>
+            <if test="item.isDelete !=null and item.isDelete !=''">
+                is_delete = #{item.isDelete},
+            </if>
+            update_time = NOW()
+            WHERE account = #{item.account} AND commodity_type_info_id = #{item.commodityId}
+        </foreach>
+    </update>
+
+    <update id="updateStoragePrice" parameterType="java.util.Map" >
+        UPDATE shop_commodity_price_info
+        <set>
+            <if test="timePrice !=null and timePrice !=''">
+                time_price = #{timePrice},
+            </if>
+            <if test="discountPrice !=null and discountPrice !=''">
+                discount_price = #{discountPrice},
+            </if>
+            <if test="discountDate !=null and discountDate !=''">
+                discount_date = #{discountDate},
+            </if>
+        </set>
+        WHERE account = #{account} AND commodity_type_info_id = #{commodityId}
+    </update>
+
+    <update id="updateAuditStatus" parameterType="java.util.Map" >
+        UPDATE shop_product_commitment_info
+        SET approve_status = #{approveStatus}
+        WHERE account = #{account} AND commodity_type_info_id = #{commodityId}
+    </update>
+
+    <update id="updateStorageStatus" parameterType="java.util.Map" >
+        UPDATE shop_commodity_info
+        SET storage_status = #{storageStatus}
+        WHERE account = #{account} AND commodity_type_info_id = #{commodityId}
+    </update>
+
+    <delete id="delTypeInfo" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_commodity_type_info
+          WHERE id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delCommodityInfo" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_commodity_info
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delCommodityProduction" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_commodity_production
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delPlaceInfo" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_production_place_info
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delCommodityQualification" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_commodity_qualification
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delCommodityHonor" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_commodity_honor
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delQualitySafety" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_commodity_quality_safety
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delSupplyInfo" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_commodity_supply_info
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delAssuranceInfo" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_commodity_assurance_info
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delPriceInfo" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_commodity_price_info
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delDeliveryInfo" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_product_delivery_info
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delAfterInfo" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_product_after_info
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delTraceableInfo" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_product_traceable_info
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+    <delete id="delCommitmentInfo" parameterType="java.util.Map">
+        <foreach collection="list" separator=";" item="item">
+          DELETE FROM shop_product_commitment_info
+          WHERE commodity_type_info_id = #{item.commodityId} and account = #{item.account}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.LoginUserMapper">
+    <resultMap id="BaseResultMap" type="com.ovit.nswy.member.certification.model.LoginUser">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="unique_id" property="uniqueId" jdbcType="VARCHAR" />
+        <result column="login_account" property="loginAccount" jdbcType="VARCHAR" />
+        <result column="display_name" property="displayName" jdbcType="VARCHAR" />
+        <result column="login_passwd" property="loginPasswd" jdbcType="VARCHAR" />
+        <result column="register_time" property="registerTime" jdbcType="TIMESTAMP" />
+        <result column="is_Identity_verification" property="isIdentityVerification" jdbcType="INTEGER" />
+        <result column="tour_number" property="tourNumber" jdbcType="INTEGER" />
+        <result column="user_type" property="userType" jdbcType="INTEGER" />
+        <result column="signature" property="signaTure" jdbcType="VARCHAR" />
+        <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+        <result column="is_real_identity" property="isRealIdentity" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, unique_id, login_account, display_name, login_passwd, register_time,
+        is_Identity_verification,
+        tour_number, user_type,signature,avatar,is_real_identity
+    </sql>
+
+    <select id="findByLoginName" resultType="java.util.Map" parameterType="java.util.Map">
+          select
+          id, unique_id, login_account, display_name, login_passwd, register_time,is_Identity_verification,
+		  tour_number, user_type,signature,avatar,is_real_identity
+          from login_user
+          where login_account = #{login_account}
+     </select>
+
+    <update id="updatePassWord" parameterType="map">
+        update login_user set login_passwd = #{new_password} where login_account = #{user_id}
+    </update>
+
+    <update id="updateIdentityFlag" parameterType="java.util.Map" >
+		update login_user set is_Identity_verification = #{flag} where login_account = #{user_id}
+	</update>
+
+    <update id="updateIsRealIdentity" parameterType="java.util.Map" >
+		update login_user set is_real_identity = 'Y' where login_account = #{user_id}
+	</update>
+
+    <select id="getLoginName" resultMap="BaseResultMap"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />
+        from login_user
+        where login_account = #{login_account,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findStep" parameterType="map" resultType="map">
+        select id,
+            account,
+            template_id as templateId,
+            step
+        from reversion_user_auth_step
+
+        where 1=1
+        <if test="account !=null and account!=''">
+           and account = #{account}
+        </if>
+        <if test="templateId !=null and templateId !=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <select id="findEnableStep" parameterType="map" resultType="map">
+        select id,account,template_id as templateId,step from reversion_user_auth_step where template_id = (select
+
+        template_id
+
+
+        from reversion_user_template_manage u  where u.account = #{account} and u.status = 1) and account = #{account}
+    </select>
+    
+    
+    <insert id="saveOrUpdateStep" parameterType="map">
+        replace into reversion_user_auth_step(
+            id,
+            account,
+            template_id,
+            step
+        ) values(
+            #{id},
+            #{account},
+            #{templateId},
+            #{step}
+        );
+    </insert>
+
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.MyGateMapper">
+    <select id="queryUserTypeByAccount" parameterType="map" resultType="map">
+        SELECT user_type AS userType FROM login_user WHERE  login_account = #{loginAccount}
+    </select>
+
+    <select id="queryModularByAccount" parameterType="map" resultType="map">
+        SELECT modular FROM user_website WHERE  account = #{loginAccount}
+    </select>
+    <select id="queryLabel" parameterType="map" resultType="map">
+        SELECT label FROM column_settings WHERE user_account =#{loginAccount} AND `column_name` = #{columnName}
+    </select>
+</mapper>

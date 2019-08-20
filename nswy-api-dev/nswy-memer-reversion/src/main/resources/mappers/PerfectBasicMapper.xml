@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.PerfectBasicMapper">
+
+    <select id="findUserModule" parameterType="map" resultType="map">
+        select app_id as appId, app_name as appName
+        from reversion_perfect_module
+        where user_id = #{account}
+    </select>
+
+    <select id="findSubModule" parameterType="map" resultType="map">
+        select sys_dict_id as dictId, name, url
+        from reversion_sys_dict
+        where parent_id = #{appId} and type = 0
+    </select>
+
+    <select id="findDynamicSubModule" parameterType="map" resultType="map">
+        select c.sys_dict_id as dictId, c.url,ifnull(d.property_name, c.name) as name
+        from reversion_sys_dict c left join
+        (select a.dict_id as dictId, a.property_name from
+        reversion_perfect_property_info a left join reversion_sys_dict b on a.dict_id = b.sys_dict_id
+        where a.account = #{account} and a.year_file_id = #{yearId} and a.template_id = #{templateId}
+        and b.parent_id = #{appId}) d on c.sys_dict_id = d.dictId
+        where c.parent_id = #{appId} and c.type = 0
+    </select>
+
+    <update id="modifyModule" parameterType="map">
+        update reversion_user_app_setting
+        set app_name = #{appName}
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="appId !=null and appId!=''">
+            and app_id = #{appId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </update>
+
+    <select id="findTextPreview" parameterType="map" resultType="map">
+        select id, user_id as account,text_preview as textPreview, is_complete as isComplete,
+        sys_dict_id as dictId, status, template_id as templateId
+        from reversion_member_text_preview  where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="dictId !=null and dictId!=''">
+            and sys_dict_id = #{dictId}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </select>
+
+    <insert id="saveTextPreview" parameterType="map">
+        insert into reversion_member_text_preview (
+        id,
+        user_id,
+        text_preview,
+        is_complete,
+        sys_dict_id,
+        create_time,
+        year_id,
+        template_id
+        <if test="status == 0 or status == 1">
+            ,status
+        </if>
+        ) values (
+        #{id},
+        #{account},
+        #{textPreview},
+        #{isComplete},
+        #{dictId},
+        now(),
+        #{yearId},
+        #{templateId}
+        <if test="status == 0 or status == 1">
+            ,#{status}
+        </if>
+        )
+    </insert>
+
+    <update id="updateTextPreview" parameterType="map">
+        UPDATE reversion_member_text_preview
+        <set>
+            <if test="textPreview !=null">
+                text_preview = #{textPreview},
+            </if>
+            <if test='isComplete == "0"'>
+                is_complete = #{isComplete},
+            </if>
+            <if test='isComplete == "1"'>
+                is_complete = #{isComplete},
+            </if>
+            <if test="yearId !=null and yearId !=''">
+                year_id = #{yearId},
+            </if>
+            <if test="status == 0 or status == 1">
+                status = #{status},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="dictId !=null and dictId!=''">
+            and sys_dict_id = #{dictId}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </update>
+
+    <insert id="saveYearInfo" parameterType="map">
+        insert into reversion_perfect_year_info (
+        id,
+        account,
+        year_file_name
+        ) values (
+        #{id},
+        #{account},
+        #{fileName}
+        )
+    </insert>
+
+    <select id="findYearInfo" parameterType="map" resultType="map">
+        select id, year_file_name as fileName
+        from reversion_perfect_year_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="fileName !=null and fileName!=''">
+            and year_file_name = #{fileName}
+        </if>
+        order by fileName
+    </select>
+    
+    <delete id="deleteYearInfo" parameterType="map">
+        delete from reversion_perfect_year_info
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findModuleInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        a.id, a.account, a.app_id as appId, a.create_time as createTime, b.url, a.app_name as appName,a.template_id as templateId
+        from reversion_user_app_setting a left join reversion_full_app_setting b
+        ON a.app_id = b.id
+        where 1=1
+        <if test="account !=null and account!=''">
+            and a.account = #{account}
+        </if>
+        <if test="level !=null and level!=''">
+            and b.level = #{level}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and a.template_id = #{templateId}
+        </if>
+    </select>
+
+    <select id="findPropertyInfo" parameterType="map" resultType="map">
+        select id, property_name as propertyName, account, year_file_id as yearId,template_id as templateId
+        from reversion_perfect_property_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_file_id = #{yearId}
+        </if>
+        <if test="dictId !=null and dictId!=''">
+            and dict_id = #{dictId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <insert id="insertPropertyInfo" parameterType="map">
+        INSERT INTO reversion_perfect_property_info(
+        property_name,
+        account,
+        year_file_id,
+        dict_id,
+        template_id
+        ) VALUES (
+        #{propertyName},
+        #{account},
+        #{yearId},
+        #{dictId},
+        #{templateId}
+        )
+    </insert>
+
+    <update id="updatePropertyInfo" parameterType="map">
+        update reversion_perfect_property_info set property_name = #{propertyName}
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_file_id = #{yearId}
+        </if>
+        <if test="dictId !=null and dictId!=''">
+            and dict_id = #{dictId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </update>
+
+    <select id="findAllTextPreviewList" parameterType="map" resultType="map">
+
+        select
+
+        id as textPreviewId,user_id as account ,text_preview as textPreview,parent_id as parentId,year_id as yearId,status,
+
+        create_time,template_id as templateId
+
+        from reversion_member_all_text_preview  where 1=1
+
+
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="appId !=null and appId!=''">
+            and parent_id = #{appId}
+        </if>
+
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <insert id="saveAllTextPreview" parameterType="map">
+        replace into reversion_member_all_text_preview(
+          id,
+          user_id,
+          text_preview,
+          parent_id,
+          year_id,
+          status,
+          template_id,
+          create_time
+        ) values (
+          #{textPreviewId},
+          #{account},
+          #{textPreview},
+          #{parentId},
+          #{yearId},
+          #{status},
+          #{templateId},
+          now()
+        );
+    </insert>
+
+    <select id="findUseTemplate" parameterType="java.lang.String" resultType="map">
+        select
+        id,
+        account,
+        user_type as userType,
+        template_id as templateId,
+        carete_time
+        from
+        reversion_user_template_manage
+        where account = #{account} and status = '1'
+    </select>
+
+    <select id="findNewYearInfo" parameterType="java.lang.String" resultType="map">
+        select id from reversion_perfect_year_info
+        where account = #{account}
+        order by year_file_name desc limit 1
+    </select>
+
+    <select id="findPrivacyInfo" resultType="java.util.Map" parameterType="java.util.Map" >
+        SELECT
+        p.image,
+        p.name_model as name,
+        p.year_id as yearId,
+        p.template_id as templateId
+        FROM privacy_info p
+        where p.account = #{account}
+        <if test="templateId!='' and templateId!=null">
+            and p.template_id = #{templateId}
+        </if>
+        <if test="yearId!='' and yearId!=null">
+            and p.year_id = #{yearId}
+        </if>
+    </select>
+
+    <select id="findMemberName" parameterType="map" resultType="map">
+        select member_name as memberName from reversion_member_aptitude_real_info
+        where user_id = #{account} and template_id = #{templateId}
+        order by create_time limit 1
+    </select>
+
+</mapper>

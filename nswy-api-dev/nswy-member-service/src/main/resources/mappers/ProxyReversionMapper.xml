@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ProxyReversionMapper">
+	
+	<insert id="insertProxy" parameterType="map">
+		insert into reversion_user_proxy_info(
+		account,
+		proxy_account,
+		protocol_template,
+		upload_protocol,
+        upload_pdf,
+		cancel_reason,
+		other_reason,
+		<if test="status != null">
+			status,
+		</if>
+		type
+		) values(
+		#{account},
+		#{proxyAccount},
+		#{protocolTemplate},
+		#{uploadProtocol},
+        #{uploadPdf},
+		#{cancelReason},
+		#{otherReason},
+		<if test="status != null">
+			#{status},
+		</if>
+		#{type}
+		)
+	</insert>
+
+	<select id="queryAccount" parameterType="java.util.Map" resultType="java.util.Map">
+		select B.id as id, A.login_account as account, A.register_time as registerTime, B.status as status,
+		B.type as type, B.update_time as proxyTime, C.member_name as name
+		from login_user A left join reversion_user_proxy_info B
+		on A.login_account = B.account
+		left join reversion_member_aptitude_real_info C on (A.login_account = C.user_id and C.is_proxy = 1)
+		where 1=1
+		<if test="key != null and key != ''">
+			AND A.login_account LIKE CONCAT('%',#{key},'%')
+		</if>
+		<if test="status != null">
+			AND B.status = #{status}
+		</if>
+		<if test="proxyAccount != null and proxyAccount != ''">
+			AND B.proxy_account = #{proxyAccount}
+		</if>
+		<if test="proxyAccount != null and proxyAccount != ''">
+			AND B.status != 4
+		</if>
+		<if test="status == 1">
+			AND B.type = 1
+		</if>
+		<if test="memberName != null and memberName != ''">
+			AND C.member_name LIKE CONCAT('%',#{memberName},'%')
+		</if>
+		<if test="lowTime != null and lowTime != ''">
+			AND B.update_time >= #{lowTime}
+		</if>
+		<if test="upperTime != null and upperTime != ''">
+			AND left(B.update_time, 10) &lt;= #{upperTime}
+		</if>
+		<if test="memberClass != null and memberClass != ''">
+			AND C.member_class LIKE CONCAT('%',#{memberClass},'%')
+		</if>
+		group by A.login_account
+		order by B.update_time desc
+	</select>
+
+	<select id="findMultiAccount" parameterType="map" resultType="string">
+		select A.login_account as account
+		from login_user A left join reversion_user_proxy_info B
+		on A.login_account = B.account
+		where 1=1
+		<if test="key != null and key != ''">
+			AND A.login_account LIKE CONCAT('%',#{key},'%')
+		</if>
+		group by A.login_account having count(*) > 1
+	</select>
+
+	<select id="findProxyInfo" parameterType="java.lang.String" resultType="java.util.Map">
+		select `type`, status
+		from reversion_user_proxy_info
+		where account = #{account}
+	</select>
+
+	<select id="queryByAccount" parameterType="java.util.Map" resultType="java.util.Map">
+		select id, account, proxy_account as proxyAccount, protocol_template as protocolTemplate,
+		upload_protocol as uploadProtocol, type, status, update_time as updateTime
+		from reversion_user_proxy_info
+		where 1=1
+		<if test="type != null">
+			AND type = #{type}
+		</if>
+		<if test="account != null and account != ''">
+			AND account = #{account}
+		</if>
+		<if test="proxyAccount != null and proxyAccount != ''">
+			AND proxy_account = #{proxyAccount}
+		</if>
+	</select>
+
+	<update id="updateProxy" parameterType="map">
+		update reversion_user_proxy_info
+		<set>
+			<if test="account!=null and account != ''">
+				account = #{account},
+			</if>
+			<if test="proxyAccount!=null and proxyAccount != ''">
+				proxy_account = #{proxyAccount},
+			</if>
+			<if test="protocolTemplate!=null and protocolTemplate != ''">
+				protocol_template = #{protocolTemplate},
+			</if>
+			<if test="uploadProtocol!=null and uploadProtocol != ''">
+				upload_protocol = #{uploadProtocol},
+			</if>
+			<!--<if test="cacelProtocolTemplate!=null and cacelProtocolTemplate != ''">
+				cacel_protocol_template = #{cacelProtocolTemplate},
+			</if>
+			<if test="cacelUploadProtocol!=null and cacelUploadProtocol != ''">
+				cacel_upload_protocol = #{cacelUploadProtocol},
+			</if>-->
+			<if test="type!=null">
+				type = #{type},
+			</if>
+			<if test="status!=null">
+				status = #{status},
+			</if>
+            <if test="uploadPdf!=null and uploadPdf != ''">
+                upload_pdf = #{uploadPdf},
+            </if>
+            <!--<if test="cacelUploadPdf!=null and cacelUploadPdf != ''">
+                cacel_upload_pdf = #{cacelUploadPdf},
+            </if>-->
+			<if test="cancelReason!=null and cancelReason != ''">
+				cancel_reason = #{cancelReason},
+			</if>
+			<if test="otherReason!=null and otherReason != ''">
+				other_reason = #{otherReason},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="proxyTemplate" parameterType="java.util.Map" resultType="java.util.Map">
+		select file_name as fileName, file_url as fileUrl
+		from reversion_proxy_model_info
+		where 1=1
+		<if test="fileType != null">
+			AND file_type = #{fileType}
+		</if>
+	</select>
+
+	<!-- 会员资质信息-->
+	<select id="findMemberName" parameterType="map" resultType="map">
+		select
+		member_aptitude_real_info_id,
+		user_id,
+		member_class,
+		member_name as memberName,
+		member_name_pinyin,
+		member_abbreviation,
+		abbreviation_pinyin,
+		aptitude_name,
+		aptitude_number,
+		aptitude_image,
+		remark,
+		status,
+		template_id as templateId,
+		DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time
+		from reversion_member_aptitude_real_info where 1=1
+		<if test="account!=null and account !=''">
+			and user_id = #{account}
+		</if>
+		<if test="templateId!=null and templateId !=''">
+			and template_id = #{templateId}
+		</if>
+		order by create_time
+	</select>
+
+	<select id="queryProxyRecord" parameterType="java.util.Map" resultType="java.util.Map">
+		select id, account, proxy_account as proxyAccount, audit_opinion as auditOpinion,
+		type, status, update_time as updateTime
+		from reversion_proxy_audit_record
+		where 1=1
+		<if test="type != null">
+			AND type = #{type}
+		</if>
+		<if test="account != null and account != ''">
+			AND account = #{account}
+		</if>
+		<if test="proxyAccount != null and proxyAccount != ''">
+			AND proxy_account = #{proxyAccount}
+		</if>
+	</select>
+
+	<insert id="saveProxyRecord" parameterType="map">
+		replace into reversion_proxy_audit_record(
+		id,
+		account,
+		proxy_account,
+		<if test="auditOpinion != null and auditOpinion != ''">
+			audit_opinion,
+		</if>
+		<if test="status != null">
+			status,
+		</if>
+		type,
+		apply_time
+		) values(
+		#{id},
+		#{account},
+		#{proxyAccount},
+		<if test="auditOpinion != null and auditOpinion != ''">
+			#{auditOpinion},
+		</if>
+		<if test="status != null">
+			#{status},
+		</if>
+		#{type},
+		now()
+		)
+	</insert>
+
+	<select id="waitProxy" parameterType="map" resultType="map">
+		select a.account, b.nswy_id as nswyId, a.apply_time as time, a.type, a.audit_opinion as auditOpinion,
+		case a.status when 1 then "通过" when 2 then "审核中" else "拒绝" end as status, c.member_name as memberName
+		from reversion_proxy_audit_record a left join login_user b
+		on a.account = b.login_account left join reversion_member_aptitude_real_info c
+		on (a.account = c.user_id and c.is_proxy = 1)
+		where 1=1
+		<if test="type != null">
+			AND a.type = #{type}
+		</if>
+		<if test="account != null and account != ''">
+			AND a.account = #{account}
+		</if>
+		<if test="userName != null and userName != ''">
+			AND a.account LIKE CONCAT('%',#{userName},'%')
+		</if>
+		<if test="proxyAccount != null and proxyAccount != ''">
+			AND a.proxy_account = #{proxyAccount}
+		</if>
+		<if test="lowTime != null and lowTime != ''">
+            AND a.apply_time >= #{lowTime}
+        </if>
+        <if test="upperTime != null and upperTime != ''">
+            AND left(a.apply_time, 10) &lt;= #{upperTime}
+        </if>
+		<if test="memberName != null and memberName != ''">
+			AND c.member_name LIKE CONCAT('%',#{memberName},'%')
+		</if>
+		order by a.update_time desc
+	</select>
+
+	<select id="isCompleting" parameterType="java.util.Map" resultType="java.util.Map">
+		select id, account, proxy_account as proxyAccount, protocol_template as protocolTemplate,
+		upload_protocol as uploadProtocol, type, status, update_time as updateTime
+		from reversion_user_proxy_info
+		where 1=1
+		<if test="account != null and account != ''">
+			AND account = #{account}
+		</if>
+		<if test="proxyAccount != null and proxyAccount != ''">
+			AND proxy_account = #{proxyAccount}
+		</if>
+	</select>
+
+</mapper>

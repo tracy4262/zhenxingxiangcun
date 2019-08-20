@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.InformationBookMapper">
+
+    <insert id="insert" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="ID">
+	  insert into information_book_info
+	  (
+          information_detail_id,
+          cover_photo,
+          book_full_photo,
+          author,
+          edition,
+          publish,
+          sheet,
+          distribution,
+          broadsheet,
+          <if test='printTime != null and printTime != ""'>
+              print_time,
+          </if>
+          word_count,
+          <if test='pubDate != null and pubDate != ""'>
+              pub_date,
+          </if>
+          paper,
+          label,
+          book_type,
+          create_time
+      )
+      values
+      (
+          #{informationDetailId},
+          #{coverPhoto},
+          #{bookFullPhoto},
+          #{author},
+          #{edition},
+          #{publish},
+          #{sheet},
+          #{distribution},
+          #{broadsheet},
+          <if test='printTime != null and printTime != ""'>
+              #{printTime},
+          </if>
+          #{wordCount},
+          <if test='pubDate != null and pubDate != ""'>
+              #{pubDate},
+          </if>
+          #{paper},
+          #{label},
+          #{bookType},
+          now()
+      )
+	</insert>
+
+    <select id="getInformationBookInfoByDetailId" resultType="java.util.Map" parameterType="java.lang.Integer">
+        select
+          id, information_detail_id, cover_photo, author, edition,
+          publish, sheet, distribution, broadsheet, print_time,
+          word_count, pub_date, paper, label, create_time,
+          update_time
+        from information_book_info
+        where information_detail_id = #{detailId}
+    </select>
+
+    <select id="getInformationBookInfoList" resultType="java.util.Map">
+        select
+        id, information_detail_id, cover_photo, author, edition,
+        publish, sheet, distribution, broadsheet, print_time,
+        word_count, pub_date, paper, label, create_time,
+        update_time
+        from information_book_info
+        ORDER BY update_time DESC
+    </select>
+
+
+    <insert id="insertMediaBook" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="ID">
+        insert into media_library_book_info
+        (
+        media_id,
+        cover_photo,
+        book_full_photo,
+        author,
+        summary,
+        source,
+        edition,
+        title,
+        publish,
+        sheet,
+        distribution,
+        broadsheet,
+        <if test='printTime != null and printTime != ""'>
+            print_time,
+        </if>
+        word_count,
+        <if test='pubDate != null and pubDate != ""'>
+            pub_date,
+        </if>
+        paper,
+        label,
+        book_type,
+        species_id,
+        species,
+        products,
+        products_id,
+        service,
+        service_id,
+        industry_name,
+        industry_id,
+        district,
+        create_time
+        )
+        values
+        (
+        #{mediaId},
+        #{coverPhoto},
+        #{bookFullPhoto},
+        #{author},
+        #{summary},
+        #{source},
+        #{edition},
+        #{title},
+        #{publish},
+        #{sheet},
+        #{distribution},
+        #{broadsheet},
+        <if test='printTime != null and printTime != ""'>
+            #{printTime},
+        </if>
+        #{wordCount},
+        <if test='pubDate != null and pubDate != ""'>
+            #{pubDate},
+        </if>
+        #{paper},
+        #{label},
+        #{bookType},
+        #{speciesId},
+        #{species},
+        #{products},
+        #{productsId},
+        #{service},
+        #{serviceId},
+        #{industryName},
+        #{industryId},
+        #{district},
+        now()
+        )
+    </insert>
+
+    <select id="findMediaBookInfo" parameterType="map" resultType="java.util.Map">
+        select
+
+        id, media_id, cover_photo, author, edition,title,summary,source,
+        publish, sheet, distribution, broadsheet, print_time,
+        word_count, pub_date, paper, label, species,species_id as speciesId,products,products_id as productsId,service,service_id as serviceId
+
+        ,industry_name as industryName,industry_id as industryId,create_time,district,
+        update_time
+        from media_library_book_info
+        where 1=1
+        <if test="media_id!=null and media_id!=''">
+            and media_id = #{media_id}
+        </if>
+        <if test="id!=null and id!=''">
+            and id = #{id}
+        </if>
+
+        ORDER BY update_time DESC
+    </select>
+
+    <select id="findMediaBookDetailInfo" parameterType="map" resultType="map">
+        select id,
+                media_id,
+                book_info_id,
+                title,
+                edit,
+                checked,
+                expand,
+                node_id,
+                parent_id,
+                order_id,
+                content,
+                file,
+                file_name
+        from media_library_book_detail
+        where 1=1
+        <if test="book_info_id !=null and book_info_id!=''">
+            and book_info_id = #{book_info_id}
+        </if>
+        <if test="media_id !=null and media_id!=''">
+            and media_id = #{media_id}
+        </if>
+
+        order by update_time
+    </select>
+
+    <delete id="deleteMedia" parameterType="map">
+        delete from media_library where media_id = #{media_id}
+    </delete>
+    <delete id="deleteMediaBookInfo" parameterType="map">
+        delete from media_library_book_info where media_id = #{media_id}
+    </delete>
+    <delete id="deleteMediaBookDetail" parameterType="map">
+        delete from media_library_book_detail where media_id = #{media_id} and book_info_id = #{book_info_id}
+    </delete>
+
+    <delete id="deleteBookById" parameterType="java.lang.Integer">
+        delete from media_library_book_info where id = #{id}
+    </delete>
+
+    <delete id="deleteBookDetailById" parameterType="java.lang.Integer">
+        delete from media_library_book_detail where book_info_id = #{id}
+    </delete>
+
+
+    <insert id="insertMemberIntroduceBook" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="ID">
+        insert into member_introduce_book_info
+        (
+        member_introduce_detail_id,
+        cover_photo,
+        book_full_photo,
+        author,
+        edition,
+        publish,
+        sheet,
+        distribution,
+        broadsheet,
+        <if test='printTime != null and printTime != ""'>
+            print_time,
+        </if>
+        word_count,
+        <if test='pubDate != null and pubDate != ""'>
+            pub_date,
+        </if>
+        paper,
+        label,
+        book_type,
+        create_time
+        )
+        values
+        (
+        #{memberIntroduceDetailId},
+        #{coverPhoto},
+        #{bookFullPhoto},
+        #{author},
+        #{edition},
+        #{publish},
+        #{sheet},
+        #{distribution},
+        #{broadsheet},
+        <if test='printTime != null and printTime != ""'>
+            #{printTime},
+        </if>
+        #{wordCount},
+        <if test='pubDate != null and pubDate != ""'>
+            #{pubDate},
+        </if>
+        #{paper},
+        #{label},
+        #{bookType},
+        now()
+        )
+    </insert>
+
+
+    <select id="findMemberIntroduceBookInfo" parameterType="map" resultType="java.util.Map">
+        select
+
+        id, member_introduce_detail_id as memberIntroduceDetailId, cover_photo, author, edition,
+        publish, sheet, distribution, broadsheet, print_time,
+        word_count, pub_date, paper, label,create_time,book_type,
+        update_time
+        from member_introduce_book_info
+        where 1=1
+        <if test="memberIntroduceDetailId!=null and memberIntroduceDetailId!=''">
+            and member_introduce_detail_id = #{memberIntroduceDetailId}
+        </if>
+        <if test="id!=null and id!=''">
+            and id = #{id}
+        </if>
+
+        ORDER BY update_time DESC
+    </select>
+
+    <select id="findMemberIntroduceBookDetailInfo" parameterType="map" resultType="map">
+        select id,
+        member_introduce_detail_id as memberIntroduceDetailId,
+        book_info_id,
+        title,
+        edit,
+        checked,
+        expand,
+        node_id,
+        parent_id,
+        order_id,
+        content,
+        file,
+        file_name,
+        book_type
+        from member_introduce_book_detail
+        where 1=1
+        <if test="book_info_id !=null and book_info_id!=''">
+            and book_info_id = #{book_info_id}
+        </if>
+        <if test="memberIntroduceDetailId !=null and memberIntroduceDetailId!=''">
+            and member_introduce_detail_id = #{memberIntroduceDetailId}
+        </if>
+
+        order by update_time
+    </select>
+
+</mapper>

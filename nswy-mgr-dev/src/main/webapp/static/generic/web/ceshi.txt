@@ -1,0 +1,247 @@
+/*资讯信息*/
+INSERT INTO `industrialclassified` VALUES ('A', '资讯顶层栏目', NULL, 'A', 0, '', '', 0, '2013-8-23 16:34:00', '1');
+
+INSERT INTO `industrialclassified` VALUES ('A01', '生产行业', 'A', 'A,A01', 1, '本门类包括01—10大类。', 'SHENG、CHAN、HANG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0101', '农业', 'A01', 'A,A01,A0101', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0102', '林业', 'A01', 'A,A01,A0102', 2, '', 'LIN、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0103', '畜牧', 'A01', 'A,A01,A0103', 2, '', 'XU、MU', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0104', '渔业', 'A01', 'A,A01,A0104', 2, '', 'YU、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0105', '农药', 'A01', 'A,A01,A0105', 2, '', 'NONG、YAO', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0106', '肥料', 'A01', 'A,A01,A0106', 2, '', 'FEI、LIAO', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0107', '饲料', 'A01', 'A,A01,A0107', 2, '', 'CI、LIAO', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0108', '食品', 'A01', 'A,A01,A0108', 2, '', 'SHI、PIN', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0109', '农机农具', 'A01', 'A,A01,A0109', 2, '', 'NONG、JI、NONG、JU', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0110', '农业用品', 'A01', 'A,A01,A0110', 2, '', 'NONG、YE、YONG、PIN', 0, '2013-8-23 16:34:00', '1');
+
+INSERT INTO `industrialclassified` VALUES ('A02', '服务行业', 'A', 'A,A02', 1, '本门类包括01—10大类。', 'SHENG、CHAN、HANG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0201', '农业服务业', 'A02', 'A,A02,A0201', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0202', '林业服务业', 'A02', 'A,A02,A0202', 2, '', 'LIN、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0203', '仓储业', 'A02', 'A,A02,A0203', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0204', '质检', 'A02', 'A,A02,A0204', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0205', '包装', 'A02', 'A,A02,A0205', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0206', '运输', 'A02', 'A,A02,A0206', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0207', '加工', 'A02', 'A,A02,A0207', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0208', '邮递业', 'A02', 'A,A02,A0208', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0209', '批发业', 'A02', 'A,A02,A0209', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0210', '零售业', 'A02', 'A,A02,A0210', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0211', '住宿业', 'A02', 'A,A02,A0211', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0212', '餐饮业', 'A02', 'A,A02,A0212', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0213', '金融业', 'A02', 'A,A02,A0213', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0214', '保险业', 'A02', 'A,A02,A0214', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0215', '娱乐业', 'A02', 'A,A02,A0215', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0216', '装卸搬运业', 'A02', 'A,A02,A0216', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0217', '交通运输业', 'A02', 'A,A02,A0217', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0218', '渔业服务业', 'A02', 'A,A02,A0218', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+INSERT INTO `industrialclassified` VALUES ('A0219', '畜牧服务业', 'A02', 'A,A02,A0219', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '1');
+
+
+/*政策信息*/
+INSERT INTO `industrialclassified` VALUES ('B', '政策顶层栏目', NULL, 'B', 0, '', '', 0, '2013-8-23 16:34:00', '4');
+
+INSERT INTO `industrialclassified` VALUES ('B01', '党务', 'B', 'B,B01', 1, '本门类包括01—07大类。', 'DANG、WU', 0, '2013-8-23 16:34:00', '4');
+
+INSERT INTO `industrialclassified` VALUES ('B0101', '综合', 'B01', 'B,B01,B0101', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '2');
+INSERT INTO `industrialclassified` VALUES ('B0102', '组织', 'B01', 'B,B01,B0102', 2, '', 'LIN、YE', 0, '2013-8-23 16:34:00', '2');
+INSERT INTO `industrialclassified` VALUES ('B0103', '宣传', 'B01', 'B,B01,B0103', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '2');
+INSERT INTO `industrialclassified` VALUES ('B0104', '统战', 'B01', 'B,B01,B0104', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '2');
+INSERT INTO `industrialclassified` VALUES ('B0105', '外联', 'B01', 'B,B01,B0105', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '2');
+INSERT INTO `industrialclassified` VALUES ('B0106', '政法', 'B01', 'B,B01,B0106', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '2');
+INSERT INTO `industrialclassified` VALUES ('B0107', '纪检', 'B01', 'B,B01,B0107', 2, '', 'NONG、YE', 0, '2013-8-23 16:34:00', '2');
+
+INSERT INTO `industrialclassified` VALUES ('B02', '政务', 'B', 'B,B02', 1, '本门类包括01—07大类。', 'DANG、WU', 0, '2013-8-23 16:34:00', '4');
+
+INSERT INTO `industrialclassified` VALUES ('B0201', '综合', 'B02', 'B,B02,B0201', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0202', '外交', 'B02', 'B,B02,B0202', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0203', '国防', 'B02', 'B,B02,B0203', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0204', '发展', 'B02', 'B,B02,B0204', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0205', '教育', 'B02', 'B,B02,B0205', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0206', '科技', 'B02', 'B,B02,B0206', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0207', '工信', 'B02', 'B,B02,B0207', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0208', '民族', 'B02', 'B,B02,B0208', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0209', '公安', 'B02', 'B,B02,B0209', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0210', '综合', 'B02', 'B,B02,B0210', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0211', '综合', 'B02', 'B,B02,B0211', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0212', '综合', 'B02', 'B,B02,B0212', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0213', '综合', 'B02', 'B,B02,B0213', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0214', '综合', 'B02', 'B,B02,B0214', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0215', '综合', 'B02', 'B,B02,B0215', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0216', '综合', 'B02', 'B,B02,B0216', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0217', '综合', 'B02', 'B,B02,B0217', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0218', '综合', 'B02', 'B,B02,B0218', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0219', '综合', 'B02', 'B,B02,B0219', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0220', '综合', 'B02', 'B,B02,B0220', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0221', '综合', 'B02', 'B,B02,B0221', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0222', '综合', 'B02', 'B,B02,B0222', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0223', '综合', 'B02', 'B,B02,B0223', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0224', '综合', 'B02', 'B,B02,B0224', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0225', '综合', 'B02', 'B,B02,B0225', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0226', '综合', 'B02', 'B,B02,B0226', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0227', '综合', 'B02', 'B,B02,B0227', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0228', '综合', 'B02', 'B,B02,B0228', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0229', '综合', 'B02', 'B,B02,B0229', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0230', '综合', 'B02', 'B,B02,B0230', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0231', '综合', 'B02', 'B,B02,B0231', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0232', '综合', 'B02', 'B,B02,B0232', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0233', '综合', 'B02', 'B,B02,B0233', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0234', '综合', 'B02', 'B,B02,B0234', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0235', '综合', 'B02', 'B,B02,B0235', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0236', '综合', 'B02', 'B,B02,B0236', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0237', '综合', 'B02', 'B,B02,B0237', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0238', '综合', 'B02', 'B,B02,B0238', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0239', '综合', 'B02', 'B,B02,B0239', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0240', '综合', 'B02', 'B,B02,B0240', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0241', '综合', 'B02', 'B,B02,B0241', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0242', '综合', 'B02', 'B,B02,B0242', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0243', '综合', 'B02', 'B,B02,B0243', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0244', '综合', 'B02', 'B,B02,B0244', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0245', '综合', 'B02', 'B,B02,B0245', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0246', '综合', 'B02', 'B,B02,B0246', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0247', '综合', 'B02', 'B,B02,B0247', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0248', '综合', 'B02', 'B,B02,B0248', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0249', '综合', 'B02', 'B,B02,B0249', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0250', '综合', 'B02', 'B,B02,B0250', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0251', '综合', 'B02', 'B,B02,B0251', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0252', '综合', 'B02', 'B,B02,B0252', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0253', '综合', 'B02', 'B,B02,B0253', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0254', '综合', 'B02', 'B,B02,B0254', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0255', '综合', 'B02', 'B,B02,B0255', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0256', '综合', 'B02', 'B,B02,B0256', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0257', '综合', 'B02', 'B,B02,B0257', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0258', '综合', 'B02', 'B,B02,B0258', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0259', '综合', 'B02', 'B,B02,B0259', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0260', '综合', 'B02', 'B,B02,B0260', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+
+
+INSERT INTO `industrialclassified` VALUES ('B03', '群团', 'B', 'B,B03', 1, '本门类包括01—07大类。', 'DANG、WU', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0301', '工会', 'B03', 'B,B03,B0301', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B0302', '共青团', 'B03', 'B,B03,B0302', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '4');
+
+INSERT INTO `industrialclassified` VALUES ('B04', '群众自治', 'B', 'B,B04', 1, '本门类包括01—07大类。', 'DANG、WU', 0, '2013-8-23 16:34:00', '4');
+INSERT INTO `industrialclassified` VALUES ('B05', '国际', 'B', 'B,B05', 1, '本门类包括01—07大类。', 'DANG、WU', 0, '2013-8-23 16:34:00', '4');
+
+
+
+
+
+
+
+
+
+/************************************************************************************/
+/*知识信息*/
+INSERT INTO `industrialclassified` VALUES ('C', '知识顶层栏目', NULL, 'C', 0, '', '', 0, '2013-8-23 16:34:00', '5');
+
+INSERT INTO `industrialclassified` VALUES ('C01', '农林牧渔', 'C', 'C,C01', 1, '本门类包括01—07大类。', 'DANG、WU', 0, '2013-8-23 16:34:00', '5');
+
+INSERT INTO `industrialclassified` VALUES ('C0101', '种植园地', 'C01', 'C,C01,C0101', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010101', '种植标准', 'C0101', 'C,C01,C0101,C010101', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010102', '种植标准', 'C0101', 'C,C01,C0101,C010102', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010103', '种植标准', 'C0101', 'C,C01,C0101,C010103', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010104', '种植标准', 'C0101', 'C,C01,C0101,C010104', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010105', '种植标准', 'C0101', 'C,C01,C0101,C010105', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010106', '种植标准', 'C0101', 'C,C01,C0101,C010106', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010107', '种植标准', 'C0101', 'C,C01,C0101,C010107', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010108', '种植标准', 'C0101', 'C,C01,C0101,C010108', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010109', '种植标准', 'C0101', 'C,C01,C0101,C010109', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010110', '种植标准', 'C0101', 'C,C01,C0101,C010110', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010111', '种植标准', 'C0101', 'C,C01,C0101,C010111', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010112', '种植标准', 'C0101', 'C,C01,C0101,C010112', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010113', '种植标准', 'C0101', 'C,C01,C0101,C010113', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010114', '种植标准', 'C0101', 'C,C01,C0101,C010114', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010115', '种植标准', 'C0101', 'C,C01,C0101,C010115', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010116', '种植标准', 'C0101', 'C,C01,C0101,C010116', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010117', '种植标准', 'C0101', 'C,C01,C0101,C010117', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010118', '种植标准', 'C0101', 'C,C01,C0101,C010118', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010119', '种植标准', 'C0101', 'C,C01,C0101,C010119', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010120', '种植标准', 'C0101', 'C,C01,C0101,C010120', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010121', '种植标准', 'C0101', 'C,C01,C0101,C010121', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010122', '种植标准', 'C0101', 'C,C01,C0101,C010122', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010123', '种植标准', 'C0101', 'C,C01,C0101,C010123', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010124', '种植标准', 'C0101', 'C,C01,C0101,C010124', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010125', '种植标准', 'C0101', 'C,C01,C0101,C010125', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010126', '种植标准', 'C0101', 'C,C01,C0101,C010126', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010127', '种植标准', 'C0101', 'C,C01,C0101,C010127', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010128', '种植标准', 'C0101', 'C,C01,C0101,C010128', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010129', '种植标准', 'C0101', 'C,C01,C0101,C010129', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010130', '种植标准', 'C0101', 'C,C01,C0101,C010130', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010131', '种植标准', 'C0101', 'C,C01,C0101,C010131', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+
+
+INSERT INTO `industrialclassified` VALUES ('C0102', '养殖园地', 'C01', 'C,C01,C0102', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010201', '养殖标准', 'C0102', 'C,C01,C0102,C010201', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010202', '种植标准', 'C0102', 'C,C01,C0102,C010202', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010203', '种植标准', 'C0102', 'C,C01,C0102,C010203', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010204', '种植标准', 'C0102', 'C,C01,C0102,C010204', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010205', '种植标准', 'C0102', 'C,C01,C0102,C010205', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010206', '种植标准', 'C0102', 'C,C01,C0102,C010206', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010207', '种植标准', 'C0102', 'C,C01,C0102,C010207', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010208', '种植标准', 'C0102', 'C,C01,C0102,C010208', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010209', '种植标准', 'C0102', 'C,C01,C0102,C010209', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010210', '种植标准', 'C0102', 'C,C01,C0102,C010210', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010211', '种植标准', 'C0102', 'C,C01,C0102,C010211', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010212', '种植标准', 'C0102', 'C,C01,C0102,C010212', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010213', '种植标准', 'C0102', 'C,C01,C0102,C010213', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010214', '种植标准', 'C0102', 'C,C01,C0102,C010214', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010215', '种植标准', 'C0102', 'C,C01,C0102,C010215', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010216', '种植标准', 'C0102', 'C,C01,C0102,C010216', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010217', '种植标准', 'C0102', 'C,C01,C0102,C010217', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010218', '种植标准', 'C0102', 'C,C01,C0102,C010218', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010219', '种植标准', 'C0102', 'C,C01,C0102,C010219', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010220', '种植标准', 'C0102', 'C,C01,C0102,C010220', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010221', '种植标准', 'C0102', 'C,C01,C0102,C010221', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010222', '种植标准', 'C0102', 'C,C01,C0102,C010222', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010223', '种植标准', 'C0102', 'C,C01,C0102,C010223', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+
+
+INSERT INTO `industrialclassified` VALUES ('C0103', '种养模式', 'C01', 'C,C01,C0103', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C0104', '规划方案', 'C01', 'C,C01,C0104', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C0105', '农业工程', 'C01', 'C,C01,C0105', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+
+INSERT INTO `industrialclassified` VALUES ('C010501', '养殖标准', 'C0105', 'C,C01,C0105,C010501', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010502', '种植标准', 'C0105', 'C,C01,C0105,C010502', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010503', '种植标准', 'C0105', 'C,C01,C0105,C010503', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010504', '种植标准', 'C0105', 'C,C01,C0105,C010504', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010505', '种植标准', 'C0105', 'C,C01,C0105,C010505', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010506', '种植标准', 'C0105', 'C,C01,C0105,C010506', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010507', '种植标准', 'C0105', 'C,C01,C0105,C010507', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010508', '种植标准', 'C0105', 'C,C01,C0105,C010508', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010509', '种植标准', 'C0105', 'C,C01,C0105,C010509', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010510', '种植标准', 'C0105', 'C,C01,C0105,C010510', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010511', '种植标准', 'C0105', 'C,C01,C0105,C010511', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010512', '种植标准', 'C0105', 'C,C01,C0105,C010512', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010513', '种植标准', 'C0105', 'C,C01,C0105,C010513', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010514', '种植标准', 'C0105', 'C,C01,C0105,C010514', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+
+
+INSERT INTO `industrialclassified` VALUES ('C0106', '农业基础科学', 'C01', 'C,C01,C0106', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010601', '养殖标准', 'C0106', 'C,C01,C0106,C010601', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010602', '种植标准', 'C0106', 'C,C01,C0106,C010602', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010603', '种植标准', 'C0106', 'C,C01,C0106,C010603', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010604', '种植标准', 'C0106', 'C,C01,C0106,C010604', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010605', '种植标准', 'C0106', 'C,C01,C0106,C010605', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010606', '种植标准', 'C0106', 'C,C01,C0106,C010606', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010607', '种植标准', 'C0106', 'C,C01,C0106,C010607', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010608', '种植标准', 'C0106', 'C,C01,C0106,C010608', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010609', '种植标准', 'C0106', 'C,C01,C0106,C010609', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010610', '种植标准', 'C0106', 'C,C01,C0106,C010610', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010611', '种植标准', 'C0106', 'C,C01,C0106,C010611', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010612', '种植标准', 'C0106', 'C,C01,C0106,C010612', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010613', '种植标准', 'C0106', 'C,C01,C0106,C010613', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010614', '种植标准', 'C0106', 'C,C01,C0106,C010614', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010615', '种植标准', 'C0106', 'C,C01,C0106,C010615', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010616', '种植标准', 'C0106', 'C,C01,C0106,C010616', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C010617', '种植标准', 'C0106', 'C,C01,C0106,C010617', 3, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+
+
+INSERT INTO `industrialclassified` VALUES ('C02', '食品科学', 'C', 'C,C02', 1, '本门类包括01—07大类。', 'DANG、WU', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C0201', '加工技术', 'C02', 'C,C02,C0201', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C0202', '包装技术', 'C02', 'C,C02,C0202', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C0203', '贮藏技术', 'C02', 'C,C02,C0203', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C0204', '食品机械', 'C02', 'C,C02,C0204', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C0205', '食品工程', 'C02', 'C,C02,C0205', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C0206', '食品标准', 'C02', 'C,C02,C0206', 2, '', 'ZHONG、HE', 0, '2013-8-23 16:34:00', '5');
+
+INSERT INTO `industrialclassified` VALUES ('C03', '经济', 'C', 'C,C03', 1, '本门类包括01—07大类。', 'DANG、WU', 0, '2013-8-23 16:34:00', '5');
+INSERT INTO `industrialclassified` VALUES ('C04', '法律', 'C', 'C,C04', 1, '本门类包括01—07大类。', 'DANG、WU', 0, '2013-8-23 16:34:00', '5');
+
+

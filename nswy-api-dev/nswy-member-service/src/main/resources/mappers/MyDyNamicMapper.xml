@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.MyDyNamicMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.MyDyNamic">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="category" property="category" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="district" property="district" jdbcType="VARCHAR" />
+		<result column="goodsName" property="goodsname" jdbcType="VARCHAR" />
+		<result column="serviceName" property="servicename" jdbcType="VARCHAR" />
+		<result column="label" property="label" jdbcType="VARCHAR" />
+		<result column="species" property="species" jdbcType="VARCHAR" />
+		<result column="summary" property="summary" jdbcType="VARCHAR" />
+		<result column="industry" property="industry" jdbcType="VARCHAR" />
+		<result column="security" property="security" jdbcType="VARCHAR" />
+		<result column="prior" property="prior" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="display_name" property="displayName" jdbcType="VARCHAR" />
+		<result column="thumb_up_num" property="thumbUpNum" jdbcType="INTEGER" />
+        <result column="post_id" property="postId" jdbcType="INTEGER" />
+        <result column="author" property="author" jdbcType="VARCHAR"/>
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.ovit.nswy.member.model.MyDyNamic"
+		extends="BaseResultMap">
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, title, type, category, source, district, goodsName,
+		serviceName, label,
+		species, summary, industry, security, prior, create_time,thumb_up_num,post_id,author
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+	<!-- 关联查询LOGINUSERNAME -->
+	<select id="findMyDyNamic" resultMap="ResultMapWithBLOBs"
+		parameterType="java.util.Map">
+		select
+		m.*,l.display_name
+		from mydynamic m LEFT JOIN login_user l ON m.account=l.login_account
+		where account = #{account}
+		<if test="label != '全部'">
+			and label = #{label,jdbcType=VARCHAR}
+		</if>
+		order by m.create_time desc
+	</select>
+
+	<select id="findMyDyNamicAsc" resultMap="ResultMapWithBLOBs"
+		parameterType="java.util.Map">
+		select
+		m.*,l.display_name
+		from mydynamic m LEFT JOIN login_user l ON m.account=l.login_account
+		where account = #{account}
+		<if test="label != '全部'">
+			and label = #{label,jdbcType=VARCHAR}
+		</if>
+		order by m.create_time Asc
+	</select>
+
+	<select id="findThumbUpNum" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from mydynamic
+		where id = #{id}
+	</select>
+
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.MyDyNamic">
+		insert into mydynamic (id, account, title,
+		type, category, source,
+		district, goodsName, serviceName,
+		label, species, summary,
+		industry, security, prior,
+		create_time, content,thumb_up_num,author)
+		values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR},
+		#{type,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR},
+		#{district,jdbcType=VARCHAR}, #{goodsname,jdbcType=VARCHAR},
+		#{servicename,jdbcType=VARCHAR},
+		#{label,jdbcType=VARCHAR}, #{species,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR},
+		#{industry,jdbcType=VARCHAR}, #{security,jdbcType=VARCHAR},
+		#{prior,jdbcType=INTEGER},now(),
+		#{content,jdbcType=LONGVARCHAR},
+		#{thumbUpNum,jdbcType=INTEGER},
+		#{author,jdbcType=VARCHAR}
+		 )
+	</insert>
+
+	<update id="updateMyDyNamic" parameterType="com.ovit.nswy.member.model.MyDyNamic">
+		update mydynamic
+		set account = #{account,jdbcType=VARCHAR},
+		title = #{title,jdbcType=VARCHAR},
+		type = #{type,jdbcType=VARCHAR},
+		category = #{category,jdbcType=VARCHAR},
+		source = #{source,jdbcType=VARCHAR},
+		district = #{district,jdbcType=VARCHAR},
+		goodsName = #{goodsname,jdbcType=VARCHAR},
+		serviceName = #{servicename,jdbcType=VARCHAR},
+		label = #{label,jdbcType=VARCHAR},
+		species = #{species,jdbcType=VARCHAR},
+		summary = #{summary,jdbcType=VARCHAR},
+		industry = #{industry,jdbcType=VARCHAR},
+		security = #{security,jdbcType=VARCHAR},
+		prior = #{prior,jdbcType=INTEGER},
+		create_time = now()
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 点赞次数 -->
+	<update id="updateThumbUpNum" parameterType="com.ovit.nswy.member.model.MyDyNamic">
+		update mydynamic
+		set
+		thumb_up_num = #{thumbUpNum,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.TrafficMapper" >
+  <select id="query" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+      traffic_id AS trafficid,
+      departure_point AS departurePoint,
+      important_site_first AS importantSiteFirst,
+      important_site_second AS importantSiteSecond
+    FROM
+      traffic
+    WHERE
+      product_id = #{productId}
+  </select>
+
+ <select id="detail" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+      traffic_id AS trafficid,
+      road_name AS roadName,
+      departure_point AS departurePoint,
+      along_road_name AS alongRoadName,
+      highway_grade AS highwayGrade,
+      highway_administrative AS highwayAdministrative,
+      road_level AS roadLevel,
+      terminus AS terminus,
+      mileage AS mileage,
+      maximal_tonnage AS maximalTonnage
+    FROM
+      traffic
+    WHERE
+       traffic_id = #{trafficid}
+ </select>
+</mapper>

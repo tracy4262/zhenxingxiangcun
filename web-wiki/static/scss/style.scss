@@ -1,0 +1,22 @@
+.vui-layout{
+	width: 1200px;
+	margin:0 auto;
+}
+.vui-scroll{
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color:rgba(51,51,51,.15);
+  }
+}
+.vui-form-sm{
+  .ivu-form-item{
+    margin-bottom: 10px;
+  }
+}
+.wiki-detail-bg{
+  background: linear-gradient(to bottom, #56b07d 0%, #ffffff 20%, #efefef 100%);
+}

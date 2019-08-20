@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.LandWaterQualityMapper">
+    <select id="queryLandWaterQuality" parameterType="map" resultType="map">
+        SELECT
+            water_quality_id AS waterQualityId,
+            land_id AS landId,
+            water_ph AS waterPH,
+            cyanide,
+            fluoride,
+            chloride,
+            arsenic,
+            mercury,
+            lead,
+            cadmium,
+            chromium,
+            fecal_coliform AS fecalColiform,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM
+            land_water_quality_info
+        WHERE
+            land_id = #{landId}
+    </select>
+
+    <insert id="saveOrUpdateLandWaterQuality" parameterType="map">
+        <!--查询记录是否存在-->
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(land_id) FROM land_water_quality_info WHERE land_id = #{landId}
+        </selectKey>
+        <!--存在则修改-->
+        <if test="count > 0">
+            UPDATE
+            land_water_quality_info
+            SET
+                land_id = #{landId},
+                water_ph = #{waterPH},
+                cyanide = #{cyanide},
+                fluoride = #{fluoride},
+                chloride = #{chloride},
+                arsenic = #{arsenic},
+                mercury = #{mercury},
+                lead = #{lead},
+                cadmium = #{cadmium},
+                chromium = #{chromium},
+                fecal_coliform = #{fecalColiform}
+            WHERE
+                land_id = #{landId}
+        </if>
+        <!--不存在则新增-->
+        <if test="count ==0">
+            INSERT INTO land_water_quality_info (
+                water_quality_id,
+                land_id,
+                water_ph,
+                cyanide,
+                fluoride,
+                chloride,
+                arsenic,
+                mercury,
+                lead,
+                cadmium,
+                chromium,
+                fecal_coliform,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{landId},
+                #{waterPH},
+                #{cyanide},
+                #{fluoride},
+                #{chloride},
+                #{arsenic},
+                #{mercury},
+                #{lead},
+                #{cadmium},
+                #{chromium},
+                #{fecalColiform},
+                NOW()
+            )
+        </if>
+    </insert>
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.ExpertInfoMapper">
+
+    <select id="findExpertInfo" resultType="java.util.Map" parameterType="java.lang.String" >
+        select
+          id,
+          expert_name,
+          expert_type as expertType,
+          adept_field as excelField,
+          adept_species as excelSpecies,
+          related_species as relatedSpecies,
+          related_industry as relatedIndustries,
+          related_product as relatedGoods,
+          related_service as relatedServices,
+          personal_photo, qualification_certificate,
+          honor_certificate,
+          title,
+          expert_status as status,
+          approve_status as approveStatus,
+          year_id,
+          template_id as templateId
+        from expert_info
+        where login_account = #{user_id}
+        <if test="year_id!='' and year_id!=null">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId!='' and templateId!=null">
+            and template_id = #{templateId}
+        </if>
+
+    </select>
+
+
+    <update id="updateExpertInfoName" parameterType="map">
+        update expert_info set expert_name = #{propertyName} where login_account = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="insertExpertInfo" parameterType="java.util.Map" >
+        replace into expert_info(
+        id,
+        expert_name,
+        login_account,
+        expert_type,
+        adept_field,
+        adept_species,
+        related_species,
+        related_industry,
+        related_product,
+        related_service,
+        personal_photo,
+        qualification_certificate,
+        honor_certificate,
+        title,
+        expert_status,
+        create_time,
+        year_id,
+        template_id
+        <if test="approveStatus != null and approveStatus != ''">
+            , approve_status
+        </if>
+        )
+        values (
+        #{id},
+        #{expert_name},
+        #{user_id},
+        #{expert_type},
+        #{adept_field},
+        #{adept_species},
+        #{related_species},
+        #{related_industry},
+        #{related_product},
+        #{related_service},
+        #{personal_photo},
+        #{qualification_certificate},
+        #{honor_certificate},
+        #{title},
+        #{expert_status},
+        now(),
+        #{year_id},
+        #{templateId}
+        <if test="approveStatus != null and approveStatus != ''">
+            , #{approveStatus}
+        </if>
+        )
+    </insert>
+</mapper>

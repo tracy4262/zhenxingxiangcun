@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.PostDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.PostInfo" resultType="com.ovit.manager.modules.nswy.entity.PostInfo">
+      select
+               p.id,
+              p.post_name as postName,
+              p.parent_id as pid,
+              p.create_time
+      from reversion_post_info p left join reversion_post_info i on p.parent_id = i.id
+
+      where 1=1
+      <if test="postName !=null and postName !=''">
+          and p.post_name like CONCAT('%',#{postName},'%')
+      </if>
+        <if test="id !=null and id !=''">
+            and p.id =#{id}
+        </if>
+
+        order by create_time desc
+
+    </select>
+
+
+
+    <insert id="savePost" parameterType="com.ovit.manager.modules.nswy.entity.PostInfo">
+        insert into reversion_post_info(
+          id,
+          post_name,
+          parent_id,
+         create_time
+        )values (
+          #{id},
+          #{postName},
+          #{pid},
+          now()
+        );
+    </insert>
+
+    <update id="updatePost" parameterType="com.ovit.manager.modules.nswy.entity.PostInfo">
+        update reversion_post_info set post_name = #{postName}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deletePost" parameterType="java.lang.String">
+        delete from reversion_post_info where id= #{id}
+    </delete>
+
+</mapper>

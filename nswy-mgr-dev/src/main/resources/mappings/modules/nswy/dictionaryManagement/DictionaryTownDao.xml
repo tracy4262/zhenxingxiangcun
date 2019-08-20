@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryTownDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryTown"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryTown">
+        select
+               p.id,
+        p.name as name,
+        p.parent_id as pid,
+        p.level,
+        p.code as value,
+        p.remark
+        from town p
+        where p.parent_id is not null and p.parent_id != ''
+        <if test="name!=null and name!=''">
+            and p.name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+        order by p.create_time desc
+    </select>
+
+    <insert id="saveTown" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryTown">
+        insert into town(
+            id,
+            name,
+            parent_id,
+            level,
+            code,
+            remark,
+            create_time
+        )values (
+                    #{id},
+                    #{name},
+                    #{pid},
+                    #{level},
+                    #{value},
+                    #{remark},
+                    now()
+                );
+    </insert>
+
+    <update id="updateTown" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryTown">
+        update town
+        set
+            name = #{name},
+            code = #{value},
+            remark = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTown" parameterType="java.lang.String">
+        delete from town where id= #{id}
+    </delete>
+
+</mapper>

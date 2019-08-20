@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.FavoriteProductMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.FavoriteProduct">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="species_name" property="speciesName" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, species_name, type, create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from favorite_product
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.FavoriteProduct">
+		insert into favorite_product (id, account, species_name,
+		type, create_time)
+		values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR},
+		#{speciesName,jdbcType=VARCHAR},
+		#{type,jdbcType=INTEGER},now())
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.FavoriteProduct">
+		update favorite_product
+		set account = #{account,jdbcType=VARCHAR},
+		species_id = #{speciesId,jdbcType=INTEGER},
+		type = #{type,jdbcType=INTEGER},
+		create_time =now()
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.NswyInformationExamineDao">
+
+	<select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.InformationInfo" resultType="com.ovit.manager.modules.nswy.entity.InformationInfo">
+        SELECT
+            i.id,
+            i.information_detail_id,
+            i.business_information,
+            i.all_range,
+            i.business_nature,
+            i.all_business,
+            i.title,
+            i.image_add,
+            DATE_FORMAT(i.create_time,"%Y-%m-%d %T") AS createTime,
+            i.comment_num,
+            i.label,
+            i.article_id,
+            i.industrial_id,
+            i.column_type,
+            CASE i.doc_type
+            WHEN '020101' THEN '行业动态'
+            WHEN '020102' THEN '企业动态'
+            WHEN '020103' THEN '专家动态'
+            WHEN '020104' THEN '乡村动态'
+            WHEN '020105' THEN '群协动态'
+            WHEN '020106' THEN '国际动态'
+            WHEN '020107' THEN '会员动态'
+            WHEN '020108' THEN '城乡互动'
+            END AS docType,
+            i.classified_id,
+            i.abstracts,
+            i.is_to_page,
+            i.species_id,
+            i.species_name,
+            i.product,
+            i.service,
+            i.examine,
+            i.friend_reminding,
+            i.reminding_content,
+            i.is_sms,
+            i.is_publish,
+            i.componsation,
+            CASE i.approve_status
+            WHEN '0' THEN '待审核'
+            WHEN '1' THEN '删除'
+            WHEN '2' THEN '审核通过'
+            WHEN '3' THEN '拒绝'
+            END AS approveStatus,
+            i.is_nav_display,
+            i.order_num,
+            d.editer
+        FROM
+        information i left join information_detail d on i.information_detail_id = d.id
+        where 1=1
+        <if test="title != null and title != ''">
+            and i.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="approveStatus != null and approveStatus != ''">
+            and i.approve_status = #{approveStatus}
+        </if>
+        ORDER BY i.create_time DESC
+	</select>
+
+
+    <delete id="deleteInformation" parameterType="java.lang.Integer" >
+        DELETE
+            t1,t2,t3,t4,t5
+        FROM
+            information t1
+        LEFT JOIN information_detail t2 ON t1.information_detail_id = t2.id
+        LEFT JOIN info_comment t3 ON t2.id = t3.information_detail_id
+        LEFT JOIN thumb_comment t4 ON t3.id = t4.comment_id
+        LEFT JOIN thumb_detail t5 ON t5.detail_id = t1.information_detail_id
+        WHERE t1.id = #{informationInfoId,jdbcType=INTEGER}
+    </delete>
+
+    <update id="informationAdopt" parameterType="map">
+        UPDATE information SET approve_status = 2 WHERE id = #{informationInfoId}
+    </update>
+
+    <update id="informationRefuse" parameterType="map">
+        UPDATE information SET approve_status = 3 WHERE id = #{informationInfoId}
+    </update>
+
+    <update id="informationUpdateHome" parameterType="map" >
+        UPDATE information SET is_to_page = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="informationUpdateNavDisplay" parameterType="map">
+        UPDATE information SET is_nav_display = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="informationSetOrderNum" parameterType="map">
+        UPDATE information SET order_num = #{orderNum} WHERE id = #{id}
+    </update>
+</mapper>

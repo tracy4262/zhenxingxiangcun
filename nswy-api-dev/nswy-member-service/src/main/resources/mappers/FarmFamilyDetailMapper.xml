@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.FarmFamilyDetailMapper">
+
+	<select id="findFamilyMember" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			f.family_member_id, f.name as name, f.relationship, f.sex, f.birthday, f.phone, f.skill,f.farm_family_id,f.account,f.family_status
+
+		FROM family_member f where 1=1
+		<if test="farm_family_id!='' and farm_family_id !=null">
+			and f.farm_family_id = #{farm_family_id}
+		</if>
+		<if test="account!='' and account !=null">
+			and f.account = #{account}
+		</if>
+		order by f.update_time desc
+	</select>
+
+	<select id="findOutputProduct" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		o.output_product_id,o.species,o.scale,o.commodity_name as commodityName,o.product_name as productName,o.product_number as product,o.conversion,o.farm_family_id,o.account,o.product_status,o.units
+
+		FROM output_product o where 1=1
+		<if test="farm_family_id!='' and farm_family_id !=null">
+			and o.farm_family_id = #{farm_family_id}
+		</if>
+		<if test="account!='' and account !=null">
+			and o.account = #{account}
+		</if>
+		order by o.update_time desc
+	</select>
+
+	<select id="findProvideServices" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+
+		p.provide_services_id, p.service_name as serviceName, p.class_ification as classification, p.create_time as createTimes, p.picture_list as pictureList, p.farm_family_id,p.account,p.provide_status
+
+		FROM provide_services_farm p where 1=1
+		<if test="farm_family_id!='' and farm_family_id !=null">
+			and p.farm_family_id = #{farm_family_id}
+		</if>
+		<if test="account!='' and account !=null">
+			and p.account = #{account}
+		</if>
+		order by p.update_time desc
+	</select>
+
+	<select id="findPurchaseIntention" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		i.purchase_intention_id, i.name, i.product_name as productName, i.total, i.price, i.totalAmount, i.farm_family_id,i.account,i.purchase_status,i.units
+
+		FROM purchase_intention i where 1=1
+		<if test="farm_family_id!='' and farm_family_id !=null">
+			and i.farm_family_id = #{farm_family_id}
+		</if>
+		<if test="account!='' and account !=null">
+			and i.account = #{account}
+		</if>
+		order by i.update_time desc
+	</select>
+
+	<select id="findHouseSituation" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			h.id,
+			h.farm_family_id,
+			h.home_owner_name as name,
+			h.home_address as addr,
+			h.built_area as buildingArea,
+			h.property_right_number as houseNumber,
+			h.land_use_area as useArea,
+			h.land_use_number as landNumber,
+			h.home_road_distance as distance,
+			h.home_structure as structure,
+			h.geographical_position as land,
+			h.home_description as development,
+			h.no_evidence_reason as reason,
+			h.home_purpose as purpose,
+			h.water_origin as waterSource,
+			h.tv_signal as tcSignal,
+			h.power_quality as communicationQuality,
+			h.is_water_diff as waterHard,
+			h.biogas_pool as biogasPool,
+			h.changes_pool as pool,
+			h.natural_gas as gas,
+			h.broadband_network as broadband,
+			h.tele_network as network,
+			h.account,
+			h.certificate,
+			h.status,
+		    h.estate,
+			h.addr_Detail as addrDetail
+		FROM house_life_condition h where 1=1
+		<if test="farm_family_id!='' and farm_family_id !=null">
+			and h.farm_family_id = #{farm_family_id}
+		</if>
+		<if test="account!='' and account !=null">
+			and h.account = #{account}
+		</if>
+
+		order by h.update_time desc
+	</select>
+
+	<select id="findFamilySituation" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT c.id,
+		c.farm_family_id,
+		c.tv_number as tv,
+		c.computer_number as computer,
+		c.fridge_number as icebox,
+		c.air_conditioner_numebr as ari,
+		c.car_number as car,
+		c.motorcycle_number as motorcycle,
+		c.solar_heater_number as heater,
+		c.family_modern_status,
+		c.account
+		FROM family_modern_condition c where 1=1
+		<if test="farm_family_id!='' and farm_family_id !=null">
+			and c.farm_family_id = #{farm_family_id}
+		</if>
+		<if test="account!='' and account !=null">
+			and c.account = #{account}
+		</if>
+		order by c.update_time desc
+	</select>
+
+	<insert id="insertFamilyMember" parameterType="java.util.Map">
+		insert into family_member ( name, relationship, sex, birthday, phone, skill,farm_family_id,family_status,account)
+
+		values (#{name},#{relationship},#{sex},#{birthday},#{phone},#{skill},#{farm_family_id},#{family_status},#{account})
+	</insert>
+
+	<insert id="insertOutputProduct" parameterType="java.util.Map">
+		insert into output_product (
+		species,scale,commodity_name,product_name,product_number,conversion,farm_family_id,product_status,account,units)
+
+		values (#{species},#{scale},#{commodityName},#{productName},#{product},#{conversion},#{farm_family_id},#{product_status},#{account},#{units});
+	</insert>
+
+	<insert id="insertProvideServices" parameterType="java.util.Map">
+		insert into provide_services_farm (service_name, class_ification, create_time, picture_list , farm_family_id,provide_status,account)
+		values (#{serviceName},#{classification},#{createTimes},#{pictureList},#{farm_family_id},#{provide_status},#{account});
+	</insert>
+
+	<insert id="insertPurchaseIntention" parameterType="java.util.Map">
+		insert into purchase_intention (name, product_name, total, price, totalAmount, farm_family_id,purchase_status,account,units)
+		values (#{name},#{productName},#{total},#{price},#{totalAmount},#{farm_family_id},#{purchase_status},#{account},#{units});
+	</insert>
+
+	<insert id="insertHouseSituation" parameterType="java.util.Map">
+		insert into house_life_condition (
+			farm_family_id,
+			home_owner_name,
+			home_address,
+			built_area,
+			property_right_number,
+			land_use_area,
+			land_use_number,
+			home_road_distance,
+			home_structure,
+			geographical_position,
+			home_description,
+			no_evidence_reason,
+			home_purpose,
+			water_origin,
+			tv_signal,
+			power_quality,
+			is_water_diff,
+			biogas_pool,
+			changes_pool,
+			natural_gas,
+			broadband_network,
+			tele_network,
+			certificate,
+			account,
+			status,
+			estate,
+			addr_Detail
+		)
+		values (
+		#{farm_family_id},
+		#{name},
+		#{addr},
+		#{buildingArea},
+		#{houseNumber},
+		#{useArea},
+		#{landNumber},
+		#{distance},
+		#{structure},
+		#{land},
+		#{development},
+		#{reason},
+		#{purpose},
+		#{waterSource},
+		#{tcSignal},
+		#{communicationQuality},
+		#{waterHard},
+		#{biogasPool},
+		#{pool},
+		#{gas},
+		#{broadband},
+		#{network},
+		#{certificate},
+		#{account},
+		#{status},
+		#{estate},
+		#{addrDetail}
+		);
+	</insert>
+
+	<insert id="insertFamilySituation" parameterType="java.util.Map">
+		insert into family_modern_condition (
+		farm_family_id,
+		tv_number,
+		computer_number,
+		fridge_number,
+		air_conditioner_numebr,
+		car_number,
+		motorcycle_number,
+		solar_heater_number,
+		family_modern_status,
+		account
+		)
+		values (
+		#{farm_family_id},
+		#{tv},
+		#{computer},
+		#{icebox},
+		#{ari},
+		#{car},
+		#{motorcycle},
+		#{heater},
+		#{family_modern_status},
+		#{account});
+	</insert>
+
+	<delete id="deleteFamilyMember" parameterType="java.util.Map">
+		delete from family_member where 1=1
+		<if test=" farm_family_id!='' and farm_family_id!=null">
+			and farm_family_id = #{farm_family_id}
+		</if>
+
+		<if test=" account!='' and account!=null">
+			and account = #{account}
+		</if>
+	</delete>
+
+	<delete id="deleteOutputProduct" parameterType="java.util.Map">
+		delete from output_product where 1=1
+		<if test=" farm_family_id!='' and farm_family_id!=null">
+			and farm_family_id = #{farm_family_id}
+		</if>
+
+		<if test=" account!='' and account!=null">
+			and account = #{account}
+		</if>
+	</delete>
+
+
+	<delete id="deleteProvideServices" parameterType="java.util.Map">
+		delete from provide_services_farm where 1=1
+		<if test=" farm_family_id!='' and farm_family_id!=null">
+			and farm_family_id = #{farm_family_id}
+		</if>
+
+		<if test=" account!='' and account!=null">
+			and account = #{account}
+		</if>
+	</delete>
+
+
+	<delete id="deletePurchaseIntention" parameterType="java.util.Map">
+		delete from purchase_intention  where 1=1
+		<if test=" farm_family_id!='' and farm_family_id!=null">
+			and farm_family_id = #{farm_family_id}
+		</if>
+
+		<if test=" account!='' and account!=null">
+			and account = #{account}
+		</if>
+	</delete>
+
+	<delete id="deleteHouseSituation" parameterType="java.util.Map">
+		delete from house_life_condition where 1=1
+		<if test=" farm_family_id!='' and farm_family_id!=null">
+			and farm_family_id = #{farm_family_id}
+		</if>
+
+		<if test=" account!='' and account!=null">
+			and account = #{account}
+		</if>
+
+	</delete>
+
+
+	<delete id="deleteFamilySituation" parameterType="java.util.Map">
+		delete from family_modern_condition where 1=1
+
+		<if test=" farm_family_id!='' and farm_family_id!=null">
+			and farm_family_id = #{farm_family_id}
+		</if>
+
+		<if test=" account!='' and account!=null">
+			and account = #{account}
+		</if>
+	</delete>
+
+
+
+</mapper>

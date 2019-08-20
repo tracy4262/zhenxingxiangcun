@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>发现</title>
+
+<link rel="stylesheet" href="../../../layui.css">
+<style>
+.findText{float: left; width: 80%; height:80px; line-height:80px;}
+.findInputText{margin-top: 21px; }
+.findButton{float: right; width: 20%; height:80px; line-height:80px; text-align:center;}
+.mainDiv{width: 800px; margin: 0px auto;}
+.findDiv{height: 80px;}
+.avatar{float: left; width: 20%;}
+.username{float: left; height:50px; line-height:50px; width: 20%;}
+.sign{float: left; height:50px; line-height:50px; width: 40%; }
+.addFriendButton{float: right; height:50px; line-height:50px; width: 20%; text-align:center;}
+.layim-find-avatar{width: 50px; height: 50px;}
+.layui-btn-small{padding: 0 15px; margin-left: 5px; color: #999;}
+</style>
+</head>
+<body>
+
+<div id="mainDiv" class="mainDiv">
+	<div id="findDiv" class="findDiv" >
+	    <div class="findText">
+	      	<!--<input type="text" id="userId" name="userId" autocomplete="off" placeholder="请输入账号" class="layui-input findInputText">-->
+			<input type="text" id="userName" name="userName" autocomplete="off" placeholder="请输入账号" class="layui-input findInputText">
+	    </div>
+		<div class="findButton">
+			<button id="find" class="layui-btn">查找</button>
+		</div>
+		<div class="findButton">
+		<button id="addGroupButton" class="layui-btn">添加分组</button>
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="layim-find">
+	  <ul id="LAY_view"></ul>
+	</div>
+	
+	<textarea title="查找模版" id="LAY_tpl" style="display:none;">
+	{{# layui.each(d.data, function(index, item){ }}
+		<li data-uid="{{ item.id }}" data-username="{{ item.username }}" data-avatar="{{ item.avatar }}" >
+	 		<div class="avatar">
+				<img src="{{ item.avatar }}" class="layui-circle layim-find-avatar" >
+	      	</div>
+			<div class="username">
+	        	{{ item.username }} 
+	      	</div>
+	      	<div class="sign">
+	        	{{ item.sign }} 
+	      	</div>
+	      	<div class="addFriendButton">
+	        	<button id="addFriend" class="layui-btn" data-type="addfriend">添加好友</button>
+	      	</div>
+
+		</li>
+	{{#  }); }}
+	</textarea>
+</div>
+
+<script src="../../../../layui.js"></script>
+<script type="text/javascript"  src="../../../../../jquery.min.js"></script>
+<script>
+var ip = '//192.168.7.42:8091';
+// var ip = '//www.ns51.cn:8091';
+layui.use(['layim', 'laypage'], function(){
+  	var layim = layui.layim
+  	,layer = layui.layer
+  	,laytpl = layui.laytpl
+  	,$ = layui.jquery
+  	,laypage = layui.laypage;
+  
+  	var addUserId;
+	var host='ws:'+ip+'/websocket/-10000'; // 通知消息的websocket通道
+  	var ws=""; // 一个ws对象就是一个通信管道
+  	if ('WebSocket' in window) {
+	  	ws=new WebSocket(host);
+  	} else if ('MozWebSocket' in window) {  
+	  	ws= new MozWebSocket(host);
+  	} else { 
+	  	layui.use(['layer'], function(){
+	  		var layer = layui.layer;
+		  	layer.alert("您的浏览器不支持webscoket协议,建议使用新版谷歌、火狐等浏览器，请勿使用IE10以下浏览器，360浏览器请使用极速模式，不要使用兼容模式！"); 
+		});
+  	}
+	
+  	ws.onopen=function(e) {
+		console.log("发送添加好友消息的ws连接成功！");
+  	}
+	
+  	ws.onclose=function(e) {
+		console.log("发送添加好友消息的ws断开连接！");
+  	}
+
+  	//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。  
+  	window.onbeforeunload = function () {  
+    	ws.close();  
+  	}  
+  
+  	$(document).ready(function(){
+  		$("#find").click(function(){//请求消息
+  		 //	addUserId=$("#userId").val();
+			userName=$("#userName").val();
+  		    $.get(ip+'/user/' + userName + '/getUserById', function(res,status){
+  		    	var user=JSON.parse(res);
+				addUserId=user.id;
+  		      	//记录来源用户信息
+  		      	var userArray=new Array();
+  		      	userArray[0]=user;
+  			  	var html = laytpl(LAY_tpl.value).render({
+  			    	data: userArray
+  			  	});
+  			  	$('#LAY_view').html(html);
+  			  	
+  			  	$("#addFriend").click(user, function(event){
+					layim.add(new AddFriend('friend',event.data.username,event.data.avatar));				
+				});
+  		    });
+		});
+	});
+
+	$("#addGroupButton").click(function(){
+		layer.open({
+			type: 2,
+			title: '添加分组',
+			shadeClose: false,
+			area: ['500px', '400px'],
+			maxmin: true,
+			closeBtn: 1,
+			content: ['./addGruop.html', 'yes'],
+			success: function (layero, index) {
+				var body = layer.getChildFrame('body', index);
+				var $bodyCont = body.contents();
+
+				$($bodyCont).on('click', '#addBtnId', function (e) {
+					var groupName = $bodyCont.find("#groupName").val();
+					$.post(ip+'/friendMessage/saveFriendGroup.do', {
+						"groupName": groupName
+					},function (rep) {
+						if(rep.code=='200'){
+							alert("weweerre");
+						}
+							layer.msg('添加成功!', {
+								icon: 1,
+								time: 1000
+							});
+						layer.closeAll();
+					})
+				})
+			}
+		})
+	})
+
+  	function AddFriend(type,username,avatar){ 
+  		this.type=type; 		// friend:申请加好友；group:申请加群
+  		this.username=username; // 好友昵称，若申请加群，参数为:groupname
+  		this.avatar=avatar; 	// 头像
+  		this.submit=function(group, remark, index){	// 一般在此执行Ajax和WS，以通知对方
+  			// 通知对方：申请添加对方为好友
+  			$.post(ip+'/friendMessage/addMessage', {
+  				to: addUserId
+  				,group: group
+  				,remark: remark
+  			}, function(res, status) {
+  				data=JSON.parse(res);
+  				if(data.code != 0){
+  		          return layer.msg(data.msg);
+  		        }
+  				
+  				// 执行ws通知对方添加好友的消息  
+				ws.send(JSON.stringify({
+					emit: "noticeMessage"
+					,to: addUserId
+				}));
+		  		
+		  		layer.close(index);		// 关闭该面板
+  			});
+  		};
+  	} 
+});
+</script>
+</body>
+</html>

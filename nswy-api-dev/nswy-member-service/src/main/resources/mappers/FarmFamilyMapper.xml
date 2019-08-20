@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.FarmFamilyMapper">
+
+	<select id="findGroup" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+		  group_id,group_name,login_account
+		from farm_group
+		where 1=1
+		<if test="login_account!='' and login_account!=null">
+			and login_account = #{login_account}
+		</if>
+		<if test="group_name!='' and group_name!=null">
+			and group_name = #{group_name}
+		</if>
+		<if test="group_id !='' and group_id!=null">
+			and group_id = #{group_id}
+		</if>
+	</select>
+
+	<select id="findTitle" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+		title_id,title_name,login_account
+		from farm_family_title
+		where login_account = #{login_account}
+
+	</select>
+	<select id="findFarmFamilyList" resultType="map" parameterType="java.util.Map">
+		select g.group_name as groupName,f.group_id,
+		case when c.sex is null then 'null'
+		when c.sex ='1' then '男'
+		when c.sex = '0' then '女' end
+		as gender,l.display_name as realName,
+
+		c.mobile as mobile,
+
+		case when
+
+		(select c.id_card from certification c where c.user_account = f.farm_account) is null
+
+		then f.id_card
+
+		else c.id_card END as idCard,c.city as location,f.title as title,f.farm_account,f.farm_family_id
+
+		 from farm_family f left join certification c on f.farm_account = c.user_account
+
+		left join login_user l on f.farm_account= l.login_account
+
+		left join farm_group g on f.group_id=g.group_id
+
+		where 1=1
+		<if test="login_account!='' and login_account !=null">
+
+			and  f.login_account = #{login_account}
+		</if>
+
+		<if test="display_name!='' and display_name !=null">
+
+			and  l.display_name like CONCAT('%',#{display_name},'%')
+		</if>
+
+		<if test="group_id!='' and group_id!=null">
+			and f.group_id = #{group_id}
+		</if>
+
+		order by f.create_time desc
+
+	</select>
+
+	<select id="findCountFamilyMember" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) from family_member f where f.name is not  null and farm_family_id
+		in (select farm_family_id  from farm_family where login_account=#{login_account})
+	</select>
+
+	<select id="findCountFarmFamily" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*)  from farm_family where login_account=#{login_account}
+		<if test="group_id !='' and group_id!=null">
+			and group_id = #{group_id}
+		</if>
+	</select>
+
+	<select id="findFarmFamily" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+		group_id,login_account,farm_account
+		from farm_family
+		where 1=1
+		<if test="login_account!='' and login_account!=null">
+			and login_account = #{login_account}
+		</if>
+		<if test="farm_account!='' and farm_account!=null">
+			and farm_account = #{farm_account}
+		</if>
+	</select>
+
+	<delete id="deleteFarmFamily" parameterType="java.lang.Integer">
+		delete from farm_family
+		where farm_family_id = #{farm_family_id}
+	</delete>
+
+	<select id="findLogin" parameterType="java.util.Map" resultType="java.util.Map">
+		select u.login_account from login_user u where u.login_account=#{farm_account}
+		<if test="login_passwd!='' and login_passwd!=null">
+			and u.login_passwd = #{login_passwd}
+		</if>
+
+	</select>
+
+
+	<insert id="insertGroup" parameterType="java.util.Map">
+		insert into farm_group (group_name, create_time,login_account)
+		values (#{group_name},now(),#{login_account});
+	</insert>
+
+	<insert id="insertTitle" parameterType="java.util.Map">
+		insert into farm_family_title (title_name, create_time,login_account)
+		values (#{title_name},now(),#{login_account});
+	</insert>
+
+	<insert id="insertFarm" parameterType="java.util.Map">
+		insert into farm_family (farm_account, login_account,group_id,password,id_card,create_time)
+		values (#{farm_account},#{login_account},#{group_id},#{login_passwd},#{idCard},now());
+	</insert>
+
+	<insert id="insertLogin" parameterType="java.util.Map">
+		insert into login_user ( unique_id, login_account,
+		login_passwd, register_time,user_type
+		)
+		values (
+		#{unique_id},#{farm_account},#{login_passwd},now(),#{user_type}
+		)
+	</insert>
+
+
+	<update id="updateGroup" parameterType="java.util.Map">
+		update farm_group
+		set group_name = #{group_name}
+		where group_id = #{group_id}
+	</update>
+
+	<update id="updateTitle" parameterType="java.util.Map">
+		update farm_family_title
+		set title_name = #{title_name}
+		where title_id = #{title_id}
+	</update>
+
+	<insert id="insertCertification" parameterType="java.util.Map">
+		insert into certification(
+		user_account,
+		id_card
+		)value (
+		#{farm_account},
+		#{idCard}
+		)
+	</insert>
+
+
+</mapper>

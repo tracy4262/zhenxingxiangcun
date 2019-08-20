@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ProxyUserInfoDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.ProxyUserInfo"
+            resultType="com.ovit.manager.modules.nswy.entity.ProxyUserInfo">
+        select
+            id as proxyUserInfoId,
+            account,
+            proxy_account as proxyAccount,
+            protocol_template as proxyTemplate,
+            upload_protocol as uploadProtocol,
+            upload_pdf as uploadPdf,
+            /*cacel_protocol_template as cacelProxyTemplate,
+            cacel_upload_protocol as cacelUploadProtocol,
+            cacel_upload_pdf as cacelUploadPdf,*/
+            type,
+            status,
+            cancel_reason as cancelReason,
+            other_reason as otherReason
+        from reversion_user_proxy_info where 1=1 and status!=0 and status!=4
+
+        <if test="account!=null and account !=''">
+            and account like CONCAT('%',#{account},'%')
+        </if>
+
+        <if test="status!='' and status!=null ">
+            and status =#{status}
+        </if>
+
+        order by update_time desc
+
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="com.ovit.manager.modules.nswy.entity.ProxyUserInfo" resultType="com.ovit.manager.modules.nswy.entity.ProxyUserInfo">
+        SELECT
+            id,
+            account,
+            proxy_account,
+            protocol_template,
+            upload_protocol,
+            /*cacel_protocol_template,
+            cacel_upload_protocol,*/
+            type,
+            status,
+            cancel_reason as cancelReason,
+            other_reason as otherReason
+        from reversion_user_proxy_info
+
+        where id = #{proxyUserInfoId}
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.ovit.manager.modules.nswy.entity.ProxyUserInfo" >
+        update reversion_user_proxy_info
+        set
+            <choose>
+                <when test="type==0 and status==3">
+                    type = 1,
+                    status = 1
+                </when>
+                <otherwise>
+                    type = #{type},
+                    status = #{status}
+                </otherwise>
+            </choose>
+
+            <!--<if test="type==0 and status==1">
+                type = #{type},
+                status = #{status}
+            </if>
+
+            <if test="type==0 and status==3">
+                type = 1,
+                status = 1
+            </if>
+
+            <if test="type==1 and status==1">
+                type = #{type},
+                status = #{status}
+            </if>
+
+            <if test="type==1 and status==3">
+                type = #{type},
+                status = #{status}
+            </if>-->
+        where id = #{proxyUserInfoId}
+
+
+    </update>
+
+    <update id="updateAuditUser" parameterType="com.ovit.manager.modules.nswy.entity.ProxyUserInfo">
+        update reversion_proxy_audit_record
+        set
+        <choose>
+            <when test="type==0 and status==3">
+                type = 1,
+                status = 1
+            </when>
+            <otherwise>
+                type = #{type},
+                status = #{status}
+            </otherwise>
+        </choose>
+
+            <if test="auditOpinion!=null and auditOpinion !=''">
+                , <![CDATA[   audit_opinion = #{auditOpinion}  ]]>
+            </if>
+        where account = (select account from reversion_user_proxy_info where id = #{proxyUserInfoId} )
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="com.ovit.manager.modules.nswy.entity.ProxyUserInfo" >
+        delete from reversion_user_proxy_info
+        where id = #{proxyCorpInfoId};
+
+    </delete>
+
+    <delete id="deleteAuditByPrimaryKey" parameterType="com.ovit.manager.modules.nswy.entity.ProxyUserInfo">
+        delete from reversion_proxy_audit_record
+        where account = (select account from reversion_user_proxy_info
+                         where id = #{proxyUserInfoId})
+    </delete>
+
+</mapper>

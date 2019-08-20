@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryCommodityDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryCommodity"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryCommodity">
+        select
+        c.id as id,
+        c.currency_commodity_pinyin as pinYin,
+        c.commodity_alias as alias,
+        c.currency_commodity_name as name,
+        c.industry_type_id as industryTypeId,
+        c.product_type_id as productTypeId,
+        c.related_species_id as relatedSpeciesId,
+        case when c.level is null then 1 else c.level end as level,
+        case when c.parent_id is null then 0 else c.parent_id end as pid,
+        c.remark as remark
+        from shop_currency_commodity c
+
+        where 1=1 and c.type != 2
+        <if test="name!=null and name!=''">
+            and c.currency_commodity_name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and c.id like CONCAT('%',#{id},'%')
+        </if>
+        order by create_time desc
+    </select>
+
+    <select id="findIndustry" parameterType="map" resultType="map">
+        select
+            dict_value as industryTypeId,
+            dict_name as industryTypeName
+        from system_dict
+        where dict_type = 'ba4d3d9c-cc38-4ddb-a7f2-25cd1323c2f7'
+
+        order by create_time desc
+    </select>
+
+    <select id="findProductType" parameterType="map" resultType="map">
+        select
+            classification_code as productTypeId,
+            classification_name as productTypeName
+        from mall_classification
+
+    </select>
+
+    <insert id="saveCommodity" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryCommodity">
+        insert into shop_currency_commodity(
+
+            currency_commodity_name,
+            currency_commodity_pinyin,
+            commodity_alias,
+            industry_type_id,
+            related_species_id,
+            account,
+            aduit_status,
+            type,
+            remark,
+            level,
+            parent_id,
+            product_type_id,
+            traceability_type,
+            create_time
+        )values (
+                    #{name},
+                    #{pinyin},
+                    #{alias},
+                    #{industryTypeId},
+                    #{relatedSpeciesId},
+                    #{account},
+                    #{status},
+                    #{type},
+                    #{remark},
+                    #{level},
+                    #{pid},
+                    #{productTypeId},
+                    #{traceabilityType},
+                    now()
+                );
+    </insert>
+
+    <update id="updateCommodity" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryCommodity">
+        update shop_currency_commodity
+        set
+            currency_commodity_name = #{name},
+            currency_commodity_pinyin = #{pinyin},
+            industry_type_id = #{industryTypeId},
+            related_species_id = #{relatedSpeciesId},
+            product_type_id = #{productTypeId},
+            commodity_alias = #{alias},
+            remark = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCommodity" parameterType="java.lang.String">
+        delete from shop_currency_commodity where id= #{id}
+    </delete>
+
+</mapper>

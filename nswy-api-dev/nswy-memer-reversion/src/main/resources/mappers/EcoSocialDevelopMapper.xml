@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.EcoSocialDevelopMapper">
+
+    <select id="findIndustry" parameterType="map" resultType="map">
+        select id, year_file_id as yearId, name, price,template_id as templateId
+        from reversion_eco_industry_info
+        where account = #{account} and year_file_id = #{yearId} and type = #{type} and template_id = #{templateId}
+    </select>
+
+    <insert id="saveIndustry" parameterType="map">
+        replace into reversion_eco_industry_info (
+        id,
+        account,
+        year_file_id,
+        name,
+        price,
+        type,
+        template_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.yearId}, #{item.name}, #{item.price}, #{item.type},#{item.templateId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteIndustry" parameterType="map">
+        delete from reversion_eco_industry_info where id = #{id}
+    </delete>
+
+    <select id="findBreed" parameterType="map" resultType="map">
+        select id, year_file_id as yearId, speci_name as speciName, scale, scale_unit as scaleUnit,
+        yield as Yield, yield_unit as YieldUnit, output,template_id as templateId
+        from reversion_eco_breed_info
+        where account = #{account} and year_file_id = #{yearId} and type = #{type} and template_id = #{templateId}
+    </select>
+
+    <insert id="saveBreed" parameterType="map">
+        replace into reversion_eco_breed_info (
+        id,
+        account,
+        year_file_id,
+        speci_name,
+        scale,
+        scale_unit,
+        yield,
+        yield_unit,
+        output,
+        type,
+        template_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.yearId}, #{item.speciName}, #{item.scale},
+                #{item.scaleUnit}, #{item.Yield}, #{item.YieldUnit}, #{item.output}, #{item.type},#{item.templateId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteBreed" parameterType="map">
+        delete from reversion_eco_breed_info where id = #{id}
+    </delete>
+
+    <select id="findFarmProduct" parameterType="map" resultType="map">
+        select id, year_file_id as yearId, price, output, yield as Yield, yield_unit as YieldUnit, after_weight as afterWeight,
+        product_name as productTypeName, weight_unit as afterWeightUnit, when_weight as whenWeight,
+        is_conversion as isConversion,template_id as templateId
+        from reversion_eco_farm_product
+        where account = #{account} and year_file_id = #{yearId} and type = #{type} and template_id = #{templateId}
+    </select>
+
+    <insert id="saveFarmProduct" parameterType="map">
+        replace into reversion_eco_farm_product (
+        id,
+        account,
+        year_file_id,
+        price,
+        output,
+        yield,
+        yield_unit,
+        after_weight,
+        product_name,
+        weight_unit,
+        when_weight,
+        is_conversion,
+        type,
+        template_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.yearId}, #{item.price}, #{item.output}, #{item.Yield},
+                #{item.YieldUnit}, #{item.afterWeight}, #{item.productTypeName}, #{item.afterWeightUnit},
+                #{item.whenWeight}, #{item.isConversion}, #{item.type},#{item.templateId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteFarmProduct" parameterType="map">
+        delete from reversion_eco_farm_product where id = #{id}
+    </delete>
+
+    <select id="findTechnicalProduct" parameterType="map" resultType="map">
+        select id, year_file_id as yearId, product_name as productName, model,
+        yield as Yield, yield_unit as YieldUnit, price, output,template_id as templateId
+        from reversion_eco_technical_product
+        where account = #{account} and year_file_id = #{yearId} and type = #{type}  and template_id = #{templateId}
+    </select>
+
+    <insert id="saveTechnicalProduct" parameterType="map">
+        replace into reversion_eco_technical_product (
+        id,
+        account,
+        year_file_id,
+        product_name,
+        model,
+        yield,
+        yield_unit,
+        price,
+        output,
+        type,
+        template_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.yearId}, #{item.productName}, #{item.model},
+                #{item.Yield}, #{item.YieldUnit}, #{item.price}, #{item.output}, #{item.type},#{item.templateId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteTechnicalProduct" parameterType="map">
+        delete from reversion_eco_technical_product where id = #{id}
+    </delete>
+
+    <select id="findServiceProduct" parameterType="map" resultType="map">
+        select id, year_file_id as yearId, service_name as serviceName, ability, price, output,template_id as templateId
+        from reversion_eco_service_product
+        where account = #{account} and year_file_id = #{yearId} and type = #{type} and template_id = #{templateId}
+    </select>
+
+    <insert id="saveServiceProduct" parameterType="map">
+        replace into reversion_eco_service_product (
+        id,
+        account,
+        year_file_id,
+        service_name,
+        ability,
+        price,
+        output,
+        type,
+        template_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.yearId}, #{item.serviceName}, #{item.ability},
+                #{item.price}, #{item.output}, #{item.type},#{item.templateId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteServiceProduct" parameterType="map">
+        delete from reversion_eco_service_product where id = #{id}
+    </delete>
+
+    <select id="findByParentId" parameterType="java.lang.String" resultType="map">
+        SELECT id as classId, label as className, parent_id as parentId FROM reversion_nation_eco_classification
+        WHERE parent_id = #{parentId}
+    </select>
+
+    <select id="findEcoBasicData" parameterType="map" resultType="map">
+        SELECT id as value, label, pinyin FROM reversion_nation_eco_classification
+        WHERE 1=1
+        <if test="id != null and id != ''">
+            AND parent_id = #{id}
+        </if>
+        <!--<if test="keywords != null and keywords != ''">-->
+            <!--AND label LIKE CONCAT('%', #{keywords}, '%')-->
+        <!--</if>-->
+        <!--<if test="fpinyin != null and fpinyin != ''">-->
+            <!--AND pinyin = #{fpinyin}-->
+        <!--</if>-->
+    </select>
+
+</mapper>

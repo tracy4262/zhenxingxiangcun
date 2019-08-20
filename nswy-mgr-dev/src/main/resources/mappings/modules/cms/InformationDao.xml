@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.cms.dao.InformationDao">
+	<resultMap id="BaseResultMap"
+		type="com.ovit.manager.modules.cms.entity.Information">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="article_id" property="articleId" jdbcType="VARCHAR" />
+		<result column="information_detail_id" property="informationDetailId"
+			jdbcType="INTEGER" />
+		<result column="business_information" property="businessInformation"
+			jdbcType="VARCHAR" />
+		<result column="all_range" property="allRange" jdbcType="VARCHAR" />
+		<result column="business_nature" property="businessNature"
+			jdbcType="VARCHAR" />
+		<result column="all_business" property="allBusiness" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="image_add" property="imageAdd" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="comment_num" property="commentNum" jdbcType="INTEGER" />
+		<result column="label" property="lables" jdbcType="VARCHAR" />
+		<result column="industrial_id" property="industrialId"
+			jdbcType="VARCHAR" />
+		<result column="doc_type" property="docType" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, article_id, information_detail_id, business_information, all_range,
+		business_nature, all_business,
+		title, image_add, create_time, comment_num, label,industrial_id,doc_type
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from information
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from information
+		where article_id = #{article_id,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 查询资讯表，并在后台通过PAGE实现分页 -->
+	<select id="findInForMation" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from information
+	</select>
+
+	<!-- 搜索 查询资讯表，并在后台通过PAGE实现分页 -->
+	<select id="findInforMationTitle" resultMap="BaseResultMap"
+		parameterType="com.ovit.manager.modules.cms.entity.Information">
+		select
+		<include refid="Base_Column_List" />
+		from information where 1=1
+		<if test="title != null">
+			AND title like concat(concat('%',#{title}),'%')
+
+		</if>
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from information
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
+		parameterType="com.ovit.manager.modules.cms.entity.Information">
+		insert into information (id, article_id, information_detail_id,
+		business_information,
+		all_range, business_nature, all_business,
+		title, image_add, create_time,
+		comment_num, label,industrial_id,doc_type)
+		values (#{id,jdbcType=INTEGER}, #{articleId,jdbcType=VARCHAR},
+		#{informationDetailId,jdbcType=INTEGER},
+		#{businessInformation,jdbcType=VARCHAR},
+		#{allRange,jdbcType=VARCHAR}, #{businessNature,jdbcType=VARCHAR}, #{allBusiness,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR}, #{imageAdd,jdbcType=VARCHAR},now(),
+		#{commentNum,jdbcType=INTEGER}, #{lables,jdbcType=VARCHAR},
+		#{industrialId,jdbcType=VARCHAR}, #{docType,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.ovit.manager.modules.cms.entity.Information">
+		insert into information
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="articleId != null">
+				article_id,
+			</if>
+			<if test="informationDetailId != null">
+				information_detail_id,
+			</if>
+			<if test="businessInformation != null">
+				business_information,
+			</if>
+			<if test="allRange != null">
+				all_range,
+			</if>
+			<if test="businessNature != null">
+				business_nature,
+			</if>
+			<if test="allBusiness != null">
+				all_business,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="imageAdd != null">
+				image_add,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="commentNum != null">
+				comment_num,
+			</if>
+			<if test="lables != null">
+				label,
+			</if>
+			<if test="industrialId != null">
+				industrial_id,
+			</if>
+			<if test="docType != null">
+				doc_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="articleId != null">
+				#{article_id,jdbcType=VARCHAR},
+			</if>
+			<if test="informationDetailId != null">
+				#{informationDetailId,jdbcType=INTEGER},
+			</if>
+			<if test="businessInformation != null">
+				#{businessInformation,jdbcType=VARCHAR},
+			</if>
+			<if test="allRange != null">
+				#{allRange,jdbcType=VARCHAR},
+			</if>
+			<if test="businessNature != null">
+				#{businessNature,jdbcType=VARCHAR},
+			</if>
+			<if test="allBusiness != null">
+				#{allBusiness,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="imageAdd != null">
+				#{imageAdd,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				now(),
+			</if>
+			<if test="commentNum != null">
+				#{commentNum,jdbcType=INTEGER},
+			</if>
+			<if test="lables != null">
+				#{lables,jdbcType=VARCHAR},
+			</if>
+			<if test="industrialId != null">
+				#{industrialId,jdbcType=VARCHAR},
+			</if>
+			<if test="docType != null">
+				#{docType,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ovit.manager.modules.cms.entity.Information">
+		update information
+		<set>
+			<if test="articleId != null">
+				article_id = #{articleId,jdbcType=VARCHAR},
+			</if>
+			<if test="informationDetailId != null">
+				information_detail_id = #{informationDetailId,jdbcType=INTEGER},
+			</if>
+			<if test="businessInformation != null">
+				business_information = #{businessInformation,jdbcType=VARCHAR},
+			</if>
+			<if test="allRange != null">
+				all_range = #{allRange,jdbcType=VARCHAR},
+			</if>
+			<if test="businessNature != null">
+				business_nature = #{businessNature,jdbcType=VARCHAR},
+			</if>
+			<if test="allBusiness != null">
+				all_business = #{allBusiness,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="imageAdd != null">
+				image_add = #{imageAdd,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time =now(),
+			</if>
+			<if test="commentNum != null">
+				comment_num = #{commentNum,jdbcType=INTEGER},
+			</if>
+			<if test="lables != null">
+				label = #{lables,jdbcType=VARCHAR},
+			</if>
+			<if test="industrialId != null">
+				industrial_id = #{industrialId,jdbcType=VARCHAR},
+			</if>
+			<if test="docType != null">
+				doc_type = #{docType,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="update" parameterType="com.ovit.manager.modules.cms.entity.Information">
+		update information
+		set article_id = #{articleId,jdbcType=VARCHAR},
+		information_detail_id = #{informationDetailId,jdbcType=INTEGER},
+		business_information = #{businessInformation,jdbcType=VARCHAR},
+		all_range = #{allRange,jdbcType=VARCHAR},
+		business_nature = #{businessNature,jdbcType=VARCHAR},
+		all_business = #{allBusiness,jdbcType=VARCHAR},
+		title = #{title,jdbcType=VARCHAR},
+		image_add = #{imageAdd,jdbcType=VARCHAR},
+		create_time =now(),
+		comment_num = #{commentNum,jdbcType=INTEGER},
+		label = #{lables,jdbcType=VARCHAR},
+		industrial_id = #{industrialId,jdbcType=VARCHAR},
+		doc_type = #{docType,jdbcType=VARCHAR},
+		approve_status = #{approveStatus,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateStatus" parameterType="com.ovit.manager.modules.cms.entity.Article">
+		update information
+		set approve_status = #{delFlag,jdbcType=VARCHAR}
+		where  id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

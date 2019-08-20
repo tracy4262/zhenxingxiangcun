@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.NswyKnowledgeExamineDao">
+	<select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.KnowledgeInfo" resultType="com.ovit.manager.modules.nswy.entity.KnowledgeInfo">
+        SELECT
+            k.id,
+            k.information_detail_id,
+            k.business_information,
+            k.all_range,
+            k.business_nature,
+            k.all_business,
+            k.title,
+            k.image_add,
+            DATE_FORMAT(k.create_time,"%Y-%m-%d %T") AS createTime,
+            k.comment_num,
+            k.label,
+            k.article_id,
+            k.industrial_id,
+            CASE k.doc_type
+            WHEN '040101' THEN '科普'
+            WHEN '040102' THEN '论文'
+            WHEN '040103' THEN '图书'
+            WHEN '040104' THEN '专利'
+            WHEN '040105' THEN '种养标准'
+            WHEN '040106' THEN '科技成果'
+            WHEN '040107' THEN '经验交流'
+            END AS docType,
+            k.abstracts,
+            k.classified_id,
+            k.is_to_page,
+            k.species_id,
+            k.species_name,
+            k.chapter,
+            k.product,
+            k.service,
+            k.friend_reminding,
+            k.reminding_content,
+            k.is_sms,
+            k.is_publish,
+            k.componsation,
+            k.column_type,
+            CASE k.approve_status
+            WHEN '0' THEN '待审核'
+            WHEN '1' THEN '删除'
+            WHEN '2' THEN '审核通过'
+            WHEN '3' THEN '拒绝'
+            END AS approveStatus,
+            k.is_nav_display,
+            k.order_num,
+            d.editer
+        FROM
+        knowledge k  left join knowledge_detail d on k.information_detail_id = d.id
+        where 1=1
+        <if test="title != null and title != ''">
+           and k.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="approveStatus != null and approveStatus != ''">
+            and k.approve_status = #{approveStatus}
+        </if>
+        ORDER BY k.create_time DESC
+	</select>
+
+    <delete id="knowledgeDelete" parameterType="java.lang.Integer" >
+        DELETE
+            t1,t2,t3,t4,t5
+        FROM
+            knowledge t1
+        LEFT JOIN knowledge_detail t2 ON t1.information_detail_id = t2.id
+        LEFT JOIN knowledge_comment t3 ON t2.id = t3.information_detail_id
+        LEFT JOIN thumb_comment t4 ON t3.id = t4.comment_id
+        LEFT JOIN thumb_detail t5 ON t5.detail_id = t1.information_detail_id
+        WHERE t1.id = #{knowledgeId,jdbcType=INTEGER}
+    </delete>
+
+    <update id="knowledgeAdopt" parameterType="map">
+        UPDATE knowledge SET approve_status = 2 WHERE id = #{knowledgeId}
+    </update>
+
+    <update id="knowledgeRefuse" parameterType="map">
+        UPDATE knowledge SET approve_status = 3 WHERE id = #{knowledgeId}
+    </update>
+
+
+    <update id="knowledgeUpdateHome" parameterType="map" >
+        UPDATE knowledge SET is_to_page = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="knowledgeUpdateNavDisplay" parameterType="map">
+        UPDATE knowledge SET is_nav_display = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="knowledgeSetOrderNum" parameterType="map">
+        UPDATE knowledge SET order_num = #{orderNum} WHERE id = #{id}
+    </update>
+</mapper>

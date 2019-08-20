@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.member.mapper.ProxyCorpInfoMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.ProxyCorpInfo">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="login_account" jdbcType="VARCHAR" property="loginAccount" />
+		<result column="corp_name" jdbcType="VARCHAR" property="corpName" />
+		<result column="business_scope" jdbcType="VARCHAR" property="businessScope" />
+		<result column="credit_code" jdbcType="VARCHAR" property="creditCode" />
+		<result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
+		<result column="identification_card" jdbcType="VARCHAR" property="identificationCard" />
+		<result column="identification_card_url" jdbcType="VARCHAR" property="identificationCardUrl" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+		<result column="registered_capital" jdbcType="DOUBLE" property="registeredCapital" />
+		<result column="establish_date" jdbcType="VARCHAR" property="establishDate" />
+		<result column="busniss_term" jdbcType="VARCHAR" property="busnissTerm" />
+		<result column="location" jdbcType="VARCHAR" property="location" />
+		<result column="company_type" jdbcType="VARCHAR" property="companyType" />
+		<result column="business_license_url" jdbcType="VARCHAR" property="businessLicenseUrl" />
+		<result column="company_address" jdbcType="VARCHAR" property="companyAddress" />
+		<result column="info_id" jdbcType="VARCHAR" property="infoId" />
+		<result column="corp_type" jdbcType="VARCHAR" property="corpType" />
+		<result column="addr_detail" jdbcType="VARCHAR" property="addrDetail" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, login_account, corp_name, business_scope, credit_code,
+		legal_person, identification_card,identification_card_url, create_time, approve_status,
+		 registered_capital, establish_date, busniss_term,
+		location, company_type,
+		business_license_url,company_address,info_id,corp_type,addr_detail
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+			resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM proxy_corp_info
+		WHERE id = #{id}
+	</select>
+    <select id="selectByName" parameterType="map" resultType="map">
+        SELECT t1.id , t1.corp_name AS corpName,t1.logo_url AS logoUrl ,t1.login_account AS loginAccount
+        FROM proxy_corp_info t1 LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+        WHERE t2.is_home_display = 1 AND t1.approve_status = 1
+        <if test="title != null and title != ''">
+            AND t1.corp_name LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="district != null">
+            AND t1.location LIKE CONCAT('%',#{district},'%')
+        </if>
+		<if test="type != null and type != ''">
+			AND t1.company_type = #{type}
+		</if>
+        <if test="serviceNameArray != null and serviceNameArray != ''">
+			<foreach collection="serviceNameArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t1.related_service LIKE CONCAT('%',#{item},'%')
+			</foreach>
+        </if>
+        <if test="industryArray != null and industryArray != ''">
+			<foreach collection="industryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t1.industry_type LIKE CONCAT('%',#{item},'%')
+			</foreach>
+        </if>
+        <if test="goodNameArray != null and goodNameArray != ''">
+			<foreach collection="goodNameArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t1.related_product LIKE CONCAT('%',#{item},'%')
+			</foreach>
+        </if>
+        <if test="speciesArray != null and speciesArray != ''">
+			<foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t1.related_species LIKE CONCAT('%',#{item},'%')
+			</foreach>
+        </if>
+        ORDER by t1.create_time DESC
+    </select>
+
+	<select id="findAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		SELECT
+		t1.id, t1.login_account, t1.corp_name, t1.business_scope, t1.credit_code,
+		t1.legal_person, t1.mobile, t1.phone, t1.identification_card, t1.email,
+		t1.identification_card_url, t1.create_time, t1.approve_status,
+		t1.legal_person_introduce, t1.legal_person_url, t1.registered_capital, t1.establish_date, t1.busniss_term,
+		t1.industry_type, t1.location, t1.company_type, t1.related_species, t1.related_product, t1.related_service,
+		t1.company_profile, t1.logo_url, t1.business_license_url,t1.addr_detail
+		FROM
+			proxy_corp_info t1 LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+		WHERE t2.is_home_display = 1 AND t1.approve_status = 1
+
+	</select>
+	<select id="queryCorpByLocation" parameterType="java.lang.String" resultType="map">
+		SELECT
+			corp_name AS corpName,
+			id AS id
+		FROM
+			proxy_corp_info
+		WHERE
+			approve_status = 1
+		AND
+			location LIKE CONCAT('%',#{location},'%')
+	</select>
+
+	<select id="findByAccount" parameterType="com.ovit.nswy.member.model.CorpInfo" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM proxy_corp_info WHERE login_account = #{loginAccount} AND approve_status = 1
+
+	</select>
+
+	<select id="getApproveStatus" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT approve_status
+		FROM proxy_corp_info
+		WHERE login_account = #{loginAccount}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		DELETE FROM proxy_corp_info
+		WHERE id = #{id}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.ProxyCorpInfo">
+	 INSERT INTO proxy_corp_info (
+		id, login_account, corp_name, business_scope, credit_code,
+		legal_person, identification_card,identification_card_url, create_time,
+		registered_capital, establish_date, busniss_term,
+		location, company_type,
+		business_license_url,company_address,info_id,addr_detail
+     )
+     VALUES (
+    	 #{id},
+    	 #{loginAccount},
+    	 #{corpName},
+	     #{businessScope},
+	     #{creditCode},
+	     #{legalPerson},
+		 #{identificationCard},
+		 #{identificationCardUrl},
+		 NOW(),
+		 #{registeredCapital},
+		 #{establishDate},
+		 #{busnissTerm},
+		 #{location},
+		 #{companyType},
+		 #{businessLicenseUrl},
+		 #{companyAddress},
+		 #{infoId},
+		 #{addrDetail}
+	 )
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.CorpInfo">
+		UPDATE
+			proxy_corp_info
+    	SET
+    		login_account = #{loginAccount},
+		    corp_name = #{corpName},
+		    business_scope = #{businessScope},
+		    credit_code = #{creditCode},
+		    legal_person = #{legalPerson},
+		    mobile = #{mobile},
+		    phone = #{phone},
+		    identification_card = #{identificationCard},
+		    email = #{email},
+		    identification_card_url = #{identificationCardUrl},
+		    create_time = #{createTime,jdbcType=TIMESTAMP},
+		    approve_status = #{approveStatus},
+		    legal_person_introduce = #{legalPersonIntroduce},
+		    legal_person_url = #{legalPersonUrl},
+		    registered_capital = #{registeredCapital,jdbcType=DOUBLE},
+		    establish_date = #{establishDate},
+		    busniss_term = #{busnissTerm},
+		    industry_type = #{industryType},
+		    location = #{location},
+		    company_type = #{companyType},
+		    related_species = #{relatedSpecies},
+		    related_product = #{relatedProduct},
+		    related_service = #{relatedService},
+		    company_profile = #{companyProfile},
+		    logo_url = #{logoUrl},
+		    business_license_url = #{businessLicenseUrl},
+		    addr_deatil = #{addrDetail}
+    	WHERE
+    		id = #{id}
+	</update>
+
+	<select id="selectCorpBySpecies" resultType="map" parameterType="java.lang.String">
+		SELECT
+		corp_name AS `name` ,business_license_url AS img ,login_account AS account
+		FROM
+		proxy_corp_info
+		WHERE approve_status = '1'
+		AND related_species LIKE concat('%',#{speciesIds},'%')
+		ORDER BY create_time ASC  LIMIT 6
+	</select>
+
+    <select id="queryCorpNotProxy" parameterType="map" resultType="map">
+        SELECT
+            t1.id,
+            t1.logo_url AS logoUrl,
+            t1.corp_name AS orgName,
+            t1.login_account AS loginAccount,
+            t1.establish_date AS establishDate,
+            DATE_FORMAT(t1.create_time,"%Y-%m-%d") AS createTime
+        FROM
+			proxy_corp_info t1
+		WHERE
+			t1.login_account NOT IN (
+		  		SELECT account FROM agency_audit WHERE audit_status != 2 AND type = "企业"
+			)
+		AND t1.approve_status = 1
+		<if test="corpName != null and corpName != ''">
+			AND
+			t1.corp_name LIKE CONCAT('%',#{corpName},"%")
+		</if>
+		<if test="location != null and location != ''">
+			AND t1.location LIKE CONCAT('%',#{location},'%')
+		</if>
+		ORDER BY t1.create_time DESC
+    </select>
+</mapper>

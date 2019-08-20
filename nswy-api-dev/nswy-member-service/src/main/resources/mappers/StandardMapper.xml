@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.StandardMapper">
+
+    <!--发布标准的基本数据-->
+    <insert id="insertStandardBase" parameterType="map">
+        INSERT INTO standard (
+            standard_detail_id,
+            classified_id,
+            title,
+            abstracts,
+            source,
+            author,
+            ycauthor,
+            source_website,
+            account,
+            location,
+            product_id,
+            species_id,
+            service_id,
+            industrial_id,
+            unscramble_expert,
+            friend_reminding,
+            reminding_content,
+            is_sms,
+            is_publish,
+            componsation,
+            is_to_page,
+            label,
+            create_time
+        ) VALUES (
+            #{standardDetailId},
+            #{standardType},
+            #{title},
+            #{summary},
+            #{source},
+            #{author},
+            #{ycauthor},
+            #{sourceWebsite},
+            #{account},
+            #{district},
+            #{commonProductId},
+            #{speciesId},
+            #{commonServiceId},
+            #{industryTypeId},
+            #{expert},
+            #{tixing},
+            #{con},
+            #{sms},
+            #{security},
+            #{money},
+            #{xianshi},
+            #{custom},
+            NOW()
+        )
+    </insert>
+    <!--详细数据，并返回详情主键-->
+    <insert id="insertStandardDetail" parameterType="map" useGeneratedKeys="true" keyProperty="standardDetailId">
+        INSERT INTO standard_detail (
+            standard_characteristic,
+            standard_status,
+            standard_ccs,
+            standard_ics,
+            standard_number,
+            chinese_name,
+            english_name,
+            release_date,
+            implement_date,
+            competent_department,
+            technical_committe,
+            release_unit,
+            standard_content,
+            standard_file
+        ) VALUES (
+            #{standardTrait},
+            #{standardStatus},
+            #{ccs},
+            #{ics},
+            #{standardNumber},
+            #{chineseStandardName},
+            #{englishStandardName},
+            #{publishDate},
+            #{implementDate},
+            #{competentDepartment},
+            #{focalPoint},
+            #{releaseUnit},
+            #{standardText},
+            #{standardFile}
+        )
+    </insert>
+
+    <!--标准展示，会员中心-->
+    <select id="queryForMemberCenter" parameterType="map" resultType="map">
+        SELECT
+            t1.standard_id AS standardId,
+            t1.standard_detail_id AS standardDetailId,
+            t1.title,
+            CASE t2.standard_characteristic
+                WHEN "M" THEN "强制性标准"
+                WHEN "R" THEN "推荐性标准"
+            END AS standardTrait,
+            CASE t2.standard_status
+                WHEN "A" THEN "现行"
+                WHEN "F" THEN "即将实施"
+            END AS standardStatus,
+            t2.chinese_name AS chineseStandardName,
+            t2.standard_number AS standardNumber,
+            CASE t1.approve_status
+                WHEN "0" THEN "待审核"
+                WHEN "1" THEN "删除"
+                WHEN "2" THEN "已审核"
+                WHEN "3" THEN "审核不通过"
+            END AS approveStatus,
+        DATE_FORMAT(t1.create_time,'%Y-%m-%d %T') AS createTime
+        FROM
+            standard t1
+        LEFT JOIN standard_detail t2 ON t1.standard_detail_id = t2.standard_detail_id
+        WHERE t1.account = #{account}
+        <if test="standardTrait != null and standardTrait != ''">
+            AND t2.standard_characteristic = #{standardTrait}
+        </if>
+        <if test="standardStatus != null and standardStatus != ''">
+            AND t2.standard_status = #{standardStatus}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND t2.chinese_name LIKE CONCAT('%',#{keyword},'%')
+        </if>
+        <if test="custom != null and custom != ''">
+            AND t1.label = #{custom}
+        </if>
+        ORDER BY t1.create_time DESC
+    </select>
+
+    <!--标准展示，无忧首页-->
+    <select id="queryForNswyHome" parameterType="map" resultType="map">
+        SELECT
+            t1.standard_id AS standardId,
+            t1.standard_detail_id AS standardDetailId,
+            t1.title,
+            CASE t2.standard_characteristic
+                WHEN "M" THEN "强制性标准"
+                WHEN "R" THEN "推荐性标准"
+            END AS standardTrait,
+            CASE t2.standard_status
+                WHEN "A" THEN "现行"
+                WHEN "F" THEN "即将实施"
+            END AS standardStatus,
+            t2.chinese_name AS chineseStandardName,
+            t2.standard_number AS standardNumber,
+            CASE t1.approve_status
+                WHEN "0" THEN "待审核"
+                WHEN "1" THEN "删除"
+                WHEN "2" THEN "已审核"
+                WHEN "3" THEN "审核不通过"
+            END AS approveStatus,
+            DATE_FORMAT(t1.create_time,'%Y-%m-%d %T') AS createTime
+        FROM
+          standard t1
+        LEFT JOIN standard_detail t2 ON t1.standard_detail_id = t2.standard_detail_id
+        WHERE t1.approve_status = 2 AND t1.is_to_page = 0
+        <if test="standardTrait != null and standardTrait != ''">
+            AND t2.standard_characteristic = #{standardTrait}
+        </if>
+        <if test="standardStatus != null and standardStatus != ''">
+            AND t2.standard_status = #{standardStatus}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND t2.chinese_name LIKE CONCAT('%',#{keyword},'%')
+        </if>
+        <if test="custom != null and custom != ''">
+            AND t1.label = #{custom}
+        </if>
+        <if test="ccs != null and ccs != ''">
+            AND t2.standard_ccs = #{ccs}
+        </if>
+        <if test="ics != null and ics != ''">
+            AND t2.standard_ics = #{ics}
+        </if>
+        <if test="district != null and district != ''">
+            AND t1.location LIKE CONCAT('%',#{district},'%')
+        </if>
+        <if test="infoType != null and infoType != ''">
+            AND t1.classified_id LIKE CONCAT('%',#{infoType},'%')
+        </if>
+        <if test="startTime != null and startTime != ''">
+            AND t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="industryArray != null and industryArray != ''">
+            <foreach collection="industryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t1.industrial_id LIKE CONCAT('%',#{item},'%')
+            </foreach>
+        </if>
+        <if test="speciesArray != null and speciesArray != ''">
+            <foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t1.species_id LIKE CONCAT('%',#{item},'%')
+            </foreach>
+        </if><if test="goodNameArray != null and goodNameArray != ''">
+            <foreach collection="goodNameArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t1.product_id LIKE CONCAT('%',#{item},'%')
+            </foreach>
+        </if>
+        <if test="serviceArray != null and serviceArray != ''">
+            <foreach collection="serviceArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t1.service_id LIKE CONCAT('%',#{item},'%')
+            </foreach>
+        </if>
+        ORDER BY t1.order_num,t1.create_time DESC
+    </select>
+
+    <!--无忧导航标准数据查询-->
+    <select id="queryForNswyNavigation" parameterType="map" resultType="map">
+        SELECT
+            t1.standard_id AS standardId,
+            t1.standard_detail_id AS standardDetailId,
+            t1.title,
+            CASE t2.standard_characteristic
+                WHEN "M" THEN "强制性标准"
+                WHEN "R" THEN "推荐性标准"
+            END AS standardTrait,
+            CASE t2.standard_status
+                WHEN "A" THEN "现行"
+                WHEN "F" THEN "即将实施"
+            END AS standardStatus,
+            t2.chinese_name AS chineseStandardName,
+            t2.standard_number AS standardNumber,
+            CASE t1.approve_status
+                WHEN "0" THEN "待审核"
+                WHEN "1" THEN "删除"
+                WHEN "2" THEN "已审核"
+                WHEN "3" THEN "审核不通过"
+            END AS approveStatus,
+            DATE_FORMAT(t1.create_time,'%Y-%m-%d') AS createTime
+        FROM
+          standard t1
+        LEFT JOIN standard_detail t2 ON t1.standard_detail_id = t2.standard_detail_id
+        WHERE t1.approve_status = 2 AND t1.is_nav_display = 0
+        ORDER BY t1.order_num,t1.create_time DESC
+    </select>
+
+    <!--标准详情-->
+    <select id="queryStandardDetail" parameterType="map" resultType="map">
+        SELECT
+            t2.standard_id AS standardId,
+            CASE t1.standard_characteristic
+                WHEN 'M' THEN '强制性标准'
+                WHEN 'R' THEN '推荐性标准'
+            END AS standardTrait,
+            CASE t1.standard_status
+                WHEN 'A' THEN '现行'
+                WHEN 'F' THEN '即将实施'
+            END AS standardStatus,
+            t1.standard_ccs AS ccs,
+            t1.standard_ics AS ics,
+            t1.standard_number AS standardNumber,
+            t1.chinese_name AS chineseStandardName,
+            t1.english_name AS englishStandardName,
+            DATE_FORMAT(t1.release_date,'%Y-%m-%d') AS publishDate,
+            DATE_FORMAT(t1.implement_date,'%Y-%m-%d') AS implementDate,
+            t1.competent_department AS competentDepartment,
+            t1.technical_committe AS focalPoint,
+            t1.release_unit AS releaseUnit,
+            t1.standard_content AS standardText,
+            t1.standard_file AS standardFile,
+            t2.browse_number AS browseNumber,
+            t2.title,
+            t2.author,
+            t2.ycauthor,
+            CASE t2.source
+                WHEN 'O' THEN '原创'
+                WHEN 'R' THEN '转载'
+            END AS source,
+            DATE_FORMAT(t1.create_time,'%Y-%m-%d %T') AS createTime,
+            t2.account,
+            t2.source_website AS sourceWebsite
+        FROM
+            standard_detail t1
+        LEFT JOIN standard t2 ON  t1.standard_detail_id = t2.standard_detail_id
+        WHERE t1.standard_detail_id = #{standardDetailId}
+    </select>
+
+    <!--查询标准下一篇-->
+    <select id="queryNext" resultType="map" parameterType="map">
+        SELECT
+            t1.standard_detail_id AS previousId,
+            t1.standard_number AS standardNumber,
+            t2.title
+        FROM
+            standard_detail t1
+        LEFT JOIN standard t2 ON t1.standard_detail_id = t2.standard_detail_id
+
+        WHERE
+            t1.standard_detail_id <![CDATA[ > ]]>${standardDetailId}
+        <!--status = 1 无忧首页详情-->
+        <if test="status == 1">
+            AND t2.approve_status = 2 AND t2.is_to_page = 0
+        </if>
+        <!--status = 2 无忧导航详情，其他为会员中心详情-->
+        <if test="status == 2">
+            AND t2.approve_status = 2 AND t2.is_nav_display = 0
+        </if>
+        LIMIT 1
+    </select>
+
+    <!--查询标准上一篇-->
+    <select id="queryPrevious" resultType="map" parameterType="map">
+        SELECT
+            t1.standard_detail_id AS previousId,
+            t1.standard_number AS standardNumber,
+            t2.title
+        FROM
+            standard_detail t1
+        LEFT JOIN standard t2 ON t1.standard_detail_id = t2.standard_detail_id
+        WHERE
+            t1.standard_detail_id <![CDATA[ < ]]>${standardDetailId}
+        <!--status = 1 无忧首页详情-->
+        <if test="status == 1">
+            AND t2.approve_status = 2 AND t2.is_to_page = 0
+        </if>
+        <!--status = 2 无忧导航详情，其他为会员中心详情-->
+        <if test="status == 2">
+            AND t2.approve_status = 2 AND t2.is_nav_display = 0
+        </if>
+        LIMIT 1
+    </select>
+
+    <!--查询标评论，评论人实名，评论点赞次数，该评论被回复次数-->
+    <select id="queryStandardComment" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT c.comment_id as id,c.content,c.create_time,c.thumb_up_num,c.comment_account as user_account,c.standard_id,COUNT(d.post_id),c.post_id  FROM standard_comment c
+			LEFT JOIN standard_comment d ON c.comment_id = d.post_id
+			GROUP BY c.comment_id
+			HAVING 1=1 and c.post_id = '0'
+        <if test="standard_id != null and standard_id != ''">
+            and c.standard_id  = #{standard_id}
+        </if>
+        <if test="account != null and account != ''">
+            and c.comment_account  = #{account}
+        </if>
+
+    </select>
+
+    <select id="findCommentHF" resultType="java.util.Map" parameterType="java.util.Map">
+		 SELECT c.comment_id as id,c.content,c.create_time,c.thumb_up_num,c.comment_account as user_account,c.standard_id from standard_comment c where c.post_id = #{id}
+
+	</select>
+
+    <select id="findCommentHFDetail" resultType="java.util.Map" parameterType="java.util.Map">
+		select c.comment_id as id,l.display_name as name from standard_comment c left join login_user l on c.comment_account = l.login_account where c.comment_id = #{id}
+
+	</select>
+
+    <delete id="deleteMyComment" parameterType="java.util.Map">
+		delete from standard_comment where comment_id = #{comment_id}
+	</delete>
+
+    <!--查询评论总数-->
+    <select id="queryStandardCommentCount" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+            count(comment_id)
+        FROM
+            standard_comment
+        WHERE
+            standard_id = #{standardId}
+    </select>
+
+    <!--发布评论、回复评论-->
+    <insert id="publishComment" parameterType="map">
+        INSERT INTO standard_comment (standard_id, comment_account,reply_account, content, thumb_up_num, create_time, post_id)
+        VALUES (#{standardId},#{account},#{replyAccount},#{content},0,NOW(),#{postId})
+    </insert>
+
+    <!--更新浏览次数-->
+    <update id="updateBrowseNumber" parameterType="map">
+        UPDATE standard t1
+        LEFT JOIN standard_detail t2 ON t1.standard_detail_id = t2.standard_detail_id
+        SET t1.browse_number = t1.browse_number + 1
+        WHERE t2.standard_detail_id = #{standardDetailId}
+    </update>
+
+    <!--查询详情评论的数量-->
+    <select id="queryThumbNumByDetailId" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM thumb_detail WHERE detail_id = #{standardDetailId} AND detail_type = "standard"
+    </select>
+
+    <!--查询标准的物种ID-->
+    <select id="findSpeciesIdFromStandard" parameterType="java.lang.Integer" resultType="java.lang.String">
+        SELECT species_id FROM standard WHERE standard_detail_id = #{id}
+    </select>
+
+    <select id="queryDetailCommentReply" parameterType="map" resultType="map">
+        SELECT t11.*,count(t22.id) AS commentThumbnum FROM (
+            SELECT
+                t1.comment_id AS commentId,
+                t1.post_id AS postId,
+                t1.standard_id AS standardId,
+                DATE_FORMAT(t1.create_time,'%Y-%m-%d %T') AS createTime,
+                t1.content AS content,
+                t1.comment_account AS commentAccount,
+                t2.display_name AS replyDisplayName,
+                t3.display_name AS commentDisplayName
+            FROM standard_comment t1
+            LEFT JOIN login_user t2 ON t1.comment_account = t2.login_account
+            LEFT JOIN login_user t3 ON t1.reply_account = t3.login_account
+            WHERE t1.post_id = #{commentId}
+            )t11 LEFT JOIN(
+                SELECT * FROM thumb_comment WHERE comment_type = "standard") t22
+            ON
+                t22.comment_id = t11.commentId
+        GROUP BY t11.commentId
+    </select>
+</mapper>

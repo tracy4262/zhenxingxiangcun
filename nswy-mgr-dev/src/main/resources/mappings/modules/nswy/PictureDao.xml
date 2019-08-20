@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.PictureDao">
+	<select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.PictureInfo" resultType="com.ovit.manager.modules.nswy.entity.PictureInfo">
+        SELECT
+            picture_id,
+            picture_url,
+            picture_name,
+            picture_use_home,
+            picture_use_information,
+            remark,
+            picture_product,
+            create_time,
+            update_time
+        FROM
+            system_picture
+        WHERE
+            is_delete != 1
+        ORDER BY create_time
+    </select>
+
+    <insert id="savePicture">
+        INSERT INTO system_picture(
+         picture_url, picture_name, remark,picture_use_information,picture_use_home,picture_product,create_time
+        ) VALUES (
+            #{pictureUrl},#{fileName},#{remark},#{pictureUseInformation},#{pictureUseHome},#{pictureProduct},NOW()
+        )
+    </insert>
+
+    <update id="pictureSetOrderNum" parameterType="map">
+        UPDATE system_picture SET order_num = #{orderNum} WHERE picture_id = #{pictureId}
+    </update>
+
+    <delete id="deletePicture" parameterType="java.lang.Integer">
+        DELETE FROM system_picture WHERE picture_id = #{deletePicture}
+    </delete>
+
+    <update id="pictureUpdateDisplay" parameterType="map">
+        UPDATE system_picture SET is_display = #{status} WHERE picture_id = #{pictureId}
+    </update>
+
+    <update id="pictureUseHome" parameterType="map">
+        UPDATE system_picture SET picture_use_home = #{status} WHERE picture_id = #{pictureId}
+    </update>
+
+    <update id="pictureUseInformation" parameterType="map">
+        UPDATE system_picture SET picture_use_information = #{status} WHERE picture_id = #{pictureId}
+    </update>
+
+    <update id="pictureProduct" parameterType="map">
+        UPDATE system_picture SET picture_product = #{status} WHERE picture_id = #{pictureId}
+    </update>
+</mapper>

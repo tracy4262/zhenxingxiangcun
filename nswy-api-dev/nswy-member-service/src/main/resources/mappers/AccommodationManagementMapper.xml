@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.AccommodationManagementMapper">
+
+
+	<select id="findRoomClass" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			r.id,
+			r.account,
+			r.room_class_name as roomClassName,
+			r.room_class_price as roomClassPrice,
+			r.create_time,
+			r.update_time
+		FROM room_class_management r
+
+		where 1=1
+		<if test="account !='' and account!=null">
+			and r.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and r.id = #{id}
+		</if>
+
+		<if test="roomClassName !='' and roomClassName!=null">
+			and r.room_class_name = #{roomClassName}
+		</if>
+
+		order by r.update_time desc
+
+	</select>
+
+	<select id="findRoomClassCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM room_class_management r
+
+		where 1=1
+
+
+		<if test="id !='' and id!=null">
+			and r.id != #{id}
+		</if>
+
+		<if test="roomClassName !='' and roomClassName!=null">
+			and r.room_class_name = #{roomClassName}
+		</if>
+
+	</select>
+
+
+	<insert id="insertRoomClass" parameterType="java.util.Map">
+		insert into room_class_management(
+			account,
+			room_class_name,
+			room_class_price,
+			create_time
+		) value (
+		#{account},
+		#{roomClassName},
+		#{roomClassPrice},
+		now()
+		)
+	</insert>
+
+	<update id="updateRoomClass" parameterType="java.util.Map">
+		update room_class_management
+		<set>
+			<if test="roomClassName!=null">
+				room_class_name =#{roomClassName},
+			</if>
+			<if test="roomClassPrice!=null">
+				room_class_price =#{roomClassPrice},
+			</if>
+
+			account = #{account}
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteRoomClass" parameterType="java.util.Map">
+		delete from room_class_management where id = #{id}
+	</delete>
+
+	<select id="findRoomListManagementList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		l.id,
+		l.account,
+		l.room_class_id as roomClassId,
+		l.room_name as roomName,
+		l.room_price as roomPrice,
+		l.discount_price as discountPrice,
+		l.discount_proportion as discountProportion,
+		l.room_image as roomImage,
+		l.room_describe as roomDescribe,
+		case l.status when '0' then '空闲中'
+		else '使用中' end as status,
+		l.create_time,
+		l.update_time,
+		r.room_class_name as roomClassName,
+		case when  p.id is not null then p.id else 0 end as flag,
+		p.type
+		FROM room_list_management l left join room_class_management r on l.room_class_id = r.id left join product_management p on l.id = p.management_id
+
+		where 1=1
+		<if test="account !='' and account!=null">
+			and l.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and l.id = #{id}
+		</if>
+
+		<if test="status !='' and status!=null">
+			and l.status = #{status}
+		</if>
+
+		<if test="roomClassName !='' and roomClassName!=null">
+			and r.room_class_name = #{roomClassName}
+		</if>
+
+		group by l.room_name
+
+		order by l.update_time desc
+
+	</select>
+
+
+	<select id="findRoomList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			l.id,
+			l.account,
+			l.room_class_id as roomClassId,
+			l.room_name as roomName,
+			l.room_price as roomPrice,
+			l.discount_price as discountPrice,
+			l.discount_proportion as discountProportion,
+			l.room_image as roomImage,
+			l.room_describe as roomDescribe,
+			case l.status when '0' then '空闲中'
+			else '使用中' end as status,
+			l.create_time,
+			l.update_time,
+			r.room_class_name as roomClassName
+		FROM room_list_management l left join room_class_management r on l.room_class_id = r.id
+
+		where 1=1
+		<if test="account !='' and account!=null">
+			and l.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and l.id = #{id}
+		</if>
+
+		<if test="status !='' and status!=null">
+			and l.status = #{status}
+		</if>
+
+		<if test="roomClassName !='' and roomClassName!=null">
+			and r.room_class_name = #{roomClassName}
+		</if>
+
+		order by l.update_time desc
+
+	</select>
+
+	<select id="findRoomListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM room_list_management l
+		where 1=1
+		<if test="account !='' and account!=null">
+			and l.account = #{account}
+		</if>
+
+		<if test="roomName !='' and roomName!=null">
+			and l.room_name = #{roomName}
+		</if>
+
+		<if test="type == 0">
+			<if test="id !='' and id!=null">
+				and l.id != #{id}
+			</if>
+		</if>
+
+
+
+	</select>
+
+
+	<insert id="insertRoomList" parameterType="java.util.Map">
+		insert into room_list_management(
+			account,
+			room_class_id,
+			room_name,
+			room_price,
+			discount_price,
+			discount_proportion,
+			room_image,
+			room_describe,
+			status,
+			create_time
+		) value (
+		#{account},
+		#{roomClassId},
+		#{roomName},
+		#{roomPrice},
+		#{discountPrice},
+		#{discountProportion},
+		#{roomImage},
+		#{roomDescribe},
+		#{status},
+		now()
+		)
+	</insert>
+
+	<update id="updateRoomList" parameterType="java.util.Map">
+		update room_list_management
+		<set>
+			<if test="roomClassId!=null">
+				room_class_id =#{roomClassId},
+			</if>
+			<if test="roomName!=null">
+				room_name =#{roomName},
+			</if>
+			<if test="roomPrice!=null">
+				room_price =#{roomPrice},
+			</if>
+			<if test="discountPrice!=null">
+				discount_price =#{discountPrice},
+			</if>
+			<if test="discountProportion!=null">
+				discount_proportion =#{discountProportion},
+			</if>
+			<if test="roomImage!=null">
+				room_image =#{roomImage},
+			</if>
+			<if test="roomDescribe!=null">
+				room_describe =#{roomDescribe},
+			</if>
+			<if test="status!=null">
+				status =#{status},
+			</if>
+
+			account = #{account}
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteRoomList" parameterType="java.util.Map">
+		delete from room_list_management where id = #{id}
+	</delete>
+
+</mapper>

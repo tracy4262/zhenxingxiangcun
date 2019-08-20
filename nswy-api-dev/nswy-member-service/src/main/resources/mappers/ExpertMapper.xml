@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.member.mapper.ExpertMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.Expert">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="account" jdbcType="VARCHAR" property="account" />
+		<result column="expert_name" jdbcType="VARCHAR" property="expertName" />
+		<result column="organaztion" jdbcType="VARCHAR" property="organaztion" />
+		<result column="industry" jdbcType="VARCHAR" property="industry" />
+		<result column="field" jdbcType="VARCHAR" property="field" />
+		<result column="point" jdbcType="INTEGER" property="point" />
+		<result column="star" jdbcType="INTEGER" property="star" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, expert_name, organaztion, industry, field, point,
+		create_time,star, title
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from expert
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="findAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from expert
+	</select>
+
+	<!-- 搜索 查询专家表，并在后台通过PAGE实现分页 -->
+	<select id="findExpertTitle" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.Expert">
+		select
+		id,unique_id,login_account,display_name,login_passwd,register_time,is_Identity_verification,tour_number,user_type,
+		signature,avatar,is_friend,is_home_display
+		from login_user where user_type = 4 AND is_home_display = 1
+		<if test="expertName != null">
+			AND expert_name like concat(concat('%',#{expertName}),'%')
+		</if>
+	</select>
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.Expert">
+		insert into expert (id, account, expert_name,
+		organaztion, industry, field, title,
+		point, create_time)
+		values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR},
+		#{expertName,jdbcType=VARCHAR},
+		#{organaztion,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, #{field,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR},
+		#{point,jdbcType=INTEGER},now())
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.Expert">
+		update expert
+		set account = #{account,jdbcType=VARCHAR},
+		expert_name = #{expertName,jdbcType=VARCHAR},
+		organaztion = #{organaztion,jdbcType=VARCHAR},
+		industry = #{industry,jdbcType=VARCHAR},
+		field = #{field,jdbcType=VARCHAR},
+		point = #{point,jdbcType=INTEGER},
+		title = #{title,jdbcType=VARCHAR},
+		create_time =now()
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

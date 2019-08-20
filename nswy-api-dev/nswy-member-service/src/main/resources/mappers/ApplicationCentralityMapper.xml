@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ApplicationCentralityMapper">
+
+    <select id="findList" parameterType="map" resultType="map">
+        select
+            f.id as appSettingId,
+            f.app_name as appName,
+            f.level,
+            case f.cost when '免费' then 0
+            when '不免费' then 1 end cost,
+            case when f.application_abstract is null then '' else f.application_abstract end  as applicationAbstract,
+            case  when f.recommend is null then 1 else f.recommend
+            end recommend,
+            case when f.logo is null then  f.icon else f.logo end logo,
+            f.logo_name as logoName,
+            f.url,
+            f.image,
+            f.image_name as imageName,
+            f.`number`,
+            u.user_type as userType,
+            u.user_type_name as userTypeName,
+            s.service_type as serviceType,
+            s.`service_type_name` as serviceTypeName,
+            e.`id` as industryId,
+            e.label as industryName
+        from reversion_full_app_setting f left join reversion_user_type_info u on f.user_type = u.user_type
+
+        left join reversion_service_type_info s on f.service_type = s.service_type
+
+        left join reversion_nation_eco_classification e on f.industry_id = e.id
+
+        where 1=1
+        <if test="level !='' and level!=null">
+            and f.level = #{level}
+        </if>
+
+        <if test="recommend !='' and recommend!=null">
+            and f.recommend = #{recommend}
+        </if>
+
+        <if test="appName !='' and appName!=null">
+            and f.app_name like concat('%',#{appName},'%')
+        </if>
+
+        <if test="userType !='' and userType!=null">
+            and f.user_type  = #{userType}
+        </if>
+
+        <if test="appSettingId !=null and appSettingId !=''">
+            and f.id = #{appSettingId}
+        </if>
+
+        <if test="flag !=null and flag !=''">
+            <if test="flag == 0">
+                order by f.number desc limit 0,10
+            </if>
+
+            <if test="flag == 1">
+                order by f.create_time desc limit 0,10
+            </if>
+        </if>
+
+    </select>
+
+    <select id="findAppSettingsByAccount" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, account, app_id as appId, create_time as createTime, app_name as appName, template_id as templateId, user_type as userType
+        from reversion_user_app_setting
+        where 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </select>
+
+
+    <select id="findUserTypeList" parameterType="map" resultType="map">
+      select
+            u.id as infoId,
+            u.account,
+            u.user_type as userType,
+            u.user_type_name as userTypeName,
+            u.create_time as createTime
+      from reversion_user_type_info u
+
+    </select>
+
+    <select id="findServiceTypeList" parameterType="map" resultType="map">
+      select
+            u.id as infoId,
+            u.account,
+            u.service_type as serviceType,
+            u.service_type_name as serviceTypeName,
+            u.create_time as createTime
+      from reversion_service_type_info u
+
+    </select>
+
+    <select id="findAppAbstract" parameterType="map" resultType="map">
+        select
+               app_name as appName,
+               application_abstract as abstract
+        from reversion_full_app_setting where 1=1
+        <if test="appId!=null and appId!=''">
+            and id = #{appId}
+        </if>
+
+    </select>
+
+    <update id="cancelNumber" parameterType="java.lang.String">
+		update reversion_full_app_setting set number=number-1 where id = #{appId};
+	</update>
+
+    <update id="addNumber" parameterType="java.lang.String">
+		update reversion_full_app_setting set number=number+1 where id = #{appId};
+	</update>
+
+    <delete id="cancelAppSettings" parameterType="java.util.Map">
+		DELETE FROM reversion_user_app_setting
+		WHERE account = #{account} AND app_id = #{appId}
+	</delete>
+
+    <insert id="saveAppSettings" parameterType="java.util.Map">
+		INSERT INTO reversion_user_app_setting (
+			account,
+			app_id,
+			app_name,
+			user_type,
+			template_id
+		) VALUES
+			(
+				#{account},
+				#{appId},
+				#{appName},
+				#{userType},
+				#{templateId}
+			)
+	</insert>
+
+</mapper>

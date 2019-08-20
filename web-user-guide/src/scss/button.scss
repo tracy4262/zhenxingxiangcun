@@ -1,0 +1,42 @@
+
+$primary          : #00C587;
+$info             : #2db7f5;
+$success          : #19be6b;
+$warning          : #ff9900;
+$error            : #ed4014;
+
+$map-colors:(
+	'primary':$white $primary $primary,
+	'info':$white $info $info,
+	'success':$white $success $success,
+	'warning':$white $warning $warning,
+	'error':$white $error $error
+);
+$map-light-btn:'primary' 'info' 'success' 'warning' 'error';
+
+@each $color in $map-light-btn {
+    $btn-color: map-get($map-colors, $color);
+    .btn-light-#{$color}{
+        color: nth($btn-color,2);
+        @if $color == 'success' {
+            background-color: lighten(nth($btn-color,3),52%);
+        } @else if $color == 'primary' {
+            background-color: lighten(nth($btn-color,3),56%);
+        } @else if $color == 'info' {
+            background-color: lighten(nth($btn-color,3),38%);
+        } @else {
+            background-color: lighten(nth($btn-color,3),45%);
+        }
+        border-color: nth($btn-color,3);
+        &:active{
+            color: nth($btn-color,2);
+            background-color: $white;
+            background-image: none;
+        }
+        &:hover {
+            color:nth($btn-color,3);
+            background-color: $white;
+            border-color: lighten(nth($btn-color,3), 5%);
+        }
+    }
+}

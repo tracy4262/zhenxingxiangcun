@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.AppSettingsMapper">
+
+	<select id="findAppSettingsByAccount" resultType="java.util.Map" parameterType="java.lang.String">
+		select
+		id,account,app_info,update_time
+		from app_settings
+		where account = #{account}
+	</select>
+
+	<select id="findAllAppInfo" resultType="java.util.Map">
+		select
+		id,appName,url,`level`,src,createTime
+		from all_app_info
+	</select>
+
+	<insert id="saveAppSettings" parameterType="java.util.Map">
+		INSERT INTO app_settings (
+			account,
+			app_info
+		) VALUES
+			(
+				#{account},
+				#{app_info}
+			)
+	</insert>
+
+	<update id="updateAppSettings" parameterType="java.util.Map">
+		UPDATE app_settings
+		SET app_info = #{app_info}
+		WHERE account = #{account}
+	</update>
+
+</mapper>

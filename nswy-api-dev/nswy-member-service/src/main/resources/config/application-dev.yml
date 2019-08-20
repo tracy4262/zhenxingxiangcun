@@ -1,0 +1,45 @@
+server:
+  port: 8089
+
+http:
+  eureka:
+    serviceUrl: 127.0.0.1
+
+#远程调用timeout时间设置
+hystrix:
+  #threadpool.default.coreSize: 100
+  #threadpool.default.maximumSize: 200
+  #threadpool.default.maxQueueSize: 5000
+  #threadpool.default.allowMaximumSizeToDivergeFromCoreSize: true
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone:  http://${http.eureka.serviceUrl}:8761/eureka/
+  instance:
+    preferIpAddress: true
+    statusPageUrlPath: /info
+    healthCheckUrlPath: /health
+    lease-renewal-interval-in-seconds: 2
+    lease-expiration-duration-in-seconds: 4
+ribbon:
+  eureka:
+    enabled: true
+endpoints:
+  jmx:
+    enabled: true
+health:
+  sensitive: false
+logging:
+  config: classpath:log4j2.xml
+
+
+

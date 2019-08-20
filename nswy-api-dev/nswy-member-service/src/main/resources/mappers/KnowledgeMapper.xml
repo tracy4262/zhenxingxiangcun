@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.KnowledgeMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.Knowledge">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="information_detail_id" property="informationDetailId" jdbcType="INTEGER" />
+        <result column="business_information" property="businessInformation" jdbcType="VARCHAR" />
+        <result column="all_range" property="allRange" jdbcType="VARCHAR" />
+        <result column="business_nature" property="businessNature" jdbcType="VARCHAR" />
+        <result column="all_business" property="allBusiness" jdbcType="VARCHAR" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="image_add" property="imageAdd" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="comment_num" property="commentNum" jdbcType="INTEGER" />
+        <result column="label" property="label" jdbcType="VARCHAR" />
+        <result column="article_id" property="articleId" jdbcType="VARCHAR" />
+        <result column="industrial_id" property="industrialId" jdbcType="VARCHAR" />
+        <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+        <result column="abstracts" property="abstracts" jdbcType="CLOB" />
+        <result column="classified_id" property="classifiedId" jdbcType="VARCHAR" />
+        <result column="is_to_page" property="isToPage" jdbcType="INTEGER" />
+        <result column="species_id" property="speciesId" jdbcType="VARCHAR" />
+        <result column="species_name" property="speciesName" jdbcType="VARCHAR" />
+        <result column="chapter" property="chapter" jdbcType="VARCHAR" />
+        <result column="product" property="product" jdbcType="VARCHAR" />
+        <result column="service" property="service" jdbcType="VARCHAR" />
+        <result column="friend_reminding" property="friendReminding" jdbcType="VARCHAR" />
+        <result column="reminding_content" property="remindingContent" jdbcType="VARCHAR" />
+        <result column="is_sms" property="isSms" jdbcType="INTEGER" />
+        <result column="is_publish" property="isPublish" jdbcType="INTEGER" />
+        <result column="componsation" property="componsation" jdbcType="VARCHAR" />
+        <result column="column_type" property="columnType" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+    id, information_detail_id, business_information, all_range, business_nature, all_business,
+    title, image_add, create_time, comment_num, label, article_id, industrial_id, CASE doc_type
+		WHEN '040101' THEN '科普'
+		WHEN '040102' THEN '论文'
+		WHEN '040103' THEN '图书'
+		WHEN '040104' THEN '专利'
+		WHEN '040105' THEN '种养标准'
+		WHEN '040106' THEN '科技成果'
+		WHEN '040107' THEN '经验交流'
+		ELSE '知识' END
+		AS doc_type,
+    abstracts, classified_id, is_to_page, species_id, species_name, chapter, product,
+    service, friend_reminding, reminding_content, is_sms, is_publish, componsation,column_type
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from knowledge
+		where id = #{id,jdbcType=INTEGER} ORDER BY create_time desc
+	</select>
+	<select id="findKnowLedgeByDetailId" resultMap="BaseResultMap"
+			parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from knowledge
+		where  information_detail_id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="findKnowLedge" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from knowledge where is_nav_display = 0 AND approve_status = 2  ORDER BY order_num,create_time DESC
+	</select>
+
+	<!-- 无忧首页显示知识-->
+	<select id="findKnowLedgeTitle" resultType="com.ovit.nswy.member.model.Knowledge" parameterType="com.ovit.nswy.member.model.Knowledge">
+        SELECT
+            t11.id,
+            t11.information_detail_id,
+            t11.title,
+            t11.create_time,
+            t11.species_name,
+            t11.column_type,
+            CASE t11.doc_type
+                WHEN '040101' THEN '科普'
+                WHEN '040102' THEN '论文'
+                WHEN '040103' THEN '图书'
+                WHEN '040104' THEN '专利'
+                WHEN '040105' THEN '种养标准'
+                WHEN '040106' THEN '科技成果'
+                WHEN '040107' THEN '经验交流'
+            ELSE '知识' END
+            AS docType,
+            count(t2.id) AS commentNum
+        FROM (
+            SELECT
+                t1.*
+            FROM knowledge t1
+            WHERE t1.is_to_page = 0 AND t1.approve_status = 2
+        <if test="title != null and title != ''">
+            AND t1.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="allRange != null and allRange != ''">
+            AND t1.all_range like CONCAT('%',#{allRange},'%')
+        </if>
+        <if test="speciesId != null and speciesId != ''">
+            AND t1.species_id LIKE CONCAT('%',#{speciesId},'%')
+        </if>
+        <if test="industrialId != null and industrialId != ''">
+            AND t1.industrial_id LIKE CONCAT('%',#{industrialId},'%')
+        </if>
+        <if test="product != null and product != ''">
+            AND t1.product LIKE CONCAT('%',#{product},'%')
+        </if>
+        <if test="service != null and service != ''">
+            AND t1.service LIKE CONCAT('%',#{service},'%')
+        </if>
+        <if test="columnType != null and columnType != ''">
+            AND t1.column_type LIKE CONCAT('%',#{columnType},'%')
+        </if>
+        <if test="classifiedId != null and classifiedId != ''">
+            AND t1.classified_id LIKE CONCAT('%',#{classifiedId},'%')
+        </if>
+        <if test="docType != null and docType != ''">
+            AND t1.doc_type = #{docType}
+        </if>
+        ) t11 LEFT JOIN knowledge_comment t2 ON t11.information_detail_id = t2.information_detail_id
+        GROUP BY t11.id ORDER BY t11.order_num, t11.create_time desc
+	</select>
+
+	<select id="findShow" resultType="java.util.Map">
+        (SELECT *,CASE doc_type WHEN '040101' THEN '科普' END AS leibie
+        FROM knowledge WHERE doc_type='040101' and is_to_page = 0 AND approve_status = 2 ORDER BY order_num,create_time DESC  LIMIT 5)
+        UNION ALL
+        (SELECT *,CASE doc_type WHEN '040102' THEN '论文' END AS leibie
+        FROM knowledge WHERE doc_type = '040102' and is_to_page = 0 AND approve_status = 2 ORDER BY order_num,create_time DESC  LIMIT 5)
+        UNION ALL
+        (SELECT *,CASE doc_type WHEN '040103' THEN '图书' END AS leibie
+        FROM knowledge WHERE doc_type = '040103' and is_to_page = 0 AND approve_status = 2 ORDER BY order_num,create_time DESC  LIMIT 5)
+        UNION ALL
+        (SELECT *,CASE doc_type WHEN '040104' THEN '专利' END AS leibie
+        FROM knowledge WHERE doc_type = '040104' and is_to_page = 0 AND approve_status = 2 ORDER BY order_num,create_time DESC  LIMIT 5)
+        UNION ALL
+        (SELECT *,CASE doc_type WHEN '040105' THEN '种养标准' END AS leibie
+        FROM knowledge WHERE doc_type = '040105' and is_to_page = 0 AND approve_status = 2 ORDER BY order_num,create_time DESC  LIMIT 5)
+        UNION ALL
+        (SELECT *,CASE doc_type WHEN '040106' THEN '科技成果' END AS leibie
+        FROM knowledge WHERE doc_type = '040106' and is_to_page = 0 AND approve_status = 2 ORDER BY order_num,create_time DESC  LIMIT 5)
+        UNION ALL
+        (SELECT *,CASE doc_type WHEN '040107' THEN '经验交流' END AS leibie
+        FROM knowledge WHERE doc_type = '040107' and is_to_page = 0 AND approve_status = 2 ORDER BY order_num,create_time DESC  LIMIT 5)
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from knowledge
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.Knowledge">
+		insert into knowledge (id, information_detail_id, business_information,
+      all_range, business_nature, all_business,
+      title, image_add, create_time,
+      comment_num, label, article_id,
+      industrial_id, doc_type, abstracts,
+      classified_id, is_to_page, species_id,
+      species_name, chapter, product,
+      service, friend_reminding, reminding_content,
+      is_sms, is_publish, componsation,column_type
+      )
+    values (#{id,jdbcType=INTEGER}, #{informationDetailId,jdbcType=INTEGER}, #{businessInformation,jdbcType=VARCHAR},
+      #{allRange,jdbcType=VARCHAR}, #{businessNature,jdbcType=VARCHAR}, #{allBusiness,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR}, #{imageAdd,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{commentNum,jdbcType=INTEGER}, #{label,jdbcType=VARCHAR}, #{articleId,jdbcType=VARCHAR},
+      #{industrialId,jdbcType=VARCHAR}, #{docType,jdbcType=VARCHAR}, #{abstracts,jdbcType=CLOB},
+      #{classifiedId,jdbcType=VARCHAR}, #{isToPage,jdbcType=INTEGER}, #{speciesId,jdbcType=VARCHAR},
+      #{speciesName,jdbcType=VARCHAR}, #{chapter,jdbcType=VARCHAR}, #{product,jdbcType=VARCHAR},
+      #{service,jdbcType=VARCHAR}, #{friendReminding,jdbcType=VARCHAR}, #{remindingContent,jdbcType=VARCHAR},
+      #{isSms,jdbcType=INTEGER}, #{isPublish,jdbcType=INTEGER}, #{componsation,jdbcType=VARCHAR},#{columnType,jdbcType=VARCHAR}
+      )
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.Knowledge">
+		update knowledge
+		set information_detail_id = #{informationDetailId,jdbcType=INTEGER},
+		business_information = #{businessInformation,jdbcType=VARCHAR},
+		all_range = #{allRange,jdbcType=VARCHAR},
+		business_nature = #{businessNature,jdbcType=VARCHAR},
+		all_business = #{allBusiness,jdbcType=VARCHAR},
+		title = #{title,jdbcType=VARCHAR},
+		image_add = #{imageAdd,jdbcType=VARCHAR},
+		create_time =now(),
+		comment_num = #{commentNum,jdbcType=INTEGER},
+		label = #{label,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="getBriefNews" resultType="map">
+		SELECT
+		id AS id,
+		information_detail_id AS informationDetailId,
+		title AS title
+		FROM knowledge
+		where column_type = '短信' AND is_nav_display = 0 AND approve_status = 2
+		ORDER BY order_num,create_time DESC
+		limit 0,6
+	</select>
+
+	<insert id="insertArticle"  parameterType="com.ovit.nswy.member.model.Article">
+		insert into cms_article(
+			id, category_id,title,keywords,create_by,create_date,update_date
+		)
+		values(
+		#{id,jdbcType=VARCHAR}, #{category,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},#{author,jdbcType=VARCHAR},#{keywords,jdbcType=VARCHAR},
+		#{createDate,jdbcType=TIMESTAMP},#{createDate,jdbcType=TIMESTAMP}
+		)
+	</insert>
+</mapper>

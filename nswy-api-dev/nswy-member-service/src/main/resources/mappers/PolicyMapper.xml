@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.PolicyMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.Policy">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="information_detail_id" property="informationDetailId" jdbcType="INTEGER" />
+        <result column="business_information" property="businessInformation" jdbcType="VARCHAR" />
+        <result column="all_range" property="allRange" jdbcType="VARCHAR" />
+        <result column="business_nature" property="businessNature" jdbcType="VARCHAR" />
+        <result column="all_business" property="allBusiness" jdbcType="VARCHAR" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="image_add" property="imageAdd" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+        <result column="comment_num" property="commentNum" jdbcType="INTEGER" />
+        <result column="label" property="label" jdbcType="VARCHAR" />
+        <result column="article_id" property="articleId" jdbcType="VARCHAR" />
+        <result column="industrial_id" property="industrialId" jdbcType="VARCHAR" />
+        <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+        <result column="abstracts" property="abstracts" jdbcType="CLOB" />
+        <result column="classified_id" property="classifiedId" jdbcType="VARCHAR" />
+        <result column="is_to_page" property="isToPage" jdbcType="INTEGER" />
+        <result column="species_id" property="speciesId" jdbcType="VARCHAR" />
+        <result column="species_name" property="speciesName" jdbcType="VARCHAR" />
+        <result column="expert" property="expert" jdbcType="VARCHAR" />
+        <result column="company" property="company" jdbcType="VARCHAR" />
+        <result column="issued_NO" property="issuedNo" jdbcType="VARCHAR" />
+        <result column="product" property="product" jdbcType="VARCHAR" />
+        <result column="service" property="service" jdbcType="VARCHAR" />
+        <result column="friend_reminding" property="friendReminding" jdbcType="VARCHAR" />
+        <result column="reminding_content" property="remindingContent" jdbcType="VARCHAR" />
+        <result column="is_sms" property="isSms" jdbcType="INTEGER" />
+        <result column="is_publish" property="isPublish" jdbcType="INTEGER" />
+        <result column="componsation" property="componsation" jdbcType="VARCHAR" />
+        <result column="column_type" property="columnType" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, information_detail_id, business_information, all_range, business_nature,all_business,
+        title, image_add, create_time,publish_time, comment_num, label, article_id, industrial_id, CASE doc_type
+		WHEN '030201' THEN '政策法规'
+		WHEN '030202' THEN '政策解读'
+		WHEN '030203' THEN '通知公告'
+		WHEN '030204' THEN '村务公开'
+		WHEN '030205' THEN '党务公开'
+		WHEN '030206' THEN '公示公告'
+		WHEN '030207' THEN '政务法规'
+		WHEN '030208' THEN '政务公开'
+		WHEN '030209' THEN '党务动态'
+        WHEN '030210' THEN '政务动态'
+		ELSE '政策' END
+		AS doc_type,
+    abstracts, classified_id, is_to_page, species_id, species_name, expert, company,
+    issued_NO, product, service, friend_reminding, reminding_content, is_sms, is_publish,
+    componsation,column_type
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from policy
+		where id = #{id,jdbcType=INTEGER} ORDER BY create_time desc
+	</select>
+    <select id="findPolicyByDetailId" resultMap="BaseResultMap"
+            parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List" />
+        from policy
+        where information_detail_id = #{id,jdbcType=INTEGER}
+    </select>
+	<select id="findPolicy" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from policy WHERE is_nav_display = 0
+        AND approve_status = 2 ORDER BY order_num,create_time DESC
+	</select>
+
+	<!-- 无忧首页显示政策 -->
+	<select id="findPolicyTitle" resultType="com.ovit.nswy.member.model.Policy" parameterType="com.ovit.nswy.member.model.Policy">
+        SELECT
+            t11.id,
+            t11.information_detail_id,
+            t11.title,
+            t11.create_time,
+            t11.species_name,
+            t11.column_type,
+            t11.is_to_page,
+            t11.approve_status,
+            CASE t11.doc_type
+                WHEN '030201' THEN '政策法规'
+                WHEN '030202' THEN '政策解读'
+                WHEN '030203' THEN '通知公告'
+                WHEN '030204' THEN '村务公开'
+                WHEN '030205' THEN '党务公开'
+                WHEN '030206' THEN '公示公告'
+                WHEN '030207' THEN '政务法规'
+                WHEN '030208' THEN '政务公开'
+                WHEN '030209' THEN '党务动态'
+                WHEN '030210' THEN '政务动态'
+                ELSE '政策' END
+            AS docType,
+            count(t2.id) AS commentNum
+        FROM (
+            SELECT
+                t1.*
+            FROM policy t1
+            WHERE t1.is_to_page = 0 AND t1.approve_status = 2
+        <if test="title != null and title != ''">
+            AND t1.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="allRange != null and allRange != ''">
+            AND t1.all_range like CONCAT('%',#{allRange},'%')
+        </if>
+        <if test="speciesId != null and speciesId != ''">
+            AND t1.species_id LIKE CONCAT('%',#{speciesId},'%')
+        </if>
+        <if test="industrialId != null and industrialId != ''">
+            AND t1.industrial_id LIKE CONCAT('%',#{industrialId},'%')
+        </if>
+        <if test="product != null and product != ''">
+            AND t1.product LIKE CONCAT('%',#{product},'%')
+        </if>
+        <if test="service != null and service != ''">
+            AND t1.service LIKE CONCAT('%',#{service},'%')
+        </if>
+        <if test="columnType != null and columnType != ''">
+            AND t1.column_type LIKE CONCAT('%',#{columnType},'%')
+        </if>
+        <if test="classifiedId != null and classifiedId != ''">
+            AND t1.classified_id LIKE CONCAT('%',#{classifiedId},'%')
+        </if>
+        <if test="docType != null and docType != ''">
+            AND t1.doc_type = #{docType}
+        </if>
+        ) t11 LEFT JOIN policy_comment t2 ON t11.information_detail_id = t2.information_detail_id
+        GROUP BY t11.id ORDER BY t11.order_num, t11.create_time desc
+	</select>
+
+	<select id="findIndexPolicy" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.Policy">
+		select
+		<include refid="Base_Column_List" />
+		from policy
+		where is_to_page = 0
+        AND approve_status = 2
+		<if test="docType != null">
+			and doc_type = #{docType}
+		</if>
+        order by order_num,create_time DESC
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from policy
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.Policy">
+		insert into policy (id, information_detail_id, business_information, 
+      all_range, business_nature, all_business,
+      title, image_add, create_time,publish_time,
+      comment_num, label, article_id,
+      industrial_id, doc_type, abstracts,
+      classified_id, is_to_page, species_id,
+      species_name, expert, company,
+      issued_NO, product, service,
+      friend_reminding, reminding_content, is_sms,
+      is_publish, componsation,column_type)
+    values (#{id,jdbcType=INTEGER}, #{informationDetailId,jdbcType=INTEGER}, #{businessInformation,jdbcType=VARCHAR},
+      #{allRange,jdbcType=VARCHAR}, #{businessNature,jdbcType=VARCHAR}, #{allBusiness,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR}, #{imageAdd,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{publishTime,jdbcType=TIMESTAMP},
+      #{commentNum,jdbcType=INTEGER}, #{label,jdbcType=VARCHAR}, #{articleId,jdbcType=VARCHAR},
+      #{industrialId,jdbcType=VARCHAR}, #{docType,jdbcType=VARCHAR}, #{abstracts,jdbcType=CLOB},
+      #{classifiedId,jdbcType=VARCHAR}, #{isToPage,jdbcType=INTEGER}, #{speciesId,jdbcType=VARCHAR},
+      #{speciesName,jdbcType=VARCHAR}, #{expert,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR},
+      #{issuedNo,jdbcType=VARCHAR}, #{product,jdbcType=VARCHAR}, #{service,jdbcType=VARCHAR},
+      #{friendReminding,jdbcType=VARCHAR}, #{remindingContent,jdbcType=VARCHAR}, #{isSms,jdbcType=INTEGER},
+      #{isPublish,jdbcType=INTEGER}, #{componsation,jdbcType=VARCHAR},#{columnType,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.Policy">
+		update policy
+		set information_detail_id = #{informationDetailId,jdbcType=INTEGER},
+		business_information = #{businessInformation,jdbcType=VARCHAR},
+		all_range = #{allRange,jdbcType=VARCHAR},
+		business_nature = #{businessNature,jdbcType=VARCHAR},
+		all_business = #{allBusiness,jdbcType=VARCHAR},
+		title = #{title,jdbcType=VARCHAR},
+		image_add = #{imageAdd,jdbcType=VARCHAR},
+		create_time =now(),
+		comment_num = #{commentNum,jdbcType=INTEGER},
+		label = #{label,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="getBriefNews" resultType="map">
+		select
+		id AS id,
+		information_detail_id AS informationDetailId,
+		title AS title
+		from policy
+		where column_type = '短信' AND is_nav_display = 0
+        AND approve_status = 2
+		ORDER BY order_num,create_time DESC
+		limit 0,6
+	</select>
+</mapper>

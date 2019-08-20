@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="chatLogMapper">
+
+	<insert id="insertChatLog" parameterType="map">
+		<![CDATA[
+    		insert into chat_log
+    		(
+    			from_account,
+    			to_account,
+    			content,
+				send_time,
+				is_send,
+				chat_type,
+				from_id
+    		)
+    		values
+    		(
+    			#{fromAccount},
+    			#{toAccount},
+    			#{content},
+    			#{sendTime},
+    			#{isSend},
+    			#{chatType},
+    			#{fromId}
+    		)
+        ]]>
+	</insert>
+
+	<select id="getChatLogByUserId" parameterType="string" resultType="map">
+		select
+			from_account as fromAccount,
+    		to_account as toAccount,
+    		content as content,
+			send_time as sendTime,
+			is_send as isSend,
+			chat_type as chatType,
+			from_id as fromId
+		from
+			chat_log
+		where
+			to_account = #{userId} and is_send = 'N'
+	</select>
+
+	<update id="updateChatLogMsgSend" parameterType="string">
+		UPDATE chat_log set is_send = 'Y' where to_account = #{toAccount}
+	</update>
+
+	<select id="getFriendChatLogByIdAndType" parameterType="map" resultType="map">
+		select
+		from_account as fromAccount,
+		to_account as toAccount,
+		content as content,
+		send_time as sendTime,
+		is_send as isSend,
+		chat_type as chatType,
+		from_id as fromId
+		from
+		chat_log
+		where
+		chat_type = "1"
+		and
+		(from_account = #{mineId} and to_account = #{userId})
+		or
+		(from_account = #{userId} and to_account = #{mineId})
+		order by send_time desc
+	</select>
+
+	<select id="getGroupChatLogByIdAndType" parameterType="map" resultType="map">
+		select
+		from_account as fromAccount,
+		to_account as toAccount,
+		content as content,
+		send_time as sendTime,
+		is_send as isSend,
+		chat_type as chatType,
+		from_id as fromId
+		from
+		chat_log
+		where
+		chat_type = "2"
+		and
+		(from_account = #{mineId} and from_id = #{groupId})
+		or
+		(to_account = #{mineId} and from_id = #{groupId})
+		order by send_time desc
+	</select>
+
+</mapper>

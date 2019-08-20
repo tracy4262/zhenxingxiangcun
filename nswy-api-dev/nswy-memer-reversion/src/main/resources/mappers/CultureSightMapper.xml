@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.CultureSightMapper">
+
+    <select id="findSceneryByAccount" parameterType="map" resultType="map">
+        select id, currency_name as currencyName, number, sight_name as sightName,
+        reception_capacity as recCapacity, unit_name as unitName, investment, is_free as isFree, ticket_price as ticketPrice, contacts,
+        location, location_number as locationNumber, introduce, coordinate_longitude as longitude, coordinate_latitude as latitude,
+        upload_img as uploadImg, status, template_id as templateId
+        from reversion_famous_scenery
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </select>
+
+    <select id="findCulturalHeritage" parameterType="map" resultType="map">
+        select id, currency_name as currencyName, number, sight_name as sightName,
+        reception_capacity as recCapacity, unit_name as unitName, investment, is_free as isFree, ticket_price as ticketPrice, contacts,
+        location, location_number as locationNumber, introduce, coordinate_longitude as longitude, coordinate_latitude as latitude,
+        upload_img as uploadImg, status,template_id as templateId
+        from reversion_cultural_heritage
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </select>
+
+    <update id="updateSceneryName" parameterType="map">
+        update reversion_famous_scenery set property_name = #{propertyName} where account = #{account} and year_file_id = #{yearId}
+    </update>
+
+    <update id="updateCulturalName" parameterType="map">
+        update reversion_cultural_heritage set property_name = #{propertyName} where account = #{account} and year_file_id = #{yearId}
+    </update>
+
+    <insert id="saveSceneryName" parameterType="map">
+        replace into reversion_famous_scenery (
+        id,
+        account,
+        currency_name,
+        number,
+        sight_name,
+        reception_capacity,
+        unit_name,
+        investment,
+        is_free,
+        ticket_price,
+        contacts,
+        location,
+        location_number,
+        introduce,
+        coordinate_longitude,
+        coordinate_latitude,
+        upload_img,
+        status,
+        create_time,
+        year_file_id,
+        template_id
+        )values (
+        #{id},
+        #{account},
+        #{currencyName},
+        #{number},
+        #{sightName},
+        #{recCapacity},
+        #{unitName},
+        #{investment},
+        #{isFree},
+        #{ticketPrice},
+        #{contacts},
+        #{location},
+        #{locationNumber},
+        #{introduce},
+        #{longitude},
+        #{latitude},
+        #{uploadImg},
+        #{status},
+        now(),
+        #{yearId},
+        #{templateId}
+        )
+    </insert>
+
+    <insert id="saveCulturalName" parameterType="map">
+        replace into reversion_cultural_heritage (
+        id,
+        account,
+        currency_name,
+        number,
+        sight_name,
+        reception_capacity,
+        unit_name,
+        investment,
+        is_free,
+        ticket_price,
+        contacts,
+        location,
+        location_number,
+        introduce,
+        coordinate_longitude,
+        coordinate_latitude,
+        upload_img,
+        status,
+        create_time,
+        year_file_id,
+        template_id
+        )values (
+        #{id},
+        #{account},
+        #{currencyName},
+        #{number},
+        #{sightName},
+        #{recCapacity},
+        #{unitName},
+        #{investment},
+        #{isFree},
+        #{ticketPrice},
+        #{contacts},
+        #{location},
+        #{locationNumber},
+        #{introduce},
+        #{longitude},
+        #{latitude},
+        #{uploadImg},
+        #{status},
+        now(),
+        #{yearId},
+        #{templateId}
+        )
+    </insert>
+    
+    <delete id="deleteScenery" parameterType="map">
+        delete from reversion_famous_scenery where id = #{id}
+    </delete>
+
+    <delete id="deleteCultural" parameterType="map">
+        delete from reversion_cultural_heritage where id = #{id}
+    </delete>
+
+    <select id="findPropertyInfo" parameterType="map" resultType="map">
+        select id, property_name as propertyName, account, year_file_id as yearId
+        from reversion_perfect_property_info
+        where account = #{account} and year_file_id = #{yearId} and dict_id = #{dictId}
+    </select>
+    
+    <insert id="insertPropertyInfo" parameterType="map">
+        INSERT INTO reversion_perfect_property_info(
+        property_name,
+        account,
+        year_file_id,
+        dict_id
+        ) VALUES (
+        #{propertyName},
+        #{account},
+        #{yearId},
+        #{dictId}
+        )
+    </insert>
+
+    <update id="updatePropertyInfo" parameterType="map">
+        update reversion_perfect_property_info set property_name = #{propertyName}
+        where account = #{account} and year_file_id = #{yearId} and dict_id = #{dictId}
+    </update>
+
+</mapper>

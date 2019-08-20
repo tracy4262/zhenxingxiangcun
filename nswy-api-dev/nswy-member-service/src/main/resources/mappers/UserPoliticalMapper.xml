@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.UserPoliticalMapper" >
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.UserPolitical" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="political" property="political" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, account, time, political, status
+  </sql>
+
+  <delete id="deleteByAccount" parameterType="java.lang.String" >
+    delete from user_political
+    where account = #{account,jdbcType=VARCHAR}
+  </delete>
+    <select id="findByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user_political where account = #{account,jdbcType=VARCHAR}
+    </select>
+  <insert id="insert" parameterType="com.ovit.nswy.member.model.UserPolitical" >
+    insert into user_political (id, account, time, 
+      political, status)
+    values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, #{time,jdbcType=VARCHAR}, 
+      #{political,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
+  </insert>
+
+</mapper>

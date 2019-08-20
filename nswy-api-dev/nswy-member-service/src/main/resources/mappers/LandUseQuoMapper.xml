@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.LandUseQuoMapper">
+    <insert id="saveLandPlot" parameterType="map" >
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(*) FROM land_info WHERE land_id = #{landId}
+        </selectKey>
+        <if test="count == 0">
+            INSERT INTO land_info(
+                land_id,
+                product_id,
+                land_used,
+                land_type,
+                plot_name,
+                longitude_latitude,
+                land_area,
+                unit_area,
+                landowner,
+                land_number,
+                map_sign,
+                situation,
+                create_time
+            ) VALUES (
+                #{landId},
+                #{productId},
+                #{landUsed},
+                #{landType},
+                #{plotName},
+                #{longitudeLatitude},
+                #{landArea},
+                #{unitArea},
+                #{landowner},
+                #{landNumber},
+                #{mapSign},
+                #{situation},
+                NOW()
+            )
+        </if>
+        <if test="count > 0">
+            UPDATE land_info SET
+                land_used = #{landUsed},
+                land_type = #{landType},
+                plot_name = #{plotName},
+                longitude_latitude = #{longitudeLatitude},
+                land_area = #{landArea},
+                unit_area = #{unitArea},
+                landowner = #{landowner},
+                land_number = #{landNumber},
+                map_sign = #{mapSign},
+                situation = #{situation}
+            WHERE land_id = #{landId}
+        </if>
+    </insert>
+
+    <update id="updateLandPlot" parameterType="map">
+        UPDATE land_info SET
+            land_used = #{landUsed},
+            land_type = #{landType},
+            plot_name = #{plotName},
+            longitude_latitude = #{longitudeLatitude},
+            land_area = #{landArea},
+            unit_area = #{unitArea},
+            landowner = #{landowner},
+            land_number = #{landNumber}
+            situation = #{situation},
+        WHERE land_id = #{landId}
+    </update>
+
+    <delete id="deleteLandPlot" parameterType="map">
+        DELETE
+            t1,t2,t3,t4,t5,t6,t7,t8
+        FROM
+            land_info t1
+            LEFT JOIN land_nutritive_info t2 ON t1.land_id = t2.land_id
+            LEFT JOIN land_physical_info t3 ON t1.land_id = t3.land_id
+            LEFT JOIN land_biological_indicator_info t4 ON t1.land_id = t4.land_id
+            LEFT JOIN land_environmental_indicators_info t5 ON t1.land_id = t5.land_id
+            LEFT JOIN land_microelements_info t6 ON t1.land_id = t6.land_id
+            LEFT JOIN land_water_quality_info t7 ON t1.land_id = t7.land_id
+            LEFT JOIN land_water_quality_report t8 ON t1.land_id = t8.land_id
+        WHERE
+            t1.land_id =  #{landId}
+    </delete>
+    <select id="queryLandPlot" parameterType="map" resultType="map">
+        SELECT
+            land_id AS landId,
+            product_id AS productId,
+            land_used AS landUsed,
+            land_type AS landType,
+            plot_name AS plotName,
+            longitude_latitude AS longitudeLatitude,
+            land_area AS landArea,
+            unit_area AS unitArea,
+            landowner AS landowner,
+            land_number AS landNumber,
+            situation AS situation,
+            CASE map_sign WHEN 'Y' THEN '已标示' WHEN 'N' THEN '未标示' END AS mapSign,
+            CASE water_quality_info WHEN 'Y' THEN '已上传' WHEN 'N' THEN '未上传' END AS waterQualityInfo,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM
+            land_info
+        WHERE
+            product_id = #{productId}
+        <if test="createTime != '' and createTime != null">
+            AND create_time LIKE CONCAT('%',${createTime},'%')
+        </if>
+    </select>
+
+    <update id="updateWaterQualityInfo" parameterType="map">
+        UPDATE land_info SET water_quality_info = #{waterQualityInfo} WHERE land_id = #{landId}
+    </update>
+</mapper>

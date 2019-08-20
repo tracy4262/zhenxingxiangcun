@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ProductMediaLibraryDetailMapper">
+    <insert id="saveMediaLibraryDetail"  parameterType="map" >
+            INSERT INTO product_photo_info(
+            photo_id,
+            product_id,
+            photo_url,
+            create_time
+            ) VALUES (
+            UUID(),
+            #{id},
+            #{photoUrl},
+            NOW()
+            )
+    </insert>
+    <delete id="deleteMediaLibraryDetail" parameterType="map">
+        DELETE FROM media_library_detail WHERE id = #{id}
+    </delete>
+
+    <update id="updateMediaLibraryDetail" parameterType="map">
+        UPDATE media_library_detail SET `name` = #{name} WHERE id = #{id}
+    </update>
+
+    <select id="query" parameterType="map" resultType="map">
+        SELECT
+            photo_id AS photoId,
+            product_id AS productId,
+            photo_url AS photoUrl,
+            create_time AS createTime
+        FROM
+            product_photo_info
+        WHERE
+             product_id = #{productId}
+    </select>
+
+    <select id="queryByProductId" parameterType="map" resultType="map">
+        SELECT photo_url AS photoUrl FROM product_photo_info WHERE product_id = #{productId}
+    </select>
+
+    <select id="queryList" parameterType="map" resultType="map">
+        SELECT
+            id,
+            media_id AS mediaId,
+            media_describe AS mediaDescribe,
+            media_url AS mediaUrl,
+            name,
+            create_time AS createTime,
+            update_time AS updateTime,
+            account,
+            product_id AS productId
+        FROM
+            media_library_detail
+        WHERE
+            media_id = #{mediaId}
+    </select>
+    <delete id="deleteMediaLibraryDetailByProductId" parameterType="map">
+        DELETE FROM product_photo_info WHERE product_id = #{productId}
+    </delete>
+</mapper>

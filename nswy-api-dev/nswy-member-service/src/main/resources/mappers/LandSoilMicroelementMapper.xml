@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.LandSoilMicroelementMapper">
+    <select id="queryLandInfoMicroelements" parameterType="map" resultType="map">
+        SELECT
+            microelement_id AS biologicalIndicatorId,
+            land_id AS landId,
+            effective_copper AS effectiveCopper,
+            available_zinc AS availableZinc,
+            available_iron AS availableIron,
+            available_mn AS availableMn,
+            available_mo AS availableMo,
+            available_boron AS availableBoron,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM
+            land_microelements_info
+        WHERE
+            land_id = #{landId}
+    </select>
+
+    <insert id="saveOrUpdateLandInfoMicroelements" parameterType="map">
+        <!--查询记录是否存在-->
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(land_id) FROM land_microelements_info WHERE land_id = #{landId}
+        </selectKey>
+        <!--存在则修改-->
+        <if test="count > 0">
+            UPDATE
+                land_microelements_info
+            SET
+                microelement_id = #{biologicalIndicatorId},
+                land_id = #{landId},
+                effective_copper = #{effectiveCopper},
+                available_zinc = #{availableZinc},
+                available_iron = #{availableIron},
+                available_mn = #{availableMn},
+                available_mo = #{availableMo},
+                available_boron = #{availableBoron}
+            WHERE
+                land_id = #{landId}
+        </if>
+        <!--不存在则新增-->
+        <if test="count ==0">
+            INSERT INTO land_microelements_info (
+                microelement_id,
+                land_id,
+                effective_copper,
+                available_zinc,
+                available_iron,
+                available_mn,
+                available_mo,
+                available_boron,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{landId},
+                #{effectiveCopper},
+                #{availableZinc},
+                #{availableIron},
+                #{availableMn},
+                #{availableMo},
+                #{availableBoron},
+                NOW()
+            )
+        </if>
+    </insert>
+
+    <select id="queryIsExit" parameterType="map" resultType="map">
+        SELECT
+            effective_copper AS effectiveCopper,
+            available_zinc AS availableZinc,
+            available_iron AS availableIron,
+            available_mn AS availableMn,
+            available_mo AS availableMo,
+            available_boron AS availableBoron
+        FROM
+            land_microelements_info
+        WHERE
+            land_id = #{landId}
+    </select>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.relationship.mapper.RelationshipGroupMapper">
+    <select id="queryIsExist" parameterType="java.lang.Integer" resultType="map">
+        SELECT * FROM relationship_group WHERE gruop_id = #{groupId}
+    </select>
+
+    <select id="queryIsDefault" parameterType="java.lang.Integer" resultType="map">
+        SELECT * FROM relationship_group WHERE gruop_id = #{groupId} AND (group_type IN (1,2,3,4,5) OR gruop_name LIKE "%专家")
+    </select>
+    <update id="updateRelationshipGroup" parameterType="com.ovit.nswy.relationship.model.request.RelationshipGroupQuery">
+        UPDATE relationship_group SET gruop_name = #{gruopName} WHERE gruop_id = #{gruopId}
+    </update>
+    <select id="nameIsExist" parameterType="com.ovit.nswy.relationship.model.request.RelationshipGroupQuery" resultType="map">
+        SELECT * FROM relationship_group WHERE gruop_name = #{gruopName} AND account = #{account}
+    </select>
+</mapper>

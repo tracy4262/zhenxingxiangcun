@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.WaterQualityMapper" >
+  <select id="query" parameterType="java.util.Map" resultType="java.util.Map">
+      SELECT
+        product_id AS productId,
+        ph AS ph,
+        mercury AS mercury,
+        cadmium AS cadmium,
+        arsenic AS arsenic,
+        lead AS lead,
+        hexavalent_chromium AS hexavalentChromium,
+        fluoride AS fluoride,
+        chemical_oxygen_demand AS chemicalOxygenDemand,
+        petroleum AS petroleum,
+        fecal_coliform AS fecalColiform,
+        irrigation_id AS irrigationId
+      FROM
+        irrigation_water_quality
+      WHERE
+        product_id = #{productId}
+  </select>
+
+  <update id="update" parameterType="java.util.Map">
+      UPDATE
+        irrigation_water_quality
+      SET
+        ph = #{ph},
+        mercury = #{mercury},
+        cadmium = #{cadmium},
+        arsenic = #{arsenic},
+        lead = #{lead},
+        hexavalent_chromium = #{hexavalentChromium},
+        fluoride = #{fluoride},
+        chemical_oxygen_demand = #{chemicalOxygenDemand},
+        petroleum = #{petroleum},
+        fecal_coliform = #{fecalColiform}
+      WHERE
+        irrigation_id = #{irrigationId}
+  </update>
+
+  <insert id="add" parameterType="java.util.Map">
+      INSERT INTO
+        irrigation_water_quality
+      (
+        irrigation_id,
+        product_id,
+        ph,
+        mercury,
+        cadmium,
+        arsenic,
+        lead,
+        hexavalent_chromium,
+        fluoride,
+        chemical_oxygen_demand,
+        petroleum,
+        fecal_coliform
+      )
+      VALUES
+      (
+        UUID(),
+        #{productId},
+        #{ph},
+        #{mercury},
+        #{cadmium},
+        #{arsenic},
+        #{lead},
+        #{hexavalentChromium},
+        #{fluoride},
+        #{chemicalOxygenDemand},
+        #{petroleum},
+        #{fecalColiform}
+      )
+  </insert>
+</mapper>

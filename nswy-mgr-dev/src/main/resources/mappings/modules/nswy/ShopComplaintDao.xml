@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ShopComplaintDao">
+
+	<select id="findList" parameterType="map" resultType="com.ovit.manager.modules.nswy.entity.ShopComplaint">
+		SELECT
+			o.id as complaintId,
+			o.seller_account as sellerAccount,
+			o.order_code_id as orderCodeId,
+			l.display_name as sellerName,
+			o.buyer_account as buyerAccount,
+			u.display_name as buyerName,
+			o.reason,
+			o.describe_info as describeInfo,
+			o.mobile,
+			o.pic_url as picUrl,
+			o.approve_status as approveStatus,
+			DATE_FORMAT(o.create_time,"%Y-%m-%d %T") AS createTime,
+		DATE_FORMAT(o.update_time,"%Y-%m-%d %T") AS updateTime
+		FROM shop_complaint o
+
+		left join shop_order s on o.order_code_id = s.order_code
+
+		left join login_user l on o.seller_account = l.login_account
+
+		left join login_user u on o.buyer_account = u.login_account
+
+
+		<where>
+
+			<if test="approveStatus != null and approveStatus != ''">
+				 c.approve_status = #{approveStatus}
+			</if>
+			<if test="sellerName != null and sellerName != ''">
+				and l.display_name LIKE CONCAT('%',#{sellerName},'%')
+			</if>
+			<if test="buyerName != null and buyerName != ''">
+				and u.display_name  LIKE CONCAT('%',#{buyerName},'%')
+			</if>
+		</where>
+		ORDER BY o.create_time DESC
+	</select>
+
+	<update id="adopt" parameterType="map">
+        UPDATE shop_complaint SET approve_status = #{approveStatus} WHERE id = #{complaintId}
+    </update>
+
+
+</mapper>

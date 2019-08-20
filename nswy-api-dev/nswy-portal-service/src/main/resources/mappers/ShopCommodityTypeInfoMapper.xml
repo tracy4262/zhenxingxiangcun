@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.ShopCommodityTypeInfoMapper">
+    <select id="findCommodityInfo" parameterType="map" resultType="map">
+        SELECT t.id,
+            t.account,
+            t.currency_commodity_id as commonProductId,
+            c.currency_commodity_name as commonProductName,
+            t.sale_market_id as salesMarket,
+            t.profession_class_id as relatedIndustryId,
+            d.label as relatedIndustry,
+            t.product_class_id as productType,
+            p.classification_name as productTypeName,
+            t.is_species_relation  as isRelatedToSpecies,
+            t.species_relation_id as relatedSpeciesId,
+            t.is_main_product as isMainProduct,
+            t.variety_id as breedId,
+            t.growth_environment as liveEnvironment,
+            t.species_protect_level as protectionLevel,
+            t.is_raw_material as isFood,
+            t.is_quantity_heat as isWriteHeat,
+            t.nutrient as heat,
+            t.is_consumption_edible as isSuitFamily,
+            t.suitable_population as suitPeople,
+            t.traceability_type as retrospectType,
+            t.commodity_abstract as productIntroduction,
+            t.commodity_image as notarizationCertificate
+
+        FROM shop_commodity_type_info t
+
+        left join shop_currency_commodity c  on t.currency_commodity_id  =  c.id
+
+        left join (SELECT t1.dict_value AS dict_value,t1.dict_name AS label FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+                WHERE t2.type_name = '行业分类') d on t.profession_class_id = d.dict_value
+
+        left join product_classification p on t.product_class_id = p.classification_code
+
+        where 1=1
+       <if test="id !='' and id !=null">
+           and t.id = #{id}
+       </if>
+        <if test="account != null and account !=''">
+            and  t.account =#{account}
+        </if>
+        ORDER BY t.create_time DESC
+    </select>
+
+    <insert id="insertCommodityInfo" parameterType="java.util.Map">
+        replace into shop_commodity_type_info (
+            id,
+            account,
+            currency_commodity_id,
+            sale_market_id,
+            profession_class_id,
+            product_class_id,
+            is_species_relation,
+            species_relation_id,
+            is_main_product,
+            variety_id,
+            growth_environment,
+            species_protect_level,
+            is_raw_material,
+            is_quantity_heat,
+            nutrient,
+            is_consumption_edible,
+            suitable_population,
+            traceability_type,
+            commodity_abstract,
+            commodity_image,
+            create_time
+        ) values (
+          #{id},
+          #{account},
+          #{commonProductId},
+          #{salesMarket},
+          #{relatedIndustryId},
+          #{productType},
+          #{isRelatedToSpecies},
+          #{relatedSpeciesId},
+          #{isMainProduct},
+          #{breedId},
+          #{liveEnvironment},
+          #{protectionLevel},
+          #{isFood},
+          #{isWriteHeat},
+          #{heat},
+          #{isSuitFamily},
+          #{suitPeople},
+          #{retrospectType},
+          #{productIntroduction},
+          #{notarizationCertificate},
+          now()
+        );
+    </insert>
+
+    <update id="updateCommodityInfo" parameterType="java.util.Map" >
+        update shop_commodity_type_info set
+        <if test="account !=null and account!=''">
+            account =#{account},
+        </if>
+        <if test="commonProductId !=null and commonProductId!=''">
+            currency_commodity_id =#{commonProductId},
+        </if>
+        <if test="salesMarket !=null and salesMarket!=''">
+            sale_market_id =#{salesMarket},
+        </if>
+        <if test="relatedIndustryId !=null and relatedIndustryId!=''">
+            profession_class_id =#{relatedIndustryId},
+        </if>
+        <if test="productType !=null and productType!=''">
+            product_class_id =#{productType},
+        </if>
+        <if test="isRelatedToSpecies !=null and isRelatedToSpecies!=''">
+            is_species_relation =#{isRelatedToSpecies},
+        </if>
+        <if test="relatedSpeciesId !=null and relatedSpeciesId!=''">
+            species_relation_id =#{relatedSpeciesId},
+        </if>
+        <if test="isMainProduct !=null and isMainProduct!=''">
+            is_main_product =#{isMainProduct},
+        </if>
+        <if test="breedId !=null and breedId!=''">
+            variety_id =#{breedId},
+        </if>
+        <if test="liveEnvironment !=null and liveEnvironment!=''">
+            growth_environment =#{liveEnvironment},
+        </if>
+        <if test="protectionLevel !=null and protectionLevel!=''">
+            species_protect_level =#{protectionLevel},
+        </if>
+        <if test="isFood !=null and isFood!=''">
+            is_raw_material =#{isFood},
+        </if>
+        <if test="isWriteHeat !=null and isWriteHeat!=''">
+            is_quantity_heat =#{isWriteHeat},
+        </if>
+
+        <if test="heat !=null and heat!=''">
+            nutrient =#{heat},
+        </if>
+        <if test="isSuitFamily !=null and isSuitFamily!=''">
+            is_consumption_edible =#{isSuitFamily},
+        </if>
+        <if test="suitPeople !=null and suitPeople!=''">
+            suitable_population =#{suitPeople},
+        </if>
+        <if test="retrospectType !=null and retrospectType!=''">
+            traceability_type =#{retrospectType},
+        </if>
+        <if test="productIntroduction !=null and productIntroduction!=''">
+            commodity_abstract =#{productIntroduction},
+        </if>
+        <if test="notarizationCertificate !=null and notarizationCertificate!=''">
+            commodity_image =#{notarizationCertificate},
+        </if>
+        create_time = now()
+
+        where id = #{id}
+    </update>
+
+    <select id="findMaxId" resultType="java.lang.String">
+		select max(id) as id from shop_commodity_type_info
+	</select>
+
+    <select id="findCommodityImage" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            picture_id,
+            picture_url,
+            picture_name,
+            picture_use_home,
+            picture_use_information,
+            picture_product,
+            remark,
+            create_time,
+            update_time
+        FROM
+            system_picture
+        WHERE
+            is_delete != 1
+            <if test="picture_product!=null and picture_product!=''">
+                and picture_product = #{picture_product}
+            </if>
+        ORDER BY create_time
+    </select>
+
+</mapper>

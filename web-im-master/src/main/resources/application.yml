@@ -1,0 +1,59 @@
+spring:
+  output:
+    ansi:
+      #DETECT：会检查终端是否支持ANSI，是的话就采用彩色输出（推荐项）
+      enabled: detect
+  profiles:
+    active: dev
+server:
+  port: 8081
+
+management:
+  port: 9081
+  security:
+    enabled: false
+  address: 127.0.0.1
+  context-path: /manage
+
+http:
+  eureka:
+    #serviceUrl: 127.0.0.1
+    serviceUrl: 192.168.7.42
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://${http.eureka.serviceUrl}:8761/eureka/
+  instance:
+    #eureka client发送心跳给server端的频率 默认30s
+    lease-renewal-interval-in-seconds: 10
+    #等待下一次心跳的超时时间 在leaseExpirationDurationInSeconds后，server端没有收到client的心跳，则将摘除该instance
+    lease-expiration-duration-in-seconds: 30
+    preferIpAddress: false
+    statusPageUrlPath: /info
+    healthCheckUrlPath: /health
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  threadpool.default.coreSize: 100
+  threadpool.default.maximumSize: 200
+  threadpool.default.maxQueueSize: 5000
+  threadpool.default.allowMaximumSizeToDivergeFromCoreSize: true
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+logging:
+  config: classpath:log4j2.xml
+
+endpoints:
+  shutdown:
+    enabled: true

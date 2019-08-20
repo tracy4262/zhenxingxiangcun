@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.shop.pushTemplate.mapper.ShopCardMapper" >
+
+
+
+    <select id="findList" resultType="map" parameterType="map">
+        SELECT t1.account,t1.commodity_type_info_id as commodityId,t1.num,t1.create_time,t1.id,t1.seller_account as sellerAccount
+        FROM  shop_card t1
+        WHERE
+        t1.account =  #{account}
+        and t1.commodity_type_info_id=#{commodityId}
+         limit 1;
+    </select>
+
+    <select id="findListByAccount" resultType="map" parameterType="map">
+        SELECT t1.account,t1.commodity_type_info_id as commodityId,t1.num,t1.create_time,t1.id,t1.seller_account as sellerAccount
+        FROM  shop_card t1
+        WHERE 1=1
+        <if test="id!=null and id!=''">
+            and t1.id =  #{id}
+        </if>
+        <if test="account!=null and account!=''">
+            and t1.account =  #{account}
+        </if>
+        <if test="sellerAccount!=null and sellerAccount!=''">
+            and t1.seller_account =  #{sellerAccount}
+        </if>
+    </select>
+
+    <select id="findListByAccountGroup" resultType="map" parameterType="map">
+        SELECT t1.account,t1.seller_account as sellerAccount
+        FROM  shop_card t1
+        WHERE 1=1
+        <if test="account!=null and account!=''">
+            and t1.account =  #{account}
+        </if>
+        group by t1.seller_account
+    </select>
+
+    <select id="findCount" resultType="java.lang.Integer" parameterType="map">
+        SELECT count(*) as number
+        FROM  shop_card t1
+        WHERE
+        t1.account =  #{account}
+        and t1.commodity_type_info_id=#{commodityId}
+
+    </select>
+
+    <insert id="saveShopCard" parameterType="map">
+        insert into shop_card(
+            account,
+            seller_account,
+            commodity_type_info_id,
+            num,
+            create_time
+        ) value (
+            #{account},
+            #{sellerAccount},
+            #{commodityId},
+            #{num},
+            now()
+        );
+    </insert>
+
+    <update id="updateShopCard" parameterType="map">
+        update shop_card
+        <set>
+            <if test="commodityId!=null">
+                commodity_type_info_id = #{commodityId},
+            </if>
+            <if test="num!=null">
+                num = #{num},
+            </if>
+        </set>
+        where account = #{account} and id = #{id}
+    </update>
+
+
+
+    <delete id="deleteShopCard" parameterType="map">
+      delete from  shop_card where id = #{id} and account = #{account}
+    </delete>
+
+    <delete id="deleteShopCardByAccount" parameterType="map">
+      delete from  shop_card where  account = #{account}
+    </delete>
+
+
+    <select id="findProductCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT COUNT(product_vbep) AS CNT FROM  shop_commodity_supply_info WHERE commodity_type_info_id = #{pid}
+    </select>
+
+
+
+    <select id="findAvatar" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+		case when l.avatar is null then '' else l.avatar end as avatar,
+		l.id as userId,
+		l.login_account as account,
+		case when m.memberName is null then '' else m.memberName end as name
+
+		from
+
+		login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+		(select u.template_id as templateId,u.account
+
+		from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+		c on l.login_account  = c.account
+
+		left join (
+		select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+		(select u.template_id as templateId,u.account
+
+		from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+		group by m.user_id
+
+		order by m.create_time asc
+
+		) m on l.login_account = m.account where l.login_account =  #{account}
+    </select>
+
+
+    <select id="findProductById" resultType="map" parameterType="java.lang.Integer">
+        SELECT t2.commodity_type_info_id
+        ,t2.account as product_account
+        ,su.display_name as seller
+        ,t2.commodity_name
+        ,t3.time_price
+        ,t3.discount_price
+        ,t3.discount_date
+        ,t6.freight
+        ,substring_index(t5.commodity_image,',',  1) as commodity_image
+        ,t4.product_output_unit
+
+        FROM    shop_commodity_info t2
+        JOIN  shop_commodity_price_info t3   ON
+        t2.commodity_type_info_id = t3.commodity_type_info_id
+        JOIN  shop_commodity_type_info t5   ON
+        t2.commodity_type_info_id = t5.id
+         JOIN  shop_product_delivery_info t6   ON
+        t2.commodity_type_info_id = t6.commodity_type_info_id
+        JOIN login_user su ON t2.account=su.login_account
+        join shop_commodity_supply_info t4 on t2.commodity_type_info_id = t4.commodity_type_info_id
+        WHERE
+        t2.commodity_type_info_id =  #{commodityTypeInfoId}
+        limit 1
+    </select>
+
+
+
+</mapper>

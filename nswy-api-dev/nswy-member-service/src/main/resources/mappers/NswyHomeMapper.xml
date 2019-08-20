@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.NswyHomeMapper" >
+    <select id="queryPictureForBanner" parameterType="map" resultType="map">
+        SELECT
+            picture_id AS pictureId,
+            picture_name AS pictureName,
+            picture_url AS pictureUrl
+        FROM
+            system_picture
+        WHERE  is_delete != 1
+        <if test="status == 1">
+            AND picture_use_home = 1
+        </if>
+        <if test="status == 2">
+            AND picture_use_information = 1
+        </if>
+    </select>
+
+    <select id="queryReadingTop" resultType="map" parameterType="map">
+        SELECT * FROM (
+            (
+                SELECT
+                    t2.id AS baseId,
+                    t1.title,
+                    t1.browse_number  AS browseNumber,
+                    t1.id AS detailId,
+                    t2.column_type AS columnType,
+                    "policy" AS ascription
+                FROM policy_detail t1
+                LEFT JOIN policy t2 ON t1.id = t2.information_detail_id
+                WHERE t2.approve_status = 2
+                ORDER BY browse_number DESC LIMIT 10
+            )
+            UNION ALL
+            (
+                SELECT
+                    t2.id AS baseId,
+                    t1.title,
+                    t1.browse_number  AS browseNumber,
+                    t1.id AS detailId,
+                    t2.column_type AS columnType,
+                    "information" AS ascription
+                FROM information_detail t1
+                LEFT JOIN information t2 ON t1.id = t2.information_detail_id
+                WHERE t2.approve_status = 2
+                ORDER BY browse_number DESC LIMIT 10
+            )
+            UNION ALL
+            (
+                SELECT
+                    t2.id AS baseId,
+                    t1.title,
+                    t1.browse_number  AS browseNumber,
+                    t1.id AS detailId,
+                    t2.column_type AS columnType,
+                    "knowledge" AS ascription
+                FROM knowledge_detail t1
+                LEFT JOIN knowledge t2 ON t1.id = t2.information_detail_id
+                WHERE t2.approve_status = 2
+                ORDER BY browse_number DESC LIMIT 10
+            )
+            UNION ALL
+            (
+                SELECT
+                    standard_id AS baseId,
+                    title,
+                    browse_number AS browseNumber,
+                    standard_detail_id AS detailId,
+                    "" AS columnType,
+                    "standard" AS ascription
+                FROM standard
+                WHERE approve_status = 2
+                ORDER BY browse_number DESC LIMIT 10
+            )
+        ) t11 ORDER BY t11.browseNumber DESC LIMIT 10
+    </select>
+
+    <select id="readingImp" resultType="map" parameterType="map">
+        SELECT * FROM (
+                          (
+                              select
+                                     id,
+                                     information_detail_id as detailId,
+                                     title,
+                                     column_type as columnType,
+                                     "policy" AS ascription,
+                                     create_time as createTime
+                              from policy
+                              where approve_status=2 and is_to_page = 0
+                              order by create_time desc limit 0,10
+                          )
+                          UNION ALL
+                          (
+                              select
+                                     id,
+                                     information_detail_id as detailId,
+                                     title,
+                                     column_type as columnType,
+                                     "information" AS ascription,
+                                     create_time as createTime
+                              from information
+                              where approve_status=2 and is_to_page = 0
+                              order by create_time desc limit 0,10
+                          )
+                          UNION ALL
+                          (
+                              select
+                                     id,
+                                     information_detail_id as detailId,
+                                     title,
+                                     column_type as columnType,
+                                     "knowledge" AS ascription,
+                                     create_time as createTime
+                              from knowledge
+                              where approve_status=2 and is_to_page = 0
+                              order by create_time desc limit 0,10
+                          )
+                          UNION ALL
+                          (
+                              SELECT
+                                  standard_id AS id,
+                                  standard_detail_id AS detailId,
+                                  title,
+                                  "" AS columnType,
+                                  "standard" AS ascription,
+                                  create_time as createTime
+                              FROM standard
+                              WHERE approve_status = 2 and is_to_page = 0
+                              ORDER BY create_time DESC LIMIT 10
+                          )
+                      ) t11 ORDER BY t11.createTime DESC LIMIT 10
+    </select>
+</mapper>

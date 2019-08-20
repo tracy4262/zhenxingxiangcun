@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.certification.mapper.FriendGroupMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.certification.model.FriendGroup">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="login_account" property="loginAccount"
+			jdbcType="VARCHAR" />
+		<result column="group_name" property="groupName" jdbcType="VARCHAR" />
+		<result column="authority" property="authority" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, login_account, group_name, authority, template_id as templateId
+	</sql>
+
+	<select id="selectByAccount" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from im_friend_group
+		where 1=1
+		<if test="account != null and account != ''">
+			AND login_account = #{account}
+		</if>
+		<if test="templateId != null and templateId != ''">
+			AND template_id = #{templateId}
+		</if>
+	</select>
+
+	<delete id="deleteByAccount" parameterType="java.util.Map">
+		delete from im_friend_group
+		where 1=1
+		<if test="account != null and account != ''">
+			AND login_account = #{account}
+		</if>
+		<if test="templateId != null and templateId != ''">
+			AND template_id = #{templateId}
+		</if>
+	</delete>
+
+	<insert id="insert" parameterType="java.util.List">
+    <![CDATA[insert into im_friend_group (id, login_account, group_name, authority, template_id
+      ) values 
+      ]]>
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.id}, #{item.loginAccount}, #{item.groupName}, #{item.authority}, #{item.templateId}
+			)
+		</foreach>
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.certification.model.FriendGroup">
+		update im_friend_group
+		set login_account = #{loginAccount,jdbcType=VARCHAR},
+		group_name = #{groupName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}hhr
+	</update>
+
+</mapper>

@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.LandInformationMapper">
+
+    <select id="findLandInfo" parameterType="map" resultType="map">
+        select id, account, year_file_id as yearId, land_code as landCode, land_name as landName, land_user as landUser, land_affect as landAffect,
+        land_type as landType, fact_area as factArea, air_area as airArea, land_level as landLevel, farmland, tenure, use_type as useType,
+        location, longitude, latitude, status, land_id as landId,template_id as templateId
+        from reversion_land_information
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_file_id = #{yearId}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </select>
+
+    <select id="findSoilContent" parameterType="map" resultType="map">
+        select id, account, year_file_id as yearId, land_code as landCode, fact_area as factArea, check_time as checkTime,
+        phosphor, kalium, organic, ph, picture as pictureList, depict, status, land_id as landId,template_id as templateId
+        from reversion_land_soil_content
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_file_id = #{yearId}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </select>
+
+    <select id="findSoilQuality" parameterType="map" resultType="map">
+        select id, account, year_file_id as yearId, land_code as landCode, fact_area as factArea, check_time as checkTime,
+        ph, cadmium, mercury, arsenic, lead, chromium, copper, nickel, zinc, six, cried, benzene, picture as pictureList,
+        depict, land_id as landId, status,template_id as templateId
+        from reversion_land_soil_quality
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_file_id = #{yearId}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </select>
+
+    <select id="findWaterQuality" parameterType="map" resultType="map">
+        select id, account, year_file_id as yearId, land_code as landCode, fact_area as factArea, check_time as checkTime,
+        chromium, manganese, oxygen, ammonia, nitrogen, phosphorus, nutrition, water_quality as waterQuality,
+        picture as pictureList, depict, land_id as landId, status,template_id as templateId
+        from reversion_land_water_quality
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_file_id = #{yearId}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </select>
+
+    <insert id="addNkyLandInfo" parameterType="map">
+        INSERT INTO reversion_land_information(
+        account,
+        year_file_id,
+        land_name,
+        longitude,
+        latitude,
+        land_id,
+        land_code,
+        land_user,
+        fact_area,
+        air_area,
+        template_id
+        ) VALUES (
+        #{account},
+        #{yearId},
+        #{landName},
+        #{longitude},
+        #{latitude},
+        #{landId},
+        #{landCode},
+        #{landUser},
+        #{factArea},
+        #{airArea},
+        #{templateId}
+        )
+    </insert>
+
+    <insert id="addNkySoilInfo" parameterType="map">
+        INSERT INTO reversion_land_soil_content(
+        account,
+        year_file_id,
+        land_id,
+        land_code,
+        fact_area,
+        template_id
+        ) VALUES (
+        #{account},
+        #{yearId},
+        #{landId},
+        #{landCode},
+        #{factArea},
+        #{templateId}
+        )
+    </insert>
+
+    <insert id="addNkySoilQuality" parameterType="map">
+        INSERT INTO reversion_land_soil_quality(
+        account,
+        year_file_id,
+        land_id,
+        land_code,
+        fact_area,
+        template_id
+        ) VALUES (
+        #{account},
+        #{yearId},
+        #{landId},
+        #{landCode},
+        #{factArea},
+        #{templateId}
+        )
+    </insert>
+
+    <insert id="addNkyWaterQuality" parameterType="map">
+        INSERT INTO reversion_land_water_quality(
+        account,
+        year_file_id,
+        land_id,
+        land_code,
+        fact_area,
+        template_id
+        ) VALUES (
+        #{account},
+        #{yearId},
+        #{landId},
+        #{landCode},
+        #{factArea},
+        #{templateId}
+        )
+    </insert>
+
+    <update id="updateLandInfo" parameterType="map">
+        update reversion_land_information
+        <set>
+            <if test="landCode !=null and landCode !=''">
+                land_code = #{landCode},
+            </if>
+            <if test="landName !=null and landName !=''">
+                land_name = #{landName},
+            </if>
+            <if test="landUser !=null and landUser !=''">
+                land_user = #{landUser},
+            </if>
+            <if test="landAffect !=null and landAffect !=''">
+                land_affect = #{landAffect},
+            </if>
+            <if test="landType !=null and landType !=''">
+                land_type = #{landType},
+            </if>
+            <if test="factArea !=null and factArea !=''">
+                fact_area = #{factArea},
+            </if>
+            <if test="airArea !=null and airArea !=''">
+                air_area = #{airArea},
+            </if>
+            <if test="landLevel !=null and landLevel !=''">
+                land_level = #{landLevel},
+            </if>
+            <if test="farmland !=null and farmland !=''">
+                farmland = #{farmland},
+            </if>
+            <if test="tenure !=null and tenure !=''">
+                tenure = #{tenure},
+            </if>
+            <if test="useType !=null and useType !=''">
+                use_type = #{useType},
+            </if>
+            <if test="location !=null and location !=''">
+                location = #{location},
+            </if>
+            <if test="longitude !=null and longitude !=''">
+                longitude = #{longitude},
+            </if>
+            <if test="latitude !=null and latitude !=''">
+                latitude = #{latitude},
+            </if>
+            <if test="templateId !=null and templateId !=''">
+                template_id = #{templateId},
+            </if>
+            <if test="status !=null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateSoilContent" parameterType="map">
+        update reversion_land_soil_content
+        <set>
+            <if test="landCode !=null and landCode !=''">
+                land_code = #{landCode},
+            </if>
+            <if test="factArea !=null and factArea !=''">
+                fact_area = #{factArea},
+            </if>
+            <if test="checkTime !=null and checkTime !=''">
+                check_time = #{checkTime},
+            </if>
+            <if test="phosphor !=null and phosphor !=''">
+                phosphor = #{phosphor},
+            </if>
+            <if test="kalium !=null and kalium !=''">
+                kalium = #{kalium},
+            </if>
+            <if test="organic !=null and organic !=''">
+                organic = #{organic},
+            </if>
+            <if test="ph !=null and ph !=''">
+                ph = #{ph},
+            </if>
+            <if test="pictureList !=null and pictureList !=''">
+                picture = #{pictureList},
+            </if>
+            <if test="depict !=null and depict !=''">
+                depict = #{depict},
+            </if>
+            <if test="templateId !=null and templateId !=''">
+                template_id = #{templateId},
+            </if>
+            <if test="status !=null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateSoilQuality" parameterType="map">
+        update reversion_land_soil_quality
+        <set>
+            <if test="landCode !=null and landCode !=''">
+                land_code = #{landCode},
+            </if>
+            <if test="factArea !=null and factArea !=''">
+                fact_area = #{factArea},
+            </if>
+            <if test="checkTime !=null and checkTime !=''">
+                check_time = #{checkTime},
+            </if>
+            <if test="ph !=null and ph !=''">
+                ph = #{ph},
+            </if>
+            <if test="cadmium !=null and cadmium !=''">
+                cadmium = #{cadmium},
+            </if>
+            <if test="mercury !=null and mercury !=''">
+                mercury = #{mercury},
+            </if>
+            <if test="arsenic !=null and arsenic !=''">
+                arsenic = #{arsenic},
+            </if>
+            <if test="lead !=null and lead !=''">
+                lead = #{lead},
+            </if>
+            <if test="chromium !=null and chromium !=''">
+                chromium = #{chromium},
+            </if>
+            <if test="copper !=null and copper !=''">
+                copper = #{copper},
+            </if>
+            <if test="nickel !=null and nickel !=''">
+                nickel = #{nickel},
+            </if>
+            <if test="zinc !=null and zinc !=''">
+                zinc = #{zinc},
+            </if>
+            <if test="six !=null and six !=''">
+                six = #{six},
+            </if>
+            <if test="cried !=null and cried !=''">
+                cried = #{cried},
+            </if>
+            <if test="benzene !=null and benzene !=''">
+                benzene = #{benzene},
+            </if>
+            <if test="pictureList !=null and pictureList !=''">
+                picture = #{pictureList},
+            </if>
+            <if test="depict !=null and depict !=''">
+                depict = #{depict},
+            </if>
+            <if test="templateId !=null and templateId !=''">
+                template_id = #{templateId},
+            </if>
+            <if test="status !=null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateWaterQuality" parameterType="map">
+        update reversion_land_water_quality
+        <set>
+            <if test="landCode !=null and landCode !=''">
+                land_code = #{landCode},
+            </if>
+            <if test="factArea !=null and factArea !=''">
+                fact_area = #{factArea},
+            </if>
+            <if test="checkTime !=null and checkTime !=''">
+                check_time = #{checkTime},
+            </if>
+            <if test="chromium !=null and chromium !=''">
+                chromium = #{chromium},
+            </if>
+            <if test="manganese !=null and manganese !=''">
+                manganese = #{manganese},
+            </if>
+            <if test="oxygen !=null and oxygen !=''">
+                oxygen = #{oxygen},
+            </if>
+            <if test="ammonia !=null and ammonia !=''">
+                ammonia = #{ammonia},
+            </if>
+            <if test="nitrogen !=null and nitrogen !=''">
+                nitrogen = #{nitrogen},
+            </if>
+            <if test="phosphorus !=null and phosphorus !=''">
+                phosphorus = #{phosphorus},
+            </if>
+            <if test="nutrition !=null and nutrition !=''">
+                nutrition = #{nutrition},
+            </if>
+            <if test="waterQuality !=null and waterQuality !=''">
+                water_quality = #{waterQuality},
+            </if>
+            <if test="pictureList !=null and pictureList !=''">
+                picture = #{pictureList},
+            </if>
+            <if test="depict !=null and depict !=''">
+                depict = #{depict},
+            </if>
+            <if test="templateId !=null and templateId !=''">
+                template_id = #{templateId},
+            </if>
+            <if test="status !=null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLandInfo" parameterType="map">
+        delete from reversion_land_information where id = #{id}
+    </delete>
+
+    <delete id="deleteSoilContent" parameterType="map">
+        delete from reversion_land_soil_content
+        where land_id = #{landId} and account = #{account} and year_file_id = #{yearId}
+    </delete>
+
+    <delete id="deleteSoilQuality" parameterType="map">
+        delete from reversion_land_soil_quality
+        where land_id = #{landId} and account = #{account} and year_file_id = #{yearId}
+    </delete>
+
+    <delete id="deleteWaterQuality" parameterType="map">
+        delete from reversion_land_water_quality
+        where land_id = #{landId} and account = #{account} and year_file_id = #{yearId}
+    </delete>
+
+    <select id="findLandUse" parameterType="map" resultType="map">
+        select id, year_file_id as yearId, number, name, number_type as numberType, type_name as typeName,
+        area, conversion_area as conversionArea, type,template_id as templateId
+        from reversion_massif_use_situation
+        where account = #{account} and year_file_id = #{yearId} and type = #{type} and template_id = #{templateId}
+    </select>
+
+    <insert id="saveLandUse" parameterType="map">
+        replace into reversion_massif_use_situation (
+        id,
+        account,
+        year_file_id,
+        number,
+        name,
+        number_type,
+        type_name,
+        area,
+        conversion_area,
+        type,
+        template_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.yearId}, #{item.number}, #{item.name}, #{item.numberType},
+                #{item.typeName}, #{item.area}, #{item.conversionArea}, #{item.type},#{item.templateId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteLandUse" parameterType="map">
+        delete from reversion_massif_use_situation where id = #{id}
+    </delete>
+
+    <select id="findLandCode" parameterType="map" resultType="map">
+        select code, `order`
+        from reversion_land_code_dict
+        where 1=1
+        <if test="code != null and code != ''">
+            AND code = #{code}
+        </if>
+    </select>
+    
+    <update id="updateLandCode" parameterType="map">
+        update reversion_land_code_dict
+        set `order` = #{order}
+        where code = #{code}
+    </update>
+    
+    <insert id="addLandCode" parameterType="map">
+        insert into reversion_land_code_dict(
+          code,
+          `order`
+        ) values (
+          #{code},
+          #{order}
+        )
+    </insert>
+
+    <select id="findAdminCode" parameterType="java.lang.String" resultType="java.lang.String">
+        select code
+        from town
+        where `id` = #{id}
+    </select>
+
+    <select id="findAddressInfo" parameterType="map" resultType="map">
+        select location,location_id as locationId
+        from reversion_member_contact_info
+        where 1=1
+        <if test="account != null and account != ''">
+            AND user_id = #{account}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </select>
+
+</mapper>

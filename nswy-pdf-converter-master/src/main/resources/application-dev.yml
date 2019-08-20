@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: nswy-pdf-converter
+#  cloud:
+#    config:
+#      enabled: true
+#      uri: http://${http.config.uri}:8888
+#      profile: ${http.config.profile}
+
+
+  http:
+    multipart:
+      maxFileSize: 10Mb
+      maxRequestSize: 10Mb
+
+#http:
+#  config:
+#    uri: 127.0.0.1
+#    profile: dev
+
+#fastDFS
+fdfs:
+  conf: ./fdfs_client.conf
+  http:
+    uploadIp: 192.168.7.61
+
+#open office
+open-office:
+  ip: 192.168.7.42
+  port: 8100
+  filePath: /Users/fuck/Downloads/

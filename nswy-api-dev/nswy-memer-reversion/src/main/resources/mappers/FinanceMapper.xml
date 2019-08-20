@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.FinanceMapper">
+
+
+
+
+    <select id="findFaninceStatusInfo" parameterType="map" resultType="map">
+        select
+        id as faninceStatusId,
+        user_id as account,
+        year_id as yearId,
+        dict_id as parentId,
+        status,
+        template_id as templateId,
+        create_time
+        from  reversion_member_fanince_status_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="parentId!=null and parentId !=''">
+            and dict_id = #{parentId}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId!=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <insert id="saveFaninceStatusInfo" parameterType="map">
+        replace into reversion_member_fanince_status_info(
+            id,
+            user_id,
+            year_id,
+            dict_id,
+            status,
+            template_id,
+            create_time
+
+        ) values (
+              #{faninceStatusId},
+              #{account},
+              #{yearId},
+              #{parentId},
+              #{status},
+              #{template_id},
+              now()
+
+        );
+    </insert>
+
+
+    <select id="findBankAccountInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        bank,
+        bank_name as bankName,
+        bank_card_number as bankCardNumber,
+        account_holder as accountHolder,
+        status,
+        create_time,
+        template_id as templateId
+        from  reversion_bank_account_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId!=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+
+    <insert id="saveBankAccountInfo" parameterType="map">
+        replace into reversion_bank_account_info(
+            id,
+            user_id,
+            year_id,
+            bank,
+            bank_name,
+            bank_card_number,
+            account_holder,
+            status,
+            template_id,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{bank},
+              #{bankName},
+              #{bankCardNumber},
+              #{accountHolder},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteBankAccountInfo" parameterType="map">
+        delete from reversion_bank_account_info where id = #{id}
+    </delete>
+
+
+    <select id="findAccountingSubjectsInfo" parameterType="map" resultType="map">
+        select
+        distinct
+        a.id,
+        a.user_id as account,
+        a.year_id as yearId,
+        a.subject_code as subjectCode,
+        a.subject_level as subjectLevel,
+        a.subject_name as subjectName,
+        a.balance_direction as balanceDirection,
+        a.subject_explain as subjectExplain,
+        a.subject_parent_id as pid,
+        a.type,
+        a.create_time
+        from  reversion_accounting_subjects_info  a
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and a.user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and a.year_id = #{yearId}
+        </if>
+
+        <if test="type!=null and type!=''">
+            and a.type = #{type}
+        </if>
+
+        <if test="pid!=null and pid!=''">
+            and a.subject_parent_id = #{pid}
+        </if>
+
+        order  by a.subject_parent_id asc
+
+    </select>
+
+
+    <insert id="saveAccountingSubjectsInfo" parameterType="map">
+        replace into reversion_accounting_subjects_info(
+            id,
+            user_id,
+            year_id,
+            subject_code,
+            subject_level,
+            subject_name,
+            balance_direction,
+            subject_explain,
+            subject_parent_id,
+            type,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{subjectCode},
+              #{subjectLevel},
+              #{subjectName},
+              #{balanceDirection},
+              #{subjectExplain},
+              #{pid},
+              #{type},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteAccountingSubjectsInfo" parameterType="map">
+        delete from reversion_accounting_subjects_info where id = #{id}
+    </delete>
+
+
+    <select id="findIncomeDistributionInfo" parameterType="map" resultType="map">
+        select
+
+        id,
+        user_id as account,
+        year_id as yearId,
+        `number`,
+        project,
+        subject,
+        upper_year_option as upperYearOption,
+        upper_year_sel as upperYearSel,
+        upper_year_money as upperYearMoney,
+        this_year_option as thisYearOption,
+        this_year_sel as thisYearSel,
+        this_year_money as thisYearMoney,
+        create_time
+        from  reversion_income_distribution_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+
+        order  by a.id desc
+
+    </select>
+
+    <insert id="saveIncomeDistributionInfo" parameterType="map">
+        replace into reversion_income_distribution_info(
+            id,
+            user_id,
+            year_id,
+           `number`,
+            project,
+            subject,
+            upper_year_option as upperYearOption,
+            upper_year_sel as upperYearSel,
+            upper_year_money as upperYearMoney,
+            this_year_option as thisYearOption,
+            this_year_sel as thisYearSel,
+            this_year_money as thisYearMoney,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{number},
+              #{project},
+              #{subject},
+              #{upperYearOption},
+              #{upperYearSel},
+              #{upperYearMoney},
+              #{thisYearOption},
+              #{thisYearSel},
+              #{thisYearMoney},
+              now()
+
+        );
+    </insert>
+
+
+    <select id="findLiabilitiesTableHeadInfo" parameterType="map" resultType="map">
+        select
+
+        id,
+        user_id as account,
+        year_id as yearId,
+        parent_id as parentId,
+        thead_data as theadData,
+        create_time
+        from  reversion_liabilities_table_head_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="parentId!=null and parentId!=''">
+            and parent_id = #{parentId}
+        </if>
+
+        order  by create_time asc
+
+    </select>
+
+
+    <insert id="saveLiabilitiesTableHeadInfo" parameterType="map">
+        replace into reversion_liabilities_table_head_info(
+            id,
+            user_id,
+            year_id,
+            parent_id,
+            thead_data,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{parentId},
+              #{theadData},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteLiabilitiesTableHeadInfo" parameterType="map">
+        delete from reversion_liabilities_table_head_info where id = #{id}
+    </delete>
+
+    <select id="findLiabilitiesTableSignInfo" parameterType="map" resultType="map">
+        select
+
+        id,
+        user_id as account,
+        year_id as yearId,
+        parent_id as parentId,
+        sign_data as signData,
+        create_time
+        from  reversion_liabilities_table_sign_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="parentId!=null and parentId!=''">
+            and parent_id = #{parentId}
+        </if>
+
+        order  by create_time asc
+
+    </select>
+
+
+    <insert id="saveLiabilitiesTableSignInfo" parameterType="map">
+        replace into reversion_liabilities_table_sign_info(
+            id,
+            user_id,
+            year_id,
+            parent_id,
+            sign_data,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{parentId},
+              #{signData},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteLiabilitiesTableSignInfo" parameterType="map">
+        delete from reversion_liabilities_table_sign_info where id = #{id}
+    </delete>
+
+</mapper>

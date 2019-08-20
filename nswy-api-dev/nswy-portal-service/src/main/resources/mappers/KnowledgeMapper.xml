@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.KnowledgeMapper">
+    <select id="queryKnowledge" parameterType="map" resultType="map">
+        SELECT
+            t1.id,
+            t1.information_detail_id AS informationDetailId,
+            t1.business_information AS businessInformation,
+            t1.all_range AS allRange,
+            t1.business_nature AS businessNature,
+            t1.all_business AS allBusiness,
+            t1.title,
+            IFNULL(t1.image_add,"") AS image,
+            t1.create_time AS createTime,
+            t1.comment_num AS commentNum,
+            t1.label,
+            t1.article_id AS articleId,
+            t1.industrial_id AS industrialId,
+            CASE t1.doc_type
+            WHEN '040101' THEN '科普'
+            WHEN '040102' THEN '论文'
+            WHEN '040103' THEN '图书'
+            WHEN '040104' THEN '专利'
+            WHEN '040105' THEN '种养标准'
+            WHEN '040106' THEN '科技成果'
+            WHEN '040107' THEN '经验交流'
+            END AS docType,
+            t1.abstracts,
+            t1.classified_id AS classifiedId,
+            t1.is_to_page AS isToPage,
+            t1.species_id AS speciesId,
+            t1.species_name AS speciesName,
+            t1.chapter,
+            t1.product,
+            t1.service,
+            t1.friend_reminding AS friendReminding,
+            t1.reminding_content AS remindingContent,
+            t1.is_sms AS isSms,
+            t1.is_publish AS isPublish,
+            t1.componsation,
+            t1.column_type AS columnType
+        FROM
+            knowledge t1
+        LEFT JOIN
+            knowledge_detail t2
+        ON
+            t1.information_detail_id = t2.id
+        WHERE
+            t2.account = #{loginAccount}
+        /*AND t1.approve_status = "2"*/
+        <if test="docType != null and docType != ''">
+            AND t1.doc_type = #{docType}
+        </if>
+        <if test="label != null and label != ''">
+            AND t1.label = #{label}
+        </if>
+        ORDER BY t1.create_time DESC
+    </select>
+</mapper>

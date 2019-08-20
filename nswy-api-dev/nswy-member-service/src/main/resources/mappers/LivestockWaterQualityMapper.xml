@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.LivestockWaterQualityMapper" >
+  <select id="query" parameterType="java.util.Map" resultType="java.util.Map">
+     SELECT
+      livestock_id AS livestockId,
+      chromaticity AS chromaticity,
+      turbidity AS turbidity,
+      stink_taste AS stinkTaste,
+      visible AS visible,
+      ph AS ph,
+      fluoride AS fluoride,
+      cyanide AS cyanide,
+      arsenic AS arsenic,
+      mercury AS mercury,
+      cadmium AS cadmium,
+      hexavalent_chromium AS hexavalentChromium,
+      lead AS lead,
+      colonies_number AS coloniesNumber,
+      coliform AS coliform
+    FROM
+      livestock_water_quality
+    WHERE
+      product_id = #{productId}
+  </select>
+
+  <update id="update" parameterType="java.util.Map">
+      UPDATE
+        livestock_water_quality
+      SET
+        chromaticity = #{chromaticity},
+        turbidity = #{turbidity},
+        stink_taste = #{stinkTaste},
+        visible = #{visible},
+        ph = #{ph},
+        fluoride = #{fluoride},
+        cyanide = #{cyanide},
+        arsenic = #{arsenic},
+        mercury = #{mercury},
+        cadmium = #{cadmium},
+        hexavalent_chromium = #{hexavalentChromium},
+        lead = #{lead},
+        colonies_number = #{coloniesNumber},
+        coliform = #{coliform}
+      WHERE
+        livestock_id = #{livestockId}
+  </update>
+
+    <insert id="add" parameterType="java.util.Map">
+      INSERT INTO
+        livestock_water_quality
+      (
+        livestock_id,
+        product_id,
+        chromaticity,
+        turbidity,
+        stink_taste,
+        visible,
+        ph,
+        fluoride,
+        cyanide,
+        arsenic,
+        mercury,
+        cadmium,
+        hexavalent_chromium,
+        lead,
+        colonies_number,
+        coliform
+      )
+      VALUES
+      (
+        UUID(),
+        #{productId},
+        #{chromaticity},
+        #{turbidity},
+        #{stinkTaste},
+        #{visible},
+        #{ph},
+        #{fluoride},
+        #{cyanide},
+        #{arsenic},
+        #{mercury},
+        #{cadmium},
+        #{hexavalentChromium},
+        #{lead},
+        #{coloniesNumber},
+        #{coliform}
+      )
+    </insert>
+</mapper>

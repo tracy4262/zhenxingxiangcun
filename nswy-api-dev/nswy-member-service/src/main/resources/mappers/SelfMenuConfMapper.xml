@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.SelfMenuConfMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.SelfMenuConf">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_account" property="userAccount" jdbcType="VARCHAR" />
+		<result column="personal_info" property="personalInfo"
+			jdbcType="INTEGER" />
+		<result column="approve" property="approve" jdbcType="INTEGER" />
+		<result column="photo" property="photo" jdbcType="INTEGER" />
+		<result column="circle" property="circle" jdbcType="INTEGER" />
+		<result column="contact_info" property="contactInfo" jdbcType="INTEGER" />
+		<result column="product" property="product" jdbcType="INTEGER" />
+		<result column="service" property="service" jdbcType="INTEGER" />
+		<result column="repository" property="repository" jdbcType="INTEGER" />
+		<result column="policy" property="policy" jdbcType="INTEGER" />
+		<result column="studio" property="studio" jdbcType="INTEGER" />
+		<result column="verification" property="verification" jdbcType="INTEGER" />
+		<result column="certificate" property="certificate" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_account, personal_info, approve, photo, circle, contact_info,
+		product, service,
+		repository, policy, studio, verification, certificate
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from self_menu_conf
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from self_menu_conf
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<delete id="deleteByAccount" parameterType="java.lang.String">
+		delete from self_menu_conf
+		where user_account = #{account,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="findByAccount" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from self_menu_conf where user_account =
+		#{user_account,jdbcType=VARCHAR}
+	</select>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.SelfMenuConf">
+		insert into self_menu_conf (id, user_account, personal_info,
+		approve, photo, circle,
+		contact_info, product, service,
+		repository, policy, studio,
+		verification, certificate)
+		values (#{id,jdbcType=INTEGER}, #{userAccount,jdbcType=VARCHAR},
+		#{personalInfo,jdbcType=INTEGER},
+		#{approve,jdbcType=INTEGER}, #{photo,jdbcType=INTEGER}, #{circle,jdbcType=INTEGER},
+		#{contactInfo,jdbcType=INTEGER}, #{product,jdbcType=INTEGER},
+		#{service,jdbcType=INTEGER},
+		#{repository,jdbcType=INTEGER}, #{policy,jdbcType=INTEGER}, #{studio,jdbcType=INTEGER},
+		#{verification,jdbcType=INTEGER}, #{certificate,jdbcType=INTEGER})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.SelfMenuConf">
+		update self_menu_conf
+		set user_account = #{userAccount,jdbcType=VARCHAR},
+		personal_info = #{personalInfo,jdbcType=INTEGER},
+		approve = #{approve,jdbcType=INTEGER},
+		photo = #{photo,jdbcType=INTEGER},
+		circle = #{circle,jdbcType=INTEGER},
+		contact_info = #{contactInfo,jdbcType=INTEGER},
+		product = #{product,jdbcType=INTEGER},
+		service = #{service,jdbcType=INTEGER},
+		repository = #{repository,jdbcType=INTEGER},
+		policy = #{policy,jdbcType=INTEGER},
+		studio = #{studio,jdbcType=INTEGER},
+		verification = #{verification,jdbcType=INTEGER},
+		certificate = #{certificate,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

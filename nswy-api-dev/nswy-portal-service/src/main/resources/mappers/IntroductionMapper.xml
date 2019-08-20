@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.IntroductionMapper">
+    <!--简介 -->
+    <select id="getInfo" parameterType="map" resultType="map">
+        SELECT introduce FROM user_website WHERE account = #{loginAccount}
+    </select>
+
+    <!--机关基本信息-->
+    <select id="getGovBaseInfo" parameterType="map" resultType="map">
+        SELECT
+            gov_name AS govName,
+            login_account AS loginAccount,
+            location,
+            gov_type AS govType,
+            gov_level AS govLevel
+        FROM
+            gov_info
+        WHERE
+            login_account = #{loginAccount}
+    </select>
+
+    <!--荣誉证书或者资质证书-->
+    <select id="getHonorInfoOrAptitude" parameterType="map" resultType="map">
+        SELECT
+            id,
+            addr AS image,
+            `describe` AS describes,
+            relative_id AS relativeId,
+            `column` AS columns,
+            `type` AS types
+        FROM
+            video_img
+        WHERE
+            account = #{loginAccount}
+        AND type = "2"
+        <if test="column != null and column != ''">
+            AND `column` = #{column}
+        </if>
+        ORDER BY create_time
+    </select>
+    <select id="getOwnerBaseInfo" parameterType="map" resultType="map">
+        SELECT
+            t3.nswy_id AS nswyId,
+            t1.account AS account,
+            t4.display_name AS realName,
+            t1.status_n AS nameStatus,
+            t1.acaTitle,
+            t1.status_a AS acaTitleStatus,
+            t1.species,
+            t1.status_s AS speciesStatus,
+            t1.sex,
+            t1.status_e AS sexStatus,
+            t2.work,
+            t1.job,
+            t1.status_j AS jobStatus,
+            t4.avatar,
+            t3.status_2 AS baseInfoStatus
+        FROM
+            user_info t1
+        LEFT JOIN
+            user_work_1 t2
+        ON
+            t1.account = t2.account
+        LEFT JOIN user_contact t3 ON t1.account = t3.account
+         LEFT JOIN login_user t4 ON t1.account = t4.login_account
+        WHERE
+            t1.account = #{loginAccount}
+    </select>
+    <select id="queryOwnerContact" parameterType="map" resultType="map">
+        SELECT
+            t1.mobile AS mobile,
+            t2.phone AS phone,
+            t1.qq AS qq,
+            t1.email AS email,
+            t1.postalcode AS postalcode,
+            t2.addr AS addr,
+            t1.status_2 as status,
+            t2.coordinate_point AS coordinate
+        FROM
+            user_contact t1
+        LEFT JOIN
+            user_info t2
+        ON
+            t1.account = t2.account
+        WHERE
+            t1.account =  #{loginAccount} AND t1.status_2 = 1
+    </select>
+    <select id="queryMyFollow" parameterType="map" resultType="java.lang.Integer">
+        SELECT count(*) FROM fans WHERE fans_account = #{loginAccount}
+    </select>
+
+    <select id="queryMyFans" parameterType="map" resultType="java.lang.Integer">
+        SELECT count(*) FROM fans WHERE account = #{loginAccount}
+    </select>
+
+    <select id="getSpecial" parameterType="map" resultType="map">
+        SELECT
+            t1.expert_type AS expertType,
+            t1.adept_field AS adeptField,
+            t1.adept_species AS adeptSpecies,
+            t1.related_species AS relatedSpecies,
+            t1.related_product AS relatedProduct,
+            t1.related_industry as relatedIndustry,
+            t1.related_service AS relatedService
+        FROM
+            expert_info t1
+        WHERE
+            t1.login_account = #{loginAccount}
+    </select>
+
+    <select id="queryOwnerHonor" parameterType="map" resultType="map">
+        SELECT honor,time FROM user_honor WHERE account = #{loginAccount}
+    </select>
+</mapper>

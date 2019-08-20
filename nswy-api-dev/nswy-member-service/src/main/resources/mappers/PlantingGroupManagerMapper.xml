@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.PlantingGroupManagerMapper">
+    <select id="doesInclude" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select 1 from login_user where login_account = #{login_account} limit 1
+	</select>
+
+    <insert id="addLoginUser" parameterType="java.util.Map">
+		INSERT INTO
+		login_user
+		(
+		login_account,
+		display_name,
+		register_time,
+		unique_id,
+		login_passwd
+		)
+		VALUES
+		(
+		#{login_account},
+		#{display_name},
+		#{register_time},
+		#{unique_id},
+		#{login_passwd}
+		)
+	</insert>
+
+    <insert id="addGroup" parameterType="java.util.Map">
+		INSERT INTO
+		user_group
+		(
+		group_id,
+		user_account
+		)
+		VALUES
+		(
+		#{group_id},
+		#{login_account}
+		)
+	</insert>
+
+    <insert id="addUserFullInfo" parameterType="java.util.Map">
+		INSERT INTO
+		user_full_info
+		(
+		account
+		)
+		VALUES
+		(
+		#{login_account}
+		)
+	</insert>
+
+    <insert id="addUserContact" parameterType="java.util.Map">
+		INSERT INTO
+		user_contact
+		(
+		account,
+		real_name,
+		rece,
+		birdhday,
+		job,
+		species,
+		sex,
+		acaTitle,
+		qq,
+		phone,
+		addr,
+		mobile,
+		email,
+		postalcode
+		)
+		VALUES
+		(
+		#{login_account},
+		#{real_name},
+		#{rece},
+		#{birdhday},
+		#{job},
+		#{species},
+		#{sex},
+		#{acaTitle},
+		#{qq},
+		#{phone},
+		#{addr},
+		#{mobile},
+		#{email},
+		#{postalcode}
+		)
+	</insert>
+
+    <insert id="addContactInfo" parameterType="java.util.Map">
+		INSERT INTO
+		contact_info
+		(
+		user_account,
+		mobile,
+		phone,
+		qq,
+		postcode,
+		email,
+		location,
+		address,
+		house_num
+		)
+		VALUES
+		(
+		#{login_account},
+		#{mobile},
+		#{phone},
+		#{qq},
+		#{postcode},
+		#{email},
+		#{location},
+		#{addr},
+		#{house_num}
+		)
+	</insert>
+
+    <insert id="addUserInfo" parameterType="java.util.Map">
+		INSERT INTO
+		user_info
+		(
+		account,
+		real_name,
+		rece,
+		birdhday,
+		job,
+		species,
+		sex,
+		acaTitle
+		)
+		VALUES
+		(
+		#{login_account},
+		#{real_name},
+		#{rece},
+		#{birdhday},
+		#{job},
+		#{species},
+		#{sex},
+		#{acaTitle}
+		)
+	</insert>
+
+    <insert id="addCertification" parameterType="java.util.Map">
+		INSERT INTO
+		certification
+		(
+		user_account,
+		sex,
+		title,
+		mobile,
+		id_card,
+		realname
+		)
+		VALUES
+		(
+		#{login_account},
+		#{sex},
+		#{acaTitle},
+		#{mobile},
+		#{id_card},
+		#{display_name}
+		)
+	</insert>
+
+    <insert id="addFocus" parameterType="java.util.Map">
+		INSERT INTO
+			focus_info
+		(
+			focus_species,
+			focus_goods,
+			focus_industry,
+			focus_service,
+			user_account
+		)
+		VALUES
+		(
+			#{focus_species},
+			#{focus_goods},
+			#{focus_industry},
+			#{focus_service},
+			#{login_account}
+		)
+	</insert>
+
+    <update id="addEducation" parameterType="java.util.Map">
+		UPDATE
+		user_full_info
+		SET
+		education = #{education}
+		WHERE
+		account = #{user_account}
+	</update>
+
+    <update id="addWork" parameterType="java.util.Map">
+		UPDATE
+		user_full_info
+		SET
+		work = #{work}
+		WHERE
+		account = #{user_account}
+	</update>
+
+    <update id="addPolicial" parameterType="java.util.Map">
+		UPDATE
+		user_full_info
+		SET
+		policial = #{policial}
+		WHERE
+		account = #{user_account}
+	</update>
+
+    <update id="addRreligion" parameterType="java.util.Map">
+		UPDATE
+		user_full_info
+		SET
+		religion = #{religion}
+		WHERE
+		account = #{user_account}
+	</update>
+
+    <update id="addHonor" parameterType="java.util.Map">
+		UPDATE
+		user_full_info
+		SET
+		honor = #{honor}
+		WHERE
+		account = #{user_account}
+	</update>
+
+    <select id="queryGroups" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		p.id AS id ,
+		p.`group_name` AS group_name ,
+		p.`group_level` AS group_level ,
+		u.`id` AS user_id ,
+		u.`user_account` AS user_account ,
+		c.`mobile` AS mobile ,
+		c.`realname` AS realname ,
+		c.`id_card` AS id_card ,
+		t.`address`  AS address,
+		t.`house_num` as house_num,
+		i.`birdhday` as birdhday
+		FROM
+		planting_group p
+		LEFT JOIN user_group u ON u.group_id = p.id
+		LEFT JOIN certification c ON c.`user_account` = u.`user_account`
+		LEFT JOIN contact_info t ON t.`user_account` = u.`user_account`
+		LEFT JOIN user_info i ON i.`account` = u.`user_account`
+		WHERE
+			group_name = #{group_name}
+		ORDER BY p.group_level
+	</select>
+
+    <delete id="removeUser" parameterType="java.lang.Integer">
+		DELETE FROM
+		user_group
+		WHERE
+		id = #{id}
+	</delete>
+
+    <select id="queryUserById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			a.`user_account` AS user_account ,
+			b.`display_name` AS display_name ,
+			CASE e.`sex`
+			WHEN 1 THEN "男"
+			WHEN 0 THEN "女"
+			END AS sex,
+			f.`id_card` AS id_card ,
+			b.`unique_id` AS unique_id ,
+			e.`birdhday` AS birdhday ,
+			e.`rece` AS rece ,
+			e.`job` AS job ,
+			e.`species` AS species ,
+			e.`acaTitle` AS acaTitle ,
+			d.`qq` AS qq ,
+			d.`postcode` AS postcode ,
+			d.`mobile` AS mobile ,
+			d.`email` AS email ,
+			d.`location` AS location ,
+			d.`house_num` AS house_num ,
+			d.address AS addr,
+			k.`focus_species` AS focus_species ,
+			k.`focus_goods` AS focus_goods ,
+			k.`focus_industry` AS focus_industry ,
+			k.`focus_service` AS focus_service ,
+			c.`education` AS education ,
+			c.`work` AS work ,
+			c.`policial` AS policial ,
+			c.`religion` AS religion ,
+			c.`honor` AS honor
+		FROM
+			user_group a
+		LEFT JOIN login_user b ON a.`user_account` = b.`login_account`
+		LEFT JOIN user_full_info c ON a.`user_account` = c.`account`
+		LEFT JOIN contact_info d ON a.`user_account` = d.`user_account`
+		LEFT JOIN user_info e ON a.`user_account` = e.`account`
+		LEFT JOIN certification f ON a.`user_account` = f.`user_account`
+		LEFT JOIN focus_info k ON a.`user_account` = k.`user_account`
+		WHERE a.`user_account` = #{user_account}
+	</select>
+
+    <select id="queryMembersFamilyById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			*
+		FROM
+			members_family
+		WHERE
+			user_account = #{user_account}
+	</select>
+
+    <select id="queryProductOutputById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		*
+		FROM
+		product_output
+		WHERE
+		user_account = #{user_account}
+	</select>
+
+    <select id="queryProvideServicesById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		*
+		FROM
+		provide_services
+		WHERE
+		user_account = #{user_account}
+	</select>
+
+    <select id="queryIntentionById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		*
+		FROM
+		intention
+		WHERE
+		user_account = #{user_account}
+	</select>
+
+    <insert id="addMembersFamily" parameterType="java.util.Map">
+		INSERT INTO
+			members_family
+		(
+			realname,
+			relationship,
+			sex,
+			birthday,
+			phone,
+			skills,
+			user_account
+		)
+		VALUES
+		(
+			#{realname},
+			#{relationship},
+			#{sex},
+			#{birthday},
+			#{phone},
+			#{skills},
+			#{user_account}
+		)
+	</insert>
+
+    <delete id="delMembersFamily" parameterType="java.util.Map">
+		DELETE FROM
+			members_family
+		WHERE
+			id = #{id}
+	</delete>
+
+    <update id="updateMembersFamily" parameterType="java.util.Map">
+		UPDATE
+			members_family
+		SET
+			realname = #{realname},
+			relationship = #{relationship},
+			sex = #{sex},
+			birthday = #{birthday},
+			phone = #{phone},
+			skills = #{skills}
+		  WHERE
+		  	id = #{id}
+	</update>
+
+    <insert id="addProductOutput" parameterType="java.util.Map">
+		INSERT INTO
+			product_output
+		(
+			species,
+			size,
+			general_name,
+			name,
+			amount,
+			reduced_amount,
+			user_account
+		)
+		VALUES
+		(
+			#{species},
+			#{size},
+			#{general_name},
+			#{name},
+			#{amount},
+			#{reduced_amount},
+			#{user_account}
+		)
+	</insert>
+
+    <delete id="delProductOutput" parameterType="java.util.Map">
+		DELETE FROM
+			product_output
+		WHERE
+			id = #{id}
+	</delete>
+
+    <update id="updateProductOutput" parameterType="java.util.Map">
+		UPDATE
+			product_output
+		SET
+			species = #{species},
+			size = #{size},
+			name = #{name},
+			amount = #{amount},
+			reduced_amount = #{reduced_amount}
+		WHERE
+			id = #{id}
+	</update>
+
+    <insert id="addProvideServices" parameterType="java.util.Map">
+		INSERT INTO
+			provide_services
+		(
+			name,
+			classification,
+			create_time,
+			user_account
+		)
+		VALUES
+		(
+			#{name},
+			#{classification},
+			#{create_time},
+			#{user_account}
+		)
+	</insert>
+
+    <delete id="delProvideServices" parameterType="java.util.Map">
+		DELETE FROM
+			provide_services
+		WHERE
+			id = #{id}
+	</delete>
+
+    <update id="updateProvideServices" parameterType="java.util.Map">
+		UPDATE
+			provide_services
+		SET
+			name = #{name},
+			classification = #{classification},
+			create_time = #{create_time}
+		WHERE
+			id = #{id}
+	</update>
+
+    <insert id="addIntention" parameterType="java.util.Map">
+		INSERT INTO
+			intention
+		(
+			general_name,
+			name,
+			count,
+			price,
+			amount,
+			user_account
+		)
+		VALUES
+		(
+			#{general_name},
+			#{name},
+			#{count},
+			#{price},
+			#{amount},
+			#{user_account}
+		)
+	</insert>
+
+    <delete id="delIntention" parameterType="java.util.Map">
+		DELETE FROM
+			intention
+		WHERE
+			id = #{id}
+	</delete>
+
+    <update id="updateIntention" parameterType="java.util.Map">
+		UPDATE
+			intention
+		SET
+			general_name = #{general_name},
+			name = #{name},
+			count = #{count},
+			price = #{price},
+			amount = #{amount}
+		WHERE
+			id = #{id}
+	</update>
+
+    <select id="getGroups" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		 	group_name,
+		 	group_level
+	    from
+	    	planting_group
+		WHERE
+			founder_account = #{login_account}
+		GROUP BY
+			`group_name`
+		ORDER BY group_level
+	</select>
+
+    <update id="updateUserContact" parameterType="java.util.Map">
+		UPDATE
+			user_contact
+		SET
+			rece = #{rece},
+			birdhday = #{birdhday},
+			job = #{job},
+			species = #{species},
+			sex = #{sex},
+			acaTitle = #{acaTitle},
+			qq = #{qq},
+			phone = #{phone},
+			addr = #{addr},
+			mobile = #{mobile},
+			email = #{email},
+			postalcode = #{postalcode}
+		WHERE
+			account = #{user_account}
+	</update>
+
+    <update id="updateContactInfo" parameterType="java.util.Map">
+		UPDATE
+			contact_info
+		SET
+			mobile = #{mobile},
+			phone = #{phone},
+			qq = #{qq},
+			postcode = #{postcode},
+			email = #{email},
+			location = #{location},
+			address = #{addr},
+			house_num = #{house_num}
+		WHERE
+			user_account = #{user_account}
+	</update>
+
+    <update id="updateUserInfo" parameterType="java.util.Map">
+		UPDATE
+			user_info
+		SET
+			rece = #{rece},
+			birdhday = #{birdhday},
+			job = #{job},
+			species = #{species},
+			sex = #{sex},
+			acaTitle = #{acaTitle}
+		WHERE
+			account = #{user_account}
+	</update>
+
+    <update id="updateCertification" parameterType="java.util.Map">
+		UPDATE
+			certification
+		SET
+			sex = #{sex},
+			title = #{title},
+			mobile = #{mobile}
+		WHERE
+			user_account = #{user_account}
+	</update>
+
+    <update id="updateFocus" parameterType="java.util.Map">
+		UPDATE
+			focus_info
+		SET
+			focus_species = #{focus_species},
+			focus_goods = #{focus_goods},
+			focus_industry = #{focus_industry},
+			focus_service =#{focus_service}
+		WHERE
+			user_account = #{user_account}
+	</update>
+
+    <select id="queryUserAccount" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT
+			login_account
+		FROM
+			login_user
+		WHERE
+			display_name = #{display_name}
+	</select>
+
+    <select id="getGroupUsers" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		b.`id` AS id ,
+		a.`sex` AS sex ,
+		a.`id_card` AS id_card ,
+		a.`realname` AS realname ,
+		c.`group_name` AS group_name ,
+		d.`mobile` AS mobile ,
+		d.`house_num` AS house_num ,
+		d.`address` AS address ,
+		e.`birdhday` AS birdhday ,
+		b.`user_account` AS user_account
+		FROM
+		planting_group p
+		LEFT JOIN user_group b ON p.`id` = b.`group_id`
+		LEFT JOIN certification a ON b.`user_account` = a.`user_account`
+		LEFT JOIN planting_group c ON b.`group_id` = c.`id`
+		LEFT JOIN contact_info d ON b.`user_account` = d.`user_account`
+		LEFT JOIN user_info e ON b.`user_account` = e.`account`
+		WHERE
+		p.founder_account = #{login_account}
+        <if test="realname != null and realname != ''">
+            AND a.realname LIKE CONCAT("%",#{realname},"%")
+        </if>
+        <if test="house_num != null and house_num != ''">
+            AND d.house_num LIKE CONCAT("%",#{house_num},"%")
+        </if>
+		<if test="group_name != null and group_name != ''">
+			AND c.group_name = #{group_name}
+		</if>
+    </select>
+
+    <select id="getSelectGroup" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			group_name,
+			id
+		FROM
+			planting_group
+		WHERE
+			founder_account = #{login_account}
+	</select>
+
+    <select id="delUser" parameterType="java.util.Map">
+		DELETE FROM
+			user_group
+		WHERE
+			user_account = #{user_account}
+	</select>
+</mapper>

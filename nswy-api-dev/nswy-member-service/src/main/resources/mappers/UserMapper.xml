@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.UserMapper">
+	<select id="getRealName" parameterType="java.lang.String" resultType="map">
+		SELECT
+			ifnull(ifnull(t3.corp_name,t2.gov_name),t1.display_name) AS realName,
+			t1.avatar,t1.user_type AS userType
+
+		FROM
+			login_user t1
+		LEFT JOIN
+			gov_info t2 ON t1.login_account = t2.login_account
+		LEFT JOIN
+			corp_info t3 ON t1.login_account = t3.login_account
+		WHERE
+			t1.login_account = #{account}
+	</select>
+
+
+    <select id="findMemberName" parameterType="map" resultType="map">
+
+        select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+		(select u.template_id as templateId,u.account
+
+		from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+        and m.user_id = #{account}
+
+		group by m.user_id
+
+		order by m.create_time asc
+
+    </select>
+
+
+    <!--查询企业信息，若status为1查询不是好友关系的企业信息，2查询未关注的的企业信息 userType = 1 企业-->
+    <!--follow：已关注的好友account为空则follow为2，反之为1-->
+    <select id="queryCorpInfo" parameterType="map" resultType="com.ovit.nswy.member.model.response.UserDTO">
+        SELECT
+            t2.id,
+            t2.unique_id,
+            t2.login_account,
+            t2.register_time,
+            t2.is_Identity_verification,
+            t2.user_type,
+            t2.signature,
+            t2.avatar,
+            t1.corp_name AS displayName,
+            t1.location AS location,
+            if(t22.account IS NULL ,"2","1") AS follow,
+            t1.create_time
+        FROM
+            corp_info t1
+        LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+        LEFT JOIN (SELECT DISTINCT account FROM fans WHERE fans_account = #{account} AND account IS NOT NULL) t22 ON t2.login_account = t22.account
+        left join proxy_corp_info t on t1.id=t.info_id
+        WHERE t.approve_status = 1 AND t2.display_name IS NOT NULL AND t1.login_account != #{account}
+        <if test="status == 1 and accountList != null and accountList.size() > 0">
+            AND t1.login_account NOT IN
+            <foreach collection="accountList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="status == 2">
+            AND t1.login_account NOT IN (SELECT DISTINCT account FROM fans WHERE fans_account = #{account} AND account IS NOT NULL )
+        </if>
+        <if test="keywords != null and keywords !=''">
+            AND (t1.corp_name  LIKE CONCAT("%",#{keywords},"%")
+            OR t2.login_account LIKE CONCAT("%",#{keywords},"%"))
+        </if>
+        <if test="areas != null and areas !=''">
+            AND t1.location  LIKE CONCAT("%",#{areas},"%")
+        </if>
+        <if test="industryArray != null and industryArray != ''">
+            <foreach collection="industryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t1.industry_type LIKE CONCAT("%",#{item},"%")
+            </foreach>
+        </if>
+        <if test="speciesArray != null and speciesArray != ''">
+            <foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t1.related_species LIKE CONCAT("%",#{item},"%")
+            </foreach>
+        </if>
+        <if test="serviceArray != null and serviceArray != ''">
+            <foreach collection="serviceArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t1.related_service LIKE CONCAT("%",#{item},"%")
+            </foreach>
+        </if>
+        order by t1.create_time desc
+       
+    </select>
+
+    <!--查询个人与专家，若status为1查询不是好友关系的，2查询未关注的的 userType = 0 个人，userType = 4 专家-->
+    <!--follow：已关注的好友account为空则follow为2，反之为1-->
+    <select id="queryUserAndExpert" parameterType="map" resultType="com.ovit.nswy.member.model.response.UserDTO">
+        SELECT *,if(t22.account IS NULL ,"2","1") AS follow FROM (
+            SELECT
+                t1.id,
+                t1.unique_id,
+                t1.login_account,
+                t1.display_name AS displayName,
+                t1.register_time,
+                t1.is_Identity_verification,
+                t1.user_type,
+                t1.signature,
+                t1.avatar,
+                t2.addr AS location,
+                t2.create_time
+            FROM login_user t1
+            LEFT JOIN user_info t2 ON t1.login_account = t2.account
+            WHERE t1.user_type = 0 AND t1.display_name IS NOT NULL
+            <if test="status == 1 and accountList != null and accountList.size() > 0">
+                AND t1.login_account NOT IN
+                <foreach collection="accountList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="status == 2">
+                AND t1.login_account NOT IN (SELECT DISTINCT account FROM fans WHERE fans_account = #{account} AND account IS NOT NULL)
+            </if>
+            <if test="keywords != null and keywords !=''">
+                AND (t1.display_name LIKE CONCAT("%",#{keywords},"%")
+                OR t2.account LIKE CONCAT("%",#{keywords},"%"))
+            </if>
+            <if test="areas != null and areas !=''">
+                AND t2.addr LIKE CONCAT("%",#{areas},"%")
+            </if>
+            <if test="speciesArray != null and speciesArray != ''">
+                <foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                    t2.species LIKE CONCAT("%",#{item},"%")
+                </foreach>
+            </if>
+            UNION ALL
+            SELECT
+                t1.id,
+                t1.unique_id,
+                t1.login_account,
+                t1.display_name AS displayName,
+                t1.register_time,
+                t1.is_Identity_verification,
+                t1.user_type,
+                t1.signature,
+                t1.avatar,
+                t2.addr AS location,
+                t2.create_time
+            FROM login_user t1
+            LEFT JOIN user_info t2 ON t1.login_account = t2.account
+            LEFT JOIN expert_info t3 ON t1.login_account = t3.login_account
+            WHERE
+                t1.user_type = 4
+            AND
+                t3.approve_status = 1 AND t1.display_name IS NOT NULL
+
+            <if test="status == 1 and accountList != null and accountList.size() > 0">
+                AND t1.login_account NOT IN
+                <foreach collection="accountList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="status == 2">
+                AND t1.login_account NOT IN (SELECT DISTINCT account FROM fans WHERE fans_account = #{account} AND account IS NOT NULL)
+            </if>
+            <if test="keywords != null and keywords !=''">
+                AND (t1.display_name LIKE CONCAT("%",#{keywords},"%")
+                OR t1.login_account LIKE CONCAT("%",#{keywords},"%"))
+            </if>
+            <if test="areas != null and areas !=''">
+                AND t2.addr LIKE CONCAT("%",#{areas},"%")
+            </if>
+            <if test="industryArray != null and industryArray != ''">
+                <foreach collection="industryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                    t3.related_industry LIKE CONCAT("%",#{item},"%")
+                </foreach>
+            </if>
+            <if test="speciesArray != null and speciesArray != ''">
+                <foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                    t3.related_species LIKE CONCAT("%",#{item},"%")
+                </foreach>
+            </if>
+            <if test="serviceArray != null and serviceArray != ''">
+                <foreach collection="serviceArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                    t3.related_service LIKE CONCAT("%",#{item},"%")
+                </foreach>
+            </if>
+        ) t11
+        LEFT JOIN (SELECT account FROM fans WHERE fans_account = #{account} AND account IS NOT NULL) t22 ON t11.login_account = t22.account
+        WHERE t11.login_account != #{account} order by t11.create_time desc
+    </select>
+    <!--查询机关与乡村，若status为1查询不是好友关系的，2查询未关注的的。userType = 3 机关 userType = 5 乡村-->
+    <!--follow：已关注的好友account为空则follow为2，反之为1-->
+    <select id="queryGovInfo" parameterType="map" resultType="com.ovit.nswy.member.model.response.UserDTO">
+        SELECT
+            t2.id,
+            t2.unique_id,
+            t2.login_account,
+            t2.register_time,
+            t2.is_Identity_verification,
+            t2.user_type,
+            t2.signature,
+            t2.avatar,
+            t1.gov_name AS displayName,
+            t1.location AS location,
+        t1.gov_type as departments,
+            if(t22.account IS NULL ,"2","1") AS follow,
+        t1.create_time
+        FROM gov_info t1
+        LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+        LEFT JOIN (
+            SELECT
+                DISTINCT account
+            FROM
+                fans
+            WHERE
+                fans_account = #{account}
+            AND
+                account IS NOT NULL
+        ) t22
+        ON
+            t1.login_account = t22.account
+        left join proxy_gov_info t on t1.id=t.info_id
+        WHERE
+            t.approve_status = 1
+        AND
+            t2.display_name IS NOT NULL AND t1.login_account != #{account}
+        <if test="status == 1 and accountList != null and accountList.size() > 0">
+            AND t1.login_account NOT IN
+            <foreach collection="accountList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="departments !=null and departments!=''">
+            and t1.gov_type LIKE CONCAT("%",#{departments},"%")
+        </if>
+        <if test="status == 2">
+            AND t1.login_account NOT IN (
+                SELECT
+                    DISTINCT account
+                FROM
+                    fans
+                WHERE
+                    fans_account = #{account}
+                AND
+                    account IS NOT NULL
+            )
+        </if>
+        <if test="departments != null and departments !=''">
+            AND t1.gov_type LIKE CONCAT("%",#{departments},"%")
+        </if>
+        <if test="keywords != null and keywords !=''">
+            AND (t1.gov_name LIKE CONCAT("%",#{keywords},"%")
+            OR t2.login_account LIKE CONCAT("%",#{keywords},"%"))
+        </if>
+        <if test="areas != null and areas !=''">
+            AND t1.location LIKE CONCAT("%",#{areas},"%")
+        </if>
+        order by t1.create_time desc
+    </select>
+    <!--查询所有用户，若status为1查询不是好友关系的，2查询未关注的的-->
+    <!--follow：已关注的好友account为空则follow为2，反之为1-->
+    <select id="queryAllUser" parameterType="map" resultType="com.ovit.nswy.member.model.response.UserDTO">
+        SELECT *, if(t22.account IS NULL ,"2","1") AS follow
+        FROM (
+            SELECT
+                t1.id,
+                t1.unique_id AS uniqueId,
+                t1.login_account AS loginAccount,
+                t1.display_name AS displayName,
+                t1.register_time AS registerTime,
+                t1.is_Identity_verification AS isIdentityVerification,
+                t1.user_type AS userType,
+                t1.signature,
+                t1.avatar,
+                t2.addr AS location,
+                t2.species,
+                "" AS service,
+                "" AS industry,
+                "" AS departments,
+                t2.create_time
+
+            FROM login_user t1 LEFT JOIN user_info t2 ON t1.login_account = t2.account
+            WHERE t1.user_type = 0 and t1.display_name IS NOT NULL
+            UNION ALL
+            SELECT
+                t1.id,
+                t1.unique_id AS uniqueId,
+                t1.login_account AS loginAccount,
+                t2.corp_name AS displayName,
+                t1.register_time AS registerTime,
+                t1.is_Identity_verification AS isIdentityVerification,
+                t1.user_type AS userType,
+                t1.signature,
+                t1.avatar,
+                t2.location  AS location,
+                t2.related_species AS species,
+                t2.related_service AS service,
+                t2.industry_type AS industry,
+                "" AS departments,
+                t.create_time
+            FROM login_user t1 LEFT JOIN corp_info t2 ON t1.login_account = t2.login_account
+            left join proxy_corp_info t on t2.id=t.info_id
+            WHERE t1.user_type = 1 AND t.approve_status = 1 AND t1.display_name IS NOT NULL
+            UNION ALL
+            SELECT
+                t1.id,
+                t1.unique_id AS uniqueId,
+                t1.login_account AS loginAccount,
+                t2.gov_name AS displayName,
+                t1.register_time AS registerTime,
+                t1.is_Identity_verification AS isIdentityVerification,
+                t1.user_type AS userType,
+                t1.signature,
+                t1.avatar,
+                t2.location AS location,
+                "" AS species,
+                "" AS service,
+                "" AS industry,
+                t2.gov_type AS departments,
+        t2.create_time
+            FROM login_user t1 LEFT JOIN gov_info t2 ON t1.login_account = t2.login_account
+            left join proxy_gov_info t on t2.id=t.info_id
+            WHERE t.approve_status = 1 AND (t1.user_type = 3 OR t1.user_type = 5) AND t1.display_name IS NOT NULL
+        UNION ALL
+            SELECT
+                t1.id,
+                t1.unique_id AS uniqueId,
+                t1.login_account AS loginAccount,
+                t1.display_name AS displayName,
+                t1.register_time AS registerTime,
+                t1.is_Identity_verification AS isIdentityVerification,
+                t1.user_type AS userType,
+                t1.signature,
+                t1.avatar,
+                t3.addr  AS location,
+                t2.related_species AS species,
+                t2.related_service AS service,
+                t2.related_industry AS industry,
+                "" AS departments,
+        t2.create_time
+            FROM login_user t1 LEFT JOIN  expert_info t2 ON t1.login_account = t2.login_account
+            LEFT JOIN user_info t3 ON t3.account = t1.login_account
+            WHERE t1.user_type = 4 AND t2.approve_status = 1 AND t1.display_name IS NOT NULL
+        ) t11
+        LEFT JOIN (
+            SELECT
+                DISTINCT account
+            FROM
+                fans
+            WHERE
+                fans_account = #{account}
+            AND
+                account IS NOT NULL
+        ) t22
+        ON
+            t11.loginAccount = t22.account
+
+        WHERE t11.displayName IS NOT NULL AND t11.loginAccount != #{account}
+        <if test="status == 1  and accountList != null and accountList.size() > 0">
+            AND t11.loginAccount NOT IN
+            <foreach collection="accountList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="status == 2">
+            AND t11.loginAccount NOT IN (
+                SELECT
+                    DISTINCT account
+                FROM
+                    fans
+                WHERE
+                    fans_account = #{account}
+                AND
+                  account IS NOT NULL
+            )
+        </if>
+        <if test="keywords != null and keywords !=''">
+            AND (t11.displayName  LIKE CONCAT("%",#{keywords},"%")
+            OR t11.loginAccount LIKE CONCAT("%",#{keywords},"%"))
+        </if>
+        <if test="areas != null and areas !=''">
+            AND t11.location  LIKE CONCAT("%",#{areas},"%")
+        </if>
+        <if test="industryArray != null and industryArray != ''">
+            <foreach collection="industryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t11.industry LIKE CONCAT("%",#{item},"%")
+            </foreach>
+        </if>
+        <if test="speciesArray != null and speciesArray != ''">
+            <foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t11.species LIKE CONCAT("%",#{item},"%")
+            </foreach>
+        </if>
+        <if test="serviceArray != null and serviceArray != ''">
+            <foreach collection="serviceArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t11.service LIKE CONCAT("%",#{item},"%")
+            </foreach>
+        </if>
+        order by t11.create_time desc
+    </select>
+</mapper>

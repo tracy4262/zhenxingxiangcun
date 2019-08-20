@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ShopCommentDao">
+
+	<select id="findList" parameterType="map" resultType="com.ovit.manager.modules.nswy.entity.ShopComment">
+		SELECT c.id as commentId,
+			c.order_code_id as orderCodeId,
+			c.commodity_type_info_id as commodityTypeInfoId,
+			d.commodity_name as commodityName,
+			c.from_account as source,
+			c.account,
+			l.display_name as displayName,
+			c.star,
+			c.`describe_info` as describeInfo,
+			c.pic_url as picUrl,
+			c.approve_status as approveStatus,
+			DATE_FORMAT(c.create_time,"%Y-%m-%d %T") AS createTime,
+			DATE_FORMAT(c.update_time,"%Y-%m-%d %T") AS updateTime
+
+		FROM shop_order_comment c
+
+		left join shop_commodity_info d on d.commodity_type_info_id = c.commodity_type_info_id
+
+		left join login_user l on l.login_account = c.account
+
+		<where>
+			<if test="source != null and source != ''">
+				c.from_account = #{source}
+			</if>
+
+			<if test="commodityName != null and commodityName != ''">
+				and d.commodity_name LIKE CONCAT('%',#{commodityName},'%')
+			</if>
+			<if test="approveStatus != null and approveStatus != ''">
+				and c.approve_status = #{approveStatus}
+			</if>
+		</where>
+		ORDER BY c.create_time DESC
+	</select>
+
+	<update id="adopt" parameterType="map">
+        UPDATE shop_order_comment SET approve_status = #{approveStatus} WHERE id = #{commentId}
+    </update>
+
+
+</mapper>

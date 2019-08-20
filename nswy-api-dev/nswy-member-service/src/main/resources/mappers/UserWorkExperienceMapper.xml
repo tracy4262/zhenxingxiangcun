@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.UserWorkExperienceMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.UserWorkExperience">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="organazation_name" property="organazationName" jdbcType="VARCHAR" />
+		<result column="start_date" property="startDate" jdbcType="VARCHAR" />
+		<result column="end_date" property="endDate" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="job" property="job" jdbcType="VARCHAR" />
+		<result column="status_n" property="statusN" jdbcType="INTEGER" />
+		<result column="status_j" property="statusJ" jdbcType="INTEGER" />
+		<result column="status_d" property="statusD" jdbcType="INTEGER" />
+		<result column="status_c" property="statusC" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, organazation_name, start_date, end_date, content, job, status_n, status_j, status_d, status_c
+
+	</sql>
+	<select id="findUserWork" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.UserWorkExperience">
+		select
+		<include refid="Base_Column_List" />
+		from user_work_experience
+		where account = #{account,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.UserWorkExperience">
+		<![CDATA[
+		insert into user_work_experience (id, account, organazation_name, start_date, 			end_date, content, job, status_n, status_j, status_d, status_c
+		)
+		values
+		]]>
+		<foreach collection="list" item="item" index="index"
+				 separator=",">
+			(#{item.id}, #{item.account}, #{item.organazationName},
+			#{item.startDate}, #{item.endDate}, #{item.content},
+			#{item.job}, #{item.statusN}, #{item.statusJ},
+			#{item.statusD}, #{item.statusC})
+		</foreach>
+	</insert>
+
+	<update id="updateUserWork" parameterType="com.ovit.nswy.member.model.UserWorkExperience">
+		update user_work_experience
+		<set>
+			<if test="organazationName != null">
+				organazation_name = #{organazationName,jdbcType=VARCHAR},
+			</if>
+			<if test="startDate != null">
+				start_date = #{startDate,jdbcType=VARCHAR},
+			</if>
+			<if test="endDate != null">
+				end_date = #{endDate,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="job != null">
+				job = #{job,jdbcType=VARCHAR},
+			</if>
+			<if test="statusN != null">
+				status_n = #{statusN,jdbcType=INTEGER},
+			</if>
+			<if test="statusJ != null">
+				status_j = #{statusJ,jdbcType=INTEGER},
+			</if>
+			<if test="statusD != null">
+			stutus_d = #{statusD,jdbcType=INTEGER},
+			</if>
+			<if test="statusC != null">
+				stutus_c = #{statusC,jdbcType=INTEGER},
+			</if>
+		</set>
+		where account = #{account,jdbcType=VARCHAR}
+	</update>
+	<delete id="deleteByAccount" parameterType="java.lang.String">
+		DELETE  from user_work_experience where account=#{account,jdbcType=VARCHAR}
+	</delete>
+</mapper>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.application.mapper.MyRecommendMapper">
+
+    <select id="commonServiceList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT a.id, a.account, a.service_name, a.image_url, a.contact, a.type, a.create_time,
+        case when b.id is null then '未推荐' else '已推荐' end as isRecommend
+        FROM fishing_service a left join recommend_application_info b
+        on (b.type=1 and b.account = #{account} and a.id = b.service_id)
+        where a.status = 1 and a.flag = 1 and a.type != 5
+        <if test="serviceName !='' and serviceName !=null">
+            and a.service_name LIKE concat(concat('%',#{serviceName},'%'))
+        </if>
+        <if test="address!='' and address!=null">
+            and a.contact like concat(concat('%',#{address},'%'))
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="recommendCommonServiceList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT a.id, a.account, a.service_name, a.image_url, a.contact, a.type, a.create_time,
+        case when b.id is null then '未推荐' else '已推荐' end as isRecommend
+        FROM fishing_service a inner join recommend_application_info b
+        on (b.type=1 and b.account = #{account} and a.id = b.service_id)
+        where a.status = 1 and a.flag = 1 and a.type != 5
+        <if test="serviceName !='' and serviceName !=null">
+            and a.service_name LIKE concat(concat('%',#{serviceName},'%'))
+        </if>
+        <if test="address!='' and address!=null">
+            and a.contact like concat(concat('%',#{address},'%'))
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="consultList" parameterType="map" resultType="map">
+        select a.id, a.account, c.expert_name as expertName, c.adept_species as adeptSpecies, c.personal_photo as personalPicture,
+        c.adept_field as adeptField, a.type, a.create_time,
+        case when d.id is null then '未推荐' else '已推荐' end as isRecommend
+        from fishing_service a left join consult_service b
+        on a.id = b.service_id left join reversion_expert_auth c
+        on b.expert_id = c.id left join recommend_application_info d
+        on (d.type=1 and d.account = #{account} and a.id = d.service_id)
+        where a.type = 5 and a.flag = 1
+        <if test="serviceName!='' and serviceName!=null">
+            and a.service_name like concat(concat('%',#{serviceName},'%'))
+        </if>
+        <if test="address!='' and address!=null">
+            and a.contact like concat(concat('%',#{address},'%'))
+        </if>
+    </select>
+
+    <select id="recommendConsultList" parameterType="map" resultType="map">
+        select a.id, a.account, c.expert_name as expertName, c.adept_species as adeptSpecies, c.personal_photo as personalPicture,
+        c.adept_field as adeptField, a.type, a.create_time,
+        case when d.id is null then '未推荐' else '已推荐' end as isRecommend
+        from fishing_service a left join consult_service b
+        on a.id = b.service_id left join reversion_expert_auth c
+        on b.expert_id = c.id inner join recommend_application_info d
+        on (d.type=1 and d.account = #{account} and a.id = d.service_id)
+        where a.type = 5 and a.flag = 1
+        <if test="serviceName!='' and serviceName!=null">
+            and a.service_name like concat(concat('%',#{serviceName},'%'))
+        </if>
+        <if test="address!='' and address!=null">
+            and a.contact like concat(concat('%',#{address},'%'))
+        </if>
+    </select>
+
+    <select id="findFishTimeChargeInfo" parameterType="map" resultType="map">
+        select time_charging as timeCharging
+        from fish_time_charge_info
+        where 1=1
+        <if test="fishServiceId!=null and fishServiceId!=''">
+            and fish_service_id = #{fishServiceId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <select id="findServiceVarietyInfo" parameterType="map" resultType="map">
+        select time_variety as timeVariety
+        from service_variety
+        where 1=1
+        <if test="serviceId!=null and serviceId!=''">
+            and service_id = #{serviceId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <select id="findProductManagementService" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT case when s.set_meal_price is null then '' else s.set_meal_price end as setMealPrice
+        FROM product_management_service s
+        where 1=1
+        <if test="fishServiceId!='' and fishServiceId!=null">
+            and s.fish_service_id = #{fishServiceId}
+        </if>
+        order by s.set_meal_price
+    </select>
+
+    <select id="findServiceJoinInfo" parameterType="map" resultType="map">
+        select s.service_name
+        from fishing_service s left join service_join_info j on
+        (s.id = j.join_service_id and j.service_id = #{id})
+        where s.status = 1 and s.flag=1
+        <if test="id !=null and id!=''">
+            and j.service_id = #{id}
+        </if>
+        <if test="type !=null and type!=''">
+            and s.type = #{type}
+        </if>
+        <if test="account !=null and account!=''">
+            and s.account = #{account}
+        </if>
+        <if test="service_name !='' and service_name !=null">
+            and s.service_name LIKE CONCAT("%", #{service_name}, "%")
+        </if>
+    </select>
+
+    <insert id="batchSaveRecommend" parameterType="map">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO recommend_application_info (
+            account,
+            `type`,
+            service_id
+            ) VALUES
+            (
+            #{item.account},
+            #{item.type},
+            #{item.id}
+            )
+        </foreach>
+    </insert>
+    
+    <select id="isHadRecommend" parameterType="map" resultType="map">
+        select id, account, type, service_id from recommend_application_info
+        where account = #{account} and type = #{type} and service_id = #{id}
+    </select>
+
+    <insert id="singleSaveRecommend" parameterType="map">
+        INSERT INTO recommend_application_info (
+        account,
+        `type`,
+        service_id
+        ) VALUES
+        (
+        #{account},
+        #{type},
+        #{id}
+        )
+    </insert>
+
+    <delete id="batchCancelRecommend" parameterType="map">
+        <foreach collection="list" item="item" index="index" separator=";">
+            delete from recommend_application_info
+            where account = #{item.account} and service_id = #{item.id} and `type` = #{item.type}
+        </foreach>
+    </delete>
+
+    <select id="baseList" parameterType="map" resultType="map">
+        SELECT a.id, a.account, a.base_name as productionBaseName, a.location, a.coordinate, a.update_time as updateTime,
+        ifnull(a.introduction, '') as introduction, ifnull(c.image_url, '') as imageUrl,
+        case when b.id is null then '未推荐' else '已推荐' end as isRecommend
+        FROM reversion_production_base a left join recommend_application_info b
+        on (b.type=2 and b.account = #{account} and a.id = b.service_id)
+        left join (select base_id, image_url from base_media_library group by base_id) c
+        on a.id = c.base_id
+        WHERE 1=1
+        <if test="baseName!='' and baseName!=null">
+            and a.base_name like concat(concat('%',#{baseName},'%'))
+        </if>
+        <if test="address!='' and address!=null">
+            and a.location like concat(concat('%',#{address},'%'))
+        </if>
+        ORDER BY a.update_time DESC
+    </select>
+
+    <select id="recommendBaseList" parameterType="map" resultType="map">
+        SELECT a.id, a.account, a.base_name as productionBaseName, a.location, a.coordinate, a.update_time as updateTime,
+        ifnull(a.introduction, '') as introduction, ifnull(c.image_url, '') as imageUrl,
+        case when b.id is null then '未推荐' else '已推荐' end as isRecommend
+        FROM reversion_production_base a inner join recommend_application_info b
+        on (b.type=2 and b.account = #{account} and a.id = b.service_id)
+        left join (select base_id, image_url from base_media_library group by base_id) c
+        on a.id = c.base_id
+        WHERE 1=1
+        <if test="baseName!='' and baseName!=null">
+            and a.base_name like concat(concat('%',#{baseName},'%'))
+        </if>
+        <if test="address!='' and address!=null">
+            and a.location like concat(concat('%',#{address},'%'))
+        </if>
+        ORDER BY a.update_time DESC
+    </select>
+
+    <select id="expertList" parameterType="map" resultType="map">
+        select a.id, a.account, a.expert_name as expertName, a.adept_species as adeptSpecies, a.adept_field as adeptField,
+        a.personal_photo as personalPicture, case when b.id is null then '未推荐' else '已推荐' end as isRecommend
+        from reversion_expert_auth a left join recommend_application_info b
+        on (b.type=3 and b.account = #{account} and a.id = b.service_id)
+        inner join reversion_user_template_manage c on (a.`account` = c.`account` and a.template_id = c.template_id and c.status = '1')
+        inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e
+        on (a.account = e.account and a.year_id = e.id)
+        inner join (select min(create_time), user_id, template_id, location from reversion_member_contact_info group by user_id, template_id) f
+        on (a.`account` = f.`user_id` and a.template_id = f.template_id)
+        where a.approve_status = 1
+        <if test="relatedSpecies!='' and relatedSpecies!=null">
+            and a.related_species like concat(concat('%',#{relatedSpecies},'%'))
+        </if>
+        <if test="expertName!='' and expertName!=null">
+            and a.expert_name like concat(concat('%',#{expertName},'%'))
+        </if>
+        <if test="address!='' and address!=null">
+            and f.location like concat(concat('%',#{address},'%'))
+        </if>
+        ORDER BY a.update_time DESC
+    </select>
+
+    <select id="recommendExpertList" parameterType="map" resultType="map">
+        select a.id, a.account, a.expert_name as expertName, a.adept_species as adeptSpecies, a.adept_field as adeptField,
+        a.personal_photo as personalPicture, case when b.id is null then '未推荐' else '已推荐' end as isRecommend
+        from reversion_expert_auth a inner join recommend_application_info b
+        on (b.type=3 and b.account = #{account} and a.id = b.service_id)
+        inner join reversion_user_template_manage c on (a.`account` = c.`account` and a.template_id = c.template_id and c.status = '1')
+        inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e
+        on (a.account = e.account and a.year_id = e.id)
+        inner join (select min(create_time), user_id, template_id, location from reversion_member_contact_info group by user_id, template_id) f
+        on (a.`account` = f.`user_id` and a.template_id = f.template_id)
+        where a.approve_status = 1
+        <if test="relatedSpecies!='' and relatedSpecies!=null">
+            and a.related_species like concat(concat('%',#{relatedSpecies},'%'))
+        </if>
+        <if test="expertName!='' and expertName!=null">
+            and a.expert_name like concat(concat('%',#{expertName},'%'))
+        </if>
+        <if test="address!='' and address!=null">
+            and f.location like concat(concat('%',#{address},'%'))
+        </if>
+        ORDER BY a.update_time DESC
+    </select>
+
+    <select id="memberInfo" resultType="map" parameterType="map">
+        select min(create_time), member_name as memberName from reversion_member_aptitude_real_info
+        where user_id = #{account} and template_id = #{templateId}
+        and member_name like concat(concat('%',#{memberName},'%'))
+    </select>
+
+    <select id="productList" parameterType="map" resultType="Integer">
+        select count(id) from recommend_application_info where type = 4
+        <if test="account!='' and account!=null">
+            and account = #{account}
+        </if>
+        <if test="id!='' and id!=null">
+           and service_id =#{id}
+        </if>
+    </select>
+
+    <select id="find" parameterType="map" resultType="Integer">
+        select count(id) from recommend_application_info where type = 4
+        <if test="account!='' and account!=null">
+            and account = #{account}
+        </if>
+        <if test="id!='' and id!=null">
+            and service_id =#{id}
+        </if>
+    </select>
+
+    <select id="findMemberName" parameterType="map" resultType="java.lang.String">
+        select display_name as memberName
+        from login_user where 1=1
+        <if test="account!='' and account!=null">
+            and login_account = #{account}
+        </if>
+    </select>
+
+
+
+</mapper>

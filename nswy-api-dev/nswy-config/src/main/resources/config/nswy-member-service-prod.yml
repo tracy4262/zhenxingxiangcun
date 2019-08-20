@@ -1,0 +1,94 @@
+
+spring:
+      datasource:
+        default:
+              name: test_mysql
+              url: jdbc:mysql://192.168.7.86:3306/nswy?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+              username: nswy
+              password: 1234
+              type: com.alibaba.druid.pool.DruidDataSource
+              driver-class-name: com.mysql.jdbc.Driver
+              filters: stat
+              maxActive: 20
+              initialSize: 1
+              maxWait: 60000
+              minIdle: 1
+              timeBetweenEvictionRunsMillis: 60000
+              minEvictableIdleTimeMillis: 300000
+              validationQuery: select 'x'
+              testWhileIdle: true
+              testOnBorrow: false
+              testOnReturn: false
+              poolPreparedStatements: true
+              maxOpenPreparedStatements: 20
+
+      redis:
+        host: 192.168.7.61
+        password: nswy
+        port: 6379
+        database: 0
+        pool:
+            max-active: 8
+            max-wait: -1
+            max-idle: 20000
+            min-idle: 0
+      timeout: 10000
+#fastDFS
+fdfs:
+  conf: ./fdfs_client.conf
+  soTimeout: 1501
+  connectTimeout: 601
+  thumbImage:
+    width: 150
+    height: 150
+  trackerList:
+    - 192.168.7.61:22122
+http:
+ uploadIp : //192.168.7.61
+
+temp_upload_url: ./upload
+#短信模板
+sms:
+  host: http://api.cloudmas.cn/
+  login_code: nswyadmin
+  passwd: ns8M2DYp
+  sign_no: cd3UM291
+  templateName: SYS170923110139140
+  type: 1
+  ext: 1
+
+exclude: /inforMation/;/policy/;/knowLege/;/login/;/index.html/;/corpInfo/
+include: /inforMation/findInforMationDetail;/knowLege/findKnowLedgeDetail;/policy/findPolicyDetail;/expert/expertDetail
+#商城接口
+shop:
+    fetchProductUrl: http://192.168.7.42/ovit/api/product/list.htm
+
+springfox:
+  name: 武汉光谷信息技术股份有限公司
+  title: 农事无忧在线文档
+  description: 农事无忧相关接口文档
+
+water_mark:
+  content: 农事无忧
+  font_size: 50
+  font_color:
+    r: 225
+    g: 225
+    b: 225
+#发送短信测试账号
+cloudmas:
+  sms:
+    host: http://api.cloudmas.cn
+    loginCode: nswytest
+    password: eMtdY-48
+    signNo: cd3UM291
+    codeTemplateName: SYS170923110139140
+    userInfoTemplateName: SYS170923110139141
+#物种
+feign :
+  client:
+   url: http://127.0.0.1:11100
+
+#百度地图 中心坐标检索范围(单位公里数)
+baidu_map:
+  range: 50

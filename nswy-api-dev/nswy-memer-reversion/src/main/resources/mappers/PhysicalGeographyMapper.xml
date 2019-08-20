@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.PhysicalGeographyMapper">
+
+
+
+    <select id="findPhysicalGeography" parameterType="map" resultType="map">
+        select s.sys_dict_id,s.name,s.parent_id,s.url from reversion_sys_dict s  where s.type=0
+        <if test="parent_id !=null and parent_id !=''">
+            and s.parent_id = #{parent_id}
+        </if>
+    </select>
+
+    <select id="findPhysicalGeographyModular" parameterType="map" resultType="map">
+        select s.sys_dict_id,s.name,s.parent_id,s.url  from reversion_sys_dict s  where s.type='1'
+        <if test="parent_id !=null and parent_id !=''">
+            and s.parent_id = #{parent_id}
+        </if>
+    </select>
+
+    <select id="findMemberLocation" parameterType="map" resultType="map">
+        select
+
+        id,user_id,member_location_name,location,address,house_number,perfect_address,status,year_id,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,template_id as templateId
+
+        from reversion_member_location_info  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <update id="updateMemberLocationName" parameterType="map">
+        update reversion_member_location_info set member_location_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveMemberLocation" parameterType="map">
+          replace into reversion_member_location_info (
+            id,
+            user_id,
+            member_location_name,
+            location,
+            address,
+            house_number,
+            perfect_address,
+            status,
+            year_id,
+            template_id,
+            create_time
+          )values (
+              #{id},
+              #{user_id},
+              #{member_location_name},
+              #{location},
+              #{address},
+              #{house_number},
+              #{perfect_address},
+              #{status},
+              #{year_id},
+              #{templateId},
+              now()
+
+          )
+    </insert>
+
+
+
+    <select id="findMemberLatitudeLongitude" parameterType="map" resultType="map">
+        select
+
+        id,user_id,member_latitude_longitude_name,latitude,longitude,status,year_id,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time
+        ,template_id as templateId
+
+        from reversion_member_latitude_longitude  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <update id="updateMemberLatitudeLongitudeName" parameterType="map">
+        update reversion_member_latitude_longitude set member_latitude_longitude_name =#{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveMemberLatitudeLongitude" parameterType="map">
+          replace into reversion_member_latitude_longitude (
+                id,
+                user_id,
+                member_latitude_longitude_name,
+                latitude,
+                longitude,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{member_latitude_longitude_name},
+                #{latitude},
+                #{longitude},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+
+          )
+    </insert>
+
+
+    <select id="findMemberNeighbor" parameterType="map" resultType="map">
+        select
+
+        id,user_id,member_neighbor_name,name,east_latitude,east_longitude,neighbor_name,neighbor_flag
+
+        ,status,year_id,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,template_id as templateId
+
+        from reversion_member_neighbor_info  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+
+    <update id="updateMemberNeighborName" parameterType="map">
+        update reversion_member_neighbor_info set member_neighbor_name =#{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveMemberNeighbor" parameterType="map">
+          replace into reversion_member_neighbor_info (
+                id,
+                user_id,
+                member_neighbor_name,
+                name,
+                east_latitude,
+                east_longitude,
+                neighbor_name,
+                neighbor_flag,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{member_neighbor_name},
+                #{name},
+                #{east_latitude},
+                #{east_longitude},
+                #{neighbor_name},
+                #{neighbor_flag},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+
+          )
+    </insert>
+
+    <delete id="deleteMemberNeighbor" parameterType="map">
+        delete from reversion_member_neighbor_info where id = #{id}
+    </delete>
+
+
+
+
+    <select id="findMemberLiveAddress" parameterType="map" resultType="map">
+        select
+
+        id,user_id,live_address_name,name,url,status,year_id,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,template_id as templateId
+
+        from reversion_member_live_address_info  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <update id="updateMemberLiveAddressName" parameterType="map">
+        update reversion_member_live_address_info set live_address_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveMemberLiveAddress" parameterType="map">
+          replace into reversion_member_live_address_info (
+                id,
+                user_id,
+                live_address_name,
+                name,
+                url,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{live_address_name},
+                #{name},
+                #{url},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+    <delete id="deleteMemberLiveAddress" parameterType="map">
+        delete from reversion_member_live_address_info where id = #{id}
+    </delete>
+
+    <select id="findTextPreview" parameterType="map" resultType="map">
+        select
+
+        id,user_id,text_preview,is_complete,sys_dict_id,year_id,
+
+        DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,template_id as templateId
+
+        from reversion_member_text_preview  where 1=1
+
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+
+        <if test="parent_id !=null and parent_id!=''">
+            and sys_dict_id = #{parent_id}
+        </if>
+
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+
+    </select>
+
+    <insert id="saveTextPreview" parameterType="map">
+          replace into reversion_member_text_preview (
+                id,
+                user_id,
+                text_preview,
+                is_complete,
+                sys_dict_id,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{text_preview},
+                #{is_complete},
+                #{sys_dict_id},
+                #{year_id},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+
+    <select id="findLandAreaInfo" parameterType="map" resultType="map">
+        select
+
+            id,user_id,land_area_name,land_area,area,unit,proportion,status,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,year_id,template_id as templateId
+
+        from reversion_land_area_info  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+</select>
+
+    <update id="updateLandAreaInfoName" parameterType="map">
+        update reversion_land_area_info set land_area_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveLandAreaInfo" parameterType="map">
+          replace into reversion_land_area_info (
+                id,
+                user_id,
+                land_area_name,
+                land_area,
+                area,
+                unit,
+                proportion,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{land_area_name},
+                #{land_area},
+                #{area},
+                #{unit},
+                #{proportion},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+    <delete id="deleteLandAreaInfo" parameterType="map">
+        delete from reversion_land_area_info where id = #{id}
+    </delete>
+
+
+    <select id="findTopographicFeature" parameterType="map" resultType="map">
+        select
+
+        id,user_id,topographic_features_name,topographic,features,avg_altitude,avg_altitude_unit,
+
+        max_altitude,max_altitude_unit,min_alititude,min_alititude_unit,
+
+        status,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,year_id,template_id as templateId
+
+        from reversion_topographic_features_info  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <update id="updateTopographicFeatureName" parameterType="map">
+        update reversion_topographic_features_info set topographic_features_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveTopographicFeature" parameterType="map">
+          replace into reversion_topographic_features_info (
+                id,
+                user_id,
+                topographic_features_name,
+                topographic,
+                features,
+                avg_altitude,
+                avg_altitude_unit,
+                max_altitude,
+                max_altitude_unit,
+                min_alititude,
+                min_alititude_unit,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{topographic_features_name},
+                #{topographic},
+                #{features},
+                #{avg_altitude},
+                #{avg_altitude_unit},
+                #{max_altitude},
+                #{max_altitude_unit},
+                #{min_alititude},
+                #{min_alititude_unit},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+
+    <select id="findClimateInfo" parameterType="map" resultType="map">
+        select
+
+        id,user_id,climate_name,climate_class,climate_class_type,radiation_dose,sunshine_time,average_temperature,
+
+        accumulated_temperature,diurnal_temperature_difference,max_temperature,min_temperature,
+
+        max_days,min_days,max_avg_temperature,min_avg_temperature,no_frost_date,avg_precipitation,avg_vaporization,avg_precipitation_day,
+
+        dryness,wetness,precipitation_period,natural_disaster,year_id,template_id as templateId,
+
+        status,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time
+
+        from reversion_climate_info  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <update id="updateClimateInfoName" parameterType="map">
+        update reversion_climate_info set climate_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveClimateInfo" parameterType="map">
+          replace into reversion_climate_info (
+                id,
+                user_id,
+                climate_name,
+                climate_class,
+                climate_class_type,
+                radiation_dose,
+                sunshine_time,
+                average_temperature,
+                accumulated_temperature,
+                diurnal_temperature_difference,
+                max_temperature,
+                min_temperature,
+                max_days,
+                min_days,
+                max_avg_temperature,
+                min_avg_temperature,
+                no_frost_date,
+                avg_precipitation,
+                avg_vaporization,
+                avg_precipitation_day,
+                dryness,
+                wetness,
+                precipitation_period,
+                natural_disaster,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{climate_name},
+                #{climate_class},
+                #{climate_class_type},
+                #{radiation_dose},
+                #{sunshine_time},
+                #{average_temperature},
+                #{accumulated_temperature},
+                #{diurnal_temperature_difference},
+                #{max_temperature},
+                #{min_temperature},
+                #{max_days},
+                #{min_days},
+                #{max_avg_temperature},
+                #{min_avg_temperature},
+                #{no_frost_date},
+                #{avg_precipitation},
+                #{avg_vaporization},
+                #{avg_precipitation_day},
+                #{dryness},
+                #{wetness},
+                #{precipitation_period},
+                #{natural_disaster},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+
+    <select id="findBiologicalResources" parameterType="map" resultType="map">
+        select
+
+        id,user_id,biological_resources_name,animalList,animalLists,animalData,plantList,plantLists,plantData,
+
+        year_id,status,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,template_id as templateId
+
+        from reversion_biological_resources_info  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <update id="updateBiologicalResourcesName" parameterType="map">
+        update reversion_biological_resources_info set biological_resources_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveBiologicalResources" parameterType="map">
+          replace into reversion_biological_resources_info (
+                id,
+                user_id,
+                biological_resources_name,
+                animalList,
+                animalLists,
+                animalData,
+                plantList,
+                plantLists,
+                plantData,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{biological_resources_name},
+                #{animalList},
+                #{animalLists},
+                #{animalData},
+                #{plantList},
+                #{plantLists},
+                #{plantData},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+    <delete id="deleteBiologicalResources" parameterType="map">
+        delete from reversion_biological_resources_info where id = #{id}
+    </delete>
+
+
+    <select id="findMineralsInfo" parameterType="map" resultType="map">
+        select
+
+        id,user_id,member_minerals_name,minerals_class,minerals_name,year_id,
+
+        status,DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,template_id as templateId
+
+        from reversion_minerals_info  where 1=1
+
+        <if test="user_id !=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <update id="updateMineralsInfoName" parameterType="map">
+        update reversion_minerals_info set member_minerals_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveMineralsInfo" parameterType="map">
+          replace into reversion_minerals_info (
+                id,
+                user_id,
+                member_minerals_name,
+                minerals_class,
+                minerals_name,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{member_minerals_name},
+                #{minerals_class},
+                #{minerals_name},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+          )
+    </insert>
+    
+    
+    <select id="findSysMineralsDictParent" parameterType="map" resultType="map">
+        select id,minerals_name,parent_id,create_time from sys_minerals_dict where parent_id = 0
+    </select>
+
+    <select id="findSysMineralsDict" parameterType="map" resultType="map">
+        select id,minerals_name,parent_id,create_time from sys_minerals_dict where parent_id = #{parent_id}
+    </select>
+</mapper>

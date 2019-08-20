@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.CommodityInfoDao">
+
+	<select id="findList" parameterType="map" resultType="com.ovit.manager.modules.nswy.entity.CommodityInfo">
+		SELECT
+		    a.id as commodityId,
+			a.currency_commodity_name as name,
+			a.commodity_alias as alias,
+		    d.dict_name as industryTypeName,
+			pc.classification_name as productTypeName,
+		    a.remark
+		from shop_currency_commodity a
+		left join (SELECT t1.dict_value as dict_value,t1.dict_name as dict_name  FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+		WHERE t2.type_name = '行业分类') d on a.industry_type_id = d.dict_value
+		left join product_classification pc on a.product_type_id = pc.classification_code
+
+		where 1=1 and type != 2
+		<if test="commodityId !=null and commodityId != ''">
+			and a.id =#{commodityId}
+		</if>
+		<if test="name !=null and name != ''">
+			and a.currency_commodity_name like CONCAT('%',#{name},'%')
+		</if>
+		ORDER BY a.update_time DESC
+	</select>
+
+	<select id="findCommodity" parameterType="map" resultType="map">
+		select
+		    id as commodityId,
+			currency_commodity_name as name,
+			commodity_alias as alias,
+			remark
+		from shop_currency_commodity
+		where type !=2
+
+	</select>
+
+	<update id="updateCommodity" parameterType="com.ovit.manager.modules.nswy.entity.CommodityInfo">
+		update shop_currency_commodity
+		<set>
+			currency_commodity_name = #{name},
+			commodity_alias = #{alias},
+		  	remark = #{remark}
+		</set>
+		where id=#{commodityId}
+
+	</update>
+
+	<insert id="saveCommodity" parameterType="com.ovit.manager.modules.nswy.entity.CommodityInfo">
+		insert into shop_currency_commodity(
+		    type,
+			currency_commodity_name,
+			commodity_alias,
+			remark
+		)values (
+		    #{type},
+			#{name},
+			#{alias},
+			#{remark}
+		);
+	</insert>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from shop_currency_commodity where id= #{shopId}
+	</delete>
+
+
+</mapper>

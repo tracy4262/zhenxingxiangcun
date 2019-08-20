@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.MyFavoriteMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.MyFavorite">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="collectId" property="collectId" jdbcType="INTEGER"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, path, type, create_time,title,collectId
+	</sql>
+	<select id="findCollect" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.MyFavorite">
+		select
+		<include refid="Base_Column_List" />
+		from myfavorite where 1=1
+		<if test="account != null">
+			and account = #{account,jdbcType=VARCHAR}
+		</if>
+		<if test="path != null">
+			and path = #{path,jdbcType=VARCHAR}
+		</if>
+		<if test="collectId != null">
+			and collectId = #{collectId,jdbcType=INTEGER}
+		</if>
+		<if test="title != null">
+			and title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+		</if>
+	</select>
+
+	<select id="findCollectContent" resultType="java.util.Map"
+			parameterType="java.util.Map">
+		select
+		a.id, a.account, a.path, a.type, a.create_time, a.title, a.collectId, b.group_name as favorite
+		from myfavorite a left join collect b
+		ON (a.account = b.belong and a.collectId = b.id)
+		where 1=1
+		<if test="account != null and account != ''">
+			and a.account = #{account,jdbcType=VARCHAR}
+		</if>
+		<if test="path != null and path != ''">
+			and a.path = #{path,jdbcType=VARCHAR}
+		</if>
+		<if test="collectId != null and collectId != '' ">
+			and a.collectId = #{collectId,jdbcType=INTEGER}
+		</if>
+		<if test="title != null and title != ''">
+			and a.title like CONCAT('%',#{title,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="templateId != null and templateId != ''">
+			and b.template_id = #{templateId}
+		</if>
+		order by a.create_time desc
+	</select>
+
+	<select id="findMyMessage" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		select
+		COUNT(*) AS favorite
+		from myfavorite f
+		where f.account = #{userId,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.MyFavorite">
+		insert into myfavorite (id, account, path,
+		type, create_time,title,collectId)
+		values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR},
+		#{path,jdbcType=VARCHAR},
+		#{type,jdbcType=VARCHAR},now(),#{title,jdbcType=VARCHAR},#{collectId,jdbcType=INTEGER})
+	</insert>
+	<delete id="delMyFavorite" parameterType="com.ovit.nswy.member.model.MyFavorite">
+	delete from myfavorite
+	where 1=1
+	and path = #{path,jdbcType=VARCHAR}
+	and account = #{account,jdbcType=VARCHAR}
+	</delete>
+	<update id="updateMyFavorite" parameterType="com.ovit.nswy.member.model.MyFavorite">
+		update
+		myfavorite
+		set
+		type = #{type,jdbcType=VARCHAR}
+		where 1=1
+		and path = #{path,jdbcType=VARCHAR}
+		and account = #{account,jdbcType=VARCHAR}
+	</update>
+	<update id="updateCollect" parameterType="com.ovit.nswy.member.model.MyFavorite">
+		update
+		myfavorite
+		set
+		collectId = #{collectId,jdbcType=INTEGER}
+		where id =#{id ,jdbcType=INTEGER}
+	</update>
+	<delete id="delFollow" parameterType="java.lang.Integer">
+		DELETE FROM
+			myfavorite
+		WHERE
+			id = #{id}
+	</delete>
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.ReportManageMapper">
+
+    <select id="findReportType" resultType="map">
+        select report_type_name as label, report_type as value
+        from reversion_report_type_info
+    </select>
+
+    <select id="find" parameterType="map" resultType="map">
+        select b.id as id, b.report_name as reportName, b.report_remark as description,
+        b.report_file as reportTemplate, b.report_file_name as reportTemplateName,
+        b.report_file_pdf as templatePreview, b.report_type_name as reportTypeName,
+        b.report_type as reportType, b.user_type as suitable,
+        b.user_type_name as userTypeName, a.report as reports,
+        a.report_name as reportsName, a.report_preview as uploadPreview
+        from reversion_user_report_manage a
+        left join reversion_report_manage_info b
+        on a.`report_template_id` = b.`id`
+        where 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_id = #{yearId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </select>
+
+    <select id="findCommon" parameterType="map" resultType="map">
+        select id, status, suitable, report_type as reportType, account, year_id as yearId, template_id as templateId
+        from reversion_user_report_common
+        where 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_id = #{yearId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="map">
+        insert into reversion_user_report_manage (
+        account,
+        year_id,
+        template_id,
+        report_template_id,
+        report,
+        report_name,
+        report_preview
+        )values (
+        #{account},
+        #{yearId},
+        #{templateId},
+        #{id},
+        #{reports},
+        #{reportsName},
+        #{uploadPreview}
+        )
+    </insert>
+
+    <insert id="saveCommon" parameterType="map">
+        insert into reversion_user_report_common (
+        account,
+        year_id,
+        template_id,
+        status,
+        suitable,
+        report_type
+        )values (
+        #{account},
+        #{yearId},
+        #{templateId},
+        #{status},
+        #{suitable},
+        #{reportType}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from reversion_user_report_manage where 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_id = #{yearId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+        <if test="id != null and id != ''">
+            AND report_template_id = #{id}
+        </if>
+    </delete>
+
+    <delete id="deleteCommon" parameterType="map">
+        delete from reversion_user_report_common where 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_id = #{yearId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </delete>
+
+    <select id="filterReport" parameterType="map" resultType="map">
+        SELECT id, report_name as reportName, report_remark as description, report_file as reportTemplate,
+        report_file_name as reportTemplateName, report_file_pdf as templatePreview
+        FROM reversion_report_manage_info
+        WHERE 1=1
+        <if test="reportType != null and reportType != ''">
+            AND report_type = #{reportType}
+        </if>
+        <if test="userType != null and userType != ''">
+            AND user_type = #{userType}
+        </if>
+    </select>
+
+</mapper>

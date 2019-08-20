@@ -1,0 +1,70 @@
+server:
+  port: 8092
+
+http:
+ eureka:
+  serviceUrl: 127.0.0.1
+
+#远程调用timeout时间设置
+hystrix:
+  #threadpool.default.coreSize: 100
+  #threadpool.default.maximumSize: 200
+  #threadpool.default.maxQueueSize: 5000
+  #threadpool.default.allowMaximumSizeToDivergeFromCoreSize: true
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+
+
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone:  http://${http.eureka.serviceUrl}:8761/eureka/
+  instance:
+    preferIpAddress: false
+    statusPageUrlPath: /info
+    healthCheckUrlPath: /health
+    lease-renewal-interval-in-seconds: 2
+    lease-expiration-duration-in-seconds: 4
+ribbon:
+  eureka:
+    enabled: true
+endpoints:
+  jmx:
+    enabled: true
+feign:
+  hystrix:
+    enabled: false
+health:
+ sensitive: false
+
+logging:
+  config: classpath:log4j2.xml
+
+spring:
+  data:
+   mongodb:
+     uri: mongodb://nswyShop:111111@106.14.65.102:27017/shop
+
+mybatis:
+  # 如果是放在src/main/java目录下 classpath:mapper/*Mapper.xml
+  mapper-locations: classpath:*mappers/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: true
+  configuration.default-fetch-size: 100
+  configuration.default-statement-timeout: 300
+
+pay:
+  expire:
+    time: 2  #支付的过期时间，默认为2h
+
+update:
+  expire:
+     #time: 0/10 * * * * ?  #每隔10秒执行一次
+     time: 0 0/5 * * * ?  #每5分钟执行一次

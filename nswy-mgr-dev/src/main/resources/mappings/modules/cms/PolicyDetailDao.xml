@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.cms.dao.PolicyDetailDao">
+	<resultMap id="BaseResultMap"
+		type="com.ovit.manager.modules.cms.entity.PolicyDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="browse_number" property="browseNumber"
+			jdbcType="INTEGER" />
+		<result column="is_report" property="isReport" jdbcType="INTEGER" />
+		<result column="editer" property="editer" jdbcType="VARCHAR" />
+		<result column="previous_id" property="previousId" jdbcType="INTEGER" />
+		<result column="previous_title" property="previousTitle"
+			jdbcType="VARCHAR" />
+		<result column="next_id" property="nextId" jdbcType="INTEGER" />
+		<result column="next_title" property="nextTitle" jdbcType="VARCHAR" />
+		<result column="thumb_up_num" property="thumbUpNum" jdbcType="INTEGER" />
+		<result column="label" property="lables" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.ovit.manager.modules.cms.entity.PolicyDetail" extends="BaseResultMap">
+		<result column="content" property="content" jdbcType="LONGVARBINARY" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, title, create_time, source, browse_number, is_report, editer,
+		previous_id, previous_title,
+		next_id, next_title,thumb_up_num,label
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+	<select id="getDetailById" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from policy_detail
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
+		parameterType="com.ovit.manager.modules.cms.entity.PolicyDetail">
+		insert into policy_detail (id, title, create_time,
+		source, browse_number, is_report,
+		editer, previous_id, previous_title,
+		next_id, next_title, content,label
+		)
+		values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{source,jdbcType=VARCHAR}, #{browseNumber,jdbcType=INTEGER}, #{isReport,jdbcType=INTEGER},
+		#{editer,jdbcType=VARCHAR}, #{previousId,jdbcType=INTEGER},
+		#{previousTitle,jdbcType=VARCHAR},
+		#{nextId,jdbcType=INTEGER}, #{nextTitle,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARBINARY},
+		#{lables,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateThumbUpNum"
+		parameterType="com.ovit.manager.modules.cms.entity.PolicyDetail">
+		update policy_detail
+		set
+		thumb_up_num = #{thumbUpNum,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="update"
+		parameterType="com.ovit.manager.modules.cms.entity.PolicyDetail">
+		update policy_detail
+		set title = #{title,jdbcType=VARCHAR},
+		source = #{source,jdbcType=VARCHAR},
+		browse_number = #{browseNumber,jdbcType=INTEGER},
+		is_report = #{isReport,jdbcType=INTEGER},
+		content = #{content,jdbcType=LONGVARCHAR},
+		editer = #{editer,jdbcType=VARCHAR},
+		previous_id = #{previousId,jdbcType=INTEGER},
+		previous_title = #{previousTitle,jdbcType=VARCHAR},
+		next_id = #{nextId,jdbcType=INTEGER},
+		next_title = #{nextTitle,jdbcType=VARCHAR},
+		thumb_up_num = #{thumbUpNum,jdbcType=INTEGER},
+		label = #{lables,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

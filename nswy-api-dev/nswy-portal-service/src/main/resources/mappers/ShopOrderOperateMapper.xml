@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.ShopOrderOperateMapper">
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.portal.model.ShopOrderOperate">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_code_id" jdbcType="VARCHAR" property="orderCodeId" />
+    <result column="from_account" jdbcType="INTEGER" property="fromAccount" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="describe_info" jdbcType="VARCHAR" property="describeInfo" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <resultMap id="ListResultMap" type="com.ovit.nswy.portal.model.response.ShopOrderOperateDTO">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_code_id" jdbcType="VARCHAR" property="orderCodeId" />
+    <result column="from_account" jdbcType="INTEGER" property="fromAccount" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="real_name" jdbcType="VARCHAR"  property="realName"/>
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="describe_info" jdbcType="VARCHAR" property="describeInfo" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+
+  <select id="findList" resultMap="ListResultMap" parameterType="map">
+    SELECT t1.*
+    ,t2.display_name as realName
+    FROM  shop_order_operate t1
+    JOIN login_user t2 on t1.account=t2.login_account
+    WHERE 1=1
+    <if test="orderCode !='' and orderCode!=null">
+      and t1.order_code_id = #{orderCode}
+    </if>
+    <if test="from !='' and from!=null">
+      and t1.from_account = #{from}
+    </if>
+    <if test="type !='' and type!=null">
+      and t1.type = #{type}
+    </if>
+    <if test="status !='' and status!=null">
+      and t1.approve_status = #{status}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+</mapper>

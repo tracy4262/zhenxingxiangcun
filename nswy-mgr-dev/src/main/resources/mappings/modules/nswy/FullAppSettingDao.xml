@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.FullAppSettingDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.FullAppSettingInfo" resultType="com.ovit.manager.modules.nswy.entity.FullAppSettingInfo">
+        select
+            f.id as appSettingId,
+            f.app_name as appName,
+            f.level,
+            case f.cost when '免费' then 0
+                        when '不免费' then 1 end cost,
+            f.application_abstract as applicationAbstract,
+            case  when f.recommend is null then 1 else f.recommend
+                  end recommend,
+            f.logo,
+            f.logo_name as logoName,
+            f.image,
+            f.image_name as imageName,
+            f.`number`,
+            f.user_type as userType
+
+        from reversion_full_app_setting f
+
+        where 1=1
+        <if test="level !='' and level!=null">
+            and f.level = #{level}
+        </if>
+
+        <if test="appName !='' and appName!=null">
+            and f.app_name like concat('%',#{appName},'%')
+        </if>
+
+    </select>
+
+    <select id="findByAppSetting" parameterType="java.lang.String" resultType="com.ovit.manager.modules.nswy.entity.FullAppSettingInfo">
+        select
+            f.id as appSettingId,
+            f.app_name as appName,
+            f.level,
+            case f.cost when '免费' then 0
+            when '不免费' then 1 end cost,
+            f.application_abstract as applicationAbstract,
+            case  when f.recommend is null then 1 else f.recommend
+                  end recommend,
+            f.logo,
+            f.logo_name as logoName,
+            f.image,
+            f.image_name as imageName,
+            f.`number`,
+            f.user_type as userType
+
+        from reversion_full_app_setting f
+
+        where f.id = #{appSettingId}
+
+    </select>
+
+    <update id="updateFullAppSetting" parameterType="map">
+        update reversion_full_app_setting
+          <set>
+              <if test="appName !=null">
+                  app_name = #{appName},
+              </if>
+              <if test="cost !=null">
+                  cost = #{cost},
+              </if>
+              <if test="applicationAbstract !=null">
+                  application_abstract = #{applicationAbstract},
+              </if>
+              <if test="recommend !=null">
+                  recommend = #{recommend},
+              </if>
+              <if test="logo !=null">
+                  logo = #{logo},
+              </if>
+              <if test="logoName !=null">
+                  logo_name = #{logoName},
+              </if>
+              <if test="image !=null">
+                  image = #{image},
+              </if>
+              <if test="imageName !=null">
+                  image_name = #{imageName},
+              </if>
+              <if test="userType !=null">
+                  user_type = #{userType},
+              </if>
+              <if test="level !=null">
+                  level = #{level}
+              </if>
+          </set>
+
+        where id = #{appSettingId}
+    </update>
+
+</mapper>

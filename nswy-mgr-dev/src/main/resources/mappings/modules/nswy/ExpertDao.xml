@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ExpertDao">
+
+	<select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.LoginUser" resultType="com.ovit.manager.modules.nswy.entity.LoginUser">
+		SELECT
+            t1.id,
+            t1.unique_id,
+            t1.login_account,
+            t1.display_name,
+            t1.login_passwd,
+            t1.register_time,
+            t1.is_Identity_verification,
+            t1.tour_number,
+            t1.user_type,
+            t1.signature,
+            t1.avatar,
+            t1.is_friend,
+            t1.is_home_display,
+            t2.expert_type,
+            t2.adept_field,
+            t2.adept_species,
+            t2.related_industry,
+            t2.related_service,
+            t1.is_to_page,
+            t1.is_nav_display,
+            t1.order_num
+        FROM
+          login_user t1 LEFT JOIN expert_info t2 ON t1.login_account = t2.login_account
+        WHERE t2.approve_status = 1
+        <if test="userType != null and userType != ''">
+            AND t1.user_type = #{userType}
+        </if>
+        <if test="displayName != null and displayName != ''">
+            AND t1.display_name LIKE CONCAT('%',#{displayName},'%')
+        </if>
+        ORDER BY t2.create_time DESC
+	</select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from login_user
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <update id="expertUpdateHome" parameterType="map" >
+        UPDATE login_user SET is_to_page = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="expertUpdateNavDisplay" parameterType="map">
+        UPDATE login_user SET is_nav_display = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="expertSetOrderNum" parameterType="map">
+        UPDATE login_user SET order_num = #{orderNum} WHERE id = #{id}
+    </update>
+</mapper>

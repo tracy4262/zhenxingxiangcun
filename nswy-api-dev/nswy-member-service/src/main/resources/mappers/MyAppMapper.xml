@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.MyAppMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.MyApp">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="appId" property="appid" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, appId,level, create_time
+	</sql>
+	<insert id="insert" parameterType="java.util.List">
+     <![CDATA[
+		insert into myapp(id, account, appId,level, create_time) values
+		]]>
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.id},#{item.account},#{item.appid},#{item.level},#{item.createTime})
+		</foreach>
+	</insert>
+	<select id="selectByAccount" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from myapp
+		where account = #{account,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByLevel" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from myapp where level = #{level,jdbcType=INTEGER}
+	</select>
+	
+	<select id="deleteAll" parameterType="java.util.Map">
+		delete from myapp where account = #{account,jdbcType=VARCHAR} and level = #{level,jdbcType=INTEGER}
+	</select>
+
+	<select id="deleteByLevel" parameterType="java.lang.Integer">
+		delete from myapp where level = #{level,jdbcType=INTEGER}
+	</select>
+
+	<insert id="saveAppStatus" parameterType="map">
+        INSERT INTO app_use_status (account,level) VALUES (#{account},#{level})
+	</insert>
+
+    <select id="queryAppUseStatusCountByAccount" resultType="map" parameterType="map">
+        SELECT app_status AS appStatus FROM app_use_status WHERE account = #{account} AND level = #{level}
+    </select>
+
+    <update id="updateByAccount" parameterType="map">
+        UPDATE app_use_status SET app_status = 1 WHERE account = #{account} AND level = #{level}
+    </update>
+
+    <select id="queryAppUseStatus" parameterType="map" resultType="java.lang.String">
+        SELECT app_status FROM app_use_status WHERE account = #{account} AND level = #{level}
+    </select>
+
+    <select id="queryMyAppByAccount" parameterType="map" resultType="map">
+        SELECT t2.id AS appId, t2.appName AS appName
+        FROM myapp t1 LEFT JOIN all_app_info t2 ON t1.appId = t2.id
+        WHERE t1.account = #{account} AND t2.level = #{level}
+    </select>
+</mapper>

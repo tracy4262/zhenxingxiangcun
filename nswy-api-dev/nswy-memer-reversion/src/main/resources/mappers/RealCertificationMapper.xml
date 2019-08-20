@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.certification.mapper.RealCertificationMapper">
+
+    <select id="findList" parameterType="map" resultType="map">
+      select
+              r.member_virtual_info_id,
+              r.user_nswy_id,
+              r.user_id,
+              r.user_status,
+              r.user_abbreviation,
+              r.user_abbreviation_status,
+              r.user_name_remark,
+              r.user_name_remark_status,
+              r.pass_word,
+              r.seat_phone,
+              r.seat_phone_status,
+              r.phone,
+              r.phone_status,
+              r.qq_number,
+              r.qq_number_status,
+              r.wechat_number,
+              r.wechat_number_status,
+              r.email,
+              r.email_status,
+              r.website_url,
+              r.website_url_status,
+              r.location,
+              r.location_status,
+              r.qr_code_http,
+              u.avatar as image,
+              DATE_FORMAT(r.create_time,"%Y-%m-%d %T")as create_time
+
+      from
+
+      reversion_member_virtual_info r
+
+      left join login_user u on r.user_id = u.login_account
+
+      left join network_info i on u.login_account = i.account
+
+      where r.user_id = #{user_id}
+    </select>
+
+    <select id="findByLoginUser" parameterType="map" resultType="map">
+        select
+          i.nswy_id_model,
+          u.login_account,
+          u.login_passwd,
+          u.avatar,
+          c.realname,
+          c.city
+
+        from login_user u
+
+        left join network_info i on u.login_account = i.account
+        left join certification c on u.login_account = c.user_account
+
+
+        where u.login_account = #{user_id}
+    </select>
+
+    <select id="findCount" parameterType="map" resultType="java.lang.Integer">
+        select count(*) from reversion_member_virtual_info where user_id = #{user_id}
+    </select>
+
+
+    <insert id="saveRealCertification" parameterType="map">
+          insert into reversion_member_virtual_info(
+              member_virtual_info_id,
+              user_nswy_id,
+              user_id,
+              user_status,
+              user_abbreviation,
+              user_abbreviation_status,
+              user_name_remark,
+              user_name_remark_status,
+              pass_word,
+              seat_phone,
+              seat_phone_status,
+              phone,
+              phone_status,
+              qq_number,
+              qq_number_status,
+              wechat_number,
+              wechat_number_status,
+              email,
+              email_status,
+              website_url,
+              website_url_status,
+              location,
+              location_status,
+              qr_code_http,
+              create_time
+
+          ) values(
+            #{member_virtual_info_id},
+            #{user_nswy_id},
+            #{user_id},
+            #{user_status},
+            #{user_abbreviation},
+            #{user_abbreviation_status},
+            #{user_name_remark},
+            #{user_name_remark_status},
+            #{pass_word},
+            #{seat_phone},
+            #{seat_phone_status},
+            #{phone},
+            #{phone_status},
+            #{qq_number},
+            #{qq_number_status},
+            #{wechat_number},
+            #{wechat_number_status},
+            #{email},
+            #{email_status},
+            #{website_url},
+            #{website_url_status},
+            #{location},
+            #{location_status},
+            #{qr_code_http},
+            now()
+          );
+    </insert>
+
+    <update id="updateLoginUser" parameterType="map">
+        update login_user set avatar = #{image} where login_account =  #{user_id}
+    </update>
+
+
+    <delete id="deleteRealCertification" parameterType="map">
+        delete from reversion_member_virtual_info where user_id = #{user_id}
+    </delete>
+
+
+
+
+    <!-- 会员资质信息-->
+    <select id="findMemberAptitude" parameterType="map" resultType="map">
+        select
+              member_aptitude_real_info_id,
+              user_id,
+              member_class,
+              member_name,
+              member_name_pinyin,
+              member_abbreviation,
+              abbreviation_pinyin,
+              aptitude_name,
+              aptitude_number,
+              aptitude_image,
+              remark,
+              status,
+              template_id as templateId,
+              DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time,
+              ifnull(is_proxy, 0) as isProxy
+        from reversion_member_aptitude_real_info where 1=1
+        <!-- 如果isProxy为1，则表示账号为被代理的账号 -->
+        <choose>
+            <when test='isProxy == "0" || isProxy == "1"'>
+                and is_proxy = 1
+            </when>
+            <otherwise>
+                <if test="templateId!=null and templateId !=''">
+                    and template_id = #{templateId}
+                </if>
+            </otherwise>
+        </choose>
+        <if test="user_id!=null and user_id !=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="member_aptitude_real_info_id!=null and member_aptitude_real_info_id !=''">
+            and member_aptitude_real_info_id = #{member_aptitude_real_info_id}
+        </if>
+        order by create_time desc
+    </select>
+
+    <update id="updateMemberAptitude" parameterType="map">
+        update reversion_member_aptitude_real_info set
+        <if test="member_class !=null">
+            member_class = #{member_class},
+        </if>
+        <if test="member_name !=null">
+            member_name = #{member_name},
+        </if>
+        <if test="member_name_pinyin !=null">
+            member_name_pinyin = #{member_name_pinyin},
+        </if>
+
+        <if test="member_abbreviation !=null">
+            member_abbreviation = #{member_abbreviation},
+        </if>
+        <if test="abbreviation_pinyin !=null">
+            abbreviation_pinyin = #{abbreviation_pinyin},
+        </if>
+        <if test="aptitude_name !=null">
+            aptitude_name = #{aptitude_name},
+        </if>
+        <if test="aptitude_number !=null">
+            aptitude_number = #{aptitude_number},
+        </if>
+        <if test="aptitude_image !=null">
+            aptitude_image = #{aptitude_image},
+        </if>
+        <if test="remark !=null">
+            remark = #{remark},
+        </if>
+        <if test="templateId !=null">
+            template_id = #{templateId},
+        </if>
+        <if test="isProxy !=null">
+            is_proxy = #{isProxy},
+        </if>
+        status = #{status}
+        where member_aptitude_real_info_id = #{member_aptitude_real_info_id}
+    </update>
+
+
+    <insert id="saveMemberAptitude" parameterType="map">
+        insert into reversion_member_aptitude_real_info
+          (
+              member_aptitude_real_info_id,
+              user_id,
+              member_class,
+              member_name,
+              member_name_pinyin,
+              member_abbreviation,
+              abbreviation_pinyin,
+              aptitude_name,
+              aptitude_number,
+              aptitude_image,
+              remark,
+              status,
+              template_id,
+              create_time,
+              is_proxy
+          )values(
+              #{member_aptitude_real_info_id},
+              #{user_id},
+              #{member_class},
+              #{member_name},
+              #{member_name_pinyin},
+              #{member_abbreviation},
+              #{abbreviation_pinyin},
+              #{aptitude_name},
+              #{aptitude_number},
+              #{aptitude_image},
+              #{remark},
+              #{status},
+              #{templateId},
+              now(),
+              #{isProxy}
+          );
+
+    </insert>
+
+    <delete id="deleteMemberAptitude" parameterType="map">
+        delete from reversion_member_aptitude_real_info where member_aptitude_real_info_id = #{member_aptitude_real_info_id}
+    </delete>
+
+
+    <!--联系方式-->
+
+    <select id="findMemberContact" parameterType="map" resultType="map">
+        select
+            member_contact_info_id,
+            user_id,
+            member_name_id,
+            member_name,
+            member_abbreviation,
+            contact_name,
+            card,
+            seat_phone,
+            phone,
+            qq_number,
+            wechat_number,
+            email,
+            website_url,
+            postal_code,
+            image,
+            image_status,
+            location,
+            location_id as locationId,
+            location_status,
+            address,
+            house_number,
+            address_status,
+            longitude,
+            latitude,
+            qr_code_contact_http,
+            qr_code_user_http,
+            status,
+            template_id as templateId,
+            DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time
+        from reversion_member_contact_info where 1=1
+        <!-- 如果isProxy为1，则表示账号为被代理的账号 -->
+        <choose>
+            <when test='isProxy == "0" || isProxy == "1"'>
+                and is_proxy = 1
+            </when>
+            <otherwise>
+                <if test="templateId!=null and templateId !=''">
+                    and template_id = #{templateId}
+                </if>
+            </otherwise>
+        </choose>
+        <if test="user_id!=null and user_id !=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="member_contact_info_id!=null and member_contact_info_id !=''">
+            and member_contact_info_id = #{member_contact_info_id}
+        </if>
+        <if test="member_name_id!=null and member_name_id !=''">
+            and member_name_id = #{member_name_id}
+        </if>
+
+        order by create_time desc
+    </select>
+
+    <select id="findMemberContactOfByAptitude" parameterType="map" resultType="map">
+        select
+            member_aptitude_real_info_id,
+            user_id,
+            member_name,
+            member_abbreviation,
+            member_name_pinyin
+        from reversion_member_aptitude_real_info where user_id = #{user_id}
+        <choose>
+            <when test='isProxy == "0" || isProxy == "1"'>
+                and is_proxy = 1
+            </when>
+            <otherwise>
+                <if test="templateId!=null and templateId !=''">
+                    and template_id = #{templateId}
+                </if>
+            </otherwise>
+        </choose>
+        order by create_time desc
+    </select>
+
+
+    <update id="updateMemberContact" parameterType="map">
+        update reversion_member_contact_info set
+
+        <if test="member_name_id !=null">
+            member_name_id = #{member_name_id},
+        </if>
+        <if test="member_name !=null">
+            member_name = #{member_name},
+        </if>
+        <if test="member_abbreviation !=null">
+            member_abbreviation = #{member_abbreviation},
+        </if>
+        <if test="contact_name !=null">
+            contact_name = #{contact_name},
+        </if>
+        <if test="card !=null">
+            card = #{card},
+        </if>
+        <if test="seat_phone !=null">
+            seat_phone = #{seat_phone},
+        </if>
+        <if test="phone !=null">
+            phone = #{phone},
+        </if>
+        <if test="qq_number !=null">
+            qq_number = #{qq_number},
+        </if>
+        <if test="wechat_number !=null">
+            wechat_number = #{wechat_number},
+        </if>
+        <if test="email !=null">
+            email = #{email},
+        </if>
+        <if test="website_url !=null">
+            website_url = #{website_url},
+        </if>
+        <if test="postal_code !=null">
+            postal_code = #{postal_code},
+        </if>
+        <if test="image !=null">
+            image = #{image},
+        </if>
+        <if test="image_status !=null">
+            image_status = #{image_status},
+        </if>
+        <if test="location !=null">
+            location = #{location},
+        </if>
+        <if test="locationId !=null">
+            location_id = #{locationId},
+        </if>
+
+        <if test="location_status !=null">
+            location_status = #{location_status},
+        </if>
+        <if test="address !=null">
+            address = #{address},
+        </if>
+        <if test="house_number !=null">
+            house_number = #{house_number},
+        </if>
+        <if test="address_status !=null">
+            address_status = #{address_status},
+        </if>
+        <if test="longitude !=null">
+            longitude = #{longitude},
+        </if>
+        <if test="latitude !=null">
+            latitude = #{latitude},
+        </if>
+        <if test="qr_code_contact_http !=null">
+            qr_code_contact_http = #{qr_code_contact_http},
+        </if>
+        <if test="qr_code_user_http !=null">
+            qr_code_user_http = #{qr_code_user_http},
+        </if>
+        <if test="templateId !=null">
+            template_id = #{templateId},
+        </if>
+        <if test="isProxy !=null">
+            is_proxy = #{isProxy},
+        </if>
+        status = #{status}
+        where member_contact_info_id = #{member_contact_info_id}
+    </update>
+
+    <insert id="saveMemberContact" parameterType="map">
+
+      insert into reversion_member_contact_info
+      (
+          member_contact_info_id,
+          user_id,
+          member_name_id,
+          member_name,
+          member_abbreviation,
+          contact_name,
+          card,
+          seat_phone,
+          phone,
+          qq_number,
+          wechat_number,
+          email,
+          website_url,
+          postal_code,
+          image,
+          image_status,
+          location,
+          location_id,
+          location_status,
+          address,
+          house_number,
+          address_status,
+          longitude,
+          latitude,
+          qr_code_contact_http,
+          qr_code_user_http,
+          status,
+          template_id,
+          create_time,
+          is_proxy
+      )values(
+          #{member_contact_info_id},
+          #{user_id},
+          #{member_name_id},
+          #{member_name},
+          #{member_abbreviation},
+          #{contact_name},
+          #{card},
+          #{seat_phone},
+          #{phone},
+          #{qq_number},
+          #{wechat_number},
+          #{email},
+          #{website_url},
+          #{postal_code},
+          #{image},
+          #{image_status},
+          #{location},
+          #{locationId},
+          #{location_status},
+          #{address},
+          #{house_number},
+          #{address_status},
+          #{longitude},
+          #{latitude},
+          #{qr_code_contact_http},
+          #{qr_code_user_http},
+          #{status},
+          #{templateId},
+          now(),
+          #{isProxy}
+      );
+    </insert>
+
+
+    <delete id="deleteMemberContact" parameterType="map">
+        delete from reversion_member_contact_info where member_contact_info_id = #{member_contact_info_id}
+    </delete>
+
+
+    <!-- 法人/个人身份 -->
+    <select id="findMemberIdentity" parameterType="map" resultType="map">
+        select
+            member_identity_info_id,
+            user_id,
+            member_name_id,
+            member_name,
+            member_abbreviation,
+            sex,
+            name,
+            phone,
+            card,
+            job,
+            job_title,
+            duty,
+            email,
+            card_image,
+            status,
+            template_id as templateId,
+            DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time
+        from reversion_member_identity_info where 1=1
+        <!-- 如果isProxy为1，则表示账号为被代理的账号 -->
+        <choose>
+            <when test='isProxy == "0" || isProxy == "1"'>
+                and is_proxy = 1
+            </when>
+            <otherwise>
+                <if test="templateId!=null and templateId !=''">
+                    and template_id = #{templateId}
+                </if>
+            </otherwise>
+        </choose>
+        <if test="user_id!=null and user_id !=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="member_identity_info_id!=null and member_identity_info_id !=''">
+            and member_identity_info_id = #{member_identity_info_id}
+        </if>
+        order by create_time desc
+    </select>
+
+    <update id="updateMemberIdentity" parameterType="map">
+        update reversion_member_identity_info set
+
+        <if test="member_name_id !=null">
+            member_name_id = #{member_name_id},
+        </if>
+        <if test="member_name !=null">
+            member_name = #{member_name},
+        </if>
+        <if test="member_abbreviation !=null">
+            member_abbreviation = #{member_abbreviation},
+        </if>
+        <if test="name !=null">
+            name = #{name},
+        </if>
+        <if test="sex !=null">
+            sex = #{sex},
+        </if>
+        <if test="phone !=null">
+            phone = #{phone},
+        </if>
+        <if test="card !=null">
+            card = #{card},
+        </if>
+        <if test="job !=null">
+            job = #{job},
+        </if>
+        <if test="job_title !=null">
+            job_title = #{job_title},
+        </if>
+        <if test="duty !=null">
+            duty = #{duty},
+        </if>
+        <if test="email !=null">
+            email = #{email},
+        </if>
+        <if test="card_image !=null">
+            card_image = #{card_image},
+        </if>
+        <if test="templateId !=null">
+            template_id = #{templateId},
+        </if>
+        <if test="isProxy !=null">
+            is_proxy = #{isProxy},
+        </if>
+        status = #{status}
+        where member_identity_info_id = #{member_identity_info_id}
+    </update>
+
+
+    <insert id="saveMemberIdentity" parameterType="map">
+         insert into reversion_member_identity_info
+          (
+              member_identity_info_id,
+              user_id,
+              member_name_id,
+              member_name,
+              member_abbreviation,
+              name,
+              sex,
+              phone,
+              card,
+              job,
+              job_title,
+              duty,
+              email,
+              card_image,
+              status,
+              template_id,
+              create_time,
+              is_proxy
+          )values(
+              #{member_identity_info_id},
+              #{user_id},
+              #{member_name_id},
+              #{member_name},
+              #{member_abbreviation},
+              #{name},
+              #{sex},
+              #{phone},
+              #{card},
+              #{job},
+              #{job_title},
+              #{duty},
+              #{email},
+              #{card_image},
+              #{status},
+              #{templateId},
+              now(),
+              #{isProxy}
+          );
+
+    </insert>
+
+    <delete id="deleteMemberIdentity" parameterType="map">
+        delete from reversion_member_identity_info where member_identity_info_id = #{member_identity_info_id}
+    </delete>
+
+
+    <!-- 法人/个人身份（管理员） -->
+    <select id="findMemberAdministrator" parameterType="map" resultType="map">
+        select
+        member_administrator_info_id,
+        user_id,
+        member_name_id,
+        member_name,
+        member_abbreviation,
+        name,
+        sex,
+        phone,
+        card,
+        job,
+        job_title,
+        duty,
+        card_image,
+        empower_image,
+        status,
+        template_id as templateId,
+        email,
+        DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time
+        from reversion_member_administrator_info where 1=1
+        <!-- 如果isProxy为1，则表示账号为被代理的账号 -->
+        <choose>
+            <when test='isProxy == "0" || isProxy == "1"'>
+                and is_proxy = 1
+            </when>
+            <otherwise>
+                <if test="templateId!=null and templateId !=''">
+                    and template_id = #{templateId}
+                </if>
+            </otherwise>
+        </choose>
+        <if test="user_id!=null and user_id !=''">
+            and user_id = #{user_id}
+        </if>
+        <if test="member_name_id!=null and member_name_id !=''">
+            and member_name_id = #{member_name_id}
+        </if>
+        order by create_time desc
+    </select>
+
+    <select id="findMemberAdministratorOfByIdentity" parameterType="map" resultType="map">
+        select
+            member_identity_info_id,
+            user_id,
+            member_name,
+            member_abbreviation
+        from reversion_member_identity_info where user_id = #{user_id}
+        <choose>
+            <when test='isProxy == "0" || isProxy == "1"'>
+                and is_proxy = 1
+            </when>
+            <otherwise>
+                <if test="templateId!=null and templateId !=''">
+                    and template_id = #{templateId}
+                </if>
+            </otherwise>
+        </choose>
+        order by create_time desc
+    </select>
+
+    <update id="updateMemberAdministrator" parameterType="map">
+        update reversion_member_administrator_info set
+        <if test="member_name_id !=null">
+            member_name_id = #{member_name_id},
+        </if>
+        <if test="member_name !=null">
+            member_name = #{member_name},
+        </if>
+        <if test="member_abbreviation !=null">
+            member_abbreviation = #{member_abbreviation},
+        </if>
+        <if test="name !=null">
+            name = #{name},
+        </if>
+        <if test="sex !=null">
+            sex = #{sex},
+        </if>
+        <if test="phone !=null">
+            phone = #{phone},
+        </if>
+        <if test="card !=null">
+            card = #{card},
+        </if>
+        <if test="job !=null">
+            job = #{job},
+        </if>
+        <if test="job_title !=null">
+            job_title = #{job_title},
+        </if>
+        <if test="duty !=null">
+            duty = #{duty},
+        </if>
+        <if test="card_image !=null">
+            card_image = #{card_image},
+        </if>
+        <if test="empower_image !=null">
+            empower_image = #{empower_image},
+        </if>
+        <if test="templateId !=null">
+            template_id = #{templateId},
+        </if>
+        <if test="email !=null">
+            email = #{email},
+        </if>
+        <if test="isProxy !=null">
+            is_proxy = #{isProxy},
+        </if>
+        status = #{status}
+        where member_administrator_info_id = #{member_administrator_info_id}
+    </update>
+
+
+    <insert id="saveMemberAdministrator" parameterType="map">
+         insert into reversion_member_administrator_info
+          (
+              member_administrator_info_id,
+              user_id,
+              member_name_id,
+              member_name,
+              member_abbreviation,
+              name,
+              sex,
+              phone,
+              card,
+              job,
+              job_title,
+              duty,
+              card_image,
+              empower_image,
+              email,
+              status,
+              template_id,
+              create_time,
+              is_proxy
+          )values(
+              #{member_administrator_info_id},
+              #{user_id},
+              #{member_name_id},
+              #{member_name},
+              #{member_abbreviation},
+              #{name},
+              #{sex},
+              #{phone},
+              #{card},
+              #{job},
+              #{job_title},
+              #{duty},
+              #{card_image},
+              #{empower_image},
+              #{email},
+              #{status},
+              #{templateId},
+              now(),
+              #{isProxy}
+          );
+
+    </insert>
+
+    <delete id="deleteMemberAdministrator" parameterType="map">
+        delete from reversion_member_administrator_info where member_administrator_info_id = #{member_administrator_info_id}
+    </delete>
+
+    <select id="neighborList" parameterType="map" resultType="map">
+        select a.account, a.location
+        FROM reversion_user_official_info a left join reversion_user_template_manage b
+        on (a.account = b.account and a.template_id = b.template_id)
+        WHERE a.account != #{account} and a.location_id like concat(concat('%', #{upAddr},'%'))
+        and a.location_id not like concat(concat('%', #{thisAddr},'%'))
+        and b.status = 1 and a.status = 1
+    </select>
+
+    <select id="getMemberType" parameterType="map" resultType="map">
+        select id as value,type_name as label from member_type where parent_id = #{pid}
+
+    </select>
+</mapper>

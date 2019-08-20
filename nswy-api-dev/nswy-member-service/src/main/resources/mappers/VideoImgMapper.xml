@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.VideoImgMapper" >
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.VideoImg" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="relative_id" property="relativeId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+      <result column="type" property="type" jdbcType="INTEGER" />
+      <result column="column" property="column" jdbcType="VARCHAR" />
+    <result column="media_name" property="mediaName" jdbcType="VARCHAR" />
+    <result column="music_size" property="musicSize" jdbcType="VARCHAR" />
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, account, addr, `describe`, relative_id, create_time, update_time,`type`,`column`,media_name,music_size
+  </sql>
+  <select id="selectByAccount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select addr
+    from video_img
+    where account=#{account,jdbcType=VARCHAR} and `column` =#{column}
+  </select>
+    <select id="selectByRelativeId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+        select
+        <include refid="Base_Column_List" />
+        from video_img
+        where relative_id = #{relativeId,jdbcType=INTEGER}
+        <!--<if test="account !=null">
+            AND account=#{account,jdbcType=VARCHAR}
+        </if>-->
+         and `column` = #{column,jdbcType=VARCHAR}
+    </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from video_img
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByAccount" parameterType="com.ovit.nswy.member.mapper.VideoImgMapper" >
+        delete from video_img
+        where account = #{account,jdbcType=VARCHAR}
+    </delete>
+  <insert id="insert" parameterType="java.util.List" >
+    insert into video_img (id, account, addr, 
+      `describe`, relative_id, create_time,update_time,`type`,`column`, media_name,music_size
+      )
+      values
+      <foreach collection="list" item="item" index="index"
+               separator=",">
+          (#{item.id},#{item.account},#{item.addr},#{item.describe},#{item.relativeId},now(),now(),#{item.type},#{item.column},#{item.mediaName},#{item.musicSize})
+      </foreach>
+  </insert>
+
+  <update id="update" parameterType="com.ovit.nswy.member.model.VideoImg" >
+    update video_img
+    set account = #{account,jdbcType=VARCHAR},
+      addr = #{addr,jdbcType=VARCHAR},
+      describe = #{describe,jdbcType=VARCHAR},
+      relative_id = #{relativeId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <insert id="saveHonorAptitude" parameterType="map">
+    INSERT INTO video_img(account, addr, create_time,`type`,`column`) VALUES (
+        #{account},#{addr},NOW(),#{type},#{column}
+    )
+  </insert>
+</mapper>

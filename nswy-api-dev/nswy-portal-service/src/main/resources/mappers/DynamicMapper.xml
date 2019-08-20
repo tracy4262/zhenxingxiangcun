@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.DynamicMapper">
+    <select id="queryDynamicInfo" parameterType="map" resultType="map">
+        SELECT
+            t1.id,
+            t1.information_detail_id AS informationDetailId,
+            t1.title,
+            t1.column_type AS columnType,
+            IFNULL(t1.image_add,"") AS image,
+            IFNULL(t1.abstracts,"") AS abstracts,
+            t1.classified_id AS classifiedId,
+            CASE t1.doc_type
+            WHEN '020101' THEN '行业动态'
+            WHEN '020102' THEN '企业动态'
+            WHEN '020103' THEN '专家动态'
+            WHEN '020104' THEN '乡村动态'
+            WHEN '020105' THEN '群协动态'
+            WHEN '020106' THEN '国际动态'
+            WHEN '020107' THEN '会员动态'
+            WHEN '020108' THEN '城乡互动'
+            END AS docType,
+            t1.create_time AS createTime
+        FROM
+            information t1
+        LEFT JOIN
+            information_detail t2
+        ON
+            t1.information_detail_id = t2.id
+        WHERE
+            t2.account =  #{loginAccount}
+        /*AND t1.approve_status = "2"*/
+        <if test="docType != null and docType != ''">
+            AND t1.doc_type = #{docType}
+        </if>
+        <if test="label != null and label != ''">
+            AND t1.label = #{label}
+        </if>
+        ORDER BY t1.create_time DESC
+    </select>
+</mapper>

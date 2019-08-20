@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: nswy-member-service
+  cloud:
+    config:
+      enabled: true
+      uri: http://${http.config.uri}:8888
+      profile: ${http.config.profile}
+
+http:
+ config:
+   uri: 127.0.0.1
+   profile: prod
+
+info:
+  app:
+    name: "nswy-member-service"
+    description: "农事无忧主页管理"
+    version: "1.0-SNAPSHOT"
+    spring-boot-version: "1.0-SNAPSHOT"

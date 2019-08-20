@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    default:
+      name: test_mysql
+      url: jdbc:mysql://127.0.0.1:3306/relationship?useUnicode=true&characterEncoding=UTF-8
+      username: relationship
+      password: 1234
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      filters: stat
+      maxActive: 20
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+
+  redis:
+    host: 47.92.108.227
+    password: 123456
+    port: 6379
+    database: 0
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 20000
+      min-idle: 0
+  timeout: 10000
+
+
+
+springfox:
+  name: 武汉光谷信息技术股份有限公司
+  title: 关系圈在线文档
+  description: 关系圈相关接口文档
+
+feign:
+  client:
+    url: http://127.0.0.1:8089
+
+http:
+  live:
+    url: https://192.168.7.42:20003

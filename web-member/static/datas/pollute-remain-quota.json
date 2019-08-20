@@ -1,0 +1,14 @@
+{
+    "code": 200,
+    "msg": "请求成功",
+    "data": [
+        {"name":"铅（以Pb计）","consult":"0.1","value":""},
+        {"name":"汞（以Hg计）","consult":"0.01","value":""},
+        {"name":"氟（以F计）","consult":"0.5","value":""},
+        {"name":"砷（以As计）","consult":"0.5","value":""},
+        {"name":"铜（以Cu计）","consult":"10","value":""},
+        {"name":"氟（以F计）","consult":"0.5","value":""},
+        {"name":"镉（以Cd计）","consult":"0.03","value":""}
+        
+        ]
+}

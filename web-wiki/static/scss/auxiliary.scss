@@ -1,0 +1,89 @@
+
+//辅助类
+//-----------------------------------------------------
+
+//对齐方式
+.tl{text-align:left!important;}
+.tr{text-align:right!important;}
+.tc{text-align:center!important;}
+.tj{text-align:justify;}
+.tn{white-space:nowrap;}
+.b{font-weight:700;}
+
+//文本颜色
+//-----------------------------------------------------
+@each $txt-name, $text-color in $map-colors{
+  .t-#{$txt-name}{
+    color:nth($text-color,2) !important;
+  }
+}
+
+//背景颜色
+//-----------------------------------------------------
+@each $bg-name, $bg-color in $map-colors{
+  .bg-#{$bg-name}{
+    background-color: nth($bg-color,2) !important;
+    &,a{color:nth($bg-color,1);}
+    @if $bg-name == 'white' {
+      background-color: $white !important;
+      &,a{color:$font-color;}
+    }
+  }
+
+}
+
+//填充边距方法
+//-----------------------------------------------------
+@mixin padding-margin($className,$attr){
+  @each $i in $list-padding-margin {
+    .#{$className}#{$i}{
+      #{$attr}:($i) * 1px !important;
+    }
+  }
+}
+//默认填充
+//-----------------------------------------------------
+@include padding-margin(pd,padding);
+@include padding-margin(pt,padding-top);
+@include padding-margin(pr,padding-right);
+@include padding-margin(pb,padding-bottom);
+@include padding-margin(pl,padding-left);
+
+//默认边距
+//-----------------------------------------------------
+@include padding-margin(mt,margin-top);
+@include padding-margin(mr,margin-right);
+@include padding-margin(mb,margin-bottom);
+@include padding-margin(ml,margin-left);
+
+
+
+//浮动
+//-----------------------------------------------------
+.clear{
+  &:before,
+  &:after {
+    display: table;
+  }
+  &:after {
+    content:"";
+    clear: both;
+  }
+}
+.fl,.fr{display:inline}
+.fr{float:right;}
+.fl{float:left;}
+
+.pr{position: relative;}
+.pa{position: absolute;}
+//单行文字溢出省略号
+//-----------------------------------------------------
+.ell {
+  @include ell()
+}
+.ell-2{
+  @include ell(true, 2, vertical)
+}
+.ell-3{
+  @include ell(true, 3, vertical)
+}

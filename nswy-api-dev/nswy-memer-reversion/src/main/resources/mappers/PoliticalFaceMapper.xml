@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.PoliticalFaceMapper">
+
+    <select id="findPoliticalFace" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            id,
+            account,
+            political_name,
+
+            political_face_model,
+
+            join_time_model,
+            year_id,
+            status,
+            template_id as templateId
+        FROM political_face
+        where 1=1
+        <if test="user_id!=null and user_id!=''">
+            and account  = #{user_id}
+        </if>
+        <if test="year_id!=null and year_id!=''">
+            and year_id  = #{year_id}
+        </if>
+        <if test="templateId!=null and templateId!=''">
+            and template_id  = #{templateId}
+        </if>
+        order  by update_time desc
+    </select>
+
+
+    <update id="updatePoliticalFaceName" parameterType="map">
+        update political_face set political_name = #{propertyName} where account = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="savePoliticalFace" parameterType="map">
+        replace into political_face (
+                id,
+                account,
+                political_name,
+                political_face_model,
+                join_time_model,
+                year_id,
+                template_id,
+                status
+
+          )values (
+                #{id},
+                #{user_id},
+                #{political_name},
+                #{political_face_model},
+                #{join_time_model},
+                #{year_id},
+                #{templateId},
+                #{status}
+          )
+    </insert>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryColumnDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryColumn"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryColumn">
+        select
+               p.id,
+        p.label as name,
+        p.parent_id as pid,
+        p.value
+        from column_dict p left join column_dict i on p.parent_id = i.id
+        where 1=1
+        <if test="name!=null and name!=''">
+            and p.label like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+    </select>
+
+    <insert id="saveColumn" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryColumn">
+        insert into column_dict(
+            label,
+            parent_id,
+            value
+        )values (
+                    #{name},
+                    #{pid},
+                    #{value}
+                );
+    </insert>
+
+    <update id="updateColumn" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryColumn">
+        update column_dict
+        set
+            label = #{name},
+            value = #{value}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteColumn" parameterType="java.lang.String">
+        delete from column_dict where id= #{id}
+    </delete>
+
+</mapper>

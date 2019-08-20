@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.EducationLiveMapper">
+
+    <select id="findEducationLive" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            e.id,
+            e.account,
+            e.education_live_name,
+            e.school_model,
+            e.school_name,
+            e.school_name_status,
+            e.education_model,
+            e.education,
+            e.education_status,
+            e.major_model,
+            e.major,
+            e.major_status,
+            e.is_general_model,
+            e.is_general,
+            e.is_general_status,
+            e.entrance_graduation_time_model,
+            e.entrance_graduation_time,
+            e.entrance_graduation_time_status,
+            e.status,
+            e.year_id,
+            e.template_id as templateId
+
+        FROM educational_experience e
+        where 1=1
+        <if test="user_id!=null and user_id!=''">
+            and e.account  = #{user_id}
+        </if>
+        <if test="year_id!=null and year_id!=''">
+            and e.year_id  = #{year_id}
+        </if>
+        <if test="templateId!=null and templateId!=''">
+            and e.template_id  = #{templateId}
+        </if>
+        order  by e.update_time desc
+    </select>
+
+    <update id="updateEducationalLiveName" parameterType="map">
+        update educational_experience set education_live_name = #{propertyName} where account = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="insertEducational" parameterType="java.util.Map">
+        replace into educational_experience (
+            id,
+            account,
+            education_live_name,
+            school_model,
+            school_name,
+            school_name_status,
+            education_model,
+            education,
+            education_status,
+            major_model,
+            major,
+            major_status,
+            is_general_model,
+            is_general,
+            is_general_status,
+            entrance_graduation_time_model,
+            entrance_graduation_time,
+            entrance_graduation_time_status,
+            status,
+            year_id,
+            template_id
+        ) values (
+            #{id},
+            #{user_id},
+            #{education_live_name},
+            #{school_model},
+            #{school_name},
+            #{school_name_status},
+            #{education_model},
+            #{education},
+            #{education_status},
+            #{major_model},
+            #{major},
+            #{major_status},
+            #{is_general_model},
+            #{is_general},
+            #{is_general_status},
+            #{entrance_graduation_time_model},
+            #{entrance_graduation_time},
+            #{entrance_graduation_time_status},
+            #{status},
+            #{year_id},
+            #{templateId}
+
+        );
+    </insert>
+
+    <delete id="deleteEducationalExperience" parameterType="map">
+        delete from educational_experience where id = #{id}
+    </delete>
+
+</mapper>

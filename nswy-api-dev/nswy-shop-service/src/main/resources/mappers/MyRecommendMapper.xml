@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.shop.pushTemplate.mapper.MyRecommendMapper">
+    
+    <select id="isHadRecommend" parameterType="map" resultType="map">
+        select id, account, type, service_id from recommend_application_info
+        where account = #{account} and type = #{type} and service_id = #{id}
+    </select>
+
+    <insert id="singleSaveRecommend" parameterType="map">
+        INSERT INTO recommend_application_info (
+        account,
+        `type`,
+        service_id
+        ) VALUES
+        (
+        #{account},
+        #{type},
+        #{id}
+        )
+    </insert>
+
+</mapper>

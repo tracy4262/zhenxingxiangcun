@@ -1,0 +1,64 @@
+spring:
+  output:
+      ansi:
+        #DETECT：会检查终端是否支持ANSI，是的话就采用彩色输出（推荐项）
+        enabled: detect
+  profiles:
+      active: t
+  #cloud:
+    #config:
+      #name: provider
+      #profile: t
+      #label: master
+      #discovery:
+        #enabled: true
+        #service-id: mas-config-server
+
+server:
+    port: 8081
+
+management:
+  port: 9081
+  security:
+    enabled: false
+  address: 127.0.0.1
+  context-path: /manage
+
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8080/eureka/
+#  instance:
+#    #eureka client发送心跳给server端的频率 默认30s
+#    lease-renewal-interval-in-seconds: 10
+#    #等待下一次心跳的超时时间 在leaseExpirationDurationInSeconds后，server端没有收到client的心跳，则将摘除该instance
+#    lease-expiration-duration-in-seconds: 30
+#    #动态赋值
+#    ip-address: 192.168.13.114
+#    prefer-ip-address: true
+#
+#feign:
+#  hystrix:
+#    enabled: true
+#hystrix:
+#  #threadpool.default.coreSize: 100
+#  #threadpool.default.maximumSize: 200
+#  #threadpool.default.maxQueueSize: 5000
+#  #threadpool.default.allowMaximumSizeToDivergeFromCoreSize: true
+#  command:
+#    default:
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 10000
+
+banner:
+  charset: utf-8
+  location: banner.txt
+
+logging:
+  config: classpath:log4j2.xml
+
+endpoints:
+  shutdown:
+    enabled: true

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.SystemDictMapper" >
+    <select id="querySystemDict" parameterType="map" resultType="com.ovit.nswy.member.model.SysDict">
+        SELECT
+            t1.dict_value AS value,
+            t1.dict_name AS label
+        FROM
+            system_dict t1
+        LEFT JOIN
+            system_dict_type t2
+        ON
+            t1.dict_type = t2.type_id
+        WHERE
+            t2.type_name = #{typeName}
+        <if test="dictName != null and dictName != ''">
+            AND t1.dict_name LIKE CONCAT("%",#{dictName},"%")
+        </if>
+        <if test="character != null and character != ''">
+            AND pinyin LIKE CONCAT(#{character},"%")
+        </if>
+    </select>
+
+    <select id="queryName" parameterType="map" resultType="map">
+        SELECT dict_name AS dictName FROM system_dict
+    </select>
+
+    <update id="setPinyin" parameterType="map">
+        UPDATE system_dict SET pinyin = #{pinyin} WHERE dict_name = #{dictName}
+    </update>
+
+
+    <insert id="insertServise" parameterType="java.util.Map">
+        insert into system_dict(
+        dict_id,dict_type,dict_value,dict_name,pinyin,create_time
+        )value (
+          #{dict_id}, #{dict_type}, #{dict_value}, #{dict_name}, #{pinyin}, now()
+
+        )
+    </insert>
+    <insert id="insert" parameterType="map">
+        INSERT INTO system_dict_1 (
+            dict_id,parent_id,dict_type,dict_value,dict_name,pinyin,order_no,remark,create_time,update_time
+        ) VALUES (
+            #{dictId},#{parentId},#{dictType},#{dictValue},#{dictName},#{pinyin},#{orderNum},#{remark},NOW(),NOW()
+        )
+    </insert>
+    <insert id="saveSystemDictType" parameterType="map">
+        INSERT INTO system_dict_type (type_id,type_name,create_time,update_time) VALUES (
+          #{dictType},#{remark},NOW(),NOW()
+        )
+    </insert>
+    <select id="queryByDictValue" parameterType="map" resultType="map">
+        SELECT dict_name AS dictName FROM system_dict WHERE dict_id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="querySystemDictNextByParentId" parameterType="java.lang.String" resultType="com.ovit.nswy.member.model.Town">
+        SELECT
+            dict_id AS id,dict_name AS name,parent_id AS parentId
+        FROM system_dict
+        WHERE parent_id = #{parentId}
+    </select>
+    <select id="findAllSystemDict" resultType="com.ovit.nswy.member.model.Town" >
+        SELECT
+            t1.dict_id AS id,
+            t1.dict_name AS name,
+            t1.parent_id AS parentId
+        FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id WHERE t2.type_name = "机关类型"
+    </select>
+</mapper>

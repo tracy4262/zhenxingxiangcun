@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.NameLibraryMapper">
+    
+    <select id="findWikiConllectionList" parameterType="map" resultType="map">
+        select
+          id,
+          account,
+          species_id as libraryId,
+          species_name as name,
+          species_image as image,
+          species_class as classId,
+          species_class_name as className,
+          index_id as indexid
+        from reversion_name_library_collection_wiki_info
+
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="libraryId !=null and libraryId!=''">
+            and species_id = #{libraryId}
+        </if>
+        <if test="keyword !=null and keyword!=''">
+            and species_name like concat('%',#{keyword},'%')
+        </if>
+        <if test="classId !=null and classId!=''">
+            and species_class = #{classId}
+        </if>
+        <if test="className !=null and className!=''">
+            and species_class_name like concat('%',#{className},'%')
+        </if>
+        order  by create_time desc
+    </select>
+
+    <insert id="saveWikiLibraryInfo" parameterType="map">
+        insert into reversion_name_library_collection_wiki_info (
+          account,
+          species_id,
+          species_name,
+          species_image,
+          species_class,
+          species_class_name,
+          index_id,
+          create_time
+        )values (
+          #{account},
+          #{libraryId},
+          #{name},
+          #{image},
+          #{classId},
+          #{className},
+          #{indexid},
+          now()
+
+        );
+    </insert>
+
+
+
+    <delete id="deleteWikiLibraryInfo" parameterType="map">
+        delete from reversion_name_library_collection_wiki_info where id = #{id}
+    </delete>
+
+    <select id="findVarietyList" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        variety_id as libraryId,
+        variety_name as name,
+        variety_image as image,
+        species_id as classId,
+
+        index_id as indexid
+        from reversion_name_library_collection_variety_info
+
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="libraryId !=null and libraryId!=''">
+            and variety_id = #{libraryId}
+        </if>
+        <if test="keyword !=null and keyword!=''">
+            and variety_name like concat('%',#{keyword},'%')
+        </if>
+        order  by create_time desc
+    </select>
+
+    <insert id="saveVarietyLibraryInfo" parameterType="map">
+        insert into reversion_name_library_collection_variety_info (
+          account,
+          variety_id,
+          variety_name,
+          variety_image,
+          species_id,
+          index_id,
+          create_time
+        )values (
+          #{account},
+          #{libraryId},
+          #{name},
+          #{image},
+          #{classId},
+          #{indexid},
+          now()
+
+        );
+    </insert>
+
+    <delete id="deleteVarietyLibraryInfo" parameterType="map">
+        delete from reversion_name_library_collection_variety_info where id = #{id}
+    </delete>
+
+    <select id="findDiseaseList" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        disease_id as libraryId,
+        disease_name as name,
+        disease_image as image,
+        species_id as classId,
+
+        index_id as indexid
+        from reversion_name_library_collection_disease_info
+
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="libraryId !=null and libraryId!=''">
+            and disease_id = #{libraryId}
+        </if>
+
+        <if test="keyword !=null and keyword!=''">
+            and disease_name like concat('%',#{keyword},'%')
+        </if>
+        order  by create_time desc
+    </select>
+
+    <insert id="saveDiseaseLibraryInfo" parameterType="map">
+        insert into reversion_name_library_collection_disease_info (
+          account,
+          disease_id,
+          disease_name,
+          disease_image,
+          species_id,
+          index_id,
+          create_time
+        )values (
+          #{account},
+          #{libraryId},
+          #{name},
+          #{image},
+          #{classId},
+          #{indexid},
+          now()
+
+        );
+    </insert>
+
+    <delete id="deleteDiseaseLibraryInfo" parameterType="map">
+        delete from reversion_name_library_collection_disease_info where id = #{id}
+    </delete>
+
+
+    <select id="findPestList" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        pest_id as libraryId,
+        pest_name as name,
+        pest_image as image,
+        species_id as classId,
+
+        index_id as indexid
+        from reversion_name_library_collection_pest_info
+
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="libraryId !=null and libraryId!=''">
+            and pest_id = #{libraryId}
+        </if>
+
+        <if test="keyword !=null and keyword!=''">
+            and pest_name like concat('%',#{keyword},'%')
+        </if>
+        order  by create_time desc
+    </select>
+
+    <insert id="savePestLibraryInfo" parameterType="map">
+        insert into reversion_name_library_collection_pest_info (
+          account,
+          pest_id,
+          pest_name,
+          pest_image,
+          species_id,
+          index_id,
+          create_time
+        )values (
+          #{account},
+          #{libraryId},
+          #{name},
+          #{image},
+          #{classId},
+          #{indexid},
+          now()
+
+        );
+    </insert>
+
+    <delete id="deletePestLibraryInfo" parameterType="map">
+        delete from reversion_name_library_collection_pest_info where id = #{id}
+    </delete>
+
+
+    <select id="findCurrencyCommodityList" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        commodity_id as commodityId,
+        commodity_name as commodityName,
+        industry_type_id as industryId,
+        product_type_id as productId,
+        species_id as classId,
+        image
+        from reversion_name_library_currency_commodity_info
+
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="classId !=null and classId!=''">
+            and species_id = #{classId}
+        </if>
+
+        <if test="commodityName !=null and commodityName!=''">
+            and commodity_name like concat('%',#{commodityName},'%')
+        </if>
+        <if test="industryId !=null and industryId!=''">
+            and industry_type_id = #{industryId}
+        </if>
+        <if test="productId !=null and productId!=''">
+            and product_type_id = #{productId}
+        </if>
+        order  by create_time desc
+    </select>
+
+    <insert id="saveCurrencyCommodityInfo" parameterType="map">
+        insert into reversion_name_library_currency_commodity_info (
+          account,
+          commodity_id,
+          commodity_name,
+          industry_type_id,
+          species_id,
+          product_type_id,
+          image,
+          create_time
+        )values (
+          #{account},
+          #{commodityId},
+          #{commodityName},
+          #{industryId},
+          #{classId},
+          #{productId},
+          #{image},
+          now()
+
+        );
+    </insert>
+
+    <delete id="deleteCurrencyCommodityLibraryInfo" parameterType="map">
+        delete from reversion_name_library_currency_commodity_info where id = #{id}
+    </delete>
+    
+    <select id="findShopCurrencyCommodity" parameterType="map" resultType="map">
+        SELECT
+          id AS fid,
+          currency_commodity_name AS fname,
+          currency_commodity_pinyin as pinyin,
+          industry_type_id as industryId,
+          product_type_id as productId,
+          related_species_id as classId,
+          service_class_id as serviceClassId,
+          service_people_name as servicePeopleName,
+          case when image is null then '' else image end as image
+            <if test="account!=null and account!=''">
+              ,case when account=#{account} then 0 else 1 end flag
+           </if>
+
+        FROM shop_currency_commodity
+        where 1=1
+        <if test="type!=null and type!=''">
+            <if test='type == "1"'>
+                AND (type = 1 OR type = 3)
+            </if>
+            <if test='type == "2"'>
+                AND type = 2
+            </if>
+        </if>
+        <if test="fpinyin!=null and fpinyin!=''">
+           and currency_commodity_pinyin like concat('%',#{fpinyin},'%')
+        </if>
+        <if test="keywords!=null and keywords!=''">
+           and currency_commodity_name like concat('%',#{keywords},'%')
+        </if>
+        <if test="account!=null and account!=''">
+            order by flag
+        </if>
+
+    </select>
+
+
+
+    <select id="findCurrencyServiceList" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        service_id as serviceId,
+        service_name as serviceName,
+        industry_type_id as industryId,
+        product_type_id as productId,
+        species_id as classId,
+        image,
+        service_id as leftServiceId,
+        service_class_id as serviceClassId,
+        service_people_name as servicePeopleName
+
+        from reversion_name_library_currency_service_info
+
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="classId !=null and classId!=''">
+            and species_id = #{classId}
+        </if>
+        <if test="serviceClassId !=null and serviceClassId!=''">
+            and service_class_id = #{serviceClassId}
+        </if>
+
+        <if test="serviceName !=null and serviceName!=''">
+            and service_name like concat('%',#{serviceName},'%')
+        </if>
+        <if test="industryId !=null and industryId!=''">
+            and industry_type_id = #{industryId}
+        </if>
+        <if test="productId !=null and productId!=''">
+            and product_type_id = #{productId}
+        </if>
+        order  by create_time desc
+    </select>
+
+    <insert id="saveCurrencyServiceInfo" parameterType="map">
+        insert into reversion_name_library_currency_service_info (
+          account,
+          service_id,
+          service_name,
+          industry_type_id,
+          species_id,
+          product_type_id,
+          image,
+          left_service_id,
+          service_class_id,
+          service_people_name,
+          create_time
+        )values (
+          #{account},
+          #{serviceId},
+          #{serviceName},
+          #{industryId},
+          #{classId},
+          #{productId},
+          #{image},
+          #{leftServiceId},
+          #{serviceClassId},
+          #{servicePeopleName},
+          now()
+
+        );
+    </insert>
+
+    <delete id="deleteCurrencyServiceLibraryInfo" parameterType="map">
+        delete from reversion_name_library_currency_service_info where id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.userManage.mapper.UserVisitingCardManageMapper">
+
+    <select id="findByLoginUser" parameterType="map" resultType="map">
+        select
+          i.nswy_id_model as nswyId,
+          u.login_account as account,
+          u.login_passwd,
+          u.avatar,
+          c.realname as realName,
+          c.city as location
+
+        from login_user u
+
+        left join network_info i on u.login_account = i.account
+        left join certification c on u.login_account = c.user_account
+
+
+        where u.login_account = #{account}
+    </select>
+    
+    
+    <select id="findRegisterInfoByaccount" parameterType="map" resultType="map">
+        select
+            id,
+            account,
+            account_flag as accountFlag,
+            real_name as realName,
+            real_name_flag as realNameFlag,
+            nswy_id as nswyId,
+            nswy_id_flag as nswyIdFlag,
+            location,
+            location_flag as locationFlag,
+            create_time as createTime,
+            template_id as templateId
+
+        from reversion_register_info where 1=1
+
+        <if test="account !=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="templateId !=null and templateId !=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <insert id="saveRegisterInfo" parameterType="map">
+        insert into reversion_register_info(
+            account,
+            <if test="accountFlag!=null">
+                account_flag,
+            </if>
+            real_name,
+            <if test="realNameFlag!=null">
+                real_name_flag,
+            </if>
+            nswy_id,
+            <if test="nswyIdFlag!=null">
+                nswy_id_flag,
+            </if>
+            location,
+            <if test="locationFlag!=null">
+                location_flag,
+            </if>
+            template_id,
+             create_time
+        ) values (
+            #{account},
+            <if test="accountFlag!=null">
+                #{accountFlag},
+            </if>
+            #{realName},
+            <if test="realNameFlag!=null">
+                #{realNameFlag},
+            </if>
+            #{nswyId},
+            <if test="nswyIdFlag!=null">
+                #{nswyIdFlag},
+            </if>
+            #{location},
+            <if test="locationFlag!=null">
+              #{locationFlag},
+            </if>
+            #{templateId},
+            now()
+        );
+    </insert>
+
+    <update id="updateRegisterInfo" parameterType="map">
+        update reversion_register_info
+        <set>
+            <if test="accountFlag!=null">
+                account_flag = #{accountFlag},
+            </if>
+            <if test="realNameFlag!=null">
+                real_name_flag = #{realNameFlag},
+            </if>
+            <if test="nswyIdFlag!=null">
+                nswy_id_flag = #{nswyIdFlag},
+            </if>
+            <if test="locationFlag!=null">
+                location_flag = #{locationFlag},
+            </if>
+        </set>
+
+        where account = #{account} and template_id = #{templateId}
+    </update>
+
+
+
+    <!-- 会员资质信息-->
+    <select id="findMemberAptitude" parameterType="map" resultType="map">
+        select
+            member_aptitude_real_info_id as id,
+            user_id as account,
+            member_class as memberClass,
+            case when member_class_flag is null then 0 else member_class_flag end
+            as memberClassFlag,
+            member_name as memberName,
+            case when member_name_flag is null then 0 else member_name_flag end
+            as memberNameFlag,
+            member_name_pinyin as memberNamePinyin,
+            case when member_name_pinyin_flag is null then 0 else member_name_pinyin_flag end
+            as memberNamePinyinFlag,
+            member_abbreviation as memberAbbreviation,
+            case when member_abbreviation_flag is null then 0 else member_abbreviation_flag end
+            as memberAbbreviationFlag,
+            abbreviation_pinyin as abbreviationPinyin,
+            case when abbreviation_pinyin_flag is null then 0 else abbreviation_pinyin_flag end
+            as abbreviationPinyinFlag,
+            aptitude_name as aptitudeName,
+            case when aptitude_name_flag is null then 0 else aptitude_name_flag end
+            as aptitudeNameFlag,
+            aptitude_number as aptitudeNumber,
+            case when aptitude_number_flag is null then 0 else aptitude_number_flag end
+            as aptitudeNumberFlag,
+            aptitude_image as aptitudeImage,
+            case when aptitude_image_flag is null then 0 else aptitude_image_flag end
+            as aptitudeImageFlag,
+            remark,
+            case when remark_flag is null then 0 else remark_flag end
+            as remarkFlag,
+            template_id as templateId,
+            DATE_FORMAT(create_time,"%Y-%m-%d %T") as createTime
+        from reversion_member_aptitude_real_info where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+        <if test="templateId!=null and templateId !=''">
+            and template_id = #{templateId}
+        </if>
+        <if test="memberNameId!=null and memberNameId !=''">
+            and member_aptitude_real_info_id = #{memberNameId}
+        </if>
+
+
+        order by create_time desc
+    </select>
+
+    <update id="updateMemberAptitude" parameterType="map">
+        update reversion_member_aptitude_real_info
+        <set>
+            <if test="memberClassFlag !=null">
+                member_class_flag = #{memberClassFlag},
+            </if>
+            <if test="memberNameFlag !=null">
+                member_name_flag = #{memberNameFlag},
+            </if>
+            <if test="memberNamePinyinFlag !=null">
+                member_name_pinyin_flag = #{memberNamePinyinFlag},
+            </if>
+
+            <if test="memberAbbreviationFlag !=null">
+                member_abbreviation_flag = #{memberAbbreviationFlag},
+            </if>
+            <if test="abbreviationPinyinFlag !=null">
+                abbreviation_pinyin_flag = #{abbreviationPinyinFlag},
+            </if>
+            <if test="aptitudeNameFlag !=null">
+                aptitude_name_flag = #{aptitudeNameFlag},
+            </if>
+            <if test="aptitudeNumberFlag !=null">
+                aptitude_number_flag = #{aptitudeNumberFlag},
+            </if>
+            <if test="aptitudeImageFlag !=null">
+                aptitude_image_flag = #{aptitudeImageFlag},
+            </if>
+            <if test="remarkFlag !=null">
+                remark_flag = #{remarkFlag},
+            </if>
+        </set>
+
+        where member_aptitude_real_info_id = #{id}
+    </update>
+
+
+    <!--联系方式-->
+
+    <select id="findMemberContact" parameterType="map" resultType="map">
+        select
+            member_contact_info_id as id,
+            user_id as account,
+            member_name_id as memberNameId,
+            member_name as memberName,
+            case when member_name_flag is null then 0 else member_name_flag end
+            as memberNameFlag,
+            member_abbreviation as memberAbbreviation,
+            case when member_abbreviation_flag is null then 0 else member_abbreviation_flag end
+            as memberAbbreviationFlag,
+            contact_name as contactName,
+            case when contact_name_flag is null then 0 else contact_name_flag end
+            as contactNameFlag,
+            card,
+            case when card_flag is null then 0 else card_flag end
+            as cardFlag,
+            seat_phone as setPhone,
+            case when seat_phone_flag is null then 0 else seat_phone_flag end
+            as setPhoneFlag,
+            phone,
+            case when phone_flag is null then 0 else phone_flag end
+            as phoneFlag,
+            qq_number as qqNumber,
+            case when qq_number_flag is null then 0 else qq_number_flag end
+            as qqNumberFlag,
+            wechat_number as wechatNumber,
+            case when wechat_number_flag is null then 0 else wechat_number_flag end
+            as wechatNumberFlag,
+            email,
+            case when email_flag is null then 0 else email_flag end
+            as emailFlag,
+            website_url as websiteUrl,
+            case when website_url_flag is null then 0 else website_url_flag end
+            as websiteUrlFlag,
+            postal_code as postalCode,
+            case when postal_code_flag is null then 0 else postal_code_flag end
+            as postalCodeFlag,
+            image,
+            case when image_flag is null then 0 else image_flag end
+            as imageFlag,
+            image_status,
+            location,
+            case when location_flag is null then 0 else location_flag end
+            as locationFlag,
+            location_id as locationId,
+            location_status,
+            address,
+            case when address_flag is null then 0 else address_flag end
+            as addressFlag,
+            house_number as houseNumber,
+            case when house_number_flag is null then 0 else house_number_flag end
+            as houseNumberFlag,
+            address_status,
+            longitude,
+            case when longitude_flag is null then 0 else longitude_flag end
+            as longitudeFlag,
+            latitude,
+            case when latitude_flag is null then 0 else latitude_flag end
+            as latitudeFlag,
+            template_id as templateId,
+            DATE_FORMAT(create_time,"%Y-%m-%d %T") as createTime
+        from reversion_member_contact_info where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+        <if test="templateId!=null and templateId !=''">
+            and template_id = #{templateId}
+        </if>
+        <if test="memberNameId!=null and memberNameId !=''">
+            and member_name_id = #{memberNameId}
+        </if>
+
+        order by create_time desc
+    </select>
+
+
+
+    <update id="updateMemberContact" parameterType="map">
+        update reversion_member_contact_info
+          <set>
+              <if test="memberNameFlag !=null">
+                  member_name_flag = #{memberNameFlag},
+              </if>
+              <if test="memberAbbreviationFlag !=null">
+                  member_abbreviation_flag = #{memberAbbreviationFlag},
+              </if>
+              <if test="contactNameFlag !=null">
+                  contact_name_flag = #{contactNameFlag},
+              </if>
+              <if test="cardFlag !=null">
+                  card_flag = #{cardFlag},
+              </if>
+              <if test="setPhoneFlag !=null">
+                  seat_phone_flag = #{setPhoneFlag},
+              </if>
+              <if test="phoneFlag !=null">
+                  phone_flag = #{phoneFlag},
+              </if>
+              <if test="qqNumberFlag !=null">
+                  qq_number_flag = #{qqNumberFlag},
+              </if>
+              <if test="wechatNumberFlag !=null">
+                  wechat_number_flag = #{wechatNumberFlag},
+              </if>
+              <if test="emailFlag !=null">
+                  email_flag = #{emailFlag},
+              </if>
+              <if test="websiteUrlFlag !=null">
+                  website_url_flag = #{websiteUrlFlag},
+              </if>
+              <if test="postalCodeFlag !=null">
+                  postal_code_flag = #{postalCodeFlag},
+              </if>
+              <if test="imageFlag !=null">
+                  image_flag = #{imageFlag},
+              </if>
+
+              <if test="locationFlag !=null">
+                  location_flag = #{locationFlag},
+              </if>
+
+              <if test="addressFlag !=null">
+                  address_flag = #{addressFlag},
+              </if>
+              <if test="houseNumberFlag !=null">
+                  house_number_flag = #{houseNumberFlag},
+              </if>
+
+              <if test="longitudeFlag !=null">
+                  longitude_flag = #{longitudeFlag},
+              </if>
+              <if test="latitudeFlag !=null">
+                  latitude_flag = #{latitudeFlag},
+              </if>
+
+          </set>
+
+        where member_contact_info_id = #{id}
+    </update>
+
+
+    <!-- 法人/个人身份 -->
+    <select id="findMemberIdentity" parameterType="map" resultType="map">
+        select
+            member_identity_info_id as id,
+            user_id as account,
+            member_name_id as memberNameId,
+            member_name as memberName,
+            case when member_name_flag is null then 0 else member_name_flag end
+            as memberNameFlag,
+            member_abbreviation as memberAbbreviation,
+            case when member_abbreviation_flag is null then 0 else member_abbreviation_flag end
+            as memberAbbreviationFlag,
+            name,
+            case when name_flag is null then 0 else name_flag end
+            as nameFlag,
+            sex,
+            case when sex_flag is null then 0 else sex_flag end
+            as sexFlag,
+            phone,
+            case when phone_flag is null then 0 else phone_flag end
+            as phoneFlag,
+            card,
+            case when card_flag is null then 0 else card_flag end
+            as cardFlag,
+            job,
+            case when job_flag is null then 0 else job_flag end
+            as jobFlag,
+            job_title as jobTitle,
+            case when job_title_flag is null then 0 else job_title_flag end
+            as jobTitleFlag,
+            duty,
+            case when duty_flag is null then 0 else duty_flag end
+            as dutyFlag,
+            email,
+            case when email_flag is null then 0 else email_flag end
+            as emailFlag,
+            card_image as cardImage,
+            case when card_image_flag is null then 0 else card_image_flag end
+            as cardImageFlag,
+            template_id as templateId,
+            DATE_FORMAT(create_time,"%Y-%m-%d %T") as createTime
+        from reversion_member_identity_info where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+        <if test="templateId!=null and templateId !=''">
+            and template_id = #{templateId}
+        </if>
+        <if test="memberNameId!=null and memberNameId !=''">
+            and member_name_id = #{memberNameId}
+        </if>
+
+        order by create_time desc
+    </select>
+
+    <update id="updateMemberIdentity" parameterType="map">
+        update reversion_member_identity_info
+        <set>
+            <if test="memberNameFlag !=null">
+                member_name_flag = #{memberNameFlag},
+            </if>
+            <if test="memberAbbreviationFlag !=null">
+                member_abbreviation_flag = #{memberAbbreviationFlag},
+            </if>
+            <if test="nameFlag !=null">
+                name_flag = #{nameFlag},
+            </if>
+            <if test="sexFlag !=null">
+                sex_flag = #{sexFlag},
+            </if>
+            <if test="phoneFlag !=null">
+                phone_flag = #{phoneFlag},
+            </if>
+            <if test="cardFlag !=null">
+                card_flag = #{cardFlag},
+            </if>
+            <if test="jobFlag !=null">
+                job_flag = #{jobFlag},
+            </if>
+            <if test="jobTitleFlag !=null">
+                job_title_flag = #{jobTitleFlag},
+            </if>
+            <if test="dutyFlag !=null">
+                duty_flag = #{dutyFlag},
+            </if>
+            <if test="emailFlag !=null">
+                email_flag = #{emailFlag},
+            </if>
+            <if test="cardImageFlag !=null">
+                card_image_flag = #{cardImageFlag},
+            </if>
+        </set>
+
+
+        where member_identity_info_id = #{id}
+    </update>
+
+
+    <!-- 法人/个人身份（管理员） -->
+    <select id="findMemberAdministrator" parameterType="map" resultType="map">
+        select
+            member_administrator_info_id as id,
+            user_id as account,
+            member_name_id as memberNameId,
+            member_name as memberName,
+            case when member_name_flag is null then 0 else member_name_flag end
+            as memberNameFlag,
+            member_abbreviation as memberAbbreviation,
+            case when member_abbreviation_flag is null then 0 else member_abbreviation_flag end
+            as memberAbbreviationFlag,
+            sex,
+            case when sex_flag is null then 0 else sex_flag end
+            as sexFlag,
+            name,
+            case when name_flag is null then 0 else name_flag end
+            as nameFlag,
+            phone,
+            case when phone_flag is null then 0 else phone_flag end
+            as phoneFlag,
+            card,
+            case when card_flag is null then 0 else card_flag end
+            as cardFlag,
+            job,
+            case when job_flag is null then 0 else job_flag end
+            as jobFlag,
+            job_title as jobTitle,
+            case when job_title_flag is null then 0 else job_title_flag end
+            as jobTitleFlag,
+            duty,
+            case when duty_flag is null then 0 else duty_flag end
+            as dutyFlag,
+            card_image as cardImage,
+            case when card_image_flag is null then 0 else card_image_flag end
+            as cardImageFlag,
+            empower_image as empowerImage,
+            case when empower_image_flag is null then 0 else empower_image_flag end
+            as empowerImageFlag,
+            email,
+            case when email_flag is null then 0 else email_flag end
+            as emailFlag,
+            template_id as templateId,
+            DATE_FORMAT(create_time,"%Y-%m-%d %T") as createTime
+        from reversion_member_administrator_info where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+        <if test="templateId!=null and templateId !=''">
+            and template_id = #{templateId}
+        </if>
+        <if test="memberNameId!=null and memberNameId !=''">
+            and member_name_id = #{memberNameId}
+        </if>
+        order by create_time desc
+    </select>
+
+
+    <update id="updateMemberAdministrator" parameterType="map">
+        update reversion_member_administrator_info
+        <set>
+            <if test="memberNameFlag !=null">
+                member_name_flag = #{memberNameFlag},
+            </if>
+            <if test="memberAbbreviationFlag !=null">
+                member_abbreviation_flag = #{memberAbbreviationFlag},
+            </if>
+            <if test="sexFlag !=null">
+                sex_flag = #{sexFlag},
+            </if>
+            <if test="nameFlag !=null">
+                name_flag = #{nameFlag},
+            </if>
+            <if test="phoneFlag !=null">
+                phone_flag = #{phoneFlag},
+            </if>
+            <if test="cardFlag !=null">
+                card_flag = #{cardFlag},
+            </if>
+            <if test="jobFlag !=null">
+                job_flag = #{jobFlag},
+            </if>
+            <if test="jobTitleFlag !=null">
+                job_title_flag = #{jobTitleFlag},
+            </if>
+            <if test="dutyFlag !=null">
+                duty_flag = #{dutyFlag},
+            </if>
+            <if test="cardImageFlag !=null">
+                card_image_flag = #{cardImageFlag},
+            </if>
+            <if test="empowerImageFlag !=null">
+                empower_image_flag = #{empowerImageFlag},
+            </if>
+            <if test="emailFlag !=null">
+                email_flag = #{emailFlag},
+            </if>
+        </set>
+
+        where member_administrator_info_id = #{id}
+    </update>
+
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.MemberIntroduceDetailMapper">
+
+    <insert id="insert" parameterType="com.ovit.nswy.member.model.MemberIntroduceDetail"
+            useGeneratedKeys="true" keyProperty="id">
+		insert into member_introduce_detail (id, title, create_time,
+		source, browse_number, is_report,
+		editer, previous_id, previous_title,
+		next_id, next_title,label,
+		species,product,industry,service,atlas_list,net_work,
+		content,account,ycauthor,type_list)
+		values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},now(),
+		#{source,jdbcType=VARCHAR}, 0,
+		#{isReport,jdbcType=INTEGER},
+		#{editer,jdbcType=VARCHAR}, #{previousId,jdbcType=INTEGER}, #{previousTitle,jdbcType=VARCHAR},
+		#{nextId,jdbcType=INTEGER}, #{nextTitle,jdbcType=VARCHAR},#{label,jdbcType=VARCHAR},
+		#{species,jdbcType=INTEGER}, #{product,jdbcType=VARCHAR},#{industry,jdbcType=VARCHAR},#{service,jdbcType=VARCHAR},#{atlasList,jdbcType=VARCHAR},#{network,jdbcType=VARCHAR},
+		#{content,jdbcType=LONGVARCHAR},#{account,jdbcType=VARCHAR},#{ycAuthor,jdbcType=VARCHAR},#{typeList,jdbcType=VARCHAR})
+	</insert>
+
+
+    <select id="findMemberIntroduceDetail" resultType="java.util.Map" parameterType="java.lang.Integer">
+		SELECT
+		i.id as id, i.title, i.create_time as createTime, i.source, i.browse_number as browseNumber, i.is_report as isReport, i.editer,
+		i.previous_id as previousId, i.previous_title as previousTitle,
+		i.next_id as nextId, i.next_title as nextTitle, i.thumb_up_num as thumbUpNum,i.label,i.account,i.ycauthor,i.content,i.account,i.type,i.type_list as typeList
+		,f.column_type AS columnType,f.doc_type AS docType,f.id AS informationId,f.abstracts
+
+	   	FROM  member_introduce_detail i LEFT JOIN member_introduce f ON i.id=f.member_introduce_detail_id
+
+		where i.id = #{id,jdbcType=INTEGER}
+	</select>
+
+    <select id="findMemberIntroduceDetailById" resultType="java.util.Map" parameterType="java.lang.Integer">
+		SELECT
+		i.id as id, i.title, i.create_time as createTime, i.source, i.browse_number as browseNumber, i.is_report as isReport, i.editer,
+		i.previous_id as previousId, i.previous_title as previousTitle,
+		i.next_id as nextId, i.next_title as nextTitle, i.thumb_up_num as thumbUpNum,i.label,i.account,i.ycauthor,i.content,
+		i.account,i.type,i.type_list as typeList,
+		i.species as speciesId,i.product as goodsId ,i.industry as industryId,i.service as serviceId,i.atlas_list as atlasList,i.net_work as network
+		,f.column_type AS columnType,f.doc_type AS docType,f.id AS informationId,f.abstracts,
+		f.industrial_id as industryName,f.product as goodsname,f.service as servicename,f.species_name as species,f.all_range as district,f.image_add,
+		f.is_sms as sms,f.is_to_page as xianshi,f.is_publish as security,f.componsation as money,f.friend_reminding as tixing,f.reminding_content as con
+
+	   	FROM  member_introduce_detail i LEFT JOIN member_introduce f ON i.id=f.member_introduce_detail_id
+
+		where i.id = #{id,jdbcType=INTEGER}
+	</select>
+
+
+</mapper>

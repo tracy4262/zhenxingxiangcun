@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: nswy-relationship-service
+  cloud:
+    config:
+      enabled: true
+      uri: http://${http.config.uri}:8888
+      profile: ${http.config.profile}
+
+
+http:
+ config:
+   uri: 127.0.0.1
+   profile: dev
+
+info:
+  app:
+    name: "nswy-relationship-service"
+    description: "关系圈管理模块"
+    version: "1.0-SNAPSHOT"
+    spring-boot-version: "1.0-SNAPSHOT"

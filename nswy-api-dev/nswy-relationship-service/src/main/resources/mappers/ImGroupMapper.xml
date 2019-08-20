@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.relationship.mapper.ImGroupMapper">
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.relationship.model.ImGroup">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="im_group_id" jdbcType="INTEGER" property="imGroupId" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+  </resultMap>
+</mapper>

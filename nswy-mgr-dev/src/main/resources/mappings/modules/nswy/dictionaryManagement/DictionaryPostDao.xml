@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryPostDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryPost"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryPost">
+        select
+               p.id,
+        p.post_name as name,
+        p.parent_id as pid,
+        p.level,
+        p.value,
+        p.remark,
+        p.create_time as createTime
+        from reversion_post_info p left join reversion_post_info i on p.parent_id = i.id
+        where 1=1
+        <if test="name!=null and name!=''">
+            and p.post_name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+
+        order by p.create_time desc
+    </select>
+
+    <insert id="savePost" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryPost">
+        insert into reversion_post_info(
+            id,
+            post_name,
+            parent_id,
+            level,
+            value,
+            remark,
+            create_time
+        )values (
+                    #{id},
+                    #{name},
+                    #{pid},
+                    #{level},
+                    #{value},
+                    #{remark},
+                    now()
+                );
+    </insert>
+
+    <update id="updatePost" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryPost">
+        update reversion_post_info
+        set
+            post_name = #{name},
+            value = #{value},
+            remark = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deletePost" parameterType="java.lang.String">
+        delete from reversion_post_info where id= #{id}
+    </delete>
+
+</mapper>

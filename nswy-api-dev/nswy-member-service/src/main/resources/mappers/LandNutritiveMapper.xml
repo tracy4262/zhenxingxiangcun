@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.LandNutritiveMapper">
+    <select id="queryLandInfoNutritive" parameterType="map" resultType="map">
+        SELECT
+            nutritive_id AS nutritiveId,
+            land_id AS landId,
+            nitrogen AS nitrogen,
+            phosphorus AS phosphorus,
+            kalium AS kalium,
+            alkali_hydrolysable_nitrogen AS alkaliHydrolysableNitrogen,
+            effective_phosphorus AS effectivePhosphorus,
+            available_potassium AS availablePotassium,
+            rapid_available_phosphorus AS rapidAvailablePhosphorus,
+            rapidly_available_potassium AS rapidlyAvailablePotassium,
+            cation_exchange_capacity AS cationExchangeCapacity,
+            carbon_nitrogen_ratio AS carbonNitrogenRatio,
+            organic_matter AS organicMatter,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM
+            land_nutritive_info
+        WHERE
+            land_id = #{landId}
+    </select>
+
+    <insert id="saveOrUpdateLandInfoNutritive" parameterType="map">
+        <!--查询记录是否存在-->
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(land_id) FROM land_nutritive_info WHERE land_id = #{landId}
+        </selectKey>
+        <!--存在则修改-->
+        <if test="count > 0">
+            UPDATE
+                land_nutritive_info
+            SET
+                nutritive_id = #{nutritiveId},
+                nitrogen = #{nitrogen},
+                phosphorus = #{phosphorus},
+                kalium = #{kalium},
+                alkali_hydrolysable_nitrogen = #{alkaliHydrolysableNitrogen},
+                effective_phosphorus = #{effectivePhosphorus},
+                available_potassium = #{availablePotassium},
+                rapid_available_phosphorus = #{rapidAvailablePhosphorus},
+                rapidly_available_potassium = #{rapidlyAvailablePotassium},
+                cation_exchange_capacity = #{cationExchangeCapacity},
+                carbon_nitrogen_ratio = #{carbonNitrogenRatio},
+                organic_matter = #{organicMatter}
+            WHERE
+                land_id = #{landId}
+        </if>
+        <!--不存在则新增-->
+        <if test="count ==0">
+            INSERT INTO land_nutritive_info (
+                nutritive_id,
+                land_id,
+                nitrogen,
+                phosphorus,
+                kalium,
+                alkali_hydrolysable_nitrogen,
+                effective_phosphorus,
+                available_potassium,
+                rapid_available_phosphorus,
+                rapidly_available_potassium,
+                cation_exchange_capacity,
+                carbon_nitrogen_ratio,
+                organic_matter,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{landId},
+                #{nitrogen},
+                #{phosphorus},
+                #{kalium},
+                #{alkaliHydrolysableNitrogen},
+                #{effectivePhosphorus},
+                #{availablePotassium},
+                #{rapidAvailablePhosphorus},
+                #{rapidlyAvailablePotassium},
+                #{cationExchangeCapacity},
+                #{carbonNitrogenRatio},
+                #{organicMatter},
+                NOW()
+            )
+        </if>
+    </insert>
+
+    <select id="queryIsExit" parameterType="map" resultType="map">
+        SELECT
+            nitrogen AS nitrogen,
+            phosphorus AS phosphorus,
+            kalium AS kalium,
+            alkali_hydrolysable_nitrogen AS alkaliHydrolysableNitrogen,
+            effective_phosphorus AS effectivePhosphorus,
+            available_potassium AS availablePotassium,
+            rapid_available_phosphorus AS rapidAvailablePhosphorus,
+            rapidly_available_potassium AS rapidlyAvailablePotassium,
+            cation_exchange_capacity AS cationExchangeCapacity,
+            carbon_nitrogen_ratio AS carbonNitrogenRatio,
+            organic_matter AS organicMatter
+        FROM
+            land_nutritive_info
+        WHERE
+            land_id = #{landId}
+    </select>
+</mapper>

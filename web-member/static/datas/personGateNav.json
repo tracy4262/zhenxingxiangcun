@@ -1,0 +1,36 @@
+{
+    "code": 200,
+    "msg": "",
+    "data": [
+        {
+            "name":"基础信息",
+            "url":"/personGate/baseInfo",
+            "child":[]
+        },{
+            "name":"动态",
+            "url":"/personGate/dynamic",
+            "child":[]
+        },{
+            "name":"政策",
+            "url":"/personGate/policy",
+            "child":[]
+        },{
+            "name":"知识",
+            "url":"/personGate/knowledge",
+            "child":[]
+        },{
+            "name":"产品",
+            "url":"/personGate/product",
+            "child":[]
+        },{
+            "name":"服务",
+            "url":"/personGate/server",
+            "child":[]
+        },{
+            "name":"土地流转",
+            "url":"/personGate/land",
+            "child":[]
+        }
+
+    ]
+}

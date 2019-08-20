@@ -1,0 +1,31 @@
+@import './CoreBase64.scss';
+
+.vui-star{
+  position: absolute;
+  width: 90px;
+  &-icon {
+    cursor: pointer;
+    z-index: 888;
+  }
+  &-number{
+    display: inline-block;
+    max-width: 70px;
+  }
+  &-animate {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    left: -30px;
+    top: -40px;
+    bottom: 0;
+    right: 0;
+    background: $background;
+    background-position: 0 0;
+    transition: background-position 1s steps(25);
+    transition-duration: 0s;
+    &--active {
+      transition-duration: 1s;
+      background-position: -2500px 0;
+    }
+  }
+}

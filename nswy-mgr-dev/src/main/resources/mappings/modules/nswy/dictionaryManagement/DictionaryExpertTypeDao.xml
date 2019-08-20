@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryExpertTypeDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryExpertType"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryExpertType">
+        select
+        p.id,
+        p.class_name as name,
+        p.parent_id as pid,
+        p.level,
+        p.value,
+        p.remark,
+        p.create_time as createTime
+        from expert_classification p left join expert_classification i on p.parent_id = i.id
+        where 1=1
+        <if test="name!=null and name!=''">
+            and p.class_name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+        order by p.create_time desc
+    </select>
+
+    <insert id="saveExpertType" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryExpertType">
+        insert into c(
+            id,
+            class_name,
+            parent_id,
+            level,
+            value,
+            remark,
+            create_time
+        )values (
+                    #{id},
+                    #{name},
+                    #{pid},
+                    #{level},
+                    #{value},
+                    #{remark},
+                    now()
+                );
+    </insert>
+
+    <update id="updateExpertType" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryExpertType">
+        update expert_classification
+        set
+            class_name = #{name},
+            value = #{value},
+            remark = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteExpertType" parameterType="java.lang.String">
+        delete from expert_classification where id= #{id}
+    </delete>
+
+</mapper>

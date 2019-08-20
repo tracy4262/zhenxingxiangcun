@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.WeatherConditionsMapper">
+    <select id="queryWeatherConditionsByProductId" parameterType="map" resultType="map">
+        SELECT
+            weather_conditions_id AS weatherConditionsId,
+            product_id AS productId,
+            climatic_zone AS climaticZone,
+            total_annual_radiation AS totalAnnualRadiation,
+            avg_sunshine_time AS avgSunshineTime,
+            avg_sunshine_time_foot AS avgSunshineTimeFoot,
+            year_avg_temperature  AS yearAvgTemperature ,
+            year_avg_temperature_foot AS yearAvgTemperatureFoot,
+            accumulated_temperature AS accumulatedTemperature,
+            accumulated_temperature_foot AS accumulatedTemperatureFoot,
+            daily_temperature_difference AS dailyTemperatureDifference,
+            daily_temperature_difference_foot AS dailyTemperatureDifferenceFoot,
+            max_temperature AS maxTemperature,
+            max_temperature_foot AS maxTemperatureFoot,
+            min_temperature AS minTemperature,
+            min_temperature_foot AS minTemperatureFoot,
+            avg_max_temperature AS avgMaxTemperature,
+            avg_max_temperature_foot AS avgMaxTemperatureFoot,
+            avg_min_temperature AS avgMinTemperature,
+            avg_min_temperature_foot AS avgMinTemperatureFoot,
+            frost_free_season AS frostFreeSeason,
+            frost_free_season_foot AS frostFreeSeasonFoot,
+            avg_annual_precipitation AS avgAnnualPrecipitation,
+            avg_annual_precipitation_foot AS avgAnnualPrecipitationFoot,
+            avg_evaporation_capacity AS avgEvaporationCapacity,
+            avg_evaporation_capacity_foot AS avgEvaporationCapacityFoot,
+            avg_precipitation_day AS avgPrecipitationDay,
+            avg_precipitation_day_foot AS avgPrecipitationDayFoot,
+            avg_dryness AS avgDryness,
+            avg_wettability AS avgWettability,
+            precipitation_concentration AS precipitationConcentration,
+            precipitation_concentration_foot AS precipitationConcentrationFoot,
+            natural_hazard AS naturalHazard,
+            update_time AS updateTime,
+            create_time AS createTime
+        FROM
+            weather_conditions_info
+        WHERE
+            product_id = #{productId}
+    </select>
+
+    <update id="saveWeatherConditions" parameterType="map">
+    <selectKey keyProperty="count" resultType="int" order="BEFORE">
+        SELECT count(*) FROM weather_conditions_info WHERE product_id = #{productId}
+    </selectKey>
+
+    <if test="count > 0">
+        UPDATE weather_conditions_info SET
+            weather_conditions_id = #{weatherConditionsId},
+            product_id = #{productId},
+            climatic_zone = #{climaticZone},
+            total_annual_radiation = #{totalAnnualRadiation},
+            avg_sunshine_time = #{avgSunshineTime},
+            avg_sunshine_time_foot = #{avgSunshineTimeFoot},
+            year_avg_temperature  = #{yearAvgTemperature },
+            year_avg_temperature_foot = #{yearAvgTemperatureFoot},
+            accumulated_temperature = #{accumulatedTemperature},
+            accumulated_temperature_foot = #{accumulatedTemperatureFoot},
+            daily_temperature_difference = #{dailyTemperatureDifference},
+            daily_temperature_difference_foot = #{dailyTemperatureDifferenceFoot},
+            max_temperature = #{maxTemperature},
+            max_temperature_foot = #{maxTemperatureFoot},
+            min_temperature = #{minTemperature},
+            min_temperature_foot = #{minTemperatureFoot},
+            avg_max_temperature = #{avgMaxTemperature},
+            avg_max_temperature_foot = #{avgMaxTemperatureFoot},
+            avg_min_temperature = #{avgMinTemperature},
+            avg_min_temperature_foot = #{avgMinTemperatureFoot},
+            frost_free_season = #{frostFreeSeason},
+            frost_free_season_foot = #{frostFreeSeasonFoot},
+            avg_annual_precipitation = #{avgAnnualPrecipitation},
+            avg_annual_precipitation_foot = #{avgAnnualPrecipitationFoot},
+            avg_evaporation_capacity = #{avgEvaporationCapacity},
+            avg_evaporation_capacity_foot = #{avgEvaporationCapacityFoot},
+            avg_precipitation_day = #{avgPrecipitationDay},
+            avg_precipitation_day_foot = #{avgPrecipitationDayFoot},
+            avg_dryness = #{avgDryness},
+            avg_wettability = #{avgWettability},
+            precipitation_concentration = #{precipitationConcentration},
+            precipitation_concentration_foot = #{precipitationConcentrationFoot},
+            natural_hazard = #{naturalHazard}
+        WHERE weather_conditions_id = #{weatherConditionsId}
+    </if>
+
+    <if test="count == 0">
+        INSERT INTO weather_conditions_info (
+            weather_conditions_id,
+            product_id,
+            climatic_zone,
+            total_annual_radiation,
+            avg_sunshine_time,
+            avg_sunshine_time_foot,
+            year_avg_temperature ,
+            year_avg_temperature_foot,
+            accumulated_temperature,
+            accumulated_temperature_foot,
+            daily_temperature_difference,
+            daily_temperature_difference_foot,
+            max_temperature,
+            max_temperature_foot,
+            min_temperature,
+            min_temperature_foot,
+            avg_max_temperature,
+            avg_max_temperature_foot,
+            avg_min_temperature,
+            avg_min_temperature_foot,
+            frost_free_season,
+            frost_free_season_foot,
+            avg_annual_precipitation,
+            avg_annual_precipitation_foot,
+            avg_evaporation_capacity,
+            avg_evaporation_capacity_foot,
+            avg_precipitation_day,
+            avg_precipitation_day_foot,
+            avg_dryness,
+            avg_wettability,
+            precipitation_concentration,
+            precipitation_concentration_foot,
+            natural_hazard,
+            create_time
+        ) VALUES (
+            UUID(),
+            #{productId},
+            #{climaticZone},
+            #{totalAnnualRadiation},
+            #{avgSunshineTime},
+            #{avgSunshineTimeFoot},
+            #{yearAvgTemperature },
+            #{yearAvgTemperatureFoot},
+            #{accumulatedTemperature},
+            #{accumulatedTemperatureFoot},
+            #{dailyTemperatureDifference},
+            #{dailyTemperatureDifferenceFoot},
+            #{maxTemperature},
+            #{maxTemperatureFoot},
+            #{minTemperature},
+            #{minTemperatureFoot},
+            #{avgMaxTemperature},
+            #{avgMaxTemperatureFoot},
+            #{avgMinTemperature},
+            #{avgMinTemperatureFoot},
+            #{frostFreeSeason},
+            #{frostFreeSeasonFoot},
+            #{avgAnnualPrecipitation},
+            #{avgAnnualPrecipitationFoot},
+            #{avgEvaporationCapacity},
+            #{avgEvaporationCapacityFoot},
+            #{avgPrecipitationDay},
+            #{avgPrecipitationDayFoot},
+            #{avgDryness},
+            #{avgWettability},
+            #{precipitationConcentration},
+            #{precipitationConcentrationFoot},
+            #{naturalHazard},
+            NOW()
+        )
+    </if>
+    </update>
+</mapper>

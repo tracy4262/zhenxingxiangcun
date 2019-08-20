@@ -1,0 +1,55 @@
+{
+  "rangeList": [
+    {
+      "value": "f2r1",
+      "label": "公开"
+    },
+    {
+      "value": "f2r2",
+      "label": "业务"
+    }
+  ],
+  "natureList": [
+    {
+      "value": "f2n1",
+      "label": "中国共产党机关"
+    },
+    {
+      "value": "f2n2",
+      "label": "党委"
+    },
+    {
+      "value": "f2n3",
+      "label": "党办"
+    },
+    {
+      "value": "f2n4",
+      "label": "组织"
+    },
+    {
+      "value": "f2n5",
+      "label": "宣传"
+    },
+    {
+      "value": "f2n6",
+      "label": "外联"
+    },
+    {
+      "value": "f2n7",
+      "label": "政法"
+    },
+    {
+      "value": "f2n8",
+      "label": "统战"
+    },
+    {
+      "value": "f2n9",
+      "label": "政研"
+    },
+    {
+      "value": "f2n10",
+      "label": "军委"
+    }
+  ],
+  "allTradeList": []
+}

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.UpCommodityBasicInfoMapper">
+
+    <insert id="insertCommodityInfo" parameterType="java.util.Map">
+        replace into shop_commodity_info (
+            id,
+            account,
+            commodity_type_info_id,
+            commodity_name,
+            product_brand,
+            product_model,
+            product_batch_number,
+            product_source,
+            provenance_features,
+            is_fresh,
+            create_time,
+            instructions,
+            pests_id,
+            disease_id,
+            storage_method,
+            toxicity_markers,
+            important_reminding
+        ) values (
+          #{id},
+          #{account},
+          #{commodityId},
+          #{productName},
+          #{productBrand},
+          #{productModel},
+          #{ProductNumber},
+          #{productSource},
+          #{provenanceCharacteristics},
+          #{isFresh},
+          #{createTime},
+          #{instructions},
+          #{pestData},
+          #{diseaseData},
+          #{storageMethod},
+          #{toxicityMark},
+          #{reminder}
+        )
+    </insert>
+
+    <insert id="insertProductionInfo" parameterType="java.util.Map">
+        replace into shop_commodity_production (
+        id,
+        account,
+        commodity_type_info_id,
+        is_material,
+        material,
+        product_way,
+        rough_processing_mode,
+        is_transgene,
+        is_irradiation,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{whether},
+        #{rawMaterial},
+        #{productionMethods},
+        #{roughProcessing},
+        #{transgenic},
+        #{irradiation},
+        #{createTime}
+        )
+    </insert>
+
+    <insert id="insertPlaceInfo" parameterType="java.util.Map">
+        replace into shop_production_place_info (
+        id,
+        account,
+        commodity_type_info_id,
+        production_place,
+        production_address,
+        production_location,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{productOrigin},
+        #{productOriginAddress},
+        #{location},
+        #{createTime}
+        )
+    </insert>
+
+    <insert id="insertQualificationInfo" parameterType="java.util.Map">
+        replace into shop_commodity_qualification (
+        id,
+        account,
+        commodity_type_info_id,
+        qualification,
+        licence,
+        variety_authorize_num,
+        quarantine_qualified,
+        quarantine_certificate,
+        licence_explain,
+        variety_authorize_num_explain,
+        quarantine_qualifie_explain,
+        quarantine_certificate_explain,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{qualification},
+        #{license},
+        #{validationNumber},
+        #{certification},
+        #{certificate},
+        #{licenceExplain},
+        #{validationNumberExplain},
+        #{quarantineQualifieExplain},
+        #{certificateExplain},
+        #{createTime}
+        )
+    </insert>
+
+    <insert id="insertHonorInfo" parameterType="java.util.Map">
+        replace into shop_commodity_honor (
+        id,
+        account,
+        commodity_type_info_id,
+        qualification,
+        certificate,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{qualification},
+        #{certificate},
+        #{createTime}
+        )
+    </insert>
+
+    <insert id="insertCustomContentInfo" parameterType="java.util.Map">
+        replace into shop_commodity_quality_safety (
+        id,
+        account,
+        commodity_type_info_id,
+        type,
+        custom_content,
+        standard,
+        is_test_report,
+        report_name,
+        detection_date,
+        detection_mechanism,
+        detection_image,
+        reference_standard,
+        standard_address,
+        standard_type,
+        standard_name ,
+        standard_number,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{commodityId},
+        #{type},
+        #{customContent},
+        #{standard},
+        #{is_test_report},
+        #{report_name},
+        #{detection_date},
+        #{detection_mechanism},
+        #{detection_image},
+        #{reference_standard},
+        #{standard_address},
+        #{standard_type},
+        #{standard_name},
+        #{standard_number},
+        now()
+        )
+    </insert>
+
+    <select id="getCommodityInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, commodity_name as productName, product_brand as productBrand, product_model as productModel, product_batch_number as ProductNumber, product_source as productSource,
+        provenance_features as provenanceCharacteristics, is_fresh as isFresh, create_time, instructions as instructions, pests_id as pestData, disease_id as diseaseData,
+        storage_method as storageMethod, toxicity_markers as toxicityMark, important_reminding as reminder
+        from shop_commodity_info
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="getProductionInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, is_material as whether, material as rawMaterial, product_way as productionMethods, rough_processing_mode as roughProcessing,
+        is_transgene as transgenic, is_irradiation as irradiation, create_time
+        from shop_commodity_production
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="getPlaceInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, production_place as productOrigin, production_address as productOriginAddress, production_location as location, create_time
+        from shop_production_place_info
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="getQualificationInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, qualification, licence as license, variety_authorize_num as validationNumber,
+        quarantine_qualified as certification, quarantine_certificate as certificate, create_time,
+        licence_explain as licenceExplain,variety_authorize_num_explain as validationNumberExplain,
+         quarantine_qualifie_explain as quarantineQualifieExplain, quarantine_certificate_explain as certificateExplain
+        from shop_commodity_qualification
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="getHonorInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, qualification, certificate,create_time
+        from shop_commodity_honor
+        where account = #{account} AND commodity_type_info_id = #{commodityId}
+    </select>
+
+
+    <select id="getCustomContentInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        t2.id, t2.quality_custom_content as qualityCustomContent, t2.safety_custom_content as safetyCustomContent
+        from shop_commodity_type_info t1
+        left join shop_currency_commodity t2 on t1.currency_commodity_id = t2.id
+        where t1.id = #{commodityId}
+    </select>
+    
+    <select id="findSafety" parameterType="map" resultType="map">
+        SELECT s.id,
+            s.commodity_type_info_id,
+            s.account,
+            s.type,
+            s.custom_content,
+            s.standard,
+            s.is_test_report,
+            s.report_name,
+            s.detection_date,
+            s.detection_mechanism,
+            s.detection_image,
+            s.reference_standard,
+            s.standard_address,
+            s.standard_type,
+            s.standard_name ,
+            s.standard_number,
+            s.create_time,
+            s.update_time
+        FROM shop_commodity_quality_safety s
+
+        where s.commodity_type_info_id = #{commodityId} and s.account = #{account} and s.type= #{type}
+    </select>
+
+</mapper>

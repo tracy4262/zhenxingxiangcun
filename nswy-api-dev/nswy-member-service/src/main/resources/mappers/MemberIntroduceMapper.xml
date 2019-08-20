@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.MemberIntroduceMapper">
+
+    <select id="findUseTemplate" parameterType="java.lang.String" resultType="map">
+        select
+        id,
+        account,
+        user_type as userType,
+        template_id as templateId,
+        carete_time
+        from
+        reversion_user_template_manage
+        where account = #{account} and status = '1'
+    </select>
+
+    <select id="findNewYearInfo" parameterType="java.lang.String" resultType="map">
+        select id from reversion_perfect_year_info
+        where account = #{account}
+        order by year_file_name desc limit 1
+    </select>
+
+
+    <select id="findLoginUserInfo" parameterType="map" resultType="map">
+        select
+
+        l.login_account as account,i.nswy_id_model as nswyId,c.realname
+
+        from login_user l
+
+        left join network_info i on l.login_account = i.account
+
+        left join certification c on  l.login_account = c.user_account
+
+        where login_account = #{account};
+
+    </select>
+
+
+
+    <insert id="insertIntroduce" parameterType="com.ovit.nswy.member.model.MemberIntroduce">
+		insert into member_introduce (id, member_introduce_detail_id, business_information,
+      all_range, business_nature, all_business,
+      title, image_add, create_time,
+      comment_num, label, article_id,
+      industrial_id, doc_type, column_type,
+      classified_id, abstracts, is_to_page,
+      species_id, species_name, product,
+      service, examine, friend_reminding,
+      reminding_content, is_sms, is_publish,
+      componsation)
+    values (#{id,jdbcType=INTEGER}, #{memberIntroduceDetailId,jdbcType=INTEGER}, #{businessInformation,jdbcType=VARCHAR},
+      #{allRange,jdbcType=VARCHAR}, #{businessNature,jdbcType=VARCHAR}, #{allBusiness,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR}, #{imageAdd,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{commentNum,jdbcType=INTEGER}, #{label,jdbcType=VARCHAR}, #{articleId,jdbcType=VARCHAR},
+      #{industrialId,jdbcType=VARCHAR}, #{docType,jdbcType=VARCHAR}, #{columnType,jdbcType=VARCHAR},
+      #{classifiedId,jdbcType=VARCHAR}, #{abstracts,jdbcType=VARCHAR}, #{isToPage,jdbcType=INTEGER},
+      #{speciesId,jdbcType=VARCHAR}, #{speciesName,jdbcType=VARCHAR}, #{product,jdbcType=VARCHAR},
+      #{service,jdbcType=VARCHAR}, #{examine,jdbcType=VARCHAR}, #{friendReminding,jdbcType=VARCHAR},
+      #{remindingContent,jdbcType=VARCHAR}, #{isSms,jdbcType=INTEGER}, #{isPublish,jdbcType=INTEGER},
+      #{componsation,jdbcType=VARCHAR})
+	</insert>
+
+    <insert id="insertArticle"  parameterType="com.ovit.nswy.member.model.Article">
+		insert into cms_article(
+			id, category_id,title,keywords,create_by,create_date,update_date
+		)
+		values(
+		#{id,jdbcType=VARCHAR}, #{category,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},#{author,jdbcType=VARCHAR},#{keywords,jdbcType=VARCHAR},
+		#{createDate,jdbcType=TIMESTAMP},#{createDate,jdbcType=TIMESTAMP}
+		)
+	</insert>
+    
+    <select id="findMediaLibraryInfo" parameterType="map" resultType="map">
+        select
+
+        b.id, b.media_id as mediaId,  b.author,b.title,l.media_name as mediaName
+
+        from media_library_book_info b
+
+        left join
+
+        (select media_id ,account,media_name from media_library where media_type = 4 ) l
+
+        on b.media_id = l.media_id where 1=1
+        <if test="account !=null and account !=''">
+            and l.account = #{account}
+        </if>
+
+    </select>
+    
+    <select id="findMemberIntroduceInfo" parameterType="map" resultType="map">
+      select
+
+        i.id, i.member_introduce_detail_id, i.business_information, i.all_range, i.business_nature, i.all_business,
+        i.title, i.image_add, i.create_time, i.comment_num, i.label, i.article_id, i.industrial_id, CASE i.doc_type
+		WHEN '020101' THEN '行业动态'
+		WHEN '020102' THEN '企业动态'
+		WHEN '020103' THEN '专家动态'
+		WHEN '020104' THEN '乡村动态'
+		WHEN '020105' THEN '群协动态'
+		WHEN '020106' THEN '国际动态'
+		WHEN '020107' THEN '会员动态'
+		WHEN '020108' THEN '城乡互动'
+		ELSE '会员介绍' END
+		AS doc_type,
+        i.column_type, i.classified_id, i.abstracts, i.is_to_page, i.species_id, i.species_name, i.product,
+        i.service, i.examine, i.friend_reminding, i.reminding_content, i.is_sms, i.is_publish, i.componsation
+
+
+        from member_introduce i left join  member_introduce_detail f ON i.member_introduce_detail_id=f.id where 1=1
+
+        <if test="account !=null and account!=''">
+            and f.account = #{account}
+        </if>
+    </select>
+
+    <delete id="deleteMemberIntroduceInfo" parameterType="map">
+        delete from member_introduce where id = #{id}
+    </delete>
+
+    <delete id="deleteMemberIntroduceDetailInfo" parameterType="map">
+        delete from member_introduce_detail where id = #{member_introduce_detail_id}
+    </delete>
+
+    <delete id="deleteMemberIntroduceBookInfo" parameterType="map">
+        delete from member_introduce_book_info where id = #{id}
+    </delete>
+
+    <delete id="deleteMemberIntroduceBookDetailInfo" parameterType="map">
+        delete from member_introduce_book_detail where member_introduce_detail_id = #{memberIntroduceDetailId} and book_info_id = #{book_info_id}
+    </delete>
+
+    <delete id="deleteByPrimaryKey" parameterType="map" >
+    delete from video_img
+    where relative_id = #{memberIntroduceDetailId} and `column` = #{column}
+  </delete>
+
+</mapper>

@@ -1,0 +1,17 @@
+.idea
+nswy-api.iml
+target
+nswy-generator/nswy-generator.iml
+nswy-gatway/nswy-gatway.iml
+nswy-common/nswy-common.iml
+nswy-eureka/nswy-eureka.iml
+nswy-config/nswy-config.iml
+nswy-monitor/nswy-monitor.iml
+nswy-wiki-service/nswy-wiki-service.iml
+nswy-member-service/nswy-member-service.iml
+nswy-relationship-service/nswy-relationship-service.iml
+nswy-portal-service/nswy-portal-service.iml
+/nswy-portal-service/nswy-portal-service.iml
+*.iml
+/qqconnect.log
+

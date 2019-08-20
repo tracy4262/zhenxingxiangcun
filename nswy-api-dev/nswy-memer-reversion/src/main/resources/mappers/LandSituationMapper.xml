@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.LandSituationMapper">
+
+    <select id="find" parameterType="map" resultType="map">
+        select id, year_file_id as yearId, number_type as numberType, type_name as typeName,
+         area, conversion_area as conversionArea, type,template_id as templateId
+        from reversion_land_use_situation
+        where account = #{account} and year_file_id = #{yearId} and type = #{type} and template_id = #{templateId}
+    </select>
+
+    <insert id="save" parameterType="map">
+        replace into reversion_land_use_situation (
+        id,
+        account,
+        year_file_id,
+        number_type,
+        type_name,
+        area,
+        conversion_area,
+        type,
+        template_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.yearId}, #{item.numberType}, #{item.typeName},
+                #{item.area}, #{item.conversionArea}, #{item.type},#{item.templateId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from reversion_land_use_situation where id = #{id}
+    </delete>
+
+    <select id="dict" parameterType="map" resultType="map">
+        select label, `value`
+        from reversion_land_use_standard
+        where 1=1
+        <if test="type !=null and type!=''">
+            and type = #{type}
+        </if>
+    </select>
+
+</mapper>

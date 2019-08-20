@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ElectricPowerMapper">
+    <insert id="saveOrUpdate" parameterType="map">
+        <selectKey keyProperty="count" order="BEFORE" resultType="int">
+            SELECT COUNT(1) FROM electric_power WHERE product_id = #{productId}
+        </selectKey>
+        <if test="count > 0">
+            UPDATE electric_power SET
+                transformer_substation = #{transformerSubstation},
+                max_power_supply = #{maxPowerSupply},
+                distribution_transform_capacity = #{distributionTransformCapacity},
+                electrical_load = #{electricalLoad},
+                electrical_price = #{electricalPrice}
+            WHERE product_id = #{productId}
+        </if>
+        <if test="count == 0">
+            INSERT INTO electric_power (
+                electric_power_id,
+                product_id,
+                transformer_substation,
+                max_power_supply,
+                distribution_transform_capacity,
+                electrical_load,
+                electrical_price,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{productId},
+                #{transformerSubstation},
+                #{maxPowerSupply},
+                #{distributionTransformCapacity},
+                #{electricalLoad},
+                #{electricalPrice},
+                NOW()
+            )
+        </if>
+    </insert>
+
+    <select id="query" parameterType="map" resultType="map">
+        SELECT
+            electric_power_id AS electricPowerId,
+            product_id AS productId,
+            transformer_substation AS transformerSubstation,
+            max_power_supply AS maxPowerSupply,
+            distribution_transform_capacity AS distributionTransformCapacity,
+            electrical_load AS electricalLoad,
+            electrical_price AS electricalPrice,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM electric_power WHERE product_id = #{productId}
+
+    </select>
+</mapper>

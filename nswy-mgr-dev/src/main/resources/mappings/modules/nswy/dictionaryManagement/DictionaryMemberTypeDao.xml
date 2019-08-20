@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryMemberTypeDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryMemberType"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryMemberType">
+        select
+               p.id,
+        p.type_name as name,
+        p.parent_id as pid,
+        p.level,
+        p.value,
+        p.remark,
+        p.create_time as createTime
+        from member_type p left join member_type i on p.parent_id = i.id
+        where 1=1
+        <if test="name!=null and name!=''">
+            and p.type_name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+        order by p.create_time desc
+    </select>
+
+    <insert id="saveMemberType" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryMemberType">
+        insert into member_type(
+            id,
+            type_name,
+            parent_id,
+            level,
+            value,
+            remark,
+            create_time
+        )values (
+                    #{id},
+                    #{name},
+                    #{pid},
+                    #{level},
+                    #{value},
+                    #{remark},
+                    now()
+                );
+    </insert>
+
+    <update id="updateMemberType" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryMemberType">
+        update member_type
+        set
+            type_name = #{name},
+            value = #{value},
+            remark = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMemberType" parameterType="java.lang.String">
+        delete from member_type where id= #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.AssetSettingMapper">
+
+    <select id="findLandUseRightInfo" parameterType="map" resultType="map">
+        select
+
+            id,
+            user_id as account,
+            year_id as yearId,
+            land_use_right_info_name as landUseRightInfoName,
+            user_name as userName,
+            parcel_coding as parcelCoding,
+            parcel_name as parcelName,
+            land_use_status as landUseStatus,
+            aeasured_area as aeasuredArea,
+            aerial_survey_area as aerialSurveyArea,
+            contract_area as contractArea,
+            get_type as getType,
+            get_time as getTime,
+            get_price as getPrice,
+            user_type as userType,
+            id_name as IDName,
+            id_number as IDNumber,
+            owner_name as ownerName,
+            owner_code as ownerCode,
+            owner_concat_name as ownerConcatName,
+            owner_phone as ownerPhone,
+            owner_address as ownerAddress,
+            `group`,
+            number,
+            owner_post_code as ownerPostCode,
+            introduction,
+            images,
+            status,
+            create_time,
+            template_id as templateId
+
+        from reversion_land_use_right_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId!=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateLandUseRightInfoName" parameterType="map">
+        update reversion_land_use_right_info set land_use_right_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveLandUseRightInfo" parameterType="map">
+        replace into reversion_land_use_right_info(
+            id,
+            user_id,
+            year_id,
+            land_use_right_info_name,
+            user_name,
+            parcel_coding,
+            parcel_name,
+            land_use_status,
+            aeasured_area,
+            aerial_survey_area,
+            contract_area,
+            get_type,
+            get_time,
+            get_price,
+            user_type,
+            id_name,
+            id_number,
+            owner_name,
+            owner_code,
+            owner_concat_name,
+            owner_phone,
+            owner_address,
+            `group`,
+            number,
+            owner_post_code,
+            introduction,
+            images,
+            status,
+            template_id,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{landUseRightInfoName},
+              #{userName},
+              #{parcelCoding},
+              #{parcelName},
+              #{landUseStatus},
+              #{aeasuredArea},
+              #{aerialSurveyArea},
+              #{contractArea},
+              #{getType},
+              #{getTime},
+              #{getPrice},
+              #{userType},
+              #{IDName},
+              #{IDNumber},
+              #{ownerName},
+              #{ownerCode},
+              #{ownerConcatName},
+              #{ownerPhone},
+              #{ownerAddress},
+              #{group},
+              #{number},
+              #{ownerPostCode},
+              #{introduction},
+              #{images},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteLandUseRightInfo" parameterType="map">
+        delete from reversion_land_use_right_info where id = #{id}
+    </delete>
+
+
+
+    <select id="findRightToUseHousingInfo" parameterType="map" resultType="map">
+        select
+
+        id,
+        user_id as account,
+        year_id as yearId,
+        right_to_use_housing_info_name as rightToUseHousingInfoName,
+        right_holder_name as rightHolderName,
+        user_name as userName,
+        building_name as buildingName,
+        housing_category as housingCategory,
+        total_floors as totalFloors,
+        building_structure as buildingStructure,
+        floor_area as floorArea,
+        construction_area as constructionArea,
+        security_level as securityLevel,
+        security_status as securityStatus,
+        `use`,
+        get_time as getTime,
+        get_price as getPrice,
+        images,
+        status,
+        create_time,
+        template_id as templateId
+
+        from reversion_right_to_use_housing_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId!=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateRightToUseHousingInfoName" parameterType="map">
+        update reversion_right_to_use_housing_info set right_to_use_housing_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveRightToUseHousingInfo" parameterType="map">
+        replace into reversion_right_to_use_housing_info(
+            id,
+            user_id,
+            year_id,
+            right_to_use_housing_info_name,
+            right_holder_name,
+            user_name,
+            building_name,
+            housing_category,
+            total_floors,
+            building_structure,
+            floor_area,
+            construction_area,
+            security_level,
+            security_status,
+            `use`,
+            get_time,
+            get_price,
+            images,
+            status,
+            template_id,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{rightToUseHousingInfoName},
+              #{rightHolderName},
+              #{userName},
+              #{buildingName},
+              #{housingCategory},
+              #{totalFloors},
+              #{buildingStructure},
+              #{floorArea},
+              #{constructionArea},
+              #{securityLevel},
+              #{securityStatus},
+              #{use},
+              #{getTime},
+              #{getPrice},
+              #{images},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteRightToUseHousingInfo" parameterType="map">
+        delete from reversion_right_to_use_housing_info where id = #{id}
+    </delete>
+
+
+
+    <select id="findProductionMachineInfo" parameterType="map" resultType="map">
+        select
+            id,
+            user_id as account,
+            year_id as yearId,
+            production_machine_info_name as productionMachineInfoName,
+            right_holder_name as rightHolderName,
+            generic_name as genericName,
+            brand_name as brandName,
+            model,
+            quantity,
+            univalent,
+            totalPrice,
+            status,
+            create_time,
+            template_id as templateId
+        from  reversion_production_machine_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId!=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateProductionMachineInfoName" parameterType="map">
+        update reversion_production_machine_info set production_machine_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveProductionMachineInfo" parameterType="map">
+        replace into reversion_production_machine_info(
+            id,
+            user_id,
+            year_id,
+            production_machine_info_name,
+            right_holder_name,
+            generic_name,
+            brand_name,
+            model,
+            quantity,
+            univalent,
+            totalPrice,
+            status,
+            template_id,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{productionMachineInfoName},
+              #{rightHolderName},
+              #{genericName},
+              #{brandName},
+              #{model},
+              #{quantity},
+              #{univalent},
+              #{totalPrice},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteProductionMachineInfo" parameterType="map">
+        delete from reversion_production_machine_info where id = #{id}
+    </delete>
+
+
+
+
+    <select id="findTransportationToolsInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        transportation_tools_info_name as transportationToolsInfoName,
+        right_holder_name as rightHolderName,
+        generic_name as genericName,
+        brand_name as brandName,
+        model,
+        model_category as modelCategory,
+        displacement,
+        maximum_power as maximumPower,
+        maximum_horsepower as maximumHorsepower,
+        loading_weight as loadingWeight,
+        maximum_power_speed as maximumPowerSpeed,
+        maximum_torque as maximumTorque,
+        maximum_torque_speed as maximumTorqueSpeed,
+        quantity,
+        univalent,
+        totalPrice,
+        status,
+        create_time,
+        template_id as templateId
+        from  reversion_transportation_tools_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId!=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateTransportationToolsInfoName" parameterType="map">
+        update reversion_transportation_tools_info set transportation_tools_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveTransportationToolsInfo" parameterType="map">
+        replace into reversion_transportation_tools_info(
+            id,
+            user_id,
+            year_id,
+            transportation_tools_info_name,
+            right_holder_name,
+            generic_name,
+            brand_name,
+            model,
+            model_category,
+            displacement,
+            maximum_power,
+            maximum_horsepower,
+            loading_weight,
+            maximum_power_speed,
+            maximum_torque,
+            maximum_torque_speed,
+            quantity,
+            univalent,
+            totalPrice,
+            status,
+            template_id,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{transportationToolsInfoName},
+              #{rightHolderName},
+              #{genericName},
+              #{brandName},
+              #{model},
+              #{modelCategory},
+              #{displacement},
+              #{maximumPower},
+              #{maximumHorsepower},
+              #{loadingWeight},
+              #{maximumPowerSpeed},
+              #{maximumTorque},
+              #{maximumTorqueSpeed},
+              #{quantity},
+              #{univalent},
+              #{totalPrice},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteTransportationToolsInfo" parameterType="map">
+        delete from reversion_transportation_tools_info where id = #{id}
+    </delete>
+
+
+
+    <select id="findHouseholdAssetsInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        household_assets_info_name as householdAssetsInfoName,
+        right_holder_name as rightHolderName,
+        generic_name as genericName,
+        brand_name as brandName,
+        model,
+        quantity,
+        unit,
+        univalent,
+        totalPrice,
+        status,
+        create_time,
+        template_id as templateId
+        from  reversion_household_assets_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId!=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateHouseholdAssetsInfoName" parameterType="map">
+        update reversion_household_assets_info set household_assets_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveHouseholdAssetsInfo" parameterType="map">
+        replace into reversion_household_assets_info(
+            id,
+            user_id,
+            year_id,
+            household_assets_info_name,
+            right_holder_name,
+            generic_name,
+            brand_name,
+            model,
+            quantity,
+            unit,
+            univalent,
+            totalPrice,
+            status,
+            template_id,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{householdAssetsInfoName},
+              #{rightHolderName},
+              #{genericName},
+              #{brandName},
+              #{model},
+              #{quantity},
+              #{unit},
+              #{univalent},
+              #{totalPrice},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteHouseholdAssetsInfo" parameterType="map">
+        delete from reversion_household_assets_info where id = #{id}
+    </delete>
+
+
+
+    <select id="findFacilityAgricultureInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        facility_agriculture_info_name as facilityAgricultureInfoName,
+        right_holder_name as rightHolderName,
+        facility_category as facilityCategory,
+        facility_name as facilityName,
+        moplot_numberdel as moplotNumberdel,
+        plot_name as plotName,
+        area,
+        investmentAmount,
+        type,
+        status,
+        template_id as templateId,
+        create_time
+        from  reversion_facility_agriculture_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId!=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateFacilityAgricultureInfoName" parameterType="map">
+        update reversion_facility_agriculture_info set facility_agriculture_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveFacilityAgricultureInfo" parameterType="map">
+        replace into reversion_facility_agriculture_info(
+            id,
+            user_id,
+            year_id,
+            facility_agriculture_info_name,
+            right_holder_name,
+            facility_category,
+            facility_name,
+            moplot_numberdel,
+            plot_name,
+            area,
+            investmentAmount,
+            type,
+            status,
+            template_id,
+            create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{facilityAgricultureInfoName},
+              #{rightHolderName},
+              #{facilityCategory},
+              #{facilityName},
+              #{moplotNumberdel},
+              #{plotName},
+              #{area},
+              #{investmentAmount},
+              #{type},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteFacilityAgricultureInfo" parameterType="map">
+        delete from reversion_facility_agriculture_info where id = #{id}
+    </delete>
+
+</mapper>

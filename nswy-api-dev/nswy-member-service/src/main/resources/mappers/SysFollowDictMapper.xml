@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.SysFollowDictMapper" >
+
+    <select id="findQuery" parameterType="com.ovit.nswy.member.model.SysFollowDict" resultType="com.ovit.nswy.member.model.SysFollowDict">
+        SELECT c.id,c.parent_id,c.label,c.value,c.type,c.create_time ,c.remark FROM sys_follow_dict c  where c.label = #{label} and c.value =#{value} and c.type=#{type}
+    </select>
+
+    <insert id="insert" parameterType="com.ovit.nswy.member.model.SysFollowDict">
+        INSERT INTO sys_follow_dict (
+            parent_id,label,value,type,create_time
+        ) VALUES (
+            #{parentId},#{label},#{value},#{type},NOW()
+        )
+    </insert>
+    <select id="findList" parameterType="map" resultType="map">
+        SELECT c.id,c.parent_id,c.label as name,c.value,c.type,c.create_time ,c.remark
+
+        FROM sys_follow_dict c
+
+        where  c.type=#{follow_type} and c.parent_id=0
+
+    </select>
+
+
+    <select id="findSysFollowDict" parameterType="map" resultType="map">
+        select c.id,c.parent_id,c.label as name,c.value,c.type,c.create_time ,c.remark from sys_follow_dict c where c.parent_id =#{id} and type=#{value};
+
+    </select>
+
+    <insert id="insertFollow" parameterType="com.ovit.nswy.member.model.FollowInfo">
+        INSERT INTO follow_info (
+            sys_follow_dict_id,follow_label,create_time,account,follow_type
+        ) VALUES (
+            #{sysFollowDictId},#{followLabel},NOW(),#{account},#{followType}
+        )
+    </insert>
+
+    <select id="findFllowDict" parameterType="map" resultType="map">
+        SELECT c.follow_id,c.sys_follow_dict_id as id ,c.follow_label as name,c.create_time ,c.account
+
+        FROM follow_info c
+
+        where  1=1
+
+        <if test="account !='' and account!=null">
+            and c.account = #{account}
+        </if>
+        <if test="followType !='' and followType!=null">
+            and c.follow_type = #{followType}
+        </if>
+
+    </select>
+
+    <delete id="deleteFollowDict" parameterType="map">
+        delete  from follow_info where account = #{account}
+
+    </delete>
+
+
+</mapper>

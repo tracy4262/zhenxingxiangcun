@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.MyNoTitleMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.MyNoTitle">
+		<result column="editer" property="editer" jdbcType="VARCHAR" />
+		<result column="artical" property="artical" jdbcType="INTEGER" />
+		<result column="zan" property="zan" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="INTEGER" />
+		<result column="zanTwo" property="zanTwo" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="findMyTitle" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.MyNoTitle">
+		SELECT editer, SUM(artical) AS artical, SUM(zan) AS zan,
+		SUM(COMMENT) AS
+		COMMENT, SUM(zan1) AS zanTwo
+		FROM (SELECT editer,
+		SUM(amt) AS artical, SUM(likeNum) AS zan, 0 AS
+		COMMENT, 0 AS zan1
+		FROM
+		(SELECT editer, COUNT(*) AS amt,
+		SUM(thumb_up_num) AS likeNum
+		FROM
+		information_detail
+		GROUP BY editer
+		UNION ALL
+		SELECT editer, COUNT(*) AS
+		amt, SUM(thumb_up_num) AS likeNum
+		FROM knowledge_detail
+		GROUP BY editer
+		UNION ALL
+		SELECT editer, COUNT(*) AS amt, SUM(thumb_up_num) AS likeNum
+		FROM policy_detail
+		GROUP BY editer
+		) a
+		GROUP BY editer
+		UNION
+		SELECT editer,
+		0 AS article, 0 AS zan, SUM(amt)
+		AS COMMENT, SUM(likeNum) AS zan1
+		FROM
+		(SELECT user_account AS editer,
+		COUNT(*) AS amt, SUM(thumb_up_num) AS
+		likeNum
+		FROM info_comment
+		GROUP BY user_account
+		UNION ALL
+		SELECT
+		user_account AS editer, COUNT(*) AS amt, SUM(thumb_up_num) AS likeNum
+		FROM knowledge_comment
+		GROUP BY user_account
+		UNION ALL
+		SELECT
+		user_account AS editer, COUNT(*) AS amt, SUM(thumb_up_num) AS likeNum
+		FROM policy_comment
+		GROUP BY user_account
+		) a
+		GROUP BY editer
+		) t
+		WHERE
+		t.editer = #{editer,jdbcType=VARCHAR}
+		GROUP BY editer
+	</select>
+
+</mapper>

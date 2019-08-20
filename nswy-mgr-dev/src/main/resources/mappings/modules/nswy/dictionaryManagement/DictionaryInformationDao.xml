@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryInformationDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryInformation"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryInformation">
+        select
+        p.id,
+        p.label as name,
+        p.parent_id as pid,
+        p.level,
+        p.value,
+        p.remark,
+        p.create_time as createTime
+        from sys_follow_dict p left join sys_follow_dict i on p.parent_id = i.id
+        where 1=1
+        <if test="name!=null and name!=''">
+            and p.label like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+        order by p.create_time desc
+    </select>
+
+    <insert id="saveInformation" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryInformation">
+        insert into sys_follow_dict(
+            id,
+            label,
+            parent_id,
+            level,
+            value,
+            remark,
+                                    type,
+            create_time
+        )values (
+                    #{id},
+                    #{name},
+                    #{pid},
+                    #{level},
+                    #{value},
+                    #{remark},
+                 #{type},
+                    now()
+                );
+    </insert>
+
+    <update id="updateInformation" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryInformation">
+        update sys_follow_dict
+        set
+            label = #{name},
+            value = #{value},
+            remark = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInformation" parameterType="java.lang.String">
+        delete from sys_follow_dict where id= #{id}
+    </delete>
+
+</mapper>

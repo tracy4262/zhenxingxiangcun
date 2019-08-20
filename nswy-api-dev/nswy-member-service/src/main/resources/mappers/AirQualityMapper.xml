@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.AirQualityMapper" >
+  <select id="query" parameterType="java.util.Map" resultType="java.util.Map">
+      SELECT
+        air_qualit_id AS airQualitId,
+        tsp_day AS tspDay,
+        sulfur_dioxide_day AS sulfurDioxideDay,
+        nitrogen_dioxide_day AS nitrogenDioxideDay,
+        fluoride_day AS fluorideDay,
+        tsp_hour AS tspHour,
+        sulfur_dioxide_hour AS sulfurDioxideHour,
+        nitrogen_dioxide_hour AS nitrogenDioxideHour,
+        fluoride_hour AS fluorideHour
+      FROM
+        air_qualit
+      WHERE
+        product_id = #{productId}
+  </select>
+
+  <update id="update" parameterType="java.util.Map">
+    UPDATE
+      air_qualit
+    SET
+     tsp_day = #{tspDay},
+     sulfur_dioxide_day = #{sulfurDioxideDay},
+     nitrogen_dioxide_day = #{nitrogenDioxideDay},
+     fluoride_day = #{fluorideDay},
+     tsp_hour = #{tspHour},
+     sulfur_dioxide_hour = #{sulfurDioxideHour},
+     nitrogen_dioxide_hour = #{nitrogenDioxideHour},
+     fluoride_hour = #{fluorideHour}
+   WHERE
+     air_qualit_id = #{airQualitId}
+  </update>
+
+    <insert id="add" parameterType="java.util.Map">
+      INSERT INTO
+        air_qualit
+      (
+        air_qualit_id,
+        product_id,
+        tsp_day,
+        sulfur_dioxide_day,
+        nitrogen_dioxide_day,
+        fluoride_day,
+        tsp_hour,
+        sulfur_dioxide_hour,
+        nitrogen_dioxide_hour,
+        fluoride_hour
+      )
+      VALUES
+      (
+        UUID(),
+        #{productId},
+        #{tspDay},
+        #{sulfurDioxideDay},
+        #{nitrogenDioxideDay},
+        #{fluorideDay},
+        #{tspHour},
+        #{sulfurDioxideHour},
+        #{nitrogenDioxideHour},
+        #{fluorideHour}
+      )
+    </insert>
+</mapper>

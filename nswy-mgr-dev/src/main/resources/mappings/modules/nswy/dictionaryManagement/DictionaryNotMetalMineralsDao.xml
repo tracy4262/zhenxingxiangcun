@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryNotMetalMineralsDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryNotMetalMinerals"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryNotMetalMinerals">
+        select
+               id,
+        minerals_name as name,
+               parent_id as pid,
+               level,
+               value,
+               remark,
+               create_time as createTime
+        from sys_minerals_dict
+        where 1=1 and parent_id = 'a0941a3282904c5f9c7a7458d8c7d68c'
+        <if test="name!=null and name!=''">
+            and minerals_name like CONCAT('%',#{name},'%')
+        </if>
+
+        order by create_time desc
+    </select>
+
+    <insert id="saveNotMetalMinerals" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryNotMetalMinerals">
+        insert into sys_minerals_dict(
+            id,
+            minerals_name,
+            parent_id,
+            level,
+            value,
+            remark,
+            create_time
+        )values (
+                    #{id},
+                    #{name},
+                    #{pid},
+                    #{level},
+                    #{value},
+                    #{remark},
+                    now()
+                );
+    </insert>
+
+    <update id="updateNotMetalMinerals" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryNotMetalMinerals">
+        update sys_minerals_dict
+        set
+            minerals_name = #{name},
+            value = #{value},
+            remark = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNotMetalMinerals" parameterType="java.lang.String">
+        delete from sys_minerals_dict where id= #{id}
+    </delete>
+
+</mapper>

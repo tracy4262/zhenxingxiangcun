@@ -1,0 +1,124 @@
+
+spring:
+      datasource:
+        default:
+              name: test_mysql
+              url: jdbc:mysql://127.0.0.1:3306/nswy?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+              username: nswy
+              password: 1234
+              type: com.alibaba.druid.pool.DruidDataSource
+              driver-class-name: com.mysql.jdbc.Driver
+              filters: stat
+              maxActive: 20
+              initialSize: 1
+              maxWait: 60000
+              minIdle: 1
+              timeBetweenEvictionRunsMillis: 60000
+              minEvictableIdleTimeMillis: 300000
+              validationQuery: select 'x'
+              testWhileIdle: true
+              testOnBorrow: false
+              testOnReturn: false
+              poolPreparedStatements: true
+              maxOpenPreparedStatements: 20
+
+      redis:
+        host: 47.92.108.227
+        password: 123456
+        port: 6379
+        database: 0
+        pool:
+            max-active: 8
+            max-wait: -1
+            max-idle: 20000
+            min-idle: 0
+      timeout: 10000
+#fastDFS
+fdfs:
+  conf: ./fdfs_client.conf
+  soTimeout: 1501
+  connectTimeout: 601
+  thumbImage:
+    width: 150
+    height: 150
+  trackerList:
+    - 192.168.7.61:22122
+http:
+ uploadIp : //192.168.7.61
+
+temp_upload_url: ./upload
+
+exclude: /inforMation/;/policy/;/knowLege/;/login/;/index.html/;/corpInfo/
+include: /inforMation/findInforMationDetail;/knowLege/findKnowLedgeDetail;/policy/findPolicyDetail;/expert/expertDetail
+#商城接口
+shop:
+    fetchProductUrl: http://192.168.7.61:8080/ovit/api/product/list.htm
+
+springfox:
+  name: 武汉光谷信息技术股份有限公司
+  title: 农事无忧在线文档
+  description: 农事无忧相关接口文档
+
+water_mark:
+  content: 农事无忧
+  font_size: 50
+  font_color:
+    r: 225
+    g: 225
+    b: 225
+
+feign :
+  client:
+   url: http://127.0.0.1:11100
+
+#发送短信开发环境账号
+cloudmas:
+  sms:
+    host: http://api.cloudmas.cn
+    loginCode: nswyuat
+    password: Qnqhg_45
+    signNo: cd3UM290
+    codeTemplateName: SYS170923110139140
+    userInfoTemplateName: SYS170923110139141
+
+#百度地图 中心坐标检索范围(单位公里数)
+baidu_map:
+  range: 50
+
+#注册账号的默认头像
+register:
+  #公司开发环境
+  image: http://192.168.7.61/00/68/wKgHPVqWSreATgJRAAAa36Ua8F8215.png
+  #农科院环境
+  #image: http://www.ns51.cn:8999/00/68/wKgHPVqWSreATgJRAAAa36Ua8F8215.png
+
+nswy:
+  mongodb:
+    uri: mongodb://www.ns51.cn:27017/markers
+    #uri: mongodb://127.0.0.1:27017/markers
+    options:
+      #最大连接数
+      #connectionsPerHost: 100
+      #最小连接数
+      #minConnectionsPerHost: 0
+      #连接的最大闲置时间 毫秒数
+      #maxConnectionIdleTime: 0
+      #连接的最大生存时间 毫秒数
+      #maxConnectionLifeTime: 0
+      #最大等待可用连接的时间 毫秒数
+      #maxWaitTime: 120000
+      #连接超时时间 毫秒数
+      #connectTimeout: 10000
+
+#远程调用timeout时间设置
+hystrix:
+  #threadpool.default.coreSize: 100
+  #threadpool.default.maximumSize: 200
+  #threadpool.default.maxQueueSize: 5000
+  #threadpool.default.allowMaximumSizeToDivergeFromCoreSize: true
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000

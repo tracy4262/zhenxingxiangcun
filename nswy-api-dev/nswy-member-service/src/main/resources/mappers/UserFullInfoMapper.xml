@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.UserFullInfoMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.UserFullInfo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="farmlan" property="farmlan" jdbcType="LONGVARCHAR" />
+		<result column="education" property="education" jdbcType="LONGVARCHAR" />
+		<result column="work" property="work" jdbcType="LONGVARCHAR" />
+		<result column="contract" property="contract" jdbcType="LONGVARCHAR" />
+		<result column="policial" property="policial" jdbcType="LONGVARCHAR" />
+		<result column="religion" property="religion" jdbcType="LONGVARCHAR" />
+		<result column="honor" property="honor" jdbcType="LONGVARCHAR" />
+		<result column="basic" property="basic" jdbcType="LONGVARCHAR" />
+		<result column="farmlan1" property="farmlan1" jdbcType="LONGVARCHAR" />
+		<result column="education1" property="education1" jdbcType="LONGVARCHAR" />
+		<result column="work1" property="work1" jdbcType="LONGVARCHAR" />
+		<result column="contract1" property="contract1" jdbcType="LONGVARCHAR" />
+		<result column="policial1" property="policial1" jdbcType="LONGVARCHAR" />
+		<result column="religion1" property="religion1" jdbcType="LONGVARCHAR" />
+		<result column="honor1" property="honor1" jdbcType="LONGVARCHAR" />
+		<result column="basic1" property="basic1" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account,farmlan, education, work, contract, policial, religion,
+		honor,basic,
+		farmlan1, education1, work1, contract1, policial1, religion1, honor1,basic1
+	</sql>
+	<select id="findUserFullInfo" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.UserFullInfo">
+		select
+		<include refid="Base_Column_List" />
+		from user_full_info
+		where account = #{account,jdbcType=VARCHAR}
+	</select>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.UserFullInfo">
+		replace into user_full_info(id, account,farmlan, education,
+		work, contract, policial, religion, honor,basic,farmlan1, education1,
+		work1, contract1, policial1, religion1, honor1,basic1)
+		values(#{id,jdbcType=INTEGER},#{account,jdbcType=VARCHAR},
+		#{farmlan,jdbcType=LONGVARCHAR},#{education,jdbcType=LONGVARCHAR},
+		#{work,jdbcType=LONGVARCHAR},#{contract,jdbcType=LONGVARCHAR},
+		#{policial,jdbcType=LONGVARCHAR},#{religion,jdbcType=LONGVARCHAR},
+		#{honor,jdbcType=LONGVARCHAR},#{basic,jdbcType=LONGVARCHAR},
+		#{farmlan1,jdbcType=LONGVARCHAR},#{education1,jdbcType=LONGVARCHAR},
+		#{work1,jdbcType=LONGVARCHAR},#{contract1,jdbcType=LONGVARCHAR},
+		#{policial1,jdbcType=LONGVARCHAR},#{religion1,jdbcType=LONGVARCHAR},
+		#{honor1,jdbcType=LONGVARCHAR},#{basic1,jdbcType=LONGVARCHAR})
+	</insert>
+
+	<update id="updateUserFullInfo" parameterType="com.ovit.nswy.member.model.UserFullInfo">
+		update user_full_info
+		<set>
+			<if test="farmlan != null">
+				farmlan = #{farmlan,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="education != null">
+				education = #{education,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="work != null">
+				`work` = #{work,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="contract != null">
+				contract = #{contract,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="policial != null">
+				policial = #{policial,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="religion != null">
+				religion = #{religion,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="honor != null">
+				honor = #{honor,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="basic != null">
+				basic = #{basic,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="farmlan1 != null">
+				farmlan1 = #{farmlan1,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="education1 != null">
+				education1 = #{education1,jdbcType=LONGVARCHAR},
+			</if>
+
+			<if test="contract1 != null">
+				contract1 = #{contract1,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="policial1 != null">
+				policial1 = #{policial1,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="religion1 != null">
+				religion1 = #{religion1,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="honor1 != null">
+				honor1 = #{honor1,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="basic1 != null">
+				basic1 = #{basic1,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where account = #{account,jdbcType=VARCHAR}
+	</update>
+
+</mapper>

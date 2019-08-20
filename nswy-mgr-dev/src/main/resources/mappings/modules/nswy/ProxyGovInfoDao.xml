@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ProxyGovInfoDao" >
+  <resultMap id="BaseResultMap" type="com.ovit.manager.modules.nswy.entity.ProxyGovInfo" >
+    <id column="id" jdbcType="INTEGER" property="proxyGovInfoId" />
+    <result column="gov_name" jdbcType="VARCHAR" property="govName" />
+    <result column="login_account" jdbcType="VARCHAR" property="loginAccount" />
+    <result column="organization_code" jdbcType="VARCHAR" property="organizationCode" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="gov_type" jdbcType="VARCHAR" property="govType" />
+    <result column="gov_level" jdbcType="VARCHAR" property="govLevel" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="logo_picture_list" jdbcType="VARCHAR" property="logoPictureList" />
+    <result column="qualification_certificate_picture_list" jdbcType="VARCHAR" property="qualificationCertificatePictureList" />
+    <result column="unit_person_picture_list" jdbcType="VARCHAR" property="unitPersonPictureList" />
+    <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+    <result column="address" jdbcType="VARCHAR" property="address"/>
+    <result column="country_type" jdbcType="VARCHAR" property="countryType"/>
+    <result column="info_id" jdbcType="VARCHAR" property="infoId"/>
+    <result column="remark" jdbcType="VARCHAR" property="remark"/>
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+        c.id as proxyGovInfoId,
+		c.gov_name as govName,
+		c.login_account as loginAccount,
+		c.organization_code as organizationCode,
+		c.create_time as createTime,
+		c.gov_type as govType,
+		c.gov_level as govLevel,
+		c.location as location,
+		c.qualification_certificate_picture_list as qualificationCertificatePictureList,
+		c.unit_person_picture_list as unitPersonPictureList,
+		c.approve_status as approveStatus,
+		c.address as address,
+		c.country_type as countryType,
+		c.info_id as infoId,
+		c.remark,
+		c.addr_detail as addrDetail
+  </sql>
+
+  <sql id="Base_Column_Lists" >
+        b.gov_name as govName1,
+        b.organization_code as organizationCode1,
+        b.create_time as createTime1,
+        b.gov_type as govType1,
+        b.gov_level as govLevel1,
+        b.location as location1,
+        b.logo_picture_list as logoPictureList,
+        b.qualification_certificate_picture_list as qualificationCertificatePictureList1,
+        b.unit_person_picture_list as unitPersonPictureList1,
+        b.approve_status as approveStatus1,
+        b.address as address1,
+        b.addr_detail as addrDetail1
+  </sql>
+
+
+    <select id="findList" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+    <include refid="Base_Column_List" />,l.display_name as legalPerson,u.display_name as agencyName
+    from proxy_gov_info c
+    left join login_user l on c.login_account = l.login_account
+    left join gov_info b on c.info_id = b.id
+    left join login_user u on b.agencyer = u.login_account
+    where 1=1
+    <if test="govName!='' and govName!=null">
+
+      and c.gov_name LIKE CONCAT('%',#{govName},'%')
+
+    </if>
+
+    <if test="approveStatus!='' and approveStatus!=null">
+
+      and c.approve_status =#{approveStatus}
+
+    </if>
+    order by c.create_time desc
+  </select>
+
+
+
+
+  <select id="selectByPrimaryKey" parameterType="com.ovit.manager.modules.nswy.entity.ProxyGovInfo" resultMap="BaseResultMap">
+
+
+    SELECT
+    <include refid="Base_Column_List" />,<include refid="Base_Column_Lists" />
+    from proxy_gov_info c left join login_user l on c.login_account = l.login_account
+      left join gov_info b on c.info_id=b.id
+    where c.id = #{proxyGovInfoId,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="com.ovit.manager.modules.nswy.entity.ProxyGovInfo" >
+    delete from proxy_gov_info
+    where id = #{proxyGovInfoId,jdbcType=INTEGER}
+  </delete>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ovit.manager.modules.nswy.entity.ProxyGovInfo" >
+    update proxy_gov_info
+    set approve_status = #{approveStatus}
+    <if test="remark!=null and remark !=''">
+      , remark = #{remark}
+    </if>
+    where id = #{proxyGovInfoId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateGovInfo" parameterType="com.ovit.manager.modules.nswy.entity.ProxyGovInfo" >
+    update gov_info
+    set approve_status = 1
+    where id = #{infoId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateLoginUser" parameterType="com.ovit.manager.modules.nswy.entity.ProxyGovInfo">
+    update login_user set is_real_identity = 'Y' where login_account = (select login_account from gov_info where id = #{infoId,jdbcType=INTEGER} )
+  </update>
+
+
+  <insert id="insertLoginUser" parameterType="com.ovit.manager.modules.nswy.entity.LoginUser">
+    insert into login_user (register_time, login_passwd, unique_id, display_name,login_account,is_real_identity, user_type)
+    values (
+      now(),
+      #{loginPasswd},
+      #{uniqueId},
+      #{displayName},
+      #{loginAccount},
+      #{isRealIdentity},
+      #{userType}
+    )
+  </insert>
+
+  <insert id="insertNswyGovInfo" parameterType="com.ovit.manager.modules.nswy.entity.NswyGovInfo">
+    insert into gov_info (login_account,create_time,agencyer,country_type,gov_name,approve_status)
+    values (
+    #{loginAccount},
+      now(),
+      #{agencyer},
+      #{countryType},
+      #{govName},
+      #{approveStatus}
+    )
+  </insert>
+
+  <select id="selectGovInfoId" parameterType="java.lang.String" resultType="java.lang.String">
+    select g.id as govInfoId from gov_info g where g.login_account=#{loginAccount}
+  </select>
+
+
+  <insert id="insertProxyGovInfo" parameterType="com.ovit.manager.modules.nswy.entity.ProxyGovInfo">
+      INSERT INTO proxy_gov_info (
+      `info_id`,
+      `login_account`,
+      `gov_name`,
+      approve_status,
+      `create_time`,
+      `country_type`
+    )
+    VALUES
+    (
+      #{infoId},
+      #{loginAccount},
+      #{govName},
+      #{approveStatus},
+      now(),
+      #{countryType}
+    );
+  </insert>
+
+  <select id="findLoginAccount" parameterType="java.lang.String" resultType="java.util.Map">
+    select * from login_user where login_account = #{loginAccount}
+  </select>
+
+
+  <select id="findPost" parameterType="map" resultType="map">
+    select id, post_name as postName, parent_id as pid from reversion_post_info where post_name = #{postName} and parent_id = #{pid}
+  </select>
+
+  <insert id="insertPost" parameterType="map">
+    INSERT INTO reversion_post_info (
+    `id`,
+    `post_name`,
+    `parent_id`,
+    `create_time`
+    )
+    VALUES
+    (
+    #{id},
+    #{postName},
+    #{pid},
+    now()
+    );
+</insert>
+
+  <select id="findTitle" parameterType="map" resultType="map">
+    select
+      p.id,
+      p.technical_title_name as technicalTitleName,
+      p.parent_id as pid
+
+    from reversion_technical_title_info p
+
+    where p.technical_title_name = #{technicalTitleName} and p.parent_id = #{pid}
+
+
+  </select>
+
+  <insert id="saveTitle" parameterType="map">
+        insert into reversion_technical_title_info(
+          id,
+          technical_title_name,
+          parent_id,
+          title_type,
+         create_time
+        )values (
+          #{id},
+          #{technicalTitleName},
+          #{pid},
+          #{titleType},
+          now()
+        );
+    </insert>
+
+</mapper>

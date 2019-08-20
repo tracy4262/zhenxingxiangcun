@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.certification.mapper.SysFollowDictMapper" >
+
+    <select id="findQuery" parameterType="com.ovit.nswy.member.certification.model.SysFollowDict" resultType="com.ovit.nswy.member.certification.model.SysFollowDict">
+        SELECT c.id,c.parent_id,c.label,c.value,c.type,c.create_time ,c.remark FROM sys_follow_dict c  where c.label = #{label} and c.value =#{value} and c.type=#{type}
+    </select>
+
+    <insert id="insert" parameterType="com.ovit.nswy.member.certification.model.SysFollowDict">
+        INSERT INTO sys_follow_dict (
+            parent_id,label,value,type,create_time
+        ) VALUES (
+            #{parentId},#{label},#{value},#{type},NOW()
+        )
+    </insert>
+
+    <select id="findList" parameterType="map" resultType="map">
+        SELECT c.id, c.parent_id, c.label as name, c.value, c.type, c.create_time, c.remark
+        FROM sys_follow_dict c
+        WHERE c.type=#{follow_type} and c.parent_id=0
+    </select>
+
+
+    <select id="findSysFollowDict" parameterType="map" resultType="map">
+        select c.id,c.parent_id,c.label as name,c.value,c.type,c.create_time ,c.remark from sys_follow_dict c where c.parent_id =#{id} and type=#{value};
+
+    </select>
+
+    <insert id="insertFollow" parameterType="com.ovit.nswy.member.certification.model.FollowInfo">
+        INSERT INTO follow_info (
+            sys_follow_dict_id,follow_label,create_time,account,follow_type,template_id
+        ) VALUES (
+            #{sysFollowDictId},#{followLabel},NOW(),#{account},#{followType},#{templateId}
+        )
+    </insert>
+
+    <select id="findFllowDict" parameterType="map" resultType="map">
+        SELECT c.follow_id,c.sys_follow_dict_id as id ,c.follow_label as name,c.create_time ,c.account
+        FROM follow_info c
+        WHERE 1=1
+        <if test="account !='' and account!=null">
+            AND c.account = #{account}
+        </if>
+        <if test="followType !='' and followType!=null">
+            AND c.follow_type = #{followType}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND c.template_id = #{templateId}
+        </if>
+    </select>
+
+    <delete id="deleteFollowDict" parameterType="map">
+        delete from follow_info where 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </delete>
+
+    <select id="findPushStatus" parameterType="map" resultType="map">
+        SELECT id, account, template_id as templateId, flag
+        FROM reversion_indivi_push_status
+        WHERE 1=1
+        <if test="account !='' and account!=null">
+            AND account = #{account}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </select>
+
+    <insert id="addPushStatus" parameterType="map">
+        INSERT INTO reversion_indivi_push_status (
+        account, template_id, flag
+        ) VALUES (
+        #{account}, #{templateId}, #{flag}
+        )
+    </insert>
+
+    <update id="updatePushStatus" parameterType="map">
+        UPDATE reversion_indivi_push_status
+        SET flag = #{flag}
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </update>
+
+    <delete id="deletePushStatus" parameterType="map">
+        DELETE FROM reversion_indivi_push_status
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </delete>
+
+</mapper>

@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.application.mapper.ConsultMapper">
+
+    <insert id="publishStepOne" parameterType="map" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO fishing_service(
+        account,
+        currency_service_name,
+        trade_class_id,
+        service_class_id,
+        `type`,
+        create_time
+        ) VALUES (
+        #{account},
+        #{currencyServiceName},
+        #{tradeClassId},
+        #{serviceClassId},
+        #{type},
+        now()
+        )
+    </insert>
+
+    <update id="updateStepOne" parameterType="map">
+        update fishing_service
+        <set>
+            <if test="currencyServiceName !=null and currencyServiceName !=''">
+                currency_service_name = #{currencyServiceName},
+            </if>
+            <if test="tradeClassId !=null and tradeClassId !=''">
+                trade_class_id = #{tradeClassId},
+            </if>
+            <if test="serviceClassId !=null and serviceClassId !=''">
+                service_class_id = #{serviceClassId},
+            </if>
+            <if test="type != null">
+                `type` = #{type},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="findStepOne" parameterType="int" resultType="map">
+        SELECT currency_service_name as currencyServiceName, trade_class_id as tradeClassId, service_class_id as serviceClassId, `type`, account
+        FROM fishing_service
+        WHERE id = #{id}
+    </select>
+
+    <select id="getExpertInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id as expertId,
+        expert_name as expert,
+        personal_photo as personalPicture,
+        expert_type as expertType,
+        adept_field as adeptField,
+        related_species as relatedSpecies
+        from reversion_expert_auth
+        where account = #{account}
+        <if test="yearId!='' and yearId!=null">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId!='' and templateId!=null">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <select id="findStepTwo" resultType="map" parameterType="map">
+        select a.service_name as serviceName, a.service_describe as serviceDescribe, a.expert_id as expertId, a.time,
+        b.expert_name as expert, b.personal_photo as personalPicture, b.expert_type as expertType, b.adept_field as adeptField,
+        b.related_species as relatedSpecies, a.related_experience as relatedExperience, a.bus_lead as busLead, a.car_lead as carLead
+        from consult_service a left join reversion_expert_auth b
+        on a.expert_id = b.id
+        where a.service_id = #{id}
+    </select>
+
+    <select id="contactList" parameterType="map" resultType="map">
+        select a.member_name, a.member_abbreviation, a.contact_name, a.card, a.seat_phone, a.phone, a.qq_number,
+        a.wechat_number, a.email, a.website_url, a.postal_code, a.image, a.location, a.location_id as locationId,
+        a.address, a.house_number, a.longitude, a.latitude, DATE_FORMAT(a.create_time, "%Y-%m-%d %T")as create_time,
+        case when b.member_contact_info_id is null then 0 else 1 end as is_choose, a.member_contact_info_id
+        from reversion_member_contact_info a left join consult_member_contact_info b
+        on (a.user_id = b.account and a.member_contact_info_id = b.member_contact_info_id and b.consult_id = #{id})
+        where 1=1
+        <if test="account!=null and account !=''">
+            and a.user_id = #{account}
+        </if>
+        <if test="templateId!=null and templateId !=''">
+            and a.template_id = #{templateId}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="findContactInfo" parameterType="map" resultType="map">
+        SELECT id, member_contact_info_id, member_name, member_name_status, member_abbreviation, member_abbreviation_status,
+        contact_name, contact_name_status, card, card_status, seat_phone, seat_phone_status, phone, phone_status, qq_number,
+        qq_number_status, wechat_number, wechat_number_status, email, email_status, website_url, website_url_status,
+        postal_code, postal_code_status, image, image_status, location, location_status, location_id as locationId,
+        address, address_status, house_number, house_number_status, longitude, latitude, lng_lat_status, DATE_FORMAT(create_time, "%Y-%m-%d %T") as create_time
+        FROM consult_member_contact_info
+        WHERE consult_id = #{id}
+        <if test="address!='' and address!=null">
+            and location like concat(concat('%',#{address},'%'))
+        </if>
+    </select>
+
+    <update id="updateStepTwo" parameterType="map">
+        update consult_service
+        <set>
+            <if test="serviceName !=null and serviceName !=''">
+                service_name = #{serviceName},
+            </if>
+            <if test="serviceDescribe !=null and serviceDescribe !=''">
+                service_describe = #{serviceDescribe},
+            </if>
+            <if test="expertId !=null and expertId !=''">
+                expert_id = #{expertId},
+            </if>
+            <if test="relatedExperience !=null and relatedExperience !=''">
+                related_experience = #{relatedExperience},
+            </if>
+            <if test="time !=null and time !=''">
+                `time` = #{time},
+            </if>
+            <if test="busLead !=null and busLead !=''">
+                bus_lead = #{busLead},
+            </if>
+            <if test="carLead !=null and carLead !=''">
+                car_lead = #{carLead},
+            </if>
+        </set>
+        where service_id = #{id}
+    </update>
+
+    <insert id="saveStepTwo" parameterType="map">
+        INSERT INTO consult_service(
+        service_id,
+        account,
+        service_name,
+        service_describe,
+        expert_id,
+        related_experience,
+        `time`,
+        bus_lead,
+        car_lead,
+        create_time
+        ) VALUES (
+        #{id},
+        #{account},
+        #{serviceName},
+        #{serviceDescribe},
+        #{expertId},
+        #{relatedExperience},
+        #{time},
+        #{busLead},
+        #{carLead},
+        now()
+        )
+    </insert>
+
+    <delete id="deleteContactInfo" parameterType="map">
+        DELETE FROM consult_member_contact_info
+        WHERE account = #{account} AND consult_id = #{consultId}
+    </delete>
+
+    <insert id="batchSaveContact" parameterType="map">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO consult_member_contact_info (
+            member_contact_info_id,
+            account,
+            consult_id,
+            member_name,
+            member_name_status,
+            member_abbreviation,
+            member_abbreviation_status,
+            contact_name,
+            contact_name_status,
+            card,
+            card_status,
+            seat_phone,
+            seat_phone_status,
+            phone,
+            phone_status,
+            qq_number,
+            qq_number_status,
+            wechat_number,
+            wechat_number_status,
+            email,
+            email_status,
+            website_url,
+            website_url_status,
+            postal_code,
+            postal_code_status,
+            image,
+            image_status,
+            location,
+            location_status,
+            location_id,
+            address,
+            address_status,
+            house_number,
+            house_number_status,
+            longitude,
+            latitude,
+            lng_lat_status,
+            create_time
+            ) VALUES
+            (
+            #{item.member_contact_info_id},
+            #{item.account},
+            #{item.consultId},
+            #{item.member_name},
+            #{item.member_name_status},
+            #{item.member_abbreviation},
+            #{item.member_abbreviation_status},
+            #{item.contact_name},
+            #{item.contact_name_status},
+            #{item.card},
+            #{item.card_status},
+            #{item.seat_phone},
+            #{item.seat_phone_status},
+            #{item.phone},
+            #{item.phone_status},
+            #{item.qq_number},
+            #{item.qq_number_status},
+            #{item.wechat_number},
+            #{item.wechat_number_status},
+            #{item.email},
+            #{item.email_status},
+            #{item.website_url},
+            #{item.website_url_status},
+            #{item.postal_code},
+            #{item.postal_code_status},
+            #{item.image},
+            #{item.image_status},
+            #{item.location},
+            #{item.location_status},
+            #{item.locationId},
+            #{item.address},
+            #{item.address_status},
+            #{item.house_number},
+            #{item.house_number_status},
+            #{item.longitude},
+            #{item.latitude},
+            #{item.lng_lat_status},
+            now()
+            )
+        </foreach>
+    </insert>
+
+    <select id="networkStationList" parameterType="map" resultType="map">
+        select a.network_name as  networkName, a.network_type as networkType, a.location, a.address, a.house_number as houseNumber,
+        a.perfect_address as perfectAddress, a.longitude, a.latitude, a.contact, a.office_phone as officePhone, a.phone,
+        case when b.consult_id is null then 0 else 1 end as is_choose, a.id as outletsId
+        from reversion_business_outlets_info a left join consult_business_outlets_info b
+        on (a.account = b.account and a.id = b.outlets_id and b.consult_id = #{id})
+        where 1=1
+        <if test="templateId!=null and templateId!=''">
+            and a.template_id = #{templateId}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and a.year_id = #{yearId}
+        </if>
+        <if test="account!=null and account!=''">
+            and a.account = #{account}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <update id="updateStepThree" parameterType="map">
+        update consult_service
+        <set>
+            <if test="serviceType !=null and serviceType !=''">
+                service_type = #{serviceType},
+            </if>
+            <if test="chargeType !=null and chargeType !=''">
+                charge_type = #{chargeType},
+            </if>
+            <if test="doorService !=null">
+                door_service = #{doorService},
+            </if>
+            <if test="doorServiceData !=null and doorServiceData !=''">
+                door_service_data = #{doorServiceData},
+            </if>
+            <if test="locationService !=null">
+                location_service = #{locationService},
+            </if>
+            <if test="locationTime !=null and locationTime !=''">
+                location_time = #{locationTime},
+            </if>
+            <if test="locationTimeStatus !=null and locationTimeStatus !=''">
+                location_time_status = #{locationTimeStatus},
+            </if>
+            <if test="telephoneService !=null">
+                telephone_service = #{telephoneService},
+            </if>
+            <if test="telephoneServiceData !=null and telephoneServiceData !=''">
+                telephone_service_data = #{telephoneServiceData},
+            </if>
+            <if test="networkService !=null">
+                network_service = #{networkService},
+            </if>
+            <if test="networkServiceData !=null and networkServiceData !=''">
+                network_service_data = #{networkServiceData},
+            </if>
+        </set>
+        where service_id = #{id}
+    </update>
+
+    <select id="findStepThree" parameterType="map" resultType="map">
+        SELECT service_type as serviceType, charge_type as chargeType, door_service as doorService, door_service_data as doorServiceData,
+        location_service as locationService, location_time as locationTime, location_time_status as locationTimeStatus,
+        telephone_service as telephoneService, telephone_service_data as telephoneServiceData, network_service as networkService,
+        network_service_data as networkServiceData
+        FROM consult_service
+        WHERE service_id = #{id}
+    </select>
+
+    <delete id="deleteNetworkInfo" parameterType="map">
+        DELETE FROM consult_business_outlets_info
+        WHERE account = #{account} AND consult_id = #{consultId}
+    </delete>
+
+    <insert id="batchSaveNetwork" parameterType="map">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO consult_business_outlets_info (
+            account,
+            outlets_id,
+            consult_id,
+            network_name,
+            network_type,
+            location,
+            address,
+            house_number,
+            perfect_address,
+            longitude,
+            latitude,
+            contact,
+            office_phone,
+            phone,
+            create_time
+            ) VALUES
+            (
+            #{item.account},
+            #{item.outletsId},
+            #{item.consultId},
+            #{item.networkName},
+            #{item.networkType},
+            #{item.location},
+            #{item.address},
+            #{item.houseNumber},
+            #{item.perfectAddress},
+            #{item.longitude},
+            #{item.latitude},
+            #{item.contact},
+            #{item.officePhone},
+            #{item.phone},
+            now()
+            )
+        </foreach>
+    </insert>
+
+    <select id="findNetworkInfo" parameterType="map" resultType="map">
+        SELECT id, outlets_id as outletsId, network_name as networkName, network_type as networkType, location, address, house_number as houseNumber,
+        perfect_address as perfectAddress, longitude, latitude, contact, office_phone as officePhone, phone
+        FROM consult_business_outlets_info
+        WHERE consult_id = #{id}
+    </select>
+
+    <update id="updateStepFour" parameterType="map">
+        update consult_service
+        <set>
+            <if test="attention !=null and attention !=''">
+                attention = #{attention},
+            </if>
+            <if test="promise !=null and promise !=''">
+                promise = #{promise},
+            </if>
+        </set>
+        where service_id = #{id}
+    </update>
+
+    <select id="findStepFour" parameterType="map" resultType="map">
+        SELECT attention, promise
+        FROM consult_service
+        WHERE service_id = #{id}
+    </select>
+
+    <select id="findConsultService" parameterType="map" resultType="map">
+        select
+        s.id,
+        s.account,
+        s.service_name,
+        b.personal_photo as image_url,
+        '5' as type,
+        s.create_time,
+        j.id as serviceJoinId,
+        j.service_id as serviceId,
+        j.`type`,
+        j.join_service_id as joinServiceId,
+        j.join_service as joinService
+        from consult_service s left join service_join_info j on (s.id = j.join_service_id and j.type = 5)
+        left join reversion_expert_auth b on s.expert_id = b.id
+        where 1=1
+        <if test="serviceId !=null and serviceId!=''">
+            and j.service_id = #{serviceId}
+        </if>
+        <if test="account !=null and account!=''">
+            and s.account = #{account}
+        </if>
+        <if test="service_name !='' and service_name !=null">
+            and s.service_name LIKE CONCAT("%",#{service_name},"%")
+        </if>
+        <if test="currency_service_name !='' and currency_service_name !=null">
+            and s.currency_service_name = #{currency_service_name}
+        </if>
+    </select>
+
+    <update id="updateImgAndContact" parameterType="map">
+        UPDATE fishing_service
+        <set>
+            <if test="img !=null and img !=''">
+                image_url = #{img},
+            </if>
+            <if test="contact !=null and contact !=''">
+                contact = #{contact},
+            </if>
+            <if test="serviceName !=null and serviceName !=''">
+                service_name = #{serviceName},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getConsultById" parameterType="map" resultType="map">
+        select id, service_id as serviceId from consult_service
+        where service_id = #{id}
+    </select>
+
+    <select id="list" parameterType="map" resultType="map">
+        select id, service_name as serviceName, service_class_id as serviceClassId, DATE_FORMAT(create_time,'%Y-%m-%d') AS createTime
+        from fishing_service
+        where account = #{account} and type = #{type}
+    </select>
+
+    <delete id="delete" parameterType="int">
+        delete from fishing_service where id = #{id}
+    </delete>
+
+    <select id="isExpert" parameterType="map" resultType="map">
+        select id from reversion_expert_auth
+        where account = #{account} and year_id = #{yearId} and template_id = #{templateId} and approve_status = 1
+    </select>
+
+    <select id="findConsultOrder" parameterType="map" resultType="map">
+        select id, status from consult_order_manage
+        where account = #{account} and consult_id = #{id} and status = 0
+    </select>
+
+    <select id="serviceList" parameterType="map" resultType="map">
+        select a.id, c.expert_name as expertName, c.adept_species as adeptSpecies, c.personal_photo as personalPicture,
+        c.adept_field as adeptField, c.expert_type as expertType, "咨询服务" as type
+        from fishing_service a left join consult_service b
+        on a.id = b.service_id left join reversion_expert_auth c
+        on b.expert_id = c.id
+        where a.type = 5 and a.flag = 1
+        <if test="expertType!='' and expertType!=null">
+            and c.expert_type = #{expertType}
+        </if>
+        <if test="industry!='' and industry!=null">
+            and c.related_industry like concat(concat('%',#{industry},'%'))
+        </if>
+        <if test="species!='' and species!=null">
+            and c.related_species like concat(concat('%',#{species},'%'))
+        </if>
+        <if test="serviceName!='' and serviceName!=null">
+            and a.service_name like concat(concat('%',#{serviceName},'%'))
+        </if>
+    </select>
+
+</mapper>

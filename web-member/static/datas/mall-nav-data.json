@@ -1,0 +1,1519 @@
+{
+	"code": 200,
+	"msg": "请求成功",
+	"data": [{
+			"icon": "icon-rice",
+			"label": "农资产品",
+			"children": [{
+					"label": "种用",
+					"value": "product/search.htm?category_id=36",
+					"children": [{
+							"value": "product/search.htm?category_id=789",
+							"label": "粮食类"
+						},
+						{
+							"value": "product/search.htm?category_id=790",
+							"label": "纤维类"
+						},
+						{
+							"value": "product/search.htm?category_id=791",
+							"label": "油料类"
+						},
+						{
+							"value": "product/search.htm?category_id=792",
+							"label": "瓜果蔬类"
+						},
+						{
+							"value": "product/search.htm?category_id=793",
+							"label": "菌藻类"
+						},
+						{
+							"value": "product/search.htm?category_id=794",
+							"label": "药用类"
+						},
+						{
+							"value": "product/search.htm?category_id=795",
+							"label": "香料类"
+						},
+						{
+							"value": "product/search.htm?category_id=796",
+							"label": "糖料类"
+						},
+						{
+							"value": "product/search.htm?category_id=797",
+							"label": "饮料类"
+						},
+						{
+							"value": "product/search.htm?category_id=798",
+							"label": "调料类"
+						},
+						{
+							"value": "product/search.htm?category_id=799",
+							"label": "嗜好类"
+						},
+						{
+							"value": "product/search.htm?category_id=800",
+							"label": "染料类"
+						},
+						{
+							"value": "product/search.htm?category_id=801",
+							"label": "漆料类"
+						},
+						{
+							"value": "product/search.htm?category_id=802",
+							"label": "胶液料类"
+						},
+						{
+							"value": "product/search.htm?category_id=803",
+							"label": "鞣料类"
+						},
+						{
+							"value": "product/search.htm?category_id=804",
+							"label": "绿化观赏类"
+						},
+						{
+							"value": "product/search.htm?category_id=805",
+							"label": "防护用材林木"
+						},
+						{
+							"value": "product/search.htm?category_id=806",
+							"label": "能源类"
+						},
+						{
+							"value": "product/search.htm?category_id=807",
+							"label": "肉用类"
+						},
+						{
+							"value": "product/search.htm?category_id=808",
+							"label": "肉蛋兼用类"
+						},
+						{
+							"value": "product/search.htm?category_id=809",
+							"label": "肉奶兼用类"
+						},
+						{
+							"value": "product/search.htm?category_id=810",
+							"label": "肉毛兼用类"
+						},
+						{
+							"value": "product/search.htm?category_id=811",
+							"label": "肉绒兼用类"
+						},
+						{
+							"value": "product/search.htm?category_id=812",
+							"label": "肉皮兼用类"
+						},
+						{
+							"value": "product/search.htm?category_id=813",
+							"label": "肉药兼用类"
+						},
+						{
+							"value": "product/search.htm?category_id=814",
+							"label": "宠物观赏类"
+						},
+						{
+							"value": "product/search.htm?category_id=815",
+							"label": "役力类"
+						},
+						{
+							"value": "product/search.htm?category_id=816",
+							"label": "益虫类"
+						},
+						{
+							"value": "product/search.htm?category_id=817",
+							"label": "实验类"
+						},
+						{
+							"value": "product/search.htm?category_id=818",
+							"label": "饵料类"
+						},
+						{
+							"value": "product/search.htm?category_id=819",
+							"label": "饲料类"
+						},
+						{
+							"value": "product/search.htm?category_id=820",
+							"label": "花卉类"
+						},
+						{
+							"value": "product/search.htm?category_id=821",
+							"label": "肥料类"
+						}
+					]
+				},
+				{
+					"label": "农药",
+					"value": "product/search.htm?category_id=42",
+					"children": [{
+							"value": "product/search.htm?category_id=822",
+							"label": "杀虫剂"
+						},
+						{
+							"value": "product/search.htm?category_id=823",
+							"label": "除草剂"
+						},
+						{
+							"value": "product/search.htm?category_id=824",
+							"label": "杀螨剂"
+						},
+						{
+							"value": "product/search.htm?category_id=825",
+							"label": "增效剂"
+						},
+						{
+							"value": "product/search.htm?category_id=826",
+							"label": "灭鼠剂"
+						},
+						{
+							"value": "product/search.htm?category_id=827",
+							"label": "杀菌剂"
+						},
+						{
+							"value": "product/search.htm?category_id=828",
+							"label": "植物生长调节剂"
+						},
+						{
+							"value": "product/search.htm?category_id=829",
+							"label": "杀软体动物"
+						}
+					]
+				},
+				{
+					"label": "化肥",
+					"value": "product/search.htm?category_id=46",
+					"children": [{
+							"value": "product/search.htm?category_id=830",
+							"label": "氮肥"
+						},
+						{
+							"value": "product/search.htm?category_id=831",
+							"label": "磷肥"
+						},
+						{
+							"value": "product/search.htm?category_id=832",
+							"label": "钾肥"
+						},
+						{
+							"value": "product/search.htm?category_id=833",
+							"label": "复合肥料"
+						},
+						{
+							"value": "product/search.htm?category_id=834",
+							"label": "复混肥料"
+						},
+						{
+							"value": "product/search.htm?category_id=835",
+							"label": "微量元素肥"
+						},
+						{
+							"value": "product/search.htm?category_id=836",
+							"label": "菌肥"
+						},
+						{
+							"value": "product/search.htm?category_id=837",
+							"label": "微生物-无机复混肥"
+						},
+						{
+							"value": "product/search.htm?category_id=838",
+							"label": "腐殖酸-无机复混肥"
+						},
+						{
+							"value": "product/search.htm?category_id=839",
+							"label": "草炭-无机复混肥"
+						},
+						{
+							"value": "product/search.htm?category_id=840",
+							"label": "厩肥"
+						},
+						{
+							"value": "product/search.htm?category_id=841",
+							"label": "堆肥"
+						},
+						{
+							"value": "product/search.htm?category_id=842",
+							"label": "沤肥"
+						},
+						{
+							"value": "product/search.htm?category_id=843",
+							"label": "沼气肥"
+						},
+						{
+							"value": "product/search.htm?category_id=844",
+							"label": "废弃物肥料"
+						}
+					]
+				},
+				{
+					"label": "兽药",
+					"value": "product/search.htm?category_id=676",
+					"children": [{
+							"value": "product/search.htm?category_id=845",
+							"label": "中兽药方剂"
+						},
+						{
+							"value": "product/search.htm?category_id=846",
+							"label": "化学药品"
+						}
+					]
+				},
+				{
+					"label": "饲料",
+					"value": "product/search.htm?category_id=677",
+					"children": [{
+							"value": "product/search.htm?category_id=847",
+							"label": "配合饲料"
+						},
+						{
+							"value": "product/search.htm?category_id=848",
+							"label": "饲料添加剂"
+						},
+						{
+							"value": "product/search.htm?category_id=849",
+							"label": "动物性蛋白质饲料"
+						},
+						{
+							"value": "product/search.htm?category_id=850",
+							"label": "植物性蛋白质饲料"
+						},
+						{
+							"value": "product/search.htm?category_id=851",
+							"label": "宠物饲料"
+						}
+					]
+				}
+			],
+			"shopLogo": [{
+					"src": "../src/img/gongsi-img.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/gongsi-img.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/gongsi-img.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/gongsi-img.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/gongsi-img.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/gongsi-img.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/gongsi-img.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/gongsi-img.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/gongsi-img.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/gongsi-img.png",
+					"value": "javascript:;"
+				}
+			]
+		},
+		{
+			"icon": "icon-produce",
+			"label": "生产工具",
+			"children": [{
+					"value": "product/search.htm?category_id=53",
+					"label": "农用工具及用品",
+					"children": [{
+							"value": "product/search.htm?category_id=852",
+							"label": "农业通用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=853",
+							"label": "农林专用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=854",
+							"label": "畜牧专用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=855",
+							"label": "渔业专用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=856",
+							"label": "农业生产耗材"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=54",
+					"label": "检测专用产品",
+					"children": [{
+							"value": "product/search.htm?category_id=857",
+							"label": "通用检测用具"
+						},
+						{
+							"value": "product/search.htm?category_id=858",
+							"label": "专用检测用具"
+						},
+						{
+							"value": "product/search.htm?category_id=859",
+							"label": "检测专用耗材"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=55",
+					"label": "仓储专用产品",
+					"children": [{
+							"value": "product/search.htm?category_id=860",
+							"label": "仓储通用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=861",
+							"label": "仓储专用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=862",
+							"label": "仓储专用耗材"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=56",
+					"label": "包装专用产品",
+					"children": [{
+							"value": "product/search.htm?category_id=863",
+							"label": "包装通用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=864",
+							"label": "包装专用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=865",
+							"label": "包装专用耗材"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=57",
+					"label": "装卸搬运专用产品",
+					"children": [{
+							"value": "product/search.htm?category_id=866",
+							"label": "装卸搬运通用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=867",
+							"label": "装卸搬运专用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=868",
+							"label": "装卸搬运专用耗材"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=680",
+					"label": "运输用具及用品",
+					"children": [{
+							"value": "product/search.htm?category_id=869",
+							"label": "运输通用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=870",
+							"label": "运输专用用具"
+						},
+						{
+							"value": "product/search.htm?category_id=871",
+							"label": "运输专用耗材"
+						}
+					]
+				}
+			],
+			"shopLogo": [{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				}
+			]
+		},
+		{
+			"icon": "icon-machine",
+			"label": "机械设备",
+			"children": [{
+					"value": "product/search.htm?category_id=78",
+					"label": "农业通用机械设备",
+					"children": [{
+							"value": "product/search.htm?category_id=872",
+							"label": "拖拉机"
+						},
+						{
+							"value": "product/search.htm?category_id=873",
+							"label": "内燃机"
+						},
+						{
+							"value": "product/search.htm?category_id=874",
+							"label": "燃油发电机组"
+						},
+						{
+							"value": "product/search.htm?category_id=875",
+							"label": "风力设备"
+						},
+						{
+							"value": "product/search.htm?category_id=876",
+							"label": "水力设备"
+						},
+						{
+							"value": "product/search.htm?category_id=877",
+							"label": "太阳能设备"
+						},
+						{
+							"value": "product/search.htm?category_id=878",
+							"label": "生物质能设备"
+						},
+						{
+							"value": "product/search.htm?category_id=879",
+							"label": "日光温室设施设备"
+						},
+						{
+							"value": "product/search.htm?category_id=880",
+							"label": "塑料大棚设施设备"
+						},
+						{
+							"value": "product/search.htm?category_id=881",
+							"label": "连栋温室设施设备"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=79",
+					"label": "农林专用机械设备",
+					"children": [{
+							"value": "product/search.htm?category_id=882",
+							"label": "种子机械"
+						},
+						{
+							"value": "product/search.htm?category_id=883",
+							"label": "挖掘机械"
+						},
+						{
+							"value": "product/search.htm?category_id=884",
+							"label": "平地机械"
+						},
+						{
+							"value": "product/search.htm?category_id=885",
+							"label": "耕地机械"
+						},
+						{
+							"value": "product/search.htm?category_id=886",
+							"label": "整地机械"
+						},
+						{
+							"value": "product/search.htm?category_id=887",
+							"label": "林地清理机械"
+						},
+						{
+							"value": "product/search.htm?category_id=888",
+							"label": "播种机械"
+						},
+						{
+							"value": "product/search.htm?category_id=889",
+							"label": "农作物育苗机械设备"
+						},
+						{
+							"value": "product/search.htm?category_id=890",
+							"label": "林业育苗机械"
+						},
+						{
+							"value": "product/search.htm?category_id=891",
+							"label": "农作物栽植机械"
+						},
+						{
+							"value": "product/search.htm?category_id=892",
+							"label": "造林机械"
+						},
+						{
+							"value": "product/search.htm?category_id=893",
+							"label": "施肥机械"
+						},
+						{
+							"value": "product/search.htm?category_id=894",
+							"label": "地膜覆盖机械"
+						},
+						{
+							"value": "product/search.htm?category_id=895",
+							"label": "植保机械"
+						},
+						{
+							"value": "product/search.htm?category_id=896",
+							"label": "森林保护机械"
+						},
+						{
+							"value": "product/search.htm?category_id=897",
+							"label": "排灌机械设备"
+						},
+						{
+							"value": "product/search.htm?category_id=898",
+							"label": "修剪修整机械"
+						},
+						{
+							"value": "product/search.htm?category_id=899",
+							"label": "农作物采收机械"
+						},
+						{
+							"value": "product/search.htm?category_id=900",
+							"label": "林业采收机械"
+						},
+						{
+							"value": "product/search.htm?category_id=901",
+							"label": "脱粒机械"
+						},
+						{
+							"value": "product/search.htm?category_id=902",
+							"label": "清选机械"
+						},
+						{
+							"value": "product/search.htm?category_id=903",
+							"label": "干燥机械"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=80",
+					"label": "畜禽机械设备",
+					"children": [{
+						"value": "product/search.htm?category_id=904",
+						"label": "畜禽饲养机械设备"
+					}]
+				},
+				{
+					"value": "product/search.htm?category_id=81",
+					"label": "水产机械设备",
+					"children": [{
+						"value": "product/search.htm?category_id=905",
+						"label": "水生动物饲养机械设备"
+					}]
+				},
+				{
+					"value": "product/search.htm?category_id=82",
+					"label": "加工机械",
+					"children": [{
+							"value": "product/search.htm?category_id=906",
+							"label": "通用加工机械"
+						},
+						{
+							"value": "product/search.htm?category_id=907",
+							"label": "专用加工机械"
+						},
+						{
+							"value": "product/search.htm?category_id=908",
+							"label": "木材加工机械"
+						},
+						{
+							"value": "product/search.htm?category_id=909",
+							"label": "畜禽产品加工机械设备"
+						},
+						{
+							"value": "product/search.htm?category_id=910",
+							"label": "水生（两栖）动物加工机械设备"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=83",
+					"label": "检测仪器及设备",
+					"children": [{
+							"value": "product/search.htm?category_id=911",
+							"label": "通用检测仪器及设备"
+						},
+						{
+							"value": "product/search.htm?category_id=912",
+							"label": "专用检测仪器及设备"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=682",
+					"label": "仓储机械",
+					"children": [{
+							"value": "product/search.htm?category_id=913",
+							"label": "通用仓储机械"
+						},
+						{
+							"value": "product/search.htm?category_id=914",
+							"label": "专用仓储机械"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=683",
+					"label": "包装机械",
+					"children": [{
+							"value": "product/search.htm?category_id=915",
+							"label": "通用包装机械"
+						},
+						{
+							"value": "product/search.htm?category_id=916",
+							"label": "专用包装机械"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=686",
+					"label": "装卸搬运机械",
+					"children": [{
+							"value": "product/search.htm?category_id=917",
+							"label": "通用装卸搬运机械"
+						},
+						{
+							"value": "product/search.htm?category_id=918",
+							"label": "农作物产品装卸搬运机械"
+						},
+						{
+							"value": "product/search.htm?category_id=919",
+							"label": "林木产品装卸搬运机械"
+						},
+						{
+							"value": "product/search.htm?category_id=920",
+							"label": "畜禽产品装卸搬运机械"
+						},
+						{
+							"value": "product/search.htm?category_id=921",
+							"label": "水生（两栖）动物产品装卸搬运机械"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=784",
+					"label": "运输机械",
+					"children": [{
+							"value": "product/search.htm?category_id=922",
+							"label": "通用运输机械"
+						},
+						{
+							"value": "product/search.htm?category_id=923",
+							"label": "专用运输机械"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=924",
+					"label": "废弃物处理设备",
+					"children": [{
+						"value": "product/search.htm?category_id=926",
+						"label": "清洁清扫机",
+						"children": [{
+								"value": "product/search.htm?category_id=927",
+								"label": "刷式道路清扫机"
+							},
+							{
+								"value": "product/search.htm?category_id=928",
+								"label": "气力清洁机"
+							}
+						]
+					}]
+				}
+			],
+			"shopLogo": [{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				}
+			]
+		},
+		{
+			"icon": "icon-instr",
+			"label": "仪器仪表",
+			"children": [{
+				"value": "product/search.htm?category_id=107",
+				"label": "检测设备"
+			}],
+			"shopLogo": [{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				}
+			]
+		},
+		{
+			"icon": "icon-farming",
+			"label": "农事产品",
+			"children": [{
+					"value": "product/search.htm?category_id=128",
+					"label": "植物产品",
+					"children": [{
+							"value": "product/search.htm?category_id=929",
+							"label": "粮食及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=930",
+							"label": "油料及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=931",
+							"label": "瓜果蔬及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=932",
+							"label": "菌藻及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=933",
+							"label": "糖料及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=934",
+							"label": "饮料原料及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=935",
+							"label": "调料及其制品"
+						},
+						{
+							"value": "product/search.htm?category_id=936",
+							"label": "嗜好品原料及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=937",
+							"label": "中药材及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=938",
+							"label": "饲料用产品"
+						},
+						{
+							"value": "product/search.htm?category_id=939",
+							"label": "棉麻及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=940",
+							"label": "香料及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=941",
+							"label": "染料及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=942",
+							"label": "漆料及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=943",
+							"label": "胶液及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=944",
+							"label": "鞣料及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=945",
+							"label": "绿化草木"
+						},
+						{
+							"value": "product/search.htm?category_id=946",
+							"label": "花卉盆景"
+						},
+						{
+							"value": "product/search.htm?category_id=947",
+							"label": "鲜切花"
+						},
+						{
+							"value": "product/search.htm?category_id=948",
+							"label": "薪柴"
+						},
+						{
+							"value": "product/search.htm?category_id=949",
+							"label": "碳材及碳"
+						},
+						{
+							"value": "product/search.htm?category_id=950",
+							"label": "原木及初加工品"
+						},
+						{
+							"value": "product/search.htm?category_id=951",
+							"label": "竹材及初加工品"
+						},
+						{
+							"value": "product/search.htm?category_id=952",
+							"label": "藤材及初加工品"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=129",
+					"label": "鲜活动物",
+					"children": [{
+							"value": "product/search.htm?category_id=953",
+							"label": "食用活动物"
+						},
+						{
+							"value": "product/search.htm?category_id=954",
+							"label": "役用活动物"
+						},
+						{
+							"value": "product/search.htm?category_id=955",
+							"label": "娱用活动物"
+						},
+						{
+							"value": "product/search.htm?category_id=956",
+							"label": "饲用活动物"
+						},
+						{
+							"value": "product/search.htm?category_id=957",
+							"label": "饵用活动物"
+						},
+						{
+							"value": "product/search.htm?category_id=958",
+							"label": "实验用动物"
+						},
+						{
+							"value": "product/search.htm?category_id=959",
+							"label": "益虫"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=130",
+					"label": "动物产品",
+					"children": [{
+							"value": "product/search.htm?category_id=960",
+							"label": "畜肉及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=961",
+							"label": "禽肉及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=962",
+							"label": "水产品及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=963",
+							"label": "蛋（卵）及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=964",
+							"label": "奶及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=965",
+							"label": "蜜及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=966",
+							"label": "动物油脂及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=967",
+							"label": "血及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=968",
+							"label": "肠及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=969",
+							"label": "毛及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=970",
+							"label": "绒及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=971",
+							"label": "丝及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=972",
+							"label": "皮及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=973",
+							"label": "角及制品"
+						},
+						{
+							"value": "product/search.htm?category_id=974",
+							"label": "骨及制品"
+						}
+					]
+				}
+			],
+			"shopLogo": [{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				}
+			]
+		},
+		{
+			"icon": "icon-holl-team",
+			"label": "食用产品",
+			"children": [{
+					"value": "product/search.htm?category_id=156",
+					"label": "食品",
+					"children": [{
+							"value": "product/search.htm?category_id=975",
+							"label": "日用副食品"
+						},
+						{
+							"value": "product/search.htm?category_id=976",
+							"label": "调味品"
+						},
+						{
+							"value": "product/search.htm?category_id=977",
+							"label": "营养保健品"
+						},
+						{
+							"value": "product/search.htm?category_id=978",
+							"label": "饮用水"
+						},
+						{
+							"value": "product/search.htm?category_id=979",
+							"label": "精装茶及茶制品"
+						},
+						{
+							"value": "product/search.htm?category_id=980",
+							"label": "饮料"
+						},
+						{
+							"value": "product/search.htm?category_id=981",
+							"label": "酒类饮品"
+						},
+						{
+							"value": "product/search.htm?category_id=982",
+							"label": "烟草制品"
+						}
+					]
+				},
+				{
+					"value": "product/search.htm?category_id=157",
+					"label": "食品添加剂",
+					"children": [{
+							"value": "product/search.htm?category_id=169",
+							"label": "食品增稠剂"
+						},
+						{
+							"value": "product/search.htm?category_id=170",
+							"label": "蛋白质添加剂"
+						},
+						{
+							"value": "product/search.htm?category_id=171",
+							"label": "食品甜味添加剂"
+						},
+						{
+							"value": "product/search.htm?category_id=172",
+							"label": "食品色、香味添加剂"
+						},
+						{
+							"value": "product/search.htm?category_id=353",
+							"label": "食品保鲜剂"
+						},
+						{
+							"value": "product/search.htm?category_id=354",
+							"label": "食品酸度调节剂"
+						},
+						{
+							"value": "product/search.htm?category_id=355",
+							"label": "食品抗结剂"
+						},
+						{
+							"value": "product/search.htm?category_id=983",
+							"label": "食品消泡剂"
+						},
+						{
+							"value": "product/search.htm?category_id=984",
+							"label": "食品用漂白剂"
+						},
+						{
+							"value": "product/search.htm?category_id=985",
+							"label": "食品用膨松剂"
+						},
+						{
+							"value": "product/search.htm?category_id=986",
+							"label": "食品用胶母糖基础剂"
+						},
+						{
+							"value": "product/search.htm?category_id=987",
+							"label": "食品用被膜剂"
+						},
+						{
+							"value": "product/search.htm?category_id=988",
+							"label": "食品用水分保持剂"
+						},
+						{
+							"value": "product/search.htm?category_id=989",
+							"label": "食品用面粉处理剂"
+						},
+						{
+							"value": "product/search.htm?category_id=990",
+							"label": "食品乳化剂"
+						},
+						{
+							"value": "product/search.htm?category_id=991",
+							"label": "食品用营养强化剂"
+						}
+					]
+				}
+			],
+			"shopLogo": [{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				}
+			]
+		},
+		{
+			"icon": "icon-record",
+			"label": "图书音像",
+			"children": [{
+					"value": "product/search.htm?category_id=202",
+					"label": "报纸"
+				},
+				{
+					"value": "product/search.htm?category_id=203",
+					"label": "图书"
+				},
+				{
+					"value": "product/search.htm?category_id=204",
+					"label": "音像"
+				},
+				{
+					"value": "product/search.htm?category_id=205",
+					"label": "软件"
+				}
+			],
+			"shopLogo": [{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				}
+			]
+		},
+		{
+			"icon": "icon-spade",
+			"label": "日用产品",
+			"children": [{
+					"value": "product/search.htm?category_id=235",
+					"label": "能源产品"
+				},
+				{
+					"value": "product/search.htm?category_id=236",
+					"label": "服饰用品"
+				},
+				{
+					"value": "product/search.htm?category_id=237",
+					"label": "鞋帽用品"
+				},
+				{
+					"value": "product/search.htm?category_id=238",
+					"label": "床上用品"
+				},
+				{
+					"value": "product/search.htm?category_id=239",
+					"label": "家俱"
+				},
+				{
+					"value": "product/search.htm?category_id=992",
+					"label": "厨卫用品"
+				},
+				{
+					"value": "product/search.htm?category_id=993",
+					"label": "洗涤用品"
+				},
+				{
+					"value": "product/search.htm?category_id=994",
+					"label": "美容用品"
+				},
+				{
+					"value": "product/search.htm?category_id=995",
+					"label": "电子设备"
+				},
+				{
+					"value": "product/search.htm?category_id=996",
+					"label": "通信工具"
+				},
+				{
+					"value": "product/search.htm?category_id=997",
+					"label": "影音视频"
+				},
+				{
+					"value": "product/search.htm?category_id=998",
+					"label": "监控设备"
+				},
+				{
+					"value": "product/search.htm?category_id=999",
+					"label": "家用电器"
+				},
+				{
+					"value": "product/search.htm?category_id=1000",
+					"label": "工艺品"
+				},
+				{
+					"value": "product/search.htm?category_id=1001",
+					"label": "珠宝首饰"
+				},
+				{
+					"value": "product/search.htm?category_id=1002",
+					"label": "美化观赏用品"
+				},
+				{
+					"value": "product/search.htm?category_id=1003",
+					"label": "文娱用品"
+				},
+				{
+					"value": "product/search.htm?category_id=1004",
+					"label": "玩具"
+				},
+				{
+					"value": "product/search.htm?category_id=1005",
+					"label": "宠物用品"
+				},
+				{
+					"value": "product/search.htm?category_id=1006",
+					"label": "动植物标本"
+				},
+				{
+					"value": "product/search.htm?category_id=1007",
+					"label": "保健用品"
+				}
+			],
+			"shopLogo": [{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				}
+			]
+		},
+		{
+			"icon": "icon-field",
+			"label": "无形产品",
+			"children": [{
+					"value": "product/search.htm?category_id=265",
+					"label": "土地使用权"
+				},
+				{
+					"value": "product/search.htm?category_id=267",
+					"label": "专利权"
+				},
+				{
+					"value": "product/search.htm?category_id=268",
+					"label": "非专利技术"
+				},
+				{
+					"value": "product/search.htm?category_id=269",
+					"label": "著作权"
+				},
+				{
+					"value": "product/search.htm?category_id=266",
+					"label": "商标权"
+				},
+				{
+					"value": "product/search.htm?category_id=1008",
+					"label": "商誉"
+				},
+				{
+					"value": "product/search.htm?category_id=1009",
+					"label": "植物新品种权"
+				},
+				{
+					"value": "product/search.htm?category_id=1010",
+					"label": "品种审定权"
+				}
+			],
+			"shopLogo": [{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				},
+				{
+					"src": "../src/img/qiye-img2.png",
+					"value": "javascript:;"
+				}
+			]
+		}
+	]
+}

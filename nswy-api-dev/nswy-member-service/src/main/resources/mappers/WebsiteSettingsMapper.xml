@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.WebsiteSettingsMapper">
+
+	<select id="findWebsiteSettingsByAccount" resultType="java.util.Map" parameterType="java.lang.String">
+		select
+		id,account,website_name,is_show,website_logo,website_banner,website_profile,website_introduction,template_info,module_info,name_suffix,update_time
+		from website_settings
+		where account = #{account}
+	</select>
+
+	<select id="findAllWebsiteInfo" resultType="java.util.Map" parameterType="java.lang.String">
+		select
+		id,name,image,user_type,app_type,update_time
+		from website_template_module
+		where user_type = #{userType}
+	</select>
+
+	<insert id="saveWebsiteSettings" parameterType="java.util.Map">
+		INSERT INTO website_settings (
+			account,
+
+			website_name,
+			is_show,
+			website_logo,
+			website_banner,
+			website_profile,
+			website_introduction,
+			template_info,
+			module_info,
+			name_suffix
+		) VALUES
+			(
+				#{account},
+
+				#{website_name},
+				#{is_show},
+				#{website_logo},
+				#{website_banner},
+				#{website_profile},
+				#{website_introduction},
+				#{template_info},
+				#{module_info},
+				#{name_suffix}
+			)
+	</insert>
+
+	<update id="updateWebsiteSettings" parameterType="java.util.Map">
+		UPDATE website_settings
+		SET website_name = #{website_name}, is_show = #{is_show}, website_logo = #{website_logo},
+			website_banner = #{website_banner}, website_profile = #{website_profile}, website_introduction = #{website_introduction},name_suffix = #{name_suffix}
+		WHERE account = #{account}
+	</update>
+
+</mapper>

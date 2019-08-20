@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.relationship.mapper.GroupMapper" >
+    <select id="queryGroupList" parameterType="com.ovit.nswy.relationship.model.request.RelationshipGroupQuery" resultType="com.ovit.nswy.relationship.model.Relationship.RelationshipGroup">
+        SELECT
+            gruop_id AS groupId,
+            account AS account,
+            gruop_name AS groupName,
+            group_type AS groupType,
+            parent_id AS parentId,
+            create_time AS createTime,
+            update_time AS updateTime,
+            group_grade AS groupGrade,
+            CASE
+                WHEN group_type = 1 OR group_type = 2 OR group_type = 3 OR group_type = 4 OR group_type = 5    THEN 'N'
+                ELSE 'Y'
+            END AS deleteStatus
+        FROM
+            relationship_group
+        WHERE parent_id = #{parentId}
+        AND account = #{account}
+    </select>
+
+    <select id="queryFriendList" parameterType="java.lang.String" resultType="com.ovit.nswy.relationship.model.Relationship.FriendList">
+        SELECT friend_id,
+            account,
+            from_account,
+            agree_type,
+            request_message,
+            create_time,
+            update_time,
+            is_read,
+            group_id,
+            from_account_id
+        FROM
+            relationship_friend
+        WHERE
+            group_id = #{groupId}
+        AND agree_type = 2
+    </select>
+</mapper>

@@ -1,0 +1,1325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.FishingServiceMapper">
+
+	<select id="findFishingService" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT s.id,
+			s.account,
+			s.currency_service_name,
+			s.trade_class_id,
+			s.service_class_id,
+			s.service_name,
+			s.simple_describe,
+			s.online_preview,
+			s.image_url,
+			s.service_describe,
+			s.service_dot,
+			s.contact_name,
+			s.qq_number,
+			s.phone,
+			s.address,
+			s.coordinate,
+			s.traffic_lead,
+			s.bus_lead as busLead,
+			s.service_outlet as serviceOutlet,
+			s.contact,
+			s.opening_hours as openingHours,
+			s.service_time,
+			s.mattres_need_attention,
+			s.promise_content,
+			s.season,
+			s.email,
+			s.addrs,
+			s.type,
+			s.money,
+			s.create_time,
+			d.label as trade_label,
+			c.label as service_label,
+			p.id as setMealId,
+			p.product_id as productId,
+			p.set_meal_name as setMealName,
+			p.promotion_plan as promotionPlan,
+			case when p.set_meal_price is null then '' else p.set_meal_price end as setMealPrice,
+			p.payType,
+			p.money,
+			p.end_date as endDate,
+			p.total_price as totalPrice,
+			p.room_id as roomId,
+			p.dining_time as diningTime
+
+		FROM fishing_service s
+		left join (SELECT t1.dict_id AS dict_id,t1.dict_name AS label FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+		WHERE t2.type_name = '行业分类') d on s.trade_class_id = d.dict_id
+
+		left join (SELECT t1.dict_id AS dict_id,t1.dict_name AS label FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+		WHERE t2.type_name = '服务分类') c on s.service_class_id = c.dict_id
+
+		left join product_management_service p on s.id = p.fish_service_id
+
+
+		where s.status = 1
+
+		<if test="type!='' and type!=null">
+			and s.type = #{type}
+		</if>
+		<if test="account!='' and account!=null">
+			and s.account = #{account}
+		</if>
+		<if test="id!='' and id!=null">
+			and s.id = #{id}
+		</if>
+		<if test="service_name !='' and service_name !=null">
+			and s.service_name LIKE CONCAT("%",#{service_name},"%")
+		</if>
+
+		order by
+
+		<if test="type == 0 or type== 1">
+			 s.create_time
+		</if>
+
+		<if test="type != 0 and type != 1">
+			 p.create_time
+		</if>
+
+		desc
+
+
+	</select>
+
+	<select id="findServiceVarietyInfo" parameterType="map" resultType="map">
+		select
+
+			v.id,
+			v.species_id as speciesId,
+			v.species_name as speciesName,
+			v.product_name as productName,
+			v.image,
+			v.season,
+			v.service_id as serviceId,
+			v.product_price as productPrice,
+			v.unit,
+			v.duration_price as durationPrice,
+			v.duration_scale as durationScale,
+			v.fish_type as fishType,
+			v.time_variety as timeVariety
+
+		from service_variety v
+		where 1=1
+		<if test="serviceId!=null and serviceId!=''">
+			and v.service_id = #{serviceId}
+		</if>
+		order by v.create_time desc
+	</select>
+
+	<select id="findMaxServiceVarietyId" resultType="java.lang.String">
+		select max(id) as id from service_variety where service_id=#{serviceId}
+	</select>
+
+	<insert id="saveServiceVarietyInfo" parameterType="map">
+		insert into service_variety (
+			image,
+			species_id,
+			species_name,
+			product_name,
+			season,
+			service_id,
+			product_price,
+			unit,
+			duration_price,
+			duration_scale,
+			fish_type,
+			time_variety,
+			create_time
+		) values (
+			#{image},
+			#{speciesId},
+			#{speciesName},
+			#{productName},
+			#{season},
+			#{serviceId},
+			#{productPrice},
+			#{unit},
+			#{durationPrice},
+			#{durationScale},
+			#{fishType},
+			#{timeVariety},
+			now()
+		);
+
+	</insert>
+
+	<update id="updateServiceVarietyInfo" parameterType="map">
+		update service_variety
+		<set>
+			<if test="image!=null">
+				image = #{image},
+			</if>
+			<if test="speciesName!=null">
+				species_name = #{speciesName},
+			</if>
+			<if test="productName!=null">
+				product_name = #{productName},
+			</if>
+			<if test="season!=null">
+				season = #{season},
+			</if>
+			<if test="serviceId!=null">
+				service_id = #{serviceId},
+			</if>
+
+			<if test="productPrice!=null">
+				product_price = #{productPrice},
+			</if>
+			<if test="unit!=null">
+				unit = #{unit},
+			</if>
+			<if test="durationPrice!=null">
+				duration_price = #{durationPrice},
+			</if>
+			<if test="durationScale!=null">
+				duration_scale = #{durationScale},
+			</if>
+			<if test="fishType!=null">
+				fish_type = #{fishType},
+			</if>
+			<if test="timeVariety!=null">
+				time_variety = #{timeVariety},
+			</if>
+
+		</set>
+
+		where id = #{id}
+	</update>
+
+	<delete id="deleteServiceVarietyInfo" parameterType="map">
+		delete from service_variety where service_id = #{serviceId}
+	</delete>
+
+	<select id="findMaxId" resultType="java.lang.String">
+		select max(id) as id from fishing_service
+	</select>
+
+	<insert id="insertFishingService" keyProperty="id" useGeneratedKeys="true" parameterType="java.util.Map">
+		insert into fishing_service(
+			currency_service_name,
+			trade_class_id,
+			service_class_id,
+			type,
+			account,
+			create_time
+		) value (
+			#{currency_service_name},
+			#{trade_class_id},
+			#{service_class_id},
+			#{type},
+			#{account},
+			now()
+		)
+	</insert>
+
+	<update id="updateFishingService" parameterType="java.util.Map">
+		update fishing_service
+		<set>
+			<if test="currency_service_name!=null">
+				currency_service_name =#{currency_service_name},
+			</if>
+			<if test="trade_class_id!=null">
+				trade_class_id =#{trade_class_id},
+			</if>
+			<if test="service_class_id!=null">
+				service_class_id =#{service_class_id},
+			</if>
+			<if test="service_name!=null">
+				service_name =#{service_name},
+			</if>
+			<if test="simple_describe!=null">
+				simple_describe =#{simple_describe},
+			</if>
+			<if test="online_preview!=null">
+				online_preview =#{online_preview},
+			</if>
+			<if test="service_describe!=null">
+				service_describe =#{service_describe},
+			</if>
+			<if test="image_url!=null">
+				image_url =#{image_url},
+			</if>
+			<if test="service_dot!=null">
+				service_dot =#{service_dot},
+			</if>
+			<if test="contact_name!=null">
+				contact_name =#{contact_name},
+			</if>
+			<if test="qq_number!=null">
+				qq_number =#{qq_number},
+			</if>
+			<if test="phone!=null">
+				phone =#{phone},
+			</if>
+			<if test="address!=null">
+				address =#{address},
+			</if>
+			<if test="addrs!=null">
+				addrs =#{addrs},
+			</if>
+			<if test="email!=null">
+				email =#{email},
+			</if>
+			<if test="coordinate!=null">
+				coordinate =#{coordinate},
+			</if>
+			<if test="traffic_lead!=null">
+				traffic_lead =#{traffic_lead},
+			</if>
+			<if test="service_time!=null">
+				service_time =#{service_time},
+			</if>
+			<if test="mattres_need_attention!=null">
+				mattres_need_attention =#{mattres_need_attention},
+			</if>
+			<if test="promise_content!=null">
+				promise_content =#{promise_content},
+			</if>
+			<if test="busLead!=null">
+				bus_lead =#{busLead},
+			</if>
+			<if test="serviceOutlet!=null">
+				service_outlet =#{serviceOutlet},
+			</if>
+			<if test="season!=null">
+				season =#{season},
+			</if>
+			<if test="money!=null">
+				money =#{money},
+			</if>
+
+			<if test="contact!=null">
+				contact =#{contact},
+			</if>
+			<if test="openingHours!=null">
+				opening_hours =#{openingHours},
+			</if>
+            <if test="flag!=null">
+                flag =#{flag},
+            </if>
+			update_time = now()
+		</set>
+		where id = #{id}
+	</update>
+	
+	
+	<select id="findFishTimeChargeInfo" parameterType="map" resultType="map">
+		select
+			id,
+			fish_service_id as fishServiceId,
+			fish_duration as fishDuration,
+			duration_price as durationPrice,
+			discount,
+			time_charging as timeCharging
+
+		from fish_time_charge_info
+		where 1=1
+		<if test="fishServiceId!=null and fishServiceId!=''">
+			and fish_service_id = #{fishServiceId}
+		</if>
+
+		order by create_time desc
+
+	</select>
+
+	<insert id="saveFishTimeChargeInfo" parameterType="map" >
+		insert into fish_time_charge_info (
+			fish_service_id,
+			fish_duration,
+			duration_price,
+			discount,
+			time_charging,
+			create_time
+		) values (
+			#{fishServiceId},
+			#{fishDuration},
+			#{durationPrice},
+			#{discount},
+			#{timeCharging},
+			now()
+
+		)
+	</insert>
+
+	<delete id="deleteFishTimeChargeInfo" parameterType="map">
+		delete from fish_time_charge_info where fish_service_id = #{fishServiceId}
+	</delete>
+
+
+	<select id="findFishVarietyChargeInfo" parameterType="map" resultType="map">
+		select
+		i.id,
+		i.fish_service_id as fishServiceId,
+		i.product_price as productPrice,
+		i.unit,
+		i.duration_price as durationPrice,
+		i.duration_scale as durationScale,
+		i.fish_type as fishType,
+		i.time_variety as timeVariety,
+		i.service_variety_id as serviceVarietyId,
+		v.species_name as speciesName,
+		v.product_name as productName,
+		v.image,
+		v.season
+
+		from fish_variety_charge_info i left join service_variety v on i.service_variety_id = v.id
+		where 1=1
+		<if test="fishServiceId!=null and fishServiceId!=''">
+			and i.fish_service_id = #{fishServiceId}
+		</if>
+
+		order by i.create_time desc
+
+	</select>
+
+
+
+	<insert id="saveFishVarietyChargeInfo" parameterType="map" >
+		insert into fish_variety_charge_info (
+			fish_service_id,
+			product_price,
+			unit,
+			duration_price,
+			duration_scale,
+			fish_type,
+			time_variety,
+			service_variety_id,
+			create_time
+		) values (
+			#{fishServiceId},
+			#{productPrice},
+			#{unit},
+			#{durationPrice},
+			#{durationScale},
+			#{fishType},
+			#{timeVariety},
+			#{serviceVarietyId},
+			now()
+
+		)
+	</insert>
+
+	<delete id="deleteFishVarietyChargeInfo" parameterType="map">
+		delete from fish_variety_charge_info where fish_service_id = #{fishServiceId} and time_variety = '1'
+	</delete>
+
+	<delete id="deleteFishingService" parameterType="java.util.Map">
+		delete from fishing_service where id = #{id}
+	</delete>
+
+	<delete id="updateFishingServiceStatus" parameterType="java.util.Map">
+		update  fishing_service set status = '2' where id = #{id}
+	</delete>
+
+	<select id="findProductId" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT
+			p.id,
+			p.parent_id,
+			p.communal_id
+		FROM product_management p
+		where p.communal_id = #{communalId}
+	</select>
+
+	<select id="findRoomId" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT
+			p.id,
+			p.parent_id,
+			p.communal_id
+		FROM room_service_management p
+		where p.communal_id = #{communalId}
+	</select>
+
+	<insert id="saveProduct" parameterType="java.util.Map">
+		insert into product_management(
+			account,
+			parent_id,
+			communal_id,
+			name,
+			price,
+			num,
+			total,
+			management_id,
+			create_time,
+			type
+		) values (
+			#{account},
+			#{parentId},
+			#{communalId},
+			#{name},
+			#{price},
+			#{num},
+			#{total},
+			#{managementId},
+			now(),
+			#{type}
+		)
+
+	</insert>
+
+	<insert id="saveRoom" parameterType="java.util.Map">
+		insert into room_service_management(
+			account,
+			parent_id,
+			communal_id,
+			name,
+			price,
+			num,
+			total,
+			management_id,
+			create_time
+		) values (
+			#{account},
+			#{parentId},
+			#{communalId},
+			#{name},
+			#{price},
+			#{num},
+			#{total},
+			#{managementId},
+			now()
+		)
+
+	</insert>
+
+	<delete id="deleteRoom" parameterType="java.lang.String">
+		delete from room_service_management where id = #{id}
+	</delete>
+
+	<delete id="deleteProduct" parameterType="java.lang.String">
+		delete from product_management where id = #{id}
+	</delete>
+
+	<select id="findProductList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT  p.id,
+				p.parent_id,
+				p.communal_id,
+				p.`name`,
+				p.price,
+				p.num,
+				p.total,
+				p.create_time,
+				s.${class_name} as className,
+				p.management_id
+		FROM product_management p left join ${table_name} s on p.parent_id = s.id where p.id = #{id}
+	</select>
+
+	<select id="findScenicList" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT
+				p.id,
+				p.parent_id,
+				p.communal_id,
+				p.`name`,
+				p.price,
+				p.num,
+				p.total,
+				p.create_time,
+				p.management_id
+
+		FROM product_management p  where p.id = #{id}
+	</select>
+
+	<select id="findRoomList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+				p.id,
+				p.parent_id,
+				p.communal_id,
+				p.`name`,
+				p.price,
+				p.num,
+				p.total,
+				p.create_time,
+				p.management_id
+
+		FROM room_service_management p  where p.id = #{id}
+	</select>
+
+	<select id="findTableRoomList" parameterType="java.lang.String" resultType="java.util.Map">
+		select t.id as tableId,case when r.room_describe is null then '大厅' else r.room_describe end as roomDescribe,t.location,t.number
+
+		from table_management t  left join  room_management r on  t.location = r.id
+
+		where t.location = #{management_id}
+	</select>
+
+
+	<select id="findProductManagementService" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			s.id,
+			s.account,
+			s.fish_service_id as fishServiceId,
+			s.product_id as productId,
+			s.room_id as roomId,
+			s.set_meal_name as setMealName,
+			s.promotion_plan as promotionPlan,
+			case when s.set_meal_price is null then '' else s.set_meal_price end as setMealPrice,
+			s.payType,
+			case when s.money is null then '' else s.money end as money,
+			s.end_date as endDate,
+			s.total_price as totalPrice,
+			s.dining_time as diningTime,
+			s.create_time,
+			s.update_time
+
+
+		FROM product_management_service s
+
+		where 1=1
+		<if test="type!='' and type!=null">
+			and s.type = #{type}
+		</if>
+		<if test="account!='' and account!=null">
+			and s.account = #{account}
+		</if>
+		<if test="fishServiceId!='' and fishServiceId!=null">
+			and s.fish_service_id = #{fishServiceId}
+		</if>
+		<if test="setMealId!='' and setMealId!=null">
+			and s.id = #{setMealId}
+		</if>
+		order by
+        <if test="orderPrice !=''">
+            s.set_meal_price  asc
+        </if>
+        <if test="orderPrice ==''">
+            s.create_time desc
+        </if>
+
+	</select>
+
+
+
+	<insert id="insertProductManagementService" parameterType="java.util.Map">
+		replace into product_management_service (
+			id,
+			account,
+			fish_service_id,
+			product_id,
+			room_id,
+			set_meal_name,
+			promotion_plan,
+			set_meal_price,
+			payType,
+			money,
+			end_date,
+			total_price,
+			type,
+			dining_time,
+			create_time
+		) values (
+			#{setMealId},
+			#{account},
+			#{fishServiceId},
+			#{productId},
+			#{roomId},
+			#{setMealName},
+			#{promotionPlan},
+			#{setMealPrice},
+			#{payType},
+			#{money},
+			#{endDate},
+			#{totalPrice},
+			#{type},
+			#{diningTime},
+			now()
+		)
+	</insert>
+
+	<delete id="deleteProductManagementService" parameterType="java.util.Map">
+		delete from product_management_service where fish_service_id = #{fishServiceId} and id = #{setMealId}
+	</delete>
+
+
+	<update id="updateProductManagementService" parameterType="java.util.Map">
+		update product_management_service
+		<set>
+			<if test="account!=null">
+				account =#{account},
+			</if>
+			<if test="productId!=null">
+				product_id =#{productId},
+			</if>
+			<if test="setMealName!=null">
+				set_meal_name =#{setMealName},
+			</if>
+			<if test="promotionPlan!=null">
+				promotion_plan =#{promotionPlan},
+			</if>
+			<if test="setMealPrice!=null">
+				set_meal_price =#{setMealPrice},
+			</if>
+
+			<if test="payType!=null">
+				payType =#{payType},
+			</if>
+			<if test="money!=null">
+				money =#{money},
+			</if>
+			<if test="endDate!=null">
+				end_date =#{endDate},
+			</if>
+			<if test="totalPrice!=null">
+				total_price =#{totalPrice},
+			</if>
+			<if test="fishServiceId!=null">
+				fish_service_id =#{fishServiceId},
+			</if>
+			update_time = now()
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="findServiceJoinInfo" parameterType="map" resultType="map">
+
+		select
+			s.id,
+			s.account,
+			s.service_name,
+			s.contact,
+			s.image_url,
+			s.type,
+			s.create_time,
+			j.id as serviceJoinId,
+			j.service_id as serviceId,
+			j.`type`,
+			j.join_service_id as joinServiceId,
+			j.join_service as joinService
+
+		from fishing_service s  left join service_join_info j on
+		(s.id = j.join_service_id and j.service_id = #{serviceId})
+		where s.status = 1 and s.flag=1
+		 <if test="serviceId !=null and serviceId!=''">
+			 and j.service_id = #{serviceId}
+		 </if>
+		<if test="type !=null and type!=''">
+			and s.type = #{type}
+		</if>
+		<if test="account !=null and account!=''">
+			and s.account = #{account}
+		</if>
+		<if test="service_name !='' and service_name !=null">
+			and s.service_name LIKE CONCAT("%",#{service_name},"%")
+		</if>
+		<if test="currency_service_name !='' and currency_service_name !=null">
+			and s.currency_service_name = #{currency_service_name}
+		</if>
+	</select>
+
+	<insert id="saveJoinServiceInfo" parameterType="map">
+		insert into service_join_info(
+			service_id,
+			type,
+			join_service_id,
+			join_service,
+			create_time
+		) values (
+			#{serviceId},
+			#{type},
+			#{joinServiceId},
+			#{joinService},
+			now()
+		);
+	</insert>
+
+	<delete id="deleteJoinServiceInfo" parameterType="map">
+		delete from service_join_info where id = #{id}
+	</delete>
+
+	<select id="findJoinServiceList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			s.id,
+			s.account,
+			s.service_name,
+			s.image_url,
+			s.contact,
+			s.type,
+			s.create_time
+
+		FROM fishing_service s
+
+		where  s.status = 1 and s.flag=1
+		<if test="type!='' and type!=null">
+			and s.type = #{type}
+		</if>
+		<if test="account!='' and account!=null">
+			and s.account = #{account}
+		</if>
+		<if test="service_name !='' and service_name !=null">
+			and s.service_name LIKE CONCAT("%",#{service_name},"%")
+		</if>
+		<if test="currency_service_name !='' and currency_service_name !=null">
+			and s.currency_service_name = #{currency_service_name}
+		</if>
+		<if test="list.size() > 0">
+			and s.id not in
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+				#{item.id}
+			</foreach>
+		</if>
+
+
+		order by s.create_time desc
+
+	</select>
+
+	<select id="findProductServiceList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT s.id,
+		s.account,
+		s.currency_service_name,
+		s.trade_class_id,
+		s.service_class_id,
+		s.service_name,
+		s.simple_describe,
+		s.online_preview,
+		s.image_url,
+		s.service_describe,
+		s.service_dot,
+		s.contact_name,
+		s.qq_number,
+		s.phone,
+		s.address,
+		s.coordinate,
+		s.traffic_lead,
+		s.bus_lead as busLead,
+		s.service_outlet as serviceOutlet,
+		s.contact,
+		s.opening_hours as openingHours,
+		s.service_time,
+		s.mattres_need_attention,
+		s.promise_content,
+		s.email,
+		s.addrs,
+		s.type,
+		s.create_time,
+		s.update_time as updateTime
+
+		FROM fishing_service s
+
+		where  s.status = 1 and s.flag = 1
+		<if test="type!='' and type!=null">
+			and s.type = #{type}
+		</if>
+		<if test="account!='' and account!=null">
+			and s.account = #{account}
+		</if>
+
+		<if test="id!='' and id!=null">
+			and s.id = #{id}
+		</if>
+		<if test="service_name !='' and service_name !=null">
+			and s.service_name LIKE CONCAT("%",#{service_name},"%")
+		</if>
+		<if test="currency_service_name !='' and currency_service_name !=null">
+			and s.currency_service_name = #{currency_service_name}
+		</if>
+		<if test="isToPage !=null and isToPage!=''">
+			and  s.is_to_page = #{isToPage}
+		</if>
+		<if test="industry !='' and industry !=null">
+			and s.trade_class_id = #{industry}
+		</if>
+		<if test="address!='' and address!=null">
+			and s.contact like concat("%",#{address},"%")
+		</if>
+		order by s.create_time desc
+
+	</select>
+
+
+	<select id="findScenicDetailById" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT
+				p.id,
+				p.parent_id,
+				p.communal_id,
+				p.`name`,
+				p.price,
+				p.num,
+				p.total,
+				p.create_time,
+				p.management_id,
+				s.scenic_describe
+
+		FROM product_management p left join scenic_spot_management s on p.management_id = s.scenic_spot_id    where p.id = #{id}
+	</select>
+
+	<select id="findRoomListDetailById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT  p.id,
+				p.parent_id,
+				p.communal_id,
+				p.`name`,
+				p.price,
+				p.num,
+				p.total,
+				p.create_time,
+				s.${class_name} as className,
+				p.management_id,
+				t.room_describe,
+				t.room_image,
+				t.discount_price
+		FROM product_management p left join ${table_name} s on p.parent_id = s.id left join room_list_management t on p.management_id = t.id where p.id = #{id}
+	</select>
+
+	<select id="findFoodDetailById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT  p.id,
+				p.parent_id,
+				p.communal_id,
+				p.`name`,
+				p.price,
+				p.num,
+				p.total,
+				p.create_time,
+				s.${class_name} as className,
+				p.management_id,
+				t.food_name,
+				t.food_image,
+				t.discount_price
+		FROM product_management p left join ${table_name} s on p.parent_id = s.id left join food_management t on p.management_id = t.id where p.id = #{id}
+	</select>
+
+	<select id="findCommentProbability" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+
+		ROUND((select count(`service_id`) from service_comment where reputation=3 and service_id = #{serviceId})/(select count(`service_id`) from service_comment where service_id = #{serviceId})*100
+
+		) as grade,
+		ROUND((select count(`service_id`) from service_comment where reputation=2 and service_id = #{serviceId})/(select count(`service_id`) from service_comment where service_id = #{serviceId})*100
+
+		) as review,
+		ROUND((select count(`service_id`) from service_comment where reputation=1 and service_id = #{serviceId})/(select count(`service_id`) from service_comment where service_id = #{serviceId})*100
+
+		) as negative
+
+		from
+
+		service_comment where 1=1
+		<if test="serviceId !='' and serviceId !=null">
+			and service_id = #{serviceId}
+		</if>
+
+
+		 group by  service_id
+	</select>
+
+
+	<select id="findCommentProbabilityNum" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+
+	  	count(service_id) as countNum,
+		(select count(`service_id`) from service_comment where service_id = #{serviceId} and reputation=3) as gradeNum,
+		(select count(`service_id`) from service_comment where service_id = #{serviceId} and  reputation=2) as reviewNum,
+		(select count(`service_id`) from service_comment where service_id = #{serviceId} and  reputation=1) as negativeNum,
+		(select ROUND(AVG(star)/2,1) as star  from service_comment o where  service_id = #{serviceId}  ) as star
+
+		from
+		service_comment where 1=1
+		<if test="serviceId !='' and serviceId !=null">
+			and service_id = #{serviceId}
+		</if>
+
+
+		group by  service_id
+	</select>
+
+
+	<select id="findCommentList" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+			s.id,
+			s.service_id,
+			s.account,
+			s.reputation,
+			s.star,
+			s.describe_info,
+			s.pic_url,
+			s.create_time,
+			l.avatar,
+			l.display_name
+		from
+			service_comment s
+		left join login_user l on s.account = l.login_account where 1=1
+			<if test="serviceId !='' and serviceId !=null">
+				and s.service_id = #{serviceId}
+			</if>
+
+			<if test="reputation !='' and reputation !=null">
+				and s.reputation = #{reputation}
+			</if>
+		order by s.create_time desc
+	</select>
+
+
+	<insert id="saveComment" parameterType="java.util.Map">
+		insert into service_comment(
+			service_id,
+			account,
+			reputation,
+			star,
+			describe_info
+		  )
+		  values(
+			#{serviceId},
+			#{account},
+			#{reputation},
+			#{star},
+			#{describeInfo}
+		  )
+	</insert>
+
+	<select id="findOrderList" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+			s.id,
+			s.order_code as orderCode,
+			s.account,
+			s.sell_account as sellAccount,
+			s.price,
+			s.contact_name as contactName,
+			s.status,
+			s.phone,
+			s.date,
+			s.time,
+			s.type,
+			s.room_id as roomId,
+			s.discount_price as discountPrice,
+			s.service_id as serviceId,
+			s.set_meal as setMeal,
+			s.set_meal_name as setMealName,
+			s.buyers_name as buyersName,
+			s.buyers_phone as buyersPhone,
+			s.create_time,
+			s.user_time as userTime,
+			s.check_type as checkType,
+			s.refund_amount as refundAmount,
+			s.remarks,
+			s.payment_time as paymentTime,
+			s.handle_personnel as  handlePersonnel,
+			s.processing_time as processingTime,
+			f.service_name as serviceName,
+			f.image_url as  imageUrl,
+			f.contact
+		from service_order_management s
+		left join fishing_service f on  s.service_id = f.id
+        where 1=1
+        <if test="orderCode!=null and orderCode!=''">
+			and s.order_code = #{orderCode}
+		</if>
+		<if test="account!=null and account!=''">
+			and s.account = #{account}
+		</if>
+		<if test="sellAccount!=null and sellAccount!=''">
+			and s.sell_account = #{sellAccount}
+		</if>
+		<if test="serviceId!=null and serviceId!=''">
+			and s.service_id = #{serviceId}
+		</if>
+		<if test="type!=null and type!=''">
+			and s.type = #{type}
+		</if>
+		<if test="status!=null and status!=''">
+			<if test='status != "5"'>
+				and s.status = #{status}
+			</if>
+				<!-- 查询退款的所有数据，-->
+			<if test='status == "5"'>
+				and s.status in (3,4,5)
+
+				<!--<if test="list.size() > 0">
+					and s.status  in
+					<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+						#{item.status}
+					</foreach>
+				</if>-->
+
+			</if>
+
+		</if>
+
+		order by s.create_time desc
+	</select>
+
+
+	<select id="findOrderCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select
+			count(*)
+		from service_order_management s
+
+		where 1=1
+		<if test="serviceId!=null and serviceId!=''">
+			and s.service_id = #{serviceId}
+		</if>
+	</select>
+
+	<select id="findAccountByName" parameterType="java.lang.String" resultType="java.util.Map">
+				SELECT
+					p.account,
+					p.name_model as name,
+					p.phone_model as phone,
+					n.qq_number_model as qq,
+					n.email_model as email
+				FROM
+					privacy_info  p
+				left join network_info n on p.account = n.account
+				where p.account = #{account}
+	</select>
+
+	<select id="findAccountByNames" parameterType="java.lang.String" resultType="java.util.Map">
+				SELECT
+					login_account,display_name as name,user_type
+				FROM
+					login_user
+
+				where login_account = #{account}
+	</select>
+
+	<select id="findInfoByName" parameterType="java.util.Map" resultType="java.util.Map">
+				SELECT
+					${class_name} as name,
+					phone
+				FROM
+					${table_name}
+
+				where login_account = #{account}
+	</select>
+
+
+
+
+
+	<select id="findIsNotOrderId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(order_code) from service_order_management where order_code = #{order_code}
+	</select>
+
+
+
+	<update id="updateOrderStatus" parameterType="java.util.Map">
+		update service_order_management set status = #{status}
+		<if test="paymentTime!=null">
+			,payment_time = now()
+		</if>
+		where id = #{id}
+	</update>
+	
+	<update id="updateOrderRefund" parameterType="map">
+		update service_order_management
+		<set>
+			<if test="status!=null">
+				status = #{status},
+			</if>
+			<if test="refundAmount!=null">
+				refund_amount = #{refundAmount},
+			</if>
+			<if test="remarks!=null">
+				remarks = #{remarks},
+			</if>
+			<if test="handlePersonnel!=null">
+				handle_personnel = #{handlePersonnel},
+			</if>
+			<if test="processingTime!=null">
+				processing_time = #{processingTime},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<insert id="saveServiceOrderManagement" parameterType="java.util.Map">
+		insert into service_order_management (
+				account,
+				contact_name,
+				sell_account,
+				room_id,
+				`date`,
+				`time`,
+			  	set_meal,
+				set_meal_name,
+				phone,
+				pay_type,
+				parent_id,
+				price,
+				discount_price,
+				order_code,
+				service_id,
+				`type`,
+				buyers_name,
+				buyers_phone,
+				user_time,
+				check_type,
+				create_time
+		) values(
+				#{account},
+				#{contactName},
+				#{sellAccount},
+				#{roomId},
+				#{date},
+				#{time},
+				#{setMeal},
+				#{setMealName},
+				#{phone},
+				#{payType},
+				#{parentId},
+				#{price},
+				#{discountPrice},
+				#{orderCode},
+				#{serviceId},
+				#{type},
+				#{buyersName},
+				#{buyersPhone},
+				#{userTime},
+				#{checkType},
+				now()
+		)
+	</insert>
+
+	<select id="findAvatar" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+		case when l.avatar is null then '' else l.avatar end as avatar,
+		l.id as userId,
+		l.login_account as account,
+		case when m.memberName is null then '' else m.memberName end as name
+
+		from
+
+		login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+		(select u.template_id as templateId,u.account
+
+		from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+		c on l.login_account  = c.account
+
+		left join (
+		select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+		(select u.template_id as templateId,u.account
+
+		from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+		group by m.user_id
+
+		order by m.create_time asc
+
+		) m on l.login_account = m.account where l.login_account =  #{account}
+    </select>
+
+	<select id="findAllServiceList" parameterType="map" resultType="map">
+		select
+		s.id,
+		s.account,
+		s.service_name,
+		s.contact,
+		s.image_url,
+		s.type,
+		s.create_time
+		from fishing_service s
+		where s.status = 1 and s.flag=1
+		<if test="type !=null and type!=''">
+			and s.type = #{type}
+		</if>
+		<if test="account !=null and account!=''">
+			and s.account = #{account}
+		</if>
+		<if test="service_name !='' and service_name !=null">
+			and s.service_name LIKE CONCAT("%",#{service_name},"%")
+		</if>
+		<if test="currency_service_name !='' and currency_service_name !=null">
+			and s.currency_service_name = #{currency_service_name}
+		</if>
+	</select>
+
+	<insert id="saveConsultOrder" parameterType="java.util.Map">
+		insert into service_order_management (
+		order_code,
+		account,
+		contact_name,
+		phone,
+		service_id,
+		`type`,
+		create_time,
+		sell_account,
+		status,
+		price
+		) values(
+		#{orderCode},
+		#{account},
+		#{name},
+		#{phone},
+		#{id},
+		#{type},
+		now(),
+		#{account},
+		#{status},
+		#{money}
+		)
+	</insert>
+
+	<insert id="saveConsultDetail" parameterType="map">
+		insert into consult_order_manage(
+		account,
+		consult_id,
+		employ_time,
+		`count`,
+		`name`,
+		phone,
+		location,
+		money,
+		create_time,
+		end_time,
+		`data`,
+		order_code
+		) VALUES (
+		#{account},
+		#{id},
+		#{employTime},
+		#{count},
+		#{name},
+		#{phone},
+		#{location},
+		#{money},
+		now(),
+		#{endTime},
+		#{data},
+		#{orderCode}
+		)
+	</insert>
+
+    <select id="findConsultService" parameterType="int" resultType="map">
+        select c.expert_name as expertName, c.adept_species as adeptSpecies, c.personal_photo as personalPicture,
+        c.adept_field as adeptField
+        from fishing_service a left join consult_service b
+        on a.id = b.service_id left join reversion_expert_auth c
+        on b.expert_id = c.id
+        where a.id = #{id}
+		<if test="species !='' and species !=null">
+			and c.adept_species = #{species}
+		</if>
+    </select>
+
+	<select id="findCousultOrderId" resultType="int" parameterType="string">
+		select id from consult_order_manage where order_code = #{orderCode}
+	</select>
+	
+	<select id="findServiceById" parameterType="map" resultType="string">
+		select account from fishing_service where id = #{id}
+	</select>
+
+	<select id="isHadRecommend" parameterType="map" resultType="map">
+		select id, account, type, service_id from recommend_application_info
+		where account = #{account} and type = #{type} and service_id = #{id}
+	</select>
+
+	<insert id="singleSaveRecommend" parameterType="map">
+		INSERT INTO recommend_application_info (
+		account,
+		`type`,
+		service_id
+		) VALUES
+		(
+		#{account},
+		#{type},
+		#{id}
+		)
+	</insert>
+
+
+</mapper>

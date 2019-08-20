@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.CorpCertificationMapper">
+
+	<select id="findCertificationByAccount" resultType="java.util.Map" parameterType="java.lang.String">
+		select
+		id,account,detail_info,update_time
+		from corp_perfect_info
+		where account = #{account}
+	</select>
+
+	<insert id="saveCertification" parameterType="java.util.Map">
+		INSERT INTO corp_perfect_info (
+			account,
+			detail_info
+		) VALUES
+			(
+				#{account},
+				#{detail_info}
+			)
+	</insert>
+
+	<update id="updateCertification" parameterType="java.util.Map">
+		UPDATE corp_perfect_info
+		SET detail_info = #{detail_info}
+		WHERE account = #{account}
+	</update>
+
+</mapper>

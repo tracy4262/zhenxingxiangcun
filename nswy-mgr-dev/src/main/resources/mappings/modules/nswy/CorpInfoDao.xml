@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.CorpInfoDao">
+	<resultMap id="BaseResultMap"
+		type="com.ovit.manager.modules.nswy.entity.NswyCorpInfo">
+		<id column="id" property="corpInfoId" jdbcType="INTEGER" />
+		<result column="login_account" property="loginAccount" jdbcType="VARCHAR" />
+		<result column="corp_name" property="corpName" jdbcType="VARCHAR" />
+		<result column="business_scope" property="businessScope" jdbcType="VARCHAR" />
+		<result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
+		<result column="legal_person" property="legalPerson" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="identification_card" property="identificationCard" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="identification_card_url" property="identificationCardUrl" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="approve_status" property="approveStatus" jdbcType="INTEGER" />
+		<result column="legal_person_introduce" property="legalPersonIntroduce" jdbcType="VARCHAR" />
+		<result column="legal_person_url" property="legalPersonUrl" jdbcType="VARCHAR" />
+		<result column="registered_capital" property="registeredCapital" jdbcType="DOUBLE" />
+		<result column="establish_date" property="establishDate" jdbcType="VARCHAR" />
+		<result column="busniss_term" property="busnissTerm" jdbcType="VARCHAR" />
+		<result column="industry_type" property="industryType" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="company_type" property="companyType" jdbcType="VARCHAR" />
+		<result column="logo_url" property="logoUrl" jdbcType="VARCHAR" />
+		<result column="business_license_url" property="businessLicenseUrl" jdbcType="VARCHAR" />
+		<result column="coordinate" property="coordinate" jdbcType="VARCHAR" />
+		<result column="related_species" property="relatedSpecies" jdbcType="LONGVARCHAR" />
+		<result column="related_product" property="relatedProduct" jdbcType="LONGVARCHAR" />
+		<result column="related_service" property="relatedService" jdbcType="LONGVARCHAR" />
+		<result column="company_profile" property="companyProfile" jdbcType="LONGVARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="addr_detail" property="addrDetail" jdbcType="VARCHAR" />
+		<result column="is_to_page" property="isToPage" jdbcType="VARCHAR" />
+		<result column="is_nav_display" property="isNavDisplay" jdbcType="VARCHAR" />
+		<result column="order_num" property="orderNum" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		   a.id, a.login_account, a.corp_name, a.business_scope, a.credit_code, a.legal_person, a.mobile,
+    a.phone, a.identification_card, a.email, a.identification_card_url, a.create_time, a.approve_status,
+    a.legal_person_introduce, a.legal_person_url, a.registered_capital, a.establish_date, a.busniss_term,
+    a.industry_type, a.location, a.company_type, a.logo_url, a.business_license_url, a.coordinate,
+    a.related_species, a.related_product, a.related_service, a.company_profile,a.remark,a.addr_detail,a.is_to_page,
+    a.is_nav_display,a.order_num
+	</sql>
+
+	<select id="findList" resultMap="BaseResultMap" parameterType="com.ovit.manager.modules.nswy.entity.NswyCorpInfo">
+		SELECT
+		<include refid="Base_Column_List" />,
+		luser.is_home_display AS isHomeDisplay
+		FROM corp_info as a
+		inner join login_user as luser ON luser.login_account=a.login_account
+		left join proxy_corp_info c on a.id = c.info_id
+		where c.approve_status =1 and a.approve_status= 3
+		<if test="corpName != null">
+			and a.corp_name like concat(concat('%',#{corpName}),'%')
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from corp_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteCorpInfo" parameterType="java.lang.Integer">
+		DELETE  t1 FROM corp_info t1 LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+		where t1.id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<update id="corpInfoUpdateHome" parameterType="map" >
+        UPDATE corp_info SET is_to_page = #{status} WHERE id = #{id}
+    </update>
+
+	<update id="corpInfoUpdateNavDisplay" parameterType="map">
+        UPDATE corp_info SET is_nav_display = #{status} WHERE id = #{id}
+    </update>
+
+	<update id="corpInfoSetOrderNum" parameterType="map">
+        UPDATE corp_info SET order_num = #{orderNum} WHERE id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.shop.pushTemplate.mapper.ShopOrderOperateMapper">
+
+
+  <select id="findList" resultType="map" parameterType="map">
+    SELECT
+    t1.id,
+    t1.order_code_id as orderCode,
+    t1.from_account as fromAccount,
+    t1.`type`,
+    t1.account,
+    t1.reason,
+    t1.describe_info as describeInfo,
+    t1.pic_url as picUrl,
+    t1.approve_status as approveStatus,
+    t1.create_time as createTime,
+    t2.name as realName
+    FROM  shop_order_operate t1
+    JOIN
+    (select
+
+    l.login_account as account,
+    case when m.memberName is null then '' else m.memberName end as name
+
+    from
+
+    login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+    c on l.login_account  = c.account
+
+    left join (
+    select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+    group by m.user_id
+
+    order by m.create_time asc
+
+    ) m on l.login_account = m.account)
+
+    t2 on t1.account=t2.account
+    WHERE 1=1
+    <if test="orderCode !='' and orderCode!=null">
+      and t1.order_code_id = #{orderCode}
+    </if>
+    <if test="from !='' and from!=null">
+      and t1.from_account = #{from}
+    </if>
+    <if test="type !='' and type!=null">
+      and t1.type = #{type}
+    </if>
+    <if test="status !='' and status!=null">
+      and t1.approve_status = #{status}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+
+
+  <select id="findByOrderCode" resultType="map" parameterType="map">
+    SELECT
+    t1.id,
+    t1.order_code_id as orderCode,
+    t1.from_account as fromAccount,
+    t1.`type`,
+    t1.account,
+    t1.reason,
+    t1.describe_info as describeInfo,
+    t1.pic_url as picUrl,
+    t1.approve_status as approveStatus,
+    t1.create_time as createTime,
+    t1.refund,
+    t1.remark,
+    t2.name as realName
+    FROM  shop_order_operate t1
+    JOIN
+    (select
+
+    l.login_account as account,
+    case when m.memberName is null then '' else m.memberName end as name
+
+    from
+
+    login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+    c on l.login_account  = c.account
+
+    left join (
+    select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+    group by m.user_id
+
+    order by m.create_time asc
+
+    ) m on l.login_account = m.account)
+
+    t2 on t1.account=t2.account
+    WHERE 1=1
+    <if test="orderCode !='' and orderCode!=null">
+      and t1.order_code_id = #{orderCode}
+    </if>
+    <if test="fromAccount !='' and fromAccount!=null">
+      and t1.from_account = #{fromAccount}
+    </if>
+
+    <if test="id !='' and id!=null">
+      and t1.id = #{id}
+    </if>
+    order by t1.create_time desc
+    limit 0,1
+  </select>
+
+  <insert id="saveOrderOperate" parameterType="map">
+
+
+    insert into shop_order_operate (
+      order_code_id,
+      from_account,
+      `type`,
+      account,
+      reason,
+      describe_info,
+      pic_url,
+      approve_status,
+      refund,
+      remark
+
+    ) values (
+      #{orderCode},
+      #{fromAccount},
+      #{type},
+      #{account},
+      #{reason},
+      #{describeInfo},
+      #{picUrl},
+      #{approveStatus},
+      #{refund},
+      #{remark}
+
+
+    );
+  </insert>
+</mapper>

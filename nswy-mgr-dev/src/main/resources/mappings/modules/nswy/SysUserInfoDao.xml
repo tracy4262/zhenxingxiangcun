@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.SysUserInfoDao" >
+
+  <sql id="Base_Column_List" >
+    u.id as infoId,
+	u.account,
+	u.user_type,
+	u.is_display,
+	u.privacy_information,
+	u.network_information,
+	u.education_live,
+	u.work_live,
+	u.political_status,
+	u.religion_faith,
+	u.specialty_information,
+	u.honour_style,
+	u.houses_condition,
+	u.home_condition,
+	u.organization,
+	u.management_team,
+	u.survey_operation,
+	u.finance_information,
+	u.property_information,
+	u.product_serve,
+	u.specialty_credentials,
+	u.facility_assets,
+    u.intangible_assets,
+    u.place_of_business,
+    u.common_assets,
+    u.overview_info,
+    u.family_member,
+    u.output_product,
+    u.provide_services,
+    u.purchase_intention,
+	u.create_time
+  </sql>
+
+
+
+
+  <select id="findList" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+    <include refid="Base_Column_List" />,l.display_name as agencyName
+    from sys_user_info u left join login_user l on u.account = l.login_account
+
+    order by u.create_time desc
+  </select>
+
+  <select id="findSysUserInfo" parameterType="java.util.Map" resultType="java.util.Map">
+    select <include refid="Base_Column_List" /> from sys_user_info u where 1=1
+    <if test="login_account !='' and login_account !=null">
+      and u.account = #{login_account}
+    </if>
+
+  </select>
+
+ <select id="findLoginUser" parameterType="java.util.Map" resultType="java.util.Map">
+    select l.login_account,l.user_type from login_user l where 1=1
+
+    <if test="login_account!='' and login_account!=null">
+      and l.login_account =#{login_account}
+    </if>
+
+    <if test="create_time !=null and create_time!=''">
+      <![CDATA[  and DATE_FORMAT(l.register_time, '%Y-%m-%d') >= DATE_FORMAT(#{create_time}, '%Y-%m-%d') ]]>
+    </if>
+ </select>
+
+
+  <select id="findCount" parameterType="java.util.Map" resultType="java.util.Map">
+
+    select <include refid="Base_Column_List" /> from sys_user_info u
+
+  </select>
+
+  <insert id="insertSysUserInfo" parameterType="java.util.Map">
+    insert into sys_user_info (
+      account,
+      user_type,
+      privacy_information,
+      network_information,
+      education_live,
+      work_live,
+      political_status,
+      religion_faith,
+      specialty_information,
+      honour_style,
+      houses_condition,
+      home_condition,
+      organization,
+      management_team,
+      survey_operation,
+      finance_information,
+      property_information,
+      product_serve,
+      specialty_credentials
+    )
+     values (
+     #{login_account},
+     #{user_type},
+     #{privacy_information},
+     #{network_information},
+     #{education_live},
+     #{work_live},
+     #{political_status},
+     #{religion_faith},
+     #{specialty_information},
+     #{honour_style},
+     #{houses_condition},
+     #{home_condition},
+     #{organization},
+     #{management_team},
+     #{survey_operation},
+     #{finance_information},
+     #{property_information},
+     #{product_serve},
+     #{specialty_credentials}
+     );
+  </insert>
+
+  <delete id="deleteSysUserInfo" parameterType="java.util.Map" >
+    delete from sys_user_info
+    where id = #{infoId}
+  </delete>
+
+
+  <update id="updateUserInfo" parameterType="java.util.Map" >
+    update sys_user_info
+    set ${INFO_NAME} = #{user_status}
+    where id = #{info_id}
+  </update>
+
+
+
+</mapper>

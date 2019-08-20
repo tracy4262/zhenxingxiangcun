@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.portal.mapper.ShopOrderProductMapper" >
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.portal.model.ShopOrderProduct" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_code_id" property="orderCodeId" jdbcType="VARCHAR" />
+    <result column="commodity_type_info_id" property="commodityTypeInfoId" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_pic" property="productPic" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="logistic_amount" property="logisticAmount" jdbcType="DECIMAL" />
+    <result column="product_output_unit" property="productOutputUnit" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <resultMap id="ExtendResultMap" type="com.ovit.nswy.portal.model.response.ShopOrderProductDTO" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_pic" property="productPic" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="logistic_amount" property="logisticAmount" jdbcType="DECIMAL" />
+    <result column="product_output_unit" property="productOutputUnit" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="findByOrderCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT t1.*
+    FROM  shop_order_product t1
+    WHERE
+    t1.order_code_id =  #{code}
+  </select>
+
+  <select id="findExtendByOrderCode" resultMap="ExtendResultMap" parameterType="java.lang.String">
+    SELECT t1.*
+    FROM  shop_order_product t1
+    WHERE
+    t1.order_code_id =  #{code}
+  </select>
+
+  <select id="selectExtendByOrderCode" resultMap="ExtendResultMap" parameterType="map">
+    SELECT t1.*
+    FROM  shop_order_product t1
+    WHERE
+    t1.order_code_id =  #{code}   and t1.product_name like CONCAT('%',#{productName,jdbcType=VARCHAR},'%')
+  </select>
+</mapper>

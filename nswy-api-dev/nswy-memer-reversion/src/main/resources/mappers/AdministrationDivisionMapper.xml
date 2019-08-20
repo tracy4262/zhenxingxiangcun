@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.AdministrationDivisionMapper">
+
+    <select id="findDepartmentInfo" parameterType="map" resultType="map">
+         select distinct d.id,d.department_name,d.user_id,d.name,d.parent_id as pid,d.create_time,d.year_id,d.status,d.template_id as templateId
+
+         from reversion_department_info d left join reversion_department_info i on d.id = i.parent_id
+
+         where 1=1
+         <if test="user_id!=null and user_id!=''">
+             and d.user_id = #{user_id}
+         </if>
+
+        <if test="name!=null and name!=''">
+            and d.name  like CONCAT('%',#{name},'%')
+        </if>
+
+        <if test="year_id !=null and year_id!=''">
+            and d.year_id = #{year_id}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and d.template_id = #{templateId}
+        </if>
+
+        order by d.id asc
+    </select>
+
+    <update id="updateDepartmentInfoName" parameterType="map">
+        update reversion_department_info set department_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveDepartmentInfo" parameterType="map">
+          replace into reversion_department_info (
+                id,
+                user_id,
+                department_name,
+                name,
+                parent_id,
+                year_id,
+                status,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{department_name},
+                #{name},
+                #{pid},
+                #{year_id},
+                #{status},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+    <delete id="deleteDepartMentInfo" parameterType="map">
+        delete from reversion_department_info where id = #{id}
+    </delete>
+
+    <select id="findAdministrativeDivision" parameterType="map" resultType="map">
+        select distinct d.id,d.division_name,d.user_id,d.name,d.parent_id as pid,d.create_time,d.year_id,d.status,d.template_id as templateId
+
+        from reversion_administrative_division d left join reversion_administrative_division a on d.id = a.parent_id
+
+        where 1=1
+        <if test="user_id!=null and user_id!=''">
+            and d.user_id = #{user_id}
+        </if>
+
+        <if test="name!=null and name!=''">
+            and d.name  like CONCAT('%',#{name},'%')
+        </if>
+
+        <if test="year_id !=null and year_id!=''">
+            and d.year_id = #{year_id}
+        </if>
+
+        <if test="templateId !=null and templateId!=''">
+            and d.template_id = #{templateId}
+        </if>
+
+        order by d.id asc
+    </select>
+
+    <update id="updateAdministrativeDivisionName" parameterType="map">
+        update reversion_administrative_division set division_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveAdministrativeDivision" parameterType="map">
+          replace into reversion_administrative_division (
+                id,
+                user_id,
+                division_name,
+                name,
+                parent_id,
+                year_id,
+                status,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{division_name},
+                #{name},
+                #{pid},
+                #{year_id},
+                #{status},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+    <delete id="deleteAdministrativeDivision" parameterType="map">
+        delete from reversion_administrative_division where id = #{id}
+    </delete>
+
+    <select id="findManagerialStaff" parameterType="map" resultType="map">
+        select  id,user_id,managerial_staff_name,name,sex,department,job,duty,phone,image,status,create_time,year_id,template_id as templateId
+
+        from reversion_managerial_staff
+
+        where 1=1
+        <if test="user_id!=null and user_id!=''">
+            and user_id = #{user_id}
+        </if>
+
+        <if test="year_id !=null and year_id!=''">
+            and year_id = #{year_id}
+        </if>
+
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+    </select>
+
+    <update id="updateManagerialStaffName" parameterType="map">
+        update reversion_managerial_staff set managerial_staff_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveManagerialStaff" parameterType="map">
+          replace into reversion_managerial_staff (
+                id,
+                user_id,
+                managerial_staff_name,
+                name,
+                sex,
+                department,
+                job,
+                duty,
+                phone,
+                image,
+                status,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{user_id},
+                #{managerial_staff_name},
+                #{name},
+                #{sex},
+                #{department},
+                #{job},
+                #{duty},
+                #{phone},
+                #{image},
+                #{status},
+                #{year_id},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+    <delete id="deleteManagerialStaff" parameterType="map">
+        delete from reversion_managerial_staff where id = #{id}
+    </delete>
+
+
+
+</mapper>

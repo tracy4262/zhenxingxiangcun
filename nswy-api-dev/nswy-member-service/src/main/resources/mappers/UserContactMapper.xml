@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.UserContactMapper" >
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.UserContact" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="nswy_id" property="nswyId" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="status_2" property="status2" jdbcType="INTEGER" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="postalcode" property="postalcode" jdbcType="VARCHAR" />
+    <result column="domain" property="domain" jdbcType="VARCHAR" />
+    <result column="mobileStatus" property="mobile_status" jdbcType="INTEGER" />
+    <result column="postalcodeStatus" property="postalcode_status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, nswy_id, account, status_2, qq,mobile, email, postalcode, `domain`, mobile_status, postalcode_status
+  </sql>
+  <select id="selectByAccount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_contact
+    where account = #{account,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_contact
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ovit.nswy.member.model.UserContact" >
+    insert into user_contact (nswy_id, account,
+      status_2,
+      qq,
+      email, `domain`)
+    values (#{nswyId,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR},
+      #{status2,jdbcType=INTEGER},
+      #{qq,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}, #{domain,jdbcType=VARCHAR})
+  </insert>
+
+
+  <update id="updateByAccount" parameterType="com.ovit.nswy.member.model.UserContact" >
+    update user_contact
+    set nswy_id = #{nswyId,jdbcType=VARCHAR},
+      status_2 = #{status2,jdbcType=INTEGER},
+      qq = #{qq,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      `domain` = #{domain,jdbcType=VARCHAR}
+    where account = #{account,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insertMobileAndPostalCode" parameterType="com.ovit.nswy.member.model.UserContact" >
+    insert into user_contact (mobile, mobile_status, postalcode, postalcode_status, account)
+    values (#{mobile,jdbcType=VARCHAR}, #{mobileStatus,jdbcType=INTEGER}, #{postalcode,jdbcType=VARCHAR}, #{postalcodeStatus,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateMobileAndPostalCodeByAccount" parameterType="com.ovit.nswy.member.model.UserContact" >
+    update user_contact
+    set mobile = #{mobile,jdbcType=VARCHAR}, postalcode = #{postalcode,jdbcType=VARCHAR}, mobile_status = #{mobileStatus,jdbcType=INTEGER}, postalcode_status = #{postalcodeStatus,jdbcType=INTEGER}
+    where account = #{account,jdbcType=VARCHAR}
+  </update>
+</mapper>

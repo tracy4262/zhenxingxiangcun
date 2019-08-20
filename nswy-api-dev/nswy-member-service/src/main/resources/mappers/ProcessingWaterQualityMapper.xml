@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ProcessingWaterQualityMapper" >
+  <select id="query" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+      pro_id AS proId,
+      ph AS ph,
+      mercury AS mercury,
+      arsenic AS arsenic,
+      cadmium AS cadmium,
+      lead AS lead,
+      hexavalent_chromium AS hexavalentChromium,
+      cyanide AS cyanide,
+      fluoride AS fluoride,
+      colonies_number AS coloniesNumber,
+      coliform AS coliform
+    FROM
+      processing_water_quality
+    WHERE
+      product_id = #{productId}
+  </select>
+
+  <update id="update" parameterType="java.util.Map">
+    UPDATE
+      processing_water_quality
+    SET
+      ph = #{ph},
+      mercury = #{mercury},
+      arsenic = #{arsenic},
+      cadmium = #{cadmium},
+      lead = #{lead},
+      hexavalent_chromium = #{hexavalentChromium},
+      cyanide = #{cyanide},
+      fluoride = #{fluoride},
+      colonies_number = #{coloniesNumber},
+      coliform = #{coliform}
+    WHERE
+      pro_id = #{proId}
+  </update>
+
+  <insert id="add" parameterType="java.util.Map">
+    INSERT INTO
+      processing_water_quality
+    (
+      pro_id,
+      product_id,
+      ph,
+      mercury,
+      arsenic,
+      cadmium,
+      lead,
+      hexavalent_chromium,
+      cyanide,
+      fluoride,
+      colonies_number,
+      coliform
+    )
+    VALUES
+    (
+      UUID(),
+      #{productId},
+      #{ph},
+      #{mercury},
+      #{arsenic},
+      #{cadmium},
+      #{lead},
+      #{hexavalentChromium},
+      #{cyanide},
+      #{fluoride},
+      #{coloniesNumber},
+      #{coliform}
+    )
+  </insert>
+</mapper>

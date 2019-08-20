@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ReportManangeTypeDao">
+	<select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.ReportManageTypeInfo" resultType="com.ovit.manager.modules.nswy.entity.ReportManageTypeInfo">
+        SELECT
+            id as reportId,
+            report_type as reportType,
+            report_type_name as reportTypeName,
+            create_time
+
+        FROM
+            reversion_report_type_info
+
+        ORDER BY create_time desc
+    </select>
+
+    <select id="findReportType" parameterType="java.lang.Integer" resultType="com.ovit.manager.modules.nswy.entity.ReportManageTypeInfo">
+        SELECT
+            id as reportId,
+            report_type as reportType,
+            report_type_name as reportTypeName,
+            create_time
+
+        FROM
+            reversion_report_type_info
+
+        where id = #{reportId}
+
+        ORDER BY create_time desc
+    </select>
+
+
+    <insert id="saveReportType" parameterType="map">
+        INSERT INTO reversion_report_type_info(
+          report_type,
+          report_type_name,
+          create_time
+        ) VALUES (
+          #{reportType},
+          #{reportTypeName},
+          NOW()
+        )
+    </insert>
+
+    <update id="updateType" parameterType="com.ovit.manager.modules.nswy.entity.ReportManageTypeInfo">
+        update reversion_report_type_info
+        <set>
+            <if test="reportType!=null">
+                report_type = #{reportType},
+
+            </if>
+            <if test="reportTypeName!=null">
+                report_type_name = #{reportTypeName},
+
+            </if>
+            create_time = now()
+        </set>
+        where id= #{reportId}
+    </update>
+
+    <select id="findReportTypeMax" parameterType="map" resultType="map">
+        select
+            max(report_type) as reportType
+        from reversion_report_type_info
+
+    </select>
+
+
+    <delete id="deleteReportType" parameterType="java.lang.Integer">
+        delete from  reversion_report_type_info  where id = #{id}
+    </delete>
+
+</mapper>

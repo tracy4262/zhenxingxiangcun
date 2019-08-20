@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.LoginUserMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.LoginUser">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="unique_id" property="uniqueId" jdbcType="VARCHAR" />
+		<result column="login_account" property="loginAccount" jdbcType="VARCHAR" />
+		<result column="display_name" property="displayName" jdbcType="VARCHAR" />
+		<result column="login_passwd" property="loginPasswd" jdbcType="VARCHAR" />
+		<result column="register_time" property="registerTime" jdbcType="TIMESTAMP" />
+		<result column="is_Identity_verification" property="isIdentityVerification" jdbcType="INTEGER" />
+		<result column="tour_number" property="tourNumber" jdbcType="INTEGER" />
+		<result column="user_type" property="userType" jdbcType="INTEGER" />
+		<result column="signature" property="signaTure" jdbcType="VARCHAR" />
+		<result column="avatar" property="avatar" jdbcType="VARCHAR" />
+		<result column="is_real_identity" property="isRealIdentity" jdbcType="VARCHAR" />
+		<result column="nswy_id" property="nswyIdModel" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, unique_id, login_account, display_name, login_passwd, register_time,
+		is_Identity_verification,
+		tour_number, user_type,signature,avatar,is_real_identity, nswy_id
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from login_user
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="findByLoginName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from login_user
+		where login_account = #{login_account,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findFriendByLoginName" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.LoginUser">
+		select
+		<include refid="Base_Column_List" />
+		from login_user
+		u WHERE 1=1
+        <if test="displayName !='null'">
+            AND u.display_name=#{displayName,jdbcType=VARCHAR}
+        </if>
+        AND EXISTS( SELECT 1 FROM myfriend f WHERE
+		f.friend=u.login_account and
+		f.account=#{loginAccount,jdbcType=VARCHAR})
+	</select>
+
+	<select id="login" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from login_user
+		where login_account = #{login_account,jdbcType=VARCHAR} and login_passwd =
+		#{login_passwd,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select * from login_user
+	</select>
+	<!-- login_account -->
+	<select id="findAllPersonAccount"  resultMap="BaseResultMap">
+		select * from login_user where user_type = '0'
+	</select>
+
+	<!-- 查询访问总量 -->
+	<select id="findTourNumber" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from login_user l
+		where l.login_account = #{userId,jdbcType=VARCHAR}
+	</select>
+	<!-- 通过圈子主题id查询副版主信息 -->
+	<select id="findModeratorById" resultType="Map" parameterType="java.lang.Integer">
+		SELECT l.*,CASE WHEN c.type=1 THEN '副版主' WHEN c.type=2 THEN '版主' END
+		AS TYPE FROM coterie_member c,login_user l WHERE
+		c.`coterie_id`=#{coterie_id,jdbcType=INTEGER} AND c.`type`>0 AND
+		c.`account`=l.`login_account` order BY c.type DESC
+
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from login_user
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.LoginUser">
+		insert into login_user (id, unique_id, login_account,
+		display_name, login_passwd, register_time, signature,avatar, nswy_id
+		)
+		values (#{id,jdbcType=INTEGER}, #{uniqueId,jdbcType=VARCHAR},
+		#{loginAccount,jdbcType=VARCHAR},
+		#{displayName,jdbcType=VARCHAR}, #{loginPasswd,jdbcType=VARCHAR},
+		#{registerTime,jdbcType=TIMESTAMP},
+		#{signaTure,jdbcType=VARCHAR},#{avatar,jdbcType=VARCHAR},
+		#{nswyIdModel, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateByAccount" parameterType="com.ovit.nswy.member.model.LoginUser">
+		update login_user
+		<set>
+			<if test="uniqueId != null">
+				unique_id = #{uniqueId,jdbcType=VARCHAR},
+			</if>
+			<if test="displayName != null">
+				display_name = #{displayName,jdbcType=VARCHAR},
+			</if>
+			<if test="loginPasswd != null">
+				login_passwd = #{loginPasswd,jdbcType=VARCHAR},
+			</if>
+			<if test="registerTime != null">
+				register_time = #{registerTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isIdentityVerification != null">
+				is_Identity_verification = #{isIdentityVerification,jdbcType=INTEGER},
+			</if>
+			<if test="tourNumber != null">
+				tour_number = #{tourNumber,jdbcType=INTEGER},
+			</if>
+			<if test="userType != null">
+				user_type = #{userType,jdbcType=INTEGER},
+			</if>
+            <if test="signaTure !=null">
+                signature=#{signaTure,jdbcType=VARCHAR},
+            </if>
+            <if test="avatar!=null">
+                avatar= #{avatar,jdbcType=VARCHAR},
+            </if>
+			<if test="isRealIdentity!=null">
+				is_real_identity = #{isRealIdentity,jdbcType=VARCHAR},
+			</if>
+            register_time =NOW()
+		</set>
+		where  login_account= #{loginAccount,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.LoginUser">
+		update login_user
+		set unique_id = #{uniqueId,jdbcType=VARCHAR},
+		login_account = #{loginAccount,jdbcType=VARCHAR},
+		display_name = #{displayName,jdbcType=VARCHAR},
+		login_passwd = #{loginPasswd,jdbcType=VARCHAR},
+		register_time = #{registerTime,jdbcType=TIMESTAMP},
+		is_Identity_verification = #{isIdentityVerification,jdbcType=VARCHAR},
+		tour_number = #{tourNumber,jdbcType=INTEGER},
+		user_type = #{userType,jdbcType=INTEGER},
+		signature= #{signature,jdbcType=VARCHAR},
+		avatar= #{avatar,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateIdentityFlag" parameterType="java.util.Map" >
+		update login_user set
+		is_Identity_verification = #{flag,jdbcType=VARCHAR}
+		where login_account = #{account,jdbcType=VARCHAR}
+	</update>
+
+	<select id="showRecommended" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+			a.`id` as id,
+			a.`unique_id` as uniqueId,
+			a.`login_account` as loginAccount,
+			a.`display_name` as displayName,
+			a.`user_type` as userType,
+			CASE c.`sex`
+			WHEN 1 THEN "男"
+			WHEN 0 THEN "女"
+			END as sex,
+			c.avatar as avatar,
+			CONCAT(b.location, b.address) as location
+		FROM
+			login_user a
+		LEFT JOIN
+			contact_info b
+		ON
+			a.login_account = b.`user_account`
+		LEFT JOIN
+			user_info c
+		ON
+			a.login_account = c.`account`
+		WHERE
+			login_account != #{login_account,jdbcType=VARCHAR}
+		<if test="user_type != NULL AND user_type != ''">
+			AND a.user_type = #{user_type,jdbcType=INTEGER}
+		</if>
+		<if test="display_name != NULL AND display_name != ''">
+			AND a.display_name LIKE CONCAT('%',#{display_name,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="location = NULL AND location != ''">
+			AND	CONCAT(b.location, b.address) LIKE  CONCAT('%',#{location,jdbcType=VARCHAR},'%')
+		</if>
+	</select>
+    <update id="updateType" parameterType="java.util.Map">
+        update login_user set
+		user_type = #{type,jdbcType=INTEGER}
+		where login_account = #{account,jdbcType=VARCHAR}
+    </update>
+
+	<update id="updatePassword" parameterType="map">
+		UPDATE login_user SET login_passwd = #{loginPassword} WHERE login_account = #{account}
+	</update>
+
+    <insert id="insertProxyUser" parameterType="com.ovit.nswy.member.model.LoginUser">
+        insert into login_user (id, unique_id, login_account,
+        display_name, login_passwd, register_time, user_type, signature,avatar
+        )
+        values (#{id,jdbcType=INTEGER}, #{uniqueId,jdbcType=VARCHAR},
+        #{loginAccount,jdbcType=VARCHAR},
+        #{displayName,jdbcType=VARCHAR}, #{loginPasswd,jdbcType=VARCHAR},
+        #{registerTime,jdbcType=TIMESTAMP},
+        #{userType,jdbcType=VARCHAR},
+        #{signaTure,jdbcType=VARCHAR},#{avatar,jdbcType=VARCHAR}
+
+        )
+    </insert>
+
+	<select id="listLoginUser" resultType="java.util.Map" parameterType="java.util.Map">
+		select avatar,display_name as name  from login_user where login_account=#{account}
+	</select>
+
+	<select id="findUseTemplate" parameterType="java.lang.String" resultType="map">
+		select
+		id,
+		account,
+		user_type as userType,
+		template_id as templateId,
+		carete_time
+		from
+		reversion_user_template_manage
+		where account = #{account} and status = '1'
+	</select>
+
+	<select id="findYearInfo" parameterType="java.lang.String" resultType="map">
+		select id from reversion_perfect_year_info
+		where account = #{account}
+		order by year_file_name desc limit 1
+	</select>
+
+</mapper>

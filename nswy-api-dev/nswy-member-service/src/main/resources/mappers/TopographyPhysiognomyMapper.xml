@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.TopographyPhysiognomyMapper">
+    <select id="queryTopographyPhysiognomy" parameterType="map" resultType="map">
+        SELECT
+            t1.topography_physiognomy_id AS topographyPhysiognomyId,
+            t1.product_id AS productId,
+            t1.topography AS topography,
+            t1.physiognomy AS physiognomy,
+            t1.avg_elevation AS avgElevation,
+            t1.create_time AS createTime,
+            t1.update_time AS updateTime,
+            t2.geographical_position AS geographicPosition
+        FROM
+            topography_physiognomy_info t1
+        LEFT JOIN product_base_info t2 ON t1.product_id = t2.product_id
+        WHERE
+            t1.product_id = #{productId}
+    </select>
+
+    <insert id="saveTopographyPhysiognomy" parameterType="map">
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(*) FROM topography_physiognomy_info WHERE product_id = #{productId}
+        </selectKey>
+        <if test="count > 0">
+            UPDATE topography_physiognomy_info SET
+                topography = #{topography},
+                physiognomy = #{physiognomy},
+                avg_elevation = #{avgElevation},
+                create_time = #{createTime},
+                update_time = #{updateTime}
+            WHERE product_id = #{productId}
+        </if>
+       <if test="count == 0">
+           INSERT INTO topography_physiognomy_info (
+               topography_physiognomy_id,
+               product_id,
+               topography,
+               physiognomy,
+               avg_elevation,
+               create_time
+           ) VALUES (
+              UUID(),
+              #{productId},
+              #{topography},
+              #{physiognomy},
+              #{avgElevation},
+              NOW()
+           )
+       </if>
+    </insert>
+</mapper>

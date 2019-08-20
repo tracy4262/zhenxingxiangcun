@@ -1,0 +1,33 @@
+server:
+  port: 8888
+
+http:
+  eureka:
+    serviceUrl: 127.0.0.1
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://${http.eureka.serviceUrl}:8761/eureka/
+  instance:
+    metadataMap:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
+  profiles:
+    active: native
+
+  logging:
+    levels:
+      org.springframework.boot.env.PropertySourcesLoader: TRACE
+      org.springframework.cloud.config.server: DEBUG

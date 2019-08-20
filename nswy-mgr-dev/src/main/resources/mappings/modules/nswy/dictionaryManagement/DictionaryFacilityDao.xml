@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryFacilityDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryFacility"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryFacility">
+        select
+               p.id,
+        p.facility_name as name,
+        p.parent_id as pid,
+        p.level,
+        p.value,
+        p.remark,
+        p.create_time as createTime
+        from facility p left join facility i on p.parent_id = i.id
+        where 1=1
+        <if test="name!=null and name!=''">
+            and p.facility_name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+        order by p.create_time desc
+    </select>
+
+    <insert id="saveFacility" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryFacility">
+        insert into facility(
+            id,
+            facility_name,
+            parent_id,
+            level,
+            value,
+            remark,
+            create_time
+        )values (
+                    #{id},
+                    #{name},
+                    #{pid},
+                    #{level},
+                    #{value},
+                    #{remark},
+                    now()
+                );
+    </insert>
+
+    <update id="updateFacility" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryFacility">
+        update facility
+        set
+            facility_name = #{name},
+            value = #{value},
+            remark = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFacility" parameterType="java.lang.String">
+        delete from facility where id= #{id}
+    </delete>
+
+</mapper>

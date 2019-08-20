@@ -1,0 +1,52 @@
+.wrapper-container{
+    width: 1366px;
+    margin: 0 auto;
+}
+.mianbaoxie{
+    font-size: 12px;
+    line-height: 42px;
+    color: #666;
+}
+.main-top{
+    padding: 20px;
+    border: 1px solid #ededed;
+}
+.text1{
+    font-size: 20px;
+    color: #333333;
+
+}
+.text2 {
+    font-size: 12px;
+    color: #666666;
+
+}
+.text3 {
+    font-size: 12px;
+    color: #ff8b3f;
+
+
+
+}
+.text4 {
+    font-size: 12px;
+    color: #999999;
+    line-height: 24px;
+
+
+
+}
+.main-bot{
+    margin: 20px 0 ;
+}
+.tab-main span{
+    font-size: 16px;
+    color: #333;
+
+}
+.tab-main p{
+    font-size: 12px;
+    color: #999999;
+    line-height: 26px;
+
+}

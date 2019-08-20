@@ -1,0 +1,271 @@
+ .header{
+    margin-top:15px;
+  }
+  .banner-logo1{
+    float:left;
+    width:110px;
+    margin:0 46px;
+  }
+  .btnReset{
+    background:#4fac77;
+    border:1px solid #4fac77;
+  }
+  .search1{
+    margin-left:-5px;
+    border-radius:0 5px 5px 0;
+  }
+  .resultList li{
+    margin-top:20px;
+  }
+  .resultList-title{
+    margin-bottom:15px;
+  }
+  .resultList-title span{
+    font-size:20px;
+    margin-right:20px;
+    color:#333;
+  }
+  .searchTip{
+    font-size:12px;
+    color:#999;
+  }
+.resultList-img, .resultList-infor{
+  float:left;
+}
+  .resultList-infor{
+    width:480px;
+    margin-left:14px;
+  }
+  .resultList-infor p{
+    font-size:14px;
+    color:#666;
+    line-height:20px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  .resultList-infor div{
+    margin-top:8px;
+    font-size:14px;
+    color:#333;
+  }
+
+/*  .clear {
+    clear:both;
+    overflow:hidden;
+  }*/
+  .search-xgyy li{
+    float:left;
+    margin:26px 28px 26px 0;
+    text-align:center;
+  }
+  .xg-content{
+    border-left:1px solid #ccc;
+    padding-left:40px;
+  }
+  
+  .xg-content img{
+    width: 54px;
+    height: 54px;
+    margin: 0 auto;
+  }
+  .xg-content .hd{
+    margin-top: 15px;
+  }
+  .login-r{
+    position:absolute;
+    top:0;
+    right:44px;
+  }
+  button.login{
+    margin-left:13px;
+  }
+  .borderLine{
+    position: relative;
+    top:36px;
+    border-bottom:1px solid #ccc;
+  }
+  .searchList{
+    margin-left:200px;
+  }
+  .listLeft{
+    width:640px;
+    margin-right:130px;
+    float:left;
+  }
+  /**资讯样式*/
+  .zx-title{
+    font-size:24px;
+    margin-bottom:15px;
+    margin-top: 30px;
+    color:#333;
+  }
+  .zx-time{
+    margin-bottom:30px;
+  }
+  .zx-time span{
+    margin-right:30px;
+    font-size:14px;
+    color:#999;
+  }
+  .zx-favorite {
+    float: right;
+    background: #FFFFFF;
+    border: 1px solid #D8D8D8;
+    border-radius: 4px;
+    width: 76px;
+    height: 34px;
+    font-size:14px;
+  }
+  .zx-content{
+    line-height:26px;
+    font-size:16px;
+    color:#666;
+    text-indent:2em;
+  }
+  .zanBtn{
+    width:140px;
+    height:50px;
+    margin:30px auto;
+  }
+.zanBtn button span{
+  margin-right:5px;
+  font-size:16px;
+  color:#4fac77;
+}
+  .zanIcon{
+    position:relative;
+    top:5px;
+    display:inline-block;
+    width:22px;
+    height:22px;
+    background:url("../img/zan-icon.png") no-repeat;
+  }
+  .loginTip{
+    width:564px;
+    height:80px;
+    background: #f8f8f8;
+    border:1px solid #e3e3e3;
+  }
+  .loginTip div{
+    width:140px;
+    height:40px;
+    margin:20px auto;
+    font-size:14px;
+    color:#666;
+  }
+  .loginTip div button{
+    margin-right:6px;
+  }
+  .userComment-list li{
+    padding-bottom:35px;
+    margin-top:25px;
+    border-bottom:1px solid #ccc;
+  }
+  .userComment img,.userComment div{
+    float:left;
+  }
+  .userComment img{
+    margin-right:10px;
+  }
+  .userComment-infor span{
+    font-size:14px;
+    color:#333;
+  }
+  .userComment-infor p{
+    margin-top:5px;
+    font-size:12px;
+    color:#999;
+  }
+  .userComment-content{
+    margin:22px 0;
+    font-size:16px;
+    color:#333;
+  }
+  .comment span{
+    margin-right:36px;
+    cursor:pointer;
+  }
+  .comment img{
+    position: relative;
+    top:5px;
+    margin-right:10px;
+  }
+  .xgzx{
+    font-size:14px;
+    color:#333;
+    margin-bottom:10px;
+    font-weight:normal;
+  }
+  .zx-time .zx-right{
+    float:right;
+  }
+  .jubao{
+    float:right;
+    margin-top:10px;
+    padding-right:20px;
+    background:url("../img/jubao-icon.png") right center  no-repeat;
+  }
+  .CommentTab{
+    position: relative;
+    margin-bottom: 100px;
+  }
+  .CommentBars{
+    position:absolute;
+    right:0;
+    top:5px;
+    font-size:16px;
+    color:#333;
+  }
+  .CommentBars span{
+    color:#ff602f;
+  }
+  .replyContent{
+    margin-left:48px;
+  }
+  .replyContent li{
+    border-bottom:1px dashed #ccc;
+    padding-bottom:0;
+  }
+  .replyContent p{
+    color:#333;
+    font-size:14px;
+  }
+  .replyName{
+    font-size:14px;
+    color:#3194d0;
+  }
+  .replyTime{
+    margin:5px 50px;
+    color:#999;
+    font-size:12px;
+     }
+  .replyTime div{
+    float:right;
+  }
+  .replyTime div span{
+    margin-left:30px;
+  }
+  .replyTime div img{
+    position: relative;
+    top:4px;
+    margin-right:5px;
+  }
+  .jietu{
+    margin:15px 0;
+  }
+  .jietu img{
+    margin-right:16px;
+    padding:5px;
+    border:1px solid #ccc;
+    border-radius:5px;
+  }
+  .jubao-list button{
+    width:90%;
+    margin-bottom:20px;
+  }
+  .jubao-list button.activeEle{
+     color:#4fac77;
+     border:1px solid #4fac77;
+   }

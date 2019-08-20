@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.CameraInfoMapper">
+    <insert id="saveCameraInfo" parameterType="map">
+        INSERT INTO camera_info (
+            camera_id,
+            product_id,
+            equipment_name,
+            equipment_address,
+            create_time
+        ) VALUES (
+            UUID(),
+            #{productId},
+            #{equipmentName},
+            #{equipmentAddress},
+            NOW()
+        )
+    </insert>
+
+    <delete id="deleteCameraInfoById" parameterType="map">
+        DELETE FROM camera_info WHERE camera_id = #{cameraId}
+    </delete>
+
+    <select id="queryCameraInfo" parameterType="map" resultType="map">
+        SELECT
+            camera_id AS cameraId,
+            product_id AS productId,
+            equipment_name AS equipmentName,
+            equipment_address AS equipmentAddress,
+            CASE camera_status WHEN 'Y' THEN '工作' WHEN 'N' THEN '不工作' END AS cameraStatus
+        FROM
+            camera_info
+        WHERE
+            product_id = #{productId}
+    </select>
+</mapper>

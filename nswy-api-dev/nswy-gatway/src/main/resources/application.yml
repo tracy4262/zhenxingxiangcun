@@ -1,0 +1,95 @@
+server:
+ port: 11100
+
+http:
+ eureka:
+  serviceUrl: 127.0.0.1
+
+endpoints:
+restart:
+ enabled: true
+shutdown:
+ enabled: true
+health:
+ sensitive: false
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${http.eureka.serviceUrl}:8761/eureka/
+  instance:
+    preferIpAddress: true
+
+ribbon:
+  eureka:
+    enabled: false
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 1
+  OkToRetryOnAllOperations: false
+
+zuul:
+ routes:
+   api-wiki:
+      path: /wiki/**
+      serviceId: nswy-wiki-service
+      sensitiveHeaders: "*"
+   api-relationship:
+      path: /relationship/**
+      serviceId: nswy-relationship-service
+      sensitiveHeaders: "*"
+   api-member:
+      path: /member/**
+      serviceId: nswy-member-service
+      sensitiveHeaders: "*"
+   api-portal:
+      path: /portal/**
+      serviceId: nswy-portal-service
+      sensitiveHeaders: "*"
+   api-im:
+         path: /im/**
+         serviceId: nswy-web-im
+         sensitiveHeaders: "*"
+   api-member-reversion:
+         path: /member-reversion/**
+         serviceId: nswy-member-reversion
+         sensitiveHeaders: "*"
+   api-shop:
+            path: /shop/**
+            serviceId: nswy-shop-service
+            sensitiveHeaders: "*"
+   intelligentsia-authority:
+      sensitiveHeaders : Authorization
+ max:
+  host:
+    connections: 500
+ host:
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 60000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+
+nswy-member-service:
+  ribbon:
+    listOfServers: 127.0.0.1:8089
+nswy-wiki-service:
+  ribbon:
+    listOfServers: 127.0.0.1:8090
+nswy-portal-service:
+  ribbon:
+    listOfServers: 127.0.0.1:8086
+nswy-relationship-service:
+  ribbon:
+    listOfServers: 127.0.0.1:8091
+nswy-member-reversion:
+  ribbon:
+    listOfServers: 127.0.0.1:8099
+nswy-shop-service:
+  ribbon:
+    listOfServers: 127.0.0.1:8092

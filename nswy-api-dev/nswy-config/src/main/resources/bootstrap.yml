@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: nswy-config
+    profiles:
+        active: native
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.MemberDao">
+    <select id="findRealMember" parameterType="map" resultType="map">
+        select a.user_id as account,a.member_class as memberClass,a.member_name as memberName,ifnull(l.is_to_page,0) as isToPage,l.order_num as orderNum,l.id as memberId
+        from reversion_member_aptitude_real_info a
+        inner join reversion_user_auth_step u on (a.user_id=u.account and a.template_id=u.template_id)
+        inner join login_user l on a.user_id = l.login_account
+        inner join reversion_member_contact_info c on c.member_name_id = a.member_aptitude_real_info_id        where u.step = '7'
+        <if test="memberName!=null and memberName!=''">
+            and a.member_name like CONCAT('%',#{memberName},'%')
+        </if>
+        group by a.user_id
+    </select>
+
+    <select id="findMemberType"  resultType="String">
+        select type_name as memberType from member_type
+        where 1=1
+        <if test="_parameter!=null and _parameter!=''">
+            and id = #{id}
+        </if>
+    </select>
+
+
+    <select id="findRelatedSpecies" parameterType="map" resultType="java.lang.String">
+        select group_concat(b.speci_name) as speciesName
+        from reversion_eco_breed_info b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+                                                                                        inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+        where b.account= #{account}
+    </select>
+
+    <select id="findRelatedProduct" parameterType="map" resultType="java.lang.String">
+        select group_concat(productName) from (
+            select b.product_name as productName
+            from reversion_eco_farm_product b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+                                              inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+            where b.account= #{account}
+
+            union
+
+            select b.product_name as productName
+            from reversion_eco_technical_product b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+                                                   inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+            where b.account= #{account}) s
+    </select>
+
+    <select id="findRelatedService" parameterType="map" resultType="java.lang.String">
+        select group_concat(b.service_name) as serviceName
+        from reversion_eco_service_product b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+                                             inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+        where b.account= #{account}
+    </select>
+
+    <select id="findRelatedIndustry" parameterType="map" resultType="java.lang.String">
+        select group_concat(b.name) as industryName
+        from reversion_eco_industry_info b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+                                           inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+        where b.account= #{account}
+    </select>
+
+    <update id="memberSetOrderNum" parameterType="map">
+        UPDATE login_user SET order_num = #{orderNum} WHERE id = #{id}
+    </update>
+
+    <update id="memberUpdateHome" parameterType="map" >
+        UPDATE login_user SET is_to_page = #{status} WHERE id = #{id}
+    </update>
+</mapper>

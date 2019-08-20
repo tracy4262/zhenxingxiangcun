@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.WorkExperienceMapper">
+
+    <select id="findWorkExperience" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            w.id,
+            w.account,
+            w.work_experience_name,
+            w.work_unit_model,
+            w.work_unit,
+            w.work_unit_status,
+            w.work_position_model,
+            w.work_position,
+            w.work_position_status,
+            w.work_time_model,
+            w.work_time,
+            w.work_time_status,
+            w.work_details_model,
+            w.work_details,
+            w.work_details_status,
+            w.year_id,
+            w.status,
+            w.template_id as templateId
+        FROM work_experience w
+        where 1=1
+        <if test="user_id!=null and user_id!=''">
+            and w.account  = #{user_id}
+        </if>
+        <if test="year_id!=null and year_id!=''">
+            and w.year_id  = #{year_id}
+        </if>
+        <if test="templateId!=null and templateId!=''">
+            and w.template_id  = #{templateId}
+        </if>
+
+
+        order  by w.update_time desc
+    </select>
+
+
+    <update id="updateWorkExperienceName" parameterType="map">
+        update work_experience set work_experience_name = #{propertyName} where account = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveWorkExperience" parameterType="map">
+        replace into work_experience (
+                id,
+                account,
+                work_experience_name,
+                work_unit_model,
+                work_position_model,
+                work_time_model,
+                work_details_model,
+                year_id,
+                template_id,
+                status
+
+          )values (
+                #{id},
+                #{user_id},
+                #{work_experience_name},
+                #{work_unit_model},
+                #{work_position_model},
+                #{work_time_model},
+                #{work_details_model},
+                #{year_id},
+                #{templateId},
+                #{status}
+          )
+    </insert>
+
+    <delete id="deleteWorkExperience" parameterType="map">
+        delete from work_experience where id = #{id}
+    </delete>
+</mapper>

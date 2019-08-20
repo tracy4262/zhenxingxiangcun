@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.UserTypeInfoDao" >
+
+  <sql id="Base_Column_List" >
+    u.id as infoId,
+	u.account,
+	u.user_type as userType,
+	u.user_type_name as userTypeName,
+	u.is_display as isDisplay,
+	u.create_time as createTime
+  </sql>
+
+
+
+
+  <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.UserTypeInfo" resultType="com.ovit.manager.modules.nswy.entity.UserTypeInfo">
+    SELECT
+    <include refid="Base_Column_List" />,l.display_name as agencyName
+    from reversion_user_type_info u left join login_user l on u.account = l.login_account
+
+    where 1=1
+      <if test="userTypeName!=null and userTypeName!=''">
+          and u.user_type_name  like concat('%',#{userTypeName},'%')
+      </if>
+
+    order by u.create_time desc
+  </select>
+
+
+
+    <select id="findUserType" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+          user_type as userType, user_type_name as userTypeName
+        from reversion_user_type_info
+
+        where 1=1
+
+        <if test="userType!='' and userType!=null">
+            and user_type = #{userType}
+        </if>
+
+    </select>
+
+
+
+
+  <select id="findMaxInfoId" parameterType="java.util.Map" resultType="java.util.Map">
+
+    select * from reversion_user_type_info order by id DESC limit 1
+
+  </select>
+
+  <insert id="insertUserTypeInfo" parameterType="com.ovit.manager.modules.nswy.entity.UserTypeInfo">
+    insert into reversion_user_type_info (
+      account,
+      user_type,
+      user_type_name,
+      create_time
+    )
+     values (
+     #{account},
+     #{userType},
+     #{userTypeName},
+     now()
+
+
+     );
+  </insert>
+
+
+    <delete id="deleteUserType" parameterType="java.lang.Integer">
+        delete from reversion_user_type_info where id = #{infoId}
+    </delete>
+
+
+
+
+
+</mapper>

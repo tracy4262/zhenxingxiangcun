@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.ShopOrderCommentMapper">
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.portal.model.ShopOrderComment">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_code_id" jdbcType="VARCHAR" property="orderCodeId" />
+    <result column="commodity_type_info_id" jdbcType="VARCHAR" property="commodityTypeInfoId" />
+    <result column="from_account" jdbcType="INTEGER" property="fromAccount" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="star" jdbcType="INTEGER" property="star" />
+    <result column="describe_info" jdbcType="VARCHAR" property="describeInfo" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <resultMap id="ListResultMap" type="com.ovit.nswy.portal.model.response.ShopOrderCommentDTO">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_code_id" jdbcType="VARCHAR" property="orderCodeId" />
+    <result column="commodity_type_info_id" jdbcType="VARCHAR" property="commodityTypeInfoId" />
+    <result column="from_account" jdbcType="INTEGER" property="fromAccount" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="star" jdbcType="INTEGER" property="star" />
+    <result column="describe_info" jdbcType="VARCHAR" property="describeInfo" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="findList" resultMap="ListResultMap" parameterType="map">
+    SELECT t1.*
+    ,t2.display_name as realName
+    FROM  shop_order_comment t1
+    JOIN login_user t2 on t1.account=t2.login_account
+    WHERE 1=1
+    <if test="account !='' and account!=null">
+      and t1.account = #{account}
+    </if>
+    <if test="from !='' and from!=null">
+      and t1.from_account = #{from}
+    </if>
+    <if test="reputation !='' and reputation!=null">
+     and t1.reputation = #{reputation}
+  </if>
+    <if test="orderCode !='' and orderCode!=null">
+      and t1.order_code_id = #{orderCode}
+    </if>
+    <if test="productCode !='' and productCode!=null">
+      and t1.commodity_type_info_id = #{productCode}
+    </if>
+    <if test="status !='' and status!=null">
+      and t1.approve_status = #{status}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+</mapper>

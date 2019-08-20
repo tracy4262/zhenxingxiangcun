@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.member.mapper.MemberMapper">
+	<select id="selectByName" parameterType="map" resultType="map">
+		SELECT  t1.corp_name AS memberName,t1.logo_url AS logoUrl,t1.login_account AS loginAccount,t2.avatar
+		FROM corp_info t1 LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+						  left join proxy_corp_info t on t1.id = t.info_id
+		WHERE  t.approve_status = 1 AND t1.is_to_page = 0
+		<if test="keyword != null and keyword != ''">
+			AND t1.corp_name LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="district != null" >
+			AND t1.location LIKE CONCAT('%',#{district},'%')
+		</if>
+		<if test="type != null and type != ''">
+			AND t1.company_type = #{type}
+		</if>
+		<if test="serviceNameArray != null and serviceNameArray != ''">
+			<foreach collection="serviceNameArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t1.related_service LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="industryArray != null and industryArray != ''">
+			<foreach collection="industryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t1.industry_type LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="goodNameArray != null and goodNameArray != ''">
+			<foreach collection="goodNameArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t1.related_product LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="speciesArray != null and speciesArray != ''">
+			<foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t1.related_species LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+
+
+
+		union all
+		select t1.gov_name AS memberName,t1.logo_picture_list AS logoUrl,t1.login_account AS loginAccount,t2.avatar
+		from gov_info t1 LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+						 left join proxy_gov_info t on t1.id = t.info_id
+		where t.approve_status = 1 AND t1.is_to_page = 0
+		<if test="keyword != null and keyword != ''">
+			AND t1.gov_name like CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="district != null and district !=''">
+			AND t1.location like CONCAT('%',#{district},'%')
+		</if>
+
+		union all
+
+		SELECT
+		t1.display_name AS memberName,t1.avatar AS logoUrl,t1.login_account AS loginAccount,t1.avatar
+		FROM login_user t1  LEFT JOIN reversion_expert_auth t2 ON t1.login_account = t2.account
+		LEFT JOIN user_info t3 ON t1.login_account = t3.account
+		WHERE t2.approve_status = 1 AND t1.is_to_page = 0
+		<if test="district != null and district != ''">
+			AND t3.addr LIKE CONCAT('%',#{district},'%')
+		</if>
+		<if test="speciesArray != null and speciesArray !=''">
+			<foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t2.adept_species LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="industryArray != null and industryArray != ''">
+			<foreach collection="industryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t2.related_industry LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="goodNameArray != null and goodNameArray != ''">
+			<foreach collection="goodNameArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t2.related_product LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="serviceNameArray != null and serviceNameArray != ''">
+			<foreach collection="serviceNameArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t2.related_service LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="type != null and type != ''">
+			AND t2.expert_type = #{type}
+		</if>
+		<if test="adeptFieldArray != null and adeptFieldArray != ''">
+			<foreach collection="adeptFieldArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				t2.adept_field LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="keyword != null and keyword !=''">
+			AND t1.display_name LIKE CONCAT('%',#{keyword},'%')
+		</if>
+
+	</select>
+
+	<select id="findMemberType" parameterType="map" resultType="map">
+		select id as value,type_name as label from member_type where parent_id = #{pid}
+	</select>
+
+	<select id="findNotExpert" parameterType="map" resultType="java.lang.Integer">
+		select count(account) from reversion_expert_auth where account = #{account} and approve_status =1
+	</select>
+
+	<select id="findRealMember" parameterType="map" resultType="map">
+		select a.user_id as account,a.member_name as memberName,l.avatar
+		from reversion_member_aptitude_real_info a
+		inner join reversion_user_auth_step u on (a.user_id=u.account and a.template_id=u.template_id)
+		inner join login_user l on a.user_id = l.login_account
+		inner join reversion_member_contact_info t1 on t1.member_name_id = a.member_aptitude_real_info_id
+		left join (select group_concat(b.speci_name) as speciesName,b.account,b.template_id
+				from reversion_eco_breed_info b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+				inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+				group by b.account) t2 on l.login_account =t2.account
+		left join (select group_concat(product_name) as productName,account from (select b.product_name,b.account
+				from reversion_eco_farm_product b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+				inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+				union
+				select b.product_name,b.account
+				from reversion_eco_technical_product b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+				inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+				) s group by s.account) t3 on l.login_account=t3.account
+		left join (select group_concat(b.service_name) as serviceName,b.account
+				from reversion_eco_service_product b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+				inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+				group by b.account) t4 on l.login_account = t4.account
+		left join (select group_concat(b.name) as industryName,b.account
+				from reversion_eco_industry_info b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+				inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+				group by b.account) t5 on l.login_account=t5.account
+		where u.step = '7' and l.is_to_page =0
+		<if test="memberName!=null and memberName!=''">
+			and a.member_name like CONCAT('%',#{memberName},'%')
+		</if>
+		<if test="memberType != null and memberType!=''" >
+			AND a.member_class LIKE CONCAT('%',#{memberType},'%')
+		</if>
+		<if test="address != null and address!=''" >
+			AND t1.location LIKE CONCAT('%',#{address},'%')
+		</if>
+		<if test="speciesArray != null and speciesArray != ''">
+			<foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				 t2.speciesName LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="productArray != null and goodNameArray != ''">
+			<foreach collection="productArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				 t3.productName LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="serviceArray != null and goodNameArray != ''">
+			<foreach collection="serviceArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				 t4.serviceName LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="industryArray != null and goodNameArray != ''">
+			<foreach collection="industryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				 t5.industryName LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		group by a.user_id order by l.order_num desc
+	</select>
+
+	<select id="findExpertlist" parameterType="map" resultType="map">
+		select a.user_id as account,a.member_name as memberName,l.avatar
+		from reversion_member_aptitude_real_info a
+		inner join reversion_user_auth_step u on (a.user_id=u.account and a.template_id=u.template_id)
+		inner join login_user l on a.user_id = l.login_account
+		left join reversion_expert_auth e on l.login_account=e.account
+		inner join reversion_member_contact_info t1 on t1.member_name_id = a.member_aptitude_real_info_id
+		where u.step = '7' and l.is_to_page =0
+		<if test="memberName!=null and memberName!=''">
+			and a.member_name like CONCAT('%',#{memberName},'%')
+		</if>
+		<if test="status!=null and status!=''">
+			and e.approve_status = #{status}
+		</if>
+		<if test="memberType != null and memberType!=''" >
+			AND a.member_class LIKE CONCAT('%',#{memberType},'%')
+		</if>
+		<if test="address != null and address!=''" >
+			AND t1.location LIKE CONCAT('%',#{address},'%')
+		</if>
+		<if test="adeptField != null and adeptField!=''" >
+			AND e.adept_field LIKE CONCAT('%',#{adeptField},'%')
+		</if>
+		<if test="expertTypeArray != null and speciesArray != ''">
+			<foreach collection="expertTypeArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				e.expert_type LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="speciesArray != null and speciesArray != ''">
+			<foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				e.related_species LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="productArray != null and goodNameArray != ''">
+			<foreach collection="productArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				e.related_product LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="serviceArray != null and goodNameArray != ''">
+			<foreach collection="serviceArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				e.related_service LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		<if test="industryArray != null and goodNameArray != ''">
+			<foreach collection="industryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+				e.related_industry LIKE CONCAT('%',#{item},'%')
+			</foreach>
+		</if>
+		group by a.user_id order by l.order_num desc
+	</select>
+
+</mapper>

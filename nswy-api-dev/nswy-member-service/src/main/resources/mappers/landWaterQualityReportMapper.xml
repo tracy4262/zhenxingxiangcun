@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.LandWaterQualityReportMapper">
+    <insert id="uploadReport" parameterType="map">
+            INSERT INTO land_water_quality_report(
+                report_id,
+                land_id,
+                report_url,
+                report_name,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{landId},
+                #{url},
+                #{name},
+                NOW()
+            )
+    </insert>
+
+    <select id="query" parameterType="map" resultType="map">
+        SELECT
+            report_id AS reportId,
+            land_id AS landId,
+            report_url AS reportUrl,
+            report_name AS reportName,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM
+            land_water_quality_report
+        WHERE
+            land_id = #{landId}
+    </select>
+    <delete id="delete" parameterType="map">
+        DELETE FROM land_water_quality_report WHERE land_id = #{landId}
+    </delete>
+</mapper>

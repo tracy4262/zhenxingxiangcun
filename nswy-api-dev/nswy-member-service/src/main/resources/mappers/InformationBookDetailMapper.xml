@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.InformationBookDetailMapper">
+
+    <insert id="batchInsert" parameterType="map">
+        INSERT INTO information_book_detail (
+        information_detail_id,
+        book_info_id,
+        title,
+        edit,
+        checked,
+        expand,
+        node_id,
+        parent_id,
+        order_id,
+        content,
+        file,
+        file_name,
+        book_type
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.information_detail_id}, #{item.book_info_id},#{item.title},#{item.edit},#{item.checked},#{item.expand},
+            #{item.node_id},#{item.parent_id},#{item.order_id},#{item.content},#{item.file},#{item.file_name},#{item.bookType})
+        </foreach>
+    </insert>
+
+    <select id="getInformation" resultType="java.util.Map" parameterType="java.lang.Integer">
+        select
+          *
+        from information
+        where id = #{id}
+    </select>
+
+
+    <select id="getKnowledge" resultType="java.util.Map" parameterType="java.lang.Integer">
+        select
+        *
+        from knowledge
+        where id = #{id}
+    </select>
+
+    <select id="getPolicy" resultType="java.util.Map" parameterType="java.lang.Integer">
+        select
+        *
+        from policy
+        where id = #{id}
+    </select>
+
+    <!--更新浏览次数-->
+    <update id="updateInformationNumber" parameterType="java.lang.Integer">
+        UPDATE information_detail
+        SET browse_number = browse_number + 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateKnowledgeNumber" parameterType="java.lang.Integer">
+        UPDATE knowledge_detail
+        SET browse_number = browse_number + 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="updatePolicyNumber" parameterType="java.lang.Integer">
+        UPDATE policy_detail
+        SET browse_number = browse_number + 1
+        WHERE id = #{id}
+    </update>
+
+    <select id="findInformationByDetailID" resultType="java.util.Map" parameterType="java.lang.Integer">
+        select
+        *
+        from information
+        where information_detail_id = #{information_detail_id}
+    </select>
+
+    <select id="findKnowledgeByDetailID" resultType="java.util.Map" parameterType="java.lang.Integer">
+        select
+        *
+        from knowledge
+        where information_detail_id = #{information_detail_id}
+    </select>
+
+    <select id="findPolicyByDetailID" resultType="java.util.Map" parameterType="java.lang.Integer">
+        select
+        *
+        from policy
+        where information_detail_id = #{information_detail_id}
+    </select>
+
+    <select id="getInformationDetail" resultType="java.util.Map" parameterType="java.lang.Integer">
+        select
+        *
+        from information_detail
+        where id = #{informationDetailId}
+    </select>
+
+    <select id="getKnowledgeDetail" resultType="java.util.Map" parameterType="java.lang.Integer">
+        select
+        *
+        from knowledge_detail
+        where id = #{informationDetailId}
+    </select>
+
+    <select id="getPolicyDetail" resultType="java.util.Map" parameterType="java.lang.Integer">
+        select
+        *
+        from policy_detail
+        where id = #{informationDetailId}
+    </select>
+
+    <select id="getInformationBookInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        *
+        from information_book_info
+        where information_detail_id = #{information_detail_id} AND book_type = #{bookType}
+    </select>
+
+    <select id="getInformationBookDetail" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        *
+        from information_book_detail
+        where information_detail_id = #{information_detail_id} AND book_type = #{bookType}
+    </select>
+
+    <select id="getBookPartInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        *
+        from information_book_detail
+        where information_detail_id = #{information_detail_id} AND node_id = #{node_id} AND book_type = #{book_type}
+    </select>
+
+    <delete id="deleteInformation" parameterType="java.lang.Integer">
+        DELETE FROM information
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteKnowledge" parameterType="java.lang.Integer">
+        DELETE FROM knowledge
+        where id = #{id}
+    </delete>
+
+    <delete id="deletePolicy" parameterType="java.lang.Integer">
+        DELETE FROM policy
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteInformationDetail" parameterType="java.lang.Integer">
+        DELETE FROM information_detail
+        where id = #{informationDetailId}
+    </delete>
+
+    <delete id="deleteKnowledgeDetail" parameterType="java.lang.Integer">
+        DELETE FROM knowledge_detail
+        where id = #{informationDetailId}
+    </delete>
+
+    <delete id="deletePolicyDetail" parameterType="java.lang.Integer">
+        DELETE FROM policy_detail
+        where id = #{informationDetailId}
+    </delete>
+
+    <delete id="deleteInformationBookInfo" parameterType="java.util.Map">
+        DELETE FROM information_book_info
+        where information_detail_id = #{information_detail_id} AND book_type = #{book_type}
+    </delete>
+
+    <delete id="deleteInformationBookDetail" parameterType="java.util.Map">
+        DELETE FROM information_book_detail
+        where information_detail_id = #{information_detail_id} AND book_type = #{book_type}
+    </delete>
+
+
+
+    <delete id="deleteMediaBookDetail" parameterType="java.util.Map">
+        DELETE FROM media_library_book_detail where media_id = #{media_id} and book_info_id = #{book_info_id}
+    </delete>
+
+    <insert id="batchInsertMediaBookInfo" parameterType="map">
+        INSERT INTO media_library_book_detail (
+        media_id,
+        book_info_id,
+        title,
+        edit,
+        checked,
+        expand,
+        node_id,
+        parent_id,
+        order_id,
+        content,
+        file,
+        file_name,
+        book_type
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.media_id}, #{item.book_info_id},#{item.title},#{item.edit},#{item.checked},#{item.expand},
+            #{item.node_id},#{item.parent_id},#{item.order_id},#{item.content},#{item.file},#{item.file_name},#{item.bookType})
+        </foreach>
+    </insert>
+
+    <delete id="deleteMemberIntroduceBookDetail" parameterType="java.util.Map">
+        DELETE FROM member_introduce_book_detail
+        where member_introduce_detail_id = #{member_introduce_detail_id} AND book_info_id = #{book_info_id}
+    </delete>
+
+    <insert id="batchInsertMemberIntroduceBookInfo" parameterType="map">
+        INSERT INTO member_introduce_book_detail (
+        member_introduce_detail_id,
+        book_info_id,
+        title,
+        edit,
+        checked,
+        expand,
+        node_id,
+        parent_id,
+        order_id,
+        content,
+        file,
+        file_name,
+        book_type
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.member_introduce_detail_id}, #{item.book_info_id},#{item.title},#{item.edit},#{item.checked},#{item.expand},
+            #{item.node_id},#{item.parent_id},#{item.order_id},#{item.content},#{item.file},#{item.file_name},#{item.bookType})
+        </foreach>
+    </insert>
+</mapper>

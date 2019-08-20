@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.IndustrialMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.Industrial">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="pid" property="pid" jdbcType="VARCHAR" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="depth" property="depth" jdbcType="INTEGER" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+		<result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="create_Time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, `name`, pid, path, depth, remarks, pinyin, state,
+		create_Time
+	</sql>
+	<select id="findIndu" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from industrial
+	</select>
+
+	<select id="findIndustrial" resultMap="BaseResultMap"
+			parameterType="com.ovit.nswy.member.model.Industrial">
+		select
+		<include refid="Base_Column_List" />
+		from industrial where depth = 2
+		<if test="id !=null">
+			and id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="pid !=null">
+			and pid = #{pid,jdbcType=VARCHAR}
+		</if>
+		<if test="name !=null">
+			and `name` like concat(concat('%',#{name}),'%')
+		</if>
+		<if test="pinyin !=null">
+			and pinyin like concat(#{pinyin},'%')
+		</if>
+		GROUP BY `name`
+	</select>
+
+	<insert id="insertIndu" parameterType="com.ovit.nswy.member.model.Industrial">
+		insert into industrial
+		(id, name, pid,
+		path, depth, remarks,
+		pinyin, state, create_Time
+		)
+		values
+		(#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{pid,jdbcType=VARCHAR},
+		#{path,jdbcType=VARCHAR},
+		#{depth,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR},
+		#{pinyin,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER},
+		#{createtime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+
+	<update id="updateIndu" parameterType="com.ovit.nswy.member.model.Industrial">
+		update industrial
+		set Name
+		= #{name,jdbcType=VARCHAR},
+		pid = #{pid,jdbcType=VARCHAR},
+		path =
+		#{path,jdbcType=VARCHAR},
+		depth = #{depth,jdbcType=INTEGER},
+		remarks =
+		#{remarks,jdbcType=VARCHAR},
+		pinyin =
+		#{pinyin,jdbcType=VARCHAR},
+		state =
+		#{state,jdbcType=INTEGER},
+		create_Time =
+		#{createtime,jdbcType=TIMESTAMP}
+		where id =
+		#{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="findIndustryByParentId" resultMap="BaseResultMap"
+			parameterType="com.ovit.nswy.member.model.Industrial">
+		select
+		<include refid="Base_Column_List" />
+		from industrial where 1=1
+		<if test="parentId !=null">
+			and pid = #{parentId,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="getIndustryByIdArray" parameterType="map" resultType="map">
+		SELECT `name` AS industrialName FROM industrial WHERE id IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

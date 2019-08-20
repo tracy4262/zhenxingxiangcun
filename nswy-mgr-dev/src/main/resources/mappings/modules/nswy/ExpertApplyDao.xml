@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ExpertApplyDao">
+  <resultMap id="BaseResultMap" type="com.ovit.manager.modules.nswy.entity.ExpertApply">
+    <id column="id" jdbcType="INTEGER" property="applyId" />
+    <result column="login_account" property="loginAccount" jdbcType="VARCHAR" />
+    <result column="expert_name" property="expertName" jdbcType="VARCHAR" />
+    <result column="work_unit" property="workUnit" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="position_name" property="positionName" jdbcType="VARCHAR" />
+    <result column="education_level" property="educationLevel" jdbcType="VARCHAR" />
+    <result column="graduate_institutions" property="graduateInstitutions" jdbcType="VARCHAR" />
+    <result column="self_introduce" property="selfIntroduce" jdbcType="VARCHAR" />
+    <result column="workplace" property="workplace" jdbcType="VARCHAR" />
+    <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="QQ" property="qq" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="location" property="location" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="expert_type" property="expertType" jdbcType="VARCHAR" />
+    <result column="adept_field" property="adeptField" jdbcType="VARCHAR" />
+    <result column="adept_species" property="adeptSpecies" jdbcType="VARCHAR" />
+    <result column="related_species" property="relatedSpecies" jdbcType="VARCHAR" />
+    <result column="related_industry" property="relatedIndustry" jdbcType="VARCHAR" />
+    <result column="related_product" property="relatedProduct" jdbcType="VARCHAR" />
+    <result column="related_service" property="relatedService" jdbcType="VARCHAR" />
+    <result column="honor_certificate_picture_list" property="honorCertificatePictureList" jdbcType="VARCHAR" />
+    <result column="qualification_certificate_picture_list" property="qualificationCertificatePictureList" jdbcType="VARCHAR" />
+    <result column="personal_picture_list" property="personalPictureList" jdbcType="VARCHAR" />
+    <result column="approve_status" property="approveStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ovit.manager.modules.nswy.entity.ExpertApply">
+    <result column="expert" jdbcType="LONGVARCHAR" property="expert" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id,login_account, expert_name, work_unit, `position`, position_name, education_level,
+    graduate_institutions, self_introduce, workplace, contact_number, mobile, QQ, email,
+    phone, location, address, expert_type, adept_field, adept_species, related_species,
+    related_industry, related_product, related_service, honor_certificate_picture_list,
+    qualification_certificate_picture_list, personal_picture_list, approve_status
+  </sql>
+  <sql id="expertList" >
+    id, expert_name, login_account, expert_type, adept_field, adept_species, related_species,
+    related_industry, related_product, related_service, approve_status, update_time,
+    create_time, coordinate
+  </sql>
+  <sql id="Blob_Column_List">
+    expert
+  </sql>
+  <select id="findList" resultMap="BaseResultMap">
+    select a.id , b.display_name expert_name,a.login_account,a.expert_type,
+    a.adept_field  ,a.adept_species, a.approve_status
+    from expert_info a
+    inner JOIN login_user b  on a.login_account= b.login_account
+    where 1=1
+    <if test="expertName != null">
+      AND b.display_name like concat(concat('%',#{expertName}),'%')
+    </if>
+    <if test="relatedSpecies != null">
+      AND b.related_species like concat(concat('%',#{relatedSpecies}),'%')
+    </if>
+    <if test="relatedIndustry != null">
+      AND b.related_industry like concat(concat('%',#{relatedIndustry}),'%')
+    </if>
+    <if test="relatedProduct != null">
+      AND b.related_product like concat(concat('%',#{relatedProduct}),'%')
+    </if>
+    <if test="relatedService != null">
+      AND b.related_service like concat(concat('%',#{relatedService}),'%')
+    </if>
+    <if test="adeptField != null">
+      AND b.adept_field like concat(concat('%',#{adeptField}),'%')
+    </if>
+    <if test="expertType != null">
+      AND b.expert_type like concat(concat('%',#{expertType}),'%')
+    </if>
+    <if test="approveStatus != null">
+      AND b.approve_status = #{approveStatus,jdbcType=INTEGER}
+    </if>
+    ORDER BY a.create_time desc
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="expertList" />
+    from expert_info
+    where 
+    	id = #{applyId,jdbcType=INTEGER}
+    ORDER BY create_time desc
+  </select>
+  <!--<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">-->
+    <!--delete from expert_info-->
+    <!--where id = #{applyId,jdbcType=INTEGER}-->
+  <!--</delete>-->
+  <insert id="insert" parameterType="com.ovit.manager.modules.nswy.entity.ExpertApply">
+    insert into expert_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="loginAccount != null" >
+        login_account,
+      </if>
+      <if test="expertName != null" >
+        expert_name,
+      </if>
+      <if test="workUnit != null" >
+        work_unit,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="positionName != null" >
+        position_name,
+      </if>
+      <if test="educationLevel != null" >
+        education_level,
+      </if>
+      <if test="graduateInstitutions != null" >
+        graduate_institutions,
+      </if>
+      <if test="selfIntroduce != null" >
+        self_introduce,
+      </if>
+      <if test="workplace != null" >
+        workplace,
+      </if>
+      <if test="contactNumber != null" >
+        contact_number,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="qq != null" >
+        QQ,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="location != null" >
+        location,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="expertType != null" >
+        expert_type,
+      </if>
+      <if test="adeptField != null" >
+        adept_field,
+      </if>
+      <if test="adeptSpecies != null" >
+        adept_species,
+      </if>
+      <if test="relatedSpecies != null" >
+        related_species,
+      </if>
+      <if test="relatedIndustry != null" >
+        related_industry,
+      </if>
+      <if test="relatedProduct != null" >
+        related_product,
+      </if>
+      <if test="relatedService != null" >
+        related_service,
+      </if>
+      <if test="honorCertificatePictureList != null" >
+        honor_certificate_picture_list,
+      </if>
+      <if test="qualificationCertificatePictureList != null" >
+        qualification_certificate_picture_list,
+      </if>
+      <if test="personalPictureList != null" >
+        personal_picture_list,
+      </if>
+      <if test="approveStatus != null" >
+        approve_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="loginAccount != null" >
+        #{loginAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="expertName != null" >
+        #{expertName,jdbcType=VARCHAR},
+      </if>
+      <if test="workUnit != null" >
+        #{workUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="positionName != null" >
+        #{positionName,jdbcType=VARCHAR},
+      </if>
+      <if test="educationLevel != null" >
+        #{educationLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="graduateInstitutions != null" >
+        #{graduateInstitutions,jdbcType=VARCHAR},
+      </if>
+      <if test="selfIntroduce != null" >
+        #{selfIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="workplace != null" >
+        #{workplace,jdbcType=VARCHAR},
+      </if>
+      <if test="contactNumber != null" >
+        #{contactNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="expertType != null" >
+        #{expertType,jdbcType=VARCHAR},
+      </if>
+      <if test="adeptField != null" >
+        #{adeptField,jdbcType=VARCHAR},
+      </if>
+      <if test="adeptSpecies != null" >
+        #{adeptSpecies,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedSpecies != null" >
+        #{relatedSpecies,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedIndustry != null" >
+        #{relatedIndustry,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedProduct != null" >
+        #{relatedProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedService != null" >
+        #{relatedService,jdbcType=VARCHAR},
+      </if>
+      <if test="honorCertificatePictureList != null" >
+        #{honorCertificatePictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="qualificationCertificatePictureList != null" >
+        #{qualificationCertificatePictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="personalPictureList != null" >
+        #{personalPictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="approveStatus != null" >
+        #{approveStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ovit.manager.modules.nswy.entity.ExpertApply">
+    update expert_info
+    set login_account = #{loginAccount,jdbcType=VARCHAR},
+    expert_name = #{expertName,jdbcType=VARCHAR},
+    work_unit = #{workUnit,jdbcType=VARCHAR},
+    `position` = #{position,jdbcType=VARCHAR},
+    position_name = #{positionName,jdbcType=VARCHAR},
+    education_level = #{educationLevel,jdbcType=VARCHAR},
+    graduate_institutions = #{graduateInstitutions,jdbcType=VARCHAR},
+    self_introduce = #{selfIntroduce,jdbcType=VARCHAR},
+    workplace = #{workplace,jdbcType=VARCHAR},
+    contact_number = #{contactNumber,jdbcType=VARCHAR},
+    mobile = #{mobile,jdbcType=VARCHAR},
+    QQ = #{qq,jdbcType=VARCHAR},
+    email = #{email,jdbcType=VARCHAR},
+    phone = #{phone,jdbcType=VARCHAR},
+    location = #{location,jdbcType=VARCHAR},
+    address = #{address,jdbcType=VARCHAR},
+    expert_type = #{expertType,jdbcType=VARCHAR},
+    adept_field = #{adeptField,jdbcType=VARCHAR},
+    adept_species = #{adeptSpecies,jdbcType=VARCHAR},
+    related_species = #{relatedSpecies,jdbcType=VARCHAR},
+    related_industry = #{relatedIndustry,jdbcType=VARCHAR},
+    related_product = #{relatedProduct,jdbcType=VARCHAR},
+    related_service = #{relatedService,jdbcType=VARCHAR},
+    honor_certificate_picture_list = #{honorCertificatePictureList,jdbcType=VARCHAR},
+    qualification_certificate_picture_list = #{qualificationCertificatePictureList,jdbcType=VARCHAR},
+    personal_picture_list = #{personalPictureList,jdbcType=VARCHAR},
+    approve_status = #{approveStatus,jdbcType=INTEGER}
+    where id = #{applyId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateType" parameterType="java.lang.String">
+    UPDATE
+      login_user
+    SET
+      user_type = 4
+    WHERE
+      login_account = #{loginAccount}
+  </update>
+
+  <update id="updateStatus" parameterType="java.lang.Integer">
+    UPDATE
+      expert_info
+    SET
+      approve_status = #{approveStatus,jdbcType=INTEGER}
+    WHERE
+      id = #{applyId,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryDisplayNameByAccount" parameterType="java.lang.String" resultType="java.lang.String">
+      SELECT display_name FROM login_user WHERE login_account = #{fcreatorid}
+  </select>
+
+  <select id="findWikiConllectionList" parameterType="map" resultType="map">
+    select
+    id,
+    account,
+    species_id as libraryId,
+    species_name as name,
+    species_image as image,
+    species_class as classId,
+    species_class_name as className,
+    index_id as indexid
+    from reversion_name_library_collection_wiki_info
+
+    where 1=1
+    <if test="account !=null and account!=''">
+      and account = #{account}
+    </if>
+
+    <if test="name !=null and name!=''">
+      and species_name = #{name}
+    </if>
+
+    order  by create_time desc
+  </select>
+
+  <insert id="saveWikiLibraryInfo" parameterType="map">
+        insert into reversion_name_library_collection_wiki_info (
+          account,
+          species_id,
+          species_name,
+          species_image,
+          species_class,
+          species_class_name,
+          index_id,
+          create_time
+        )values (
+          #{account},
+          #{libraryId},
+          #{name},
+          #{image},
+          #{classId},
+          #{className},
+          #{indexid},
+          now()
+
+        );
+    </insert>
+
+    <update id="updateWikiLibraryInfo" parameterType="map">
+      update reversion_name_library_collection_wiki_info
+      <set>
+        <if test="image!=null">
+          species_image = #{image},
+        </if>
+        <if test="classId!=null">
+          species_class = #{classId},
+        </if>
+        <if test="className!=null">
+          species_class_name = #{className},
+        </if>
+
+      </set>
+      where species_id = #{speciesid}
+    </update>
+
+    <delete id="deleteWikiLibraryInfo" parameterType="map">
+        delete from reversion_name_library_collection_wiki_info where index_id = #{indexid}
+    </delete>
+
+  <select id="findVarietyList" parameterType="map" resultType="map">
+    select
+    id,
+    account,
+    variety_id as libraryId,
+    variety_name as name,
+    variety_image as image,
+    species_id as classId,
+
+    index_id as indexid
+    from reversion_name_library_collection_variety_info
+
+    where 1=1
+    <if test="account !=null and account!=''">
+      and account = #{account}
+    </if>
+
+
+    <if test="name !=null and name!=''">
+      and variety_name = #{name}
+    </if>
+    order  by create_time desc
+  </select>
+
+  <insert id="saveVarietyLibraryInfo" parameterType="map">
+        insert into reversion_name_library_collection_variety_info (
+          account,
+          variety_id,
+          variety_name,
+          variety_image,
+          species_id,
+          index_id,
+          create_time
+        )values (
+          #{account},
+          #{libraryId},
+          #{name},
+          #{image},
+          #{classId},
+          #{indexid},
+          now()
+
+        );
+    </insert>
+
+  <update id="updateVarietyLibraryInfo" parameterType="map">
+    update reversion_name_library_collection_variety_info
+    <set>
+      <if test="image!=null">
+        variety_image = #{image},
+      </if>
+      <if test="classId!=null">
+        species_id = #{classId},
+      </if>
+
+    </set>
+    where variety_id = #{fid}
+  </update>
+
+  <delete id="deleteVarietyLibraryInfo" parameterType="map">
+        delete from reversion_name_library_collection_variety_info where index_id = #{indexid}
+    </delete>
+
+  <select id="findDiseaseList" parameterType="map" resultType="map">
+    select
+    id,
+    account,
+    disease_id as libraryId,
+    disease_name as name,
+    disease_image as image,
+    species_id as classId,
+
+    index_id as indexid
+    from reversion_name_library_collection_disease_info
+
+    where 1=1
+    <if test="account !=null and account!=''">
+      and account = #{account}
+    </if>
+
+
+    <if test="name !=null and name!=''">
+      and disease_name = #{name}
+    </if>
+    order  by create_time desc
+  </select>
+
+  <insert id="saveDiseaseLibraryInfo" parameterType="map">
+        insert into reversion_name_library_collection_disease_info (
+          account,
+          disease_id,
+          disease_name,
+          disease_image,
+          species_id,
+          index_id,
+          create_time
+        )values (
+          #{account},
+          #{libraryId},
+          #{name},
+          #{image},
+          #{classId},
+          #{indexid},
+          now()
+
+        );
+    </insert>
+
+  <update id="updateDiseaseLibraryInfo" parameterType="map">
+    update reversion_name_library_collection_disease_info
+    <set>
+      <if test="image!=null">
+        disease_image = #{image},
+      </if>
+      <if test="classId!=null">
+        species_id = #{classId},
+      </if>
+
+    </set>
+    where disease_name = #{fname} and account = #{account}
+  </update>
+
+  <delete id="deleteDiseaseLibraryInfo" parameterType="map">
+        delete from reversion_name_library_collection_disease_info where index_id = #{indexid}
+  </delete>
+
+  <select id="findPestList" parameterType="map" resultType="map">
+    select
+    id,
+    account,
+    pest_id as libraryId,
+    pest_name as name,
+    pest_image as image,
+    species_id as classId,
+
+    index_id as indexid
+    from reversion_name_library_collection_pest_info
+
+    where 1=1
+    <if test="account !=null and account!=''">
+      and account = #{account}
+    </if>
+
+
+    <if test="name !=null and name!=''">
+      and pest_name =#{name}
+    </if>
+    order  by create_time desc
+  </select>
+
+
+  <insert id="savePestLibraryInfo" parameterType="map">
+        insert into reversion_name_library_collection_pest_info (
+          account,
+          pest_id,
+          pest_name,
+          pest_image,
+          species_id,
+          index_id,
+          create_time
+        )values (
+          #{account},
+          #{libraryId},
+          #{name},
+          #{image},
+          #{classId},
+          #{indexid},
+          now()
+
+        );
+    </insert>
+
+  <update id="updatePestLibraryInfo" parameterType="map">
+    update reversion_name_library_collection_pest_info
+    <set>
+      <if test="image!=null">
+        pest_image = #{image},
+      </if>
+      <if test="classId!=null">
+        species_id = #{classId},
+      </if>
+
+    </set>
+    where pest_id = #{fid}
+  </update>
+
+  <delete id="deletePestLibraryInfo" parameterType="map">
+        delete from reversion_name_library_collection_pest_info where index_id = #{indexid}
+    </delete>
+</mapper>

@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.shop.inventory.mapper.BasicSettingMapper">
+
+    <select id="customFind" resultType="map">
+        select id, account, product_classify as productClassify, custom_name as customName, update_time as updateTime
+        from inventory_basic_setting_custom
+        where 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="customName != null and customName != ''">
+            AND custom_name = #{customName}
+        </if>
+        <if test="key != null and key != ''">
+            AND custom_name like concat('%', #{key}, '%')
+        </if>
+        <if test="productClassify != null and productClassify != ''">
+            AND product_classify = #{productClassify}
+        </if>
+        <if test="customId != null and customId != ''">
+            AND id = #{customId}
+        </if>
+        <if test="id != null and id != ''">
+            AND id != #{id}
+        </if>
+
+    </select>
+
+    <insert id="customSave" parameterType="map">
+        insert into inventory_basic_setting_custom(
+        id,
+        account,
+        product_classify,
+        custom_name
+        ) values (
+        #{id},
+        #{account},
+        #{productClassify},
+        #{customName}
+        )
+    </insert>
+
+    <select id="productCodeIsUse" parameterType="map" resultType="map">
+      SELECT id from inventory_basic_setting_commodity
+      where 1=1
+      <if test="productCode != null and productCode != ''">
+         AND product_code = #{productCode}
+      </if>
+      <if test="account != null and account != ''">
+         AND account = #{account}
+      </if>
+      <if test="id != null and id != ''">
+         AND id != #{id}
+      </if>
+    </select>
+
+    <insert id="productSave" parameterType="map">
+        replace into inventory_basic_setting_commodity(
+        id,
+        account,
+        product_code,
+        product_name,
+        commodity_id,
+        product_classify,
+        custom_id,
+        unit,
+        upper_limit,
+        lower_limit
+        ) values (
+        #{id},
+        #{account},
+        #{productCode},
+        #{productName},
+        #{commodityId},
+        #{productClassify},
+        #{customId},
+        #{unit},
+        <choose>
+            <when test="upperLimit !=null and upperLimit !=''">
+                #{upperLimit},
+            </when>
+            <otherwise>
+                null,
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="lowerLimit !=null and lowerLimit !=''">
+                #{lowerLimit}
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>
+        )
+    </insert>
+
+    <select id="productFind" resultType="map">
+        select id, account, product_code as productCode, product_name as productName, commodity_id as commodityId,
+        product_classify as productClassify, custom_id as customId, update_time as updateTime, unit,
+        ifnull(upper_limit, '不限') as upperLimit, ifnull(lower_limit, '不限') as lowerLimit
+        from inventory_basic_setting_commodity
+        where account = #{account}
+        <if test="productName != null and productName != ''">
+            AND product_name like concat('%', #{productName}, '%')
+        </if>
+        <if test="customId != null and customId != ''">
+            AND custom_id = #{customId}
+        </if>
+        order by update_time desc
+    </select>
+
+    <select id="findProductClassify" parameterType="map" resultType="map">
+        SELECT id, classification_name as classifyName, classification_code as productClassify FROM product_classification
+        WHERE classification_code = #{productClassify}
+    </select>
+
+    <select id="findCommonCommodity" parameterType="map" resultType="map">
+        SELECT id, currency_commodity_name as commodityName FROM shop_currency_commodity
+        WHERE id = #{commodityId}
+    </select>
+
+    <delete id="productDelete" parameterType="map">
+        delete from inventory_basic_setting_commodity where id = #{id} and account = #{account}
+    </delete>
+
+    <delete id="customDelete" parameterType="map">
+        delete from inventory_basic_setting_custom where id = #{id} and account = #{account}
+    </delete>
+
+    <select id="getStoreOrder" parameterType="string" resultType="java.lang.Integer">
+        select `order` from inventory_basic_setting_store where account = #{account}
+    </select>
+
+    <insert id="storeSave" parameterType="map">
+        replace into inventory_basic_setting_store(
+        id,
+        account,
+        store_name,
+        remark,
+        status
+        ) values (
+        #{id},
+        #{account},
+        #{storeName},
+        #{remark},
+        #{status}
+        )
+    </insert>
+    
+    <select id="storeFind" parameterType="map" resultType="map">
+        select id, account, store_name as storeName, remark, status
+        from inventory_basic_setting_store
+        where account = #{account}
+        <if test="key != null and key != ''">
+            AND store_name like concat('%', #{key}, '%')
+        </if>
+        <if test="storeName != null and storeName != ''">
+            AND store_name = #{storeName}
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        <if test="id != null and id != ''">
+            AND id != #{id}
+        </if>
+    </select>
+
+    <delete id="storeDelete" parameterType="map">
+        delete from inventory_basic_setting_store where id = #{id} and account = #{account}
+    </delete>
+
+    <insert id="billSave" parameterType="map">
+        replace into inventory_basic_setting_bill(
+        id,
+        account,
+        in_bill,
+        out_bill
+        ) values (
+        #{id},
+        #{account},
+        #{inBill},
+        #{outBill}
+        )
+    </insert>
+
+    <select id="billFind" parameterType="map" resultType="map">
+        select id, account, in_bill as inBill, out_bill as outBill
+        from inventory_basic_setting_bill where account = #{account}
+    </select>
+
+    <select id="getInStoreOrder" parameterType="string" resultType="java.lang.Integer">
+        select `order` from inventory_in_store_type where account = #{account}
+    </select>
+
+    <insert id="inStoreSave" parameterType="map">
+        replace into inventory_in_store_type(
+        id,
+        account,
+        `type`
+        ) values (
+        #{id},
+        #{account},
+        #{type}
+        )
+    </insert>
+
+    <select id="inStoreFind" parameterType="map" resultType="map">
+        select id, account, type, update_time as updateTime
+        from inventory_in_store_type
+        where account = #{account}
+        <if test="type != null and type != ''">
+            AND type = #{type}
+        </if>
+        <if test="id != null and id != ''">
+            AND id != #{id}
+        </if>
+        order by update_time desc
+    </select>
+
+    <select id="inStoreWithSystem" parameterType="map" resultType="map">
+        select id, account, type, updateTime, flag from(
+        select id, #{account} as account, name as type, update_time as updateTime, 0 as flag
+        from inventory_common_store_type
+        where type = 1
+        union all
+        select id, account, type, update_time as updateTime, 1 as flag
+        from inventory_in_store_type
+        where account = #{account} order by updateTime desc) a
+        where 1=1
+        <if test="type != null and type != ''">
+            AND type = #{type}
+        </if>
+        <if test="id != null and id != ''">
+            AND id != #{id}
+        </if>
+    </select>
+
+    <delete id="inStoreDelete" parameterType="map">
+        delete from inventory_in_store_type where id = #{id} and account = #{account}
+    </delete>
+
+    <select id="getOutStoreOrder" parameterType="string" resultType="java.lang.Integer">
+        select `order` from inventory_out_store_type where account = #{account}
+    </select>
+
+    <insert id="outStoreSave" parameterType="map">
+        replace into inventory_out_store_type(
+        id,
+        account,
+        `type`
+        ) values (
+        #{id},
+        #{account},
+        #{type}
+        )
+    </insert>
+
+    <select id="outStoreFind" parameterType="map" resultType="map">
+        select id, account, type, update_time as updateTime
+        from inventory_out_store_type
+        where account = #{account}
+        <if test="type != null and type != ''">
+            AND type = #{type}
+        </if>
+        <if test="id != null and id != ''">
+            AND id != #{id}
+        </if>
+        order by update_time desc
+    </select>
+
+    <select id="outStoreWithSystem" parameterType="map" resultType="map">
+        select id, account, type, updateTime, flag from(
+        select id, #{account} as account, name as type, update_time as updateTime, 0 as flag
+        from inventory_common_store_type
+        where type = 2
+        union all
+        select id, account, type, update_time as updateTime, 1 as flag
+        from inventory_out_store_type
+        where account = #{account} order by updateTime desc) a
+        where 1=1
+        <if test="type != null and type != ''">
+            AND type = #{type}
+        </if>
+        <if test="id != null and id != ''">
+            AND id != #{id}
+        </if>
+    </select>
+
+    <delete id="outStoreDelete" parameterType="map">
+        delete from inventory_out_store_type where id = #{id} and account = #{account}
+    </delete>
+
+    <select id="getMemberName" parameterType="string" resultType="string">
+        select b.member_name as memberName from
+		reversion_member_aptitude_real_info b left join reversion_user_template_manage a
+		on (a.account = b.user_id and a.template_id = b.template_id)
+		where b.user_id = #{account} and a.status = '1' order by b.create_time limit 1
+    </select>
+
+    <insert id="enterStoreSave" parameterType="map">
+        insert into inventory_in_store_record(
+        account,
+        product_code,
+        number,
+        unit,
+        price,
+        total_price,
+        batch_number,
+        in_store,
+        in_store_type,
+        operator_account,
+        create_time,
+        enter_order
+        ) values (
+        #{account},
+        #{productCode},
+        #{number},
+        #{unit},
+        #{price},
+        #{totalPrice},
+        #{batchNumber},
+        #{inStore},
+        #{inStoreType},
+        #{operatorAccount},
+        #{createTime},
+        #{enterOrder}
+        )
+    </insert>
+
+    <select id="storeManageFind" parameterType="map" resultType="map">
+        select id, account, product_code as productCode, unit, price, in_store as inStore,
+        initial_store as initialStore, total_store as totalStore, upper_limit as upperLimit,
+        lower_limit as lowerLimit, update_time as updateTime
+        from inventory_store_manage
+        where account = #{account} AND product_code = #{productCode}
+        AND unit = #{unit} AND price = #{price} AND in_store = #{inStore}
+    </select>
+
+    <insert id="storeManageSave" parameterType="map" keyProperty="id" useGeneratedKeys="true">
+        insert into inventory_store_manage(
+        account,
+        product_code,
+        unit,
+        price,
+        in_store,
+        initial_store,
+        total_store
+        ) values (
+        #{account},
+        #{productCode},
+        #{unit},
+        #{price},
+        #{inStore},
+        #{initialStore},
+        #{number}
+        )
+    </insert>
+
+    <insert id="overrideStoreManageSave" parameterType="map">
+        insert into inventory_store_manage(
+        account,
+        product_code,
+        unit,
+        price,
+        in_store,
+        initial_store,
+        total_store
+        ) values (
+        #{account},
+        #{productCode},
+        #{unit},
+        #{price},
+        #{inStore},
+        #{initialStore},
+        #{number}
+        )
+    </insert>
+
+    <update id="storeManageUpdate" parameterType="map">
+        UPDATE inventory_store_manage
+        set initial_store = initial_store + #{initialStore},
+        total_store = total_store + #{number}
+        where account = #{account} AND product_code = #{productCode}
+        AND unit = #{unit} AND price = #{price} AND in_store = #{inStore}
+    </update>
+
+    <select id="manageFind" parameterType="map" resultType="map">
+        select a.id, a.product_code as productCode, b.product_name as productName, b.commodity_id as commodityId, b.product_classify as productClassify,
+        a.unit, a.total_store as totalStore, ifnull(a.upper_limit, '不限') as upperLimit, ifnull(a.lower_limit, '不限') as lowerLimit,
+        a.in_store as inStore, c.store_name as storeName, a.initial_store as initialStore, a.price, b.custom_id as customId, round((a.price * a.total_store),2) as totalPrice
+        from inventory_store_manage a left join inventory_basic_setting_commodity b on (a.product_code = b.product_code and a.account = b.account)
+        left join inventory_basic_setting_store c on a.in_store = c.id
+        where a.account = #{account}
+        <if test="productClassify != null and productClassify != ''">
+            AND b.product_classify = #{productClassify}
+        </if>
+        <if test="productName != null and productName != ''">
+            AND b.product_name like concat('%',  #{productName}, '%')
+        </if>
+        <if test="productCode != null and productCode != ''">
+            AND a.product_code = #{productCode}
+        </if>
+        <if test="commodityId != null and commodityId != ''">
+            AND b.commodity_id = #{commodityId}
+        </if>
+        <if test="inStore != null and inStore != ''">
+            AND a.in_store = #{inStore}
+        </if>
+        <if test="customId != null and customId != ''">
+            AND b.custom_id = #{customId}
+        </if>
+        order by a.update_time desc
+    </select>
+
+    <update id="warningSave" parameterType="map">
+        update inventory_store_manage
+        <set>
+            <choose>
+                <when test="upperLimit !=null and upperLimit !=''">
+                    upper_limit = #{upperLimit},
+                </when>
+                <otherwise>
+                    upper_limit = null,
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="lowerLimit !=null and lowerLimit !=''">
+                    lower_limit = #{lowerLimit},
+                </when>
+                <otherwise>
+                    lower_limit = null,
+                </otherwise>
+            </choose>
+        </set>
+        where id = #{id}
+    </update>
+
+    <insert id="exitStoreSave" parameterType="map">
+        insert into inventory_out_store_record(
+        account,
+        product_code,
+        number,
+        unit,
+        price,
+        in_store,
+        out_store_type,
+        operator_account,
+        create_time,
+        exit_order
+        ) values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.account}, #{item.productCode}, #{item.number}, #{item.unit}, #{item.price}, #{item.inStore},
+                #{item.outStoreType}, #{item.operatorAccount}, #{item.createTime}, #{item.exitOrder})
+            </foreach>
+        </if>
+    </insert>
+
+    <update id="outStoreManageUpdate" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            UPDATE inventory_store_manage SET
+            total_store = total_store - #{item.number}
+            WHERE id = #{item.id}
+        </foreach>
+    </update>
+
+    <select id="enterRecord" parameterType="map" resultType="map">
+        select ifnull(a.enter_order, '') as `order`, a.product_code as productCode, b.product_name as productName,
+        b.custom_id as customId, a.number, a.unit, a.price, a.total_price as totalPrice, a.batch_number as batchNumber,
+        c.store_name as storeName, a.create_time as createTime, a.operator_account as operatorAccount
+        from inventory_in_store_record a left join inventory_basic_setting_commodity b on (a.product_code = b.product_code and a.account = b.account)
+        left join inventory_basic_setting_store c on a.in_store = c.id
+        where a.account = #{account} and a.is_display = 1
+        <if test="productClassify != null and productClassify != ''">
+            AND b.product_classify = #{productClassify}
+        </if>
+        <if test="productName != null and productName != ''">
+            AND b.product_name like concat('%',  #{productName}, '%')
+        </if>
+        <!--<if test="productCode != null and productCode != ''">
+            AND a.product_code = #{productCode}
+        </if>-->
+        <!--<if test="commodityId != null and commodityId != ''">
+            AND b.commodity_id = #{commodityId}
+        </if>-->
+        <if test="customId != null and customId != ''">
+            AND b.custom_id = #{customId}
+        </if>
+        <if test="inStore != null and inStore != ''">
+            AND a.in_store = #{inStore}
+        </if>
+        <if test="order != null and order != ''">
+            AND a.enter_order like concat('%',  #{order}, '%')
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            AND a.create_time >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND a.create_time &lt;= #{endTime}
+        </if>
+        order by a.update_time desc
+    </select>
+
+    <select id="exitRecord" parameterType="map" resultType="map">
+        select ifnull(a.exit_order, '') as `order`, a.product_code as productCode, b.product_name as productName,
+        b.custom_id as customId, a.number, a.unit, a.price, round((a.price * a.number),2) as totalPrice, c.store_name as storeName,
+        a.create_time as createTime, a.operator_account as operatorAccount
+        from inventory_out_store_record a left join inventory_basic_setting_commodity b on (a.product_code = b.product_code and a.account = b.account)
+        left join inventory_basic_setting_store c on a.in_store = c.id
+        where a.account = #{account} and a.is_display = 1
+        <if test="productClassify != null and productClassify != ''">
+            AND b.product_classify = #{productClassify}
+        </if>
+        <if test="productName != null and productName != ''">
+            AND b.product_name like concat('%',  #{productName}, '%')
+        </if>
+        <if test="customId != null and customId != ''">
+            AND b.custom_id = #{customId}
+        </if>
+        <if test="inStore != null and inStore != ''">
+            AND a.in_store = #{inStore}
+        </if>
+        <if test="order != null and order != ''">
+            AND a.exit_order like concat('%',  #{order}, '%')
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            AND a.create_time >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND a.create_time &lt;= #{endTime}
+        </if>
+        order by a.update_time desc
+    </select>
+
+    <select id="enterOrder" parameterType="map" resultType="map">
+        select ifnull(a.enter_order, '') as `order`, a.product_code as productCode, b.product_name as productName,
+        a.number, a.unit, a.price, a.total_price as totalPrice, a.batch_number as batchNumber,
+        c.store_name as storeName, a.create_time as createTime, a.operator_account as operatorAccount
+        from inventory_in_store_record a left join inventory_basic_setting_commodity b on (a.product_code = b.product_code and a.account = b.account)
+        left join inventory_basic_setting_store c on a.in_store = c.id
+        where a.account = #{account} and a.enter_order = #{order}
+    </select>
+
+    <select id="exitOrder" parameterType="map" resultType="map">
+        select ifnull(a.exit_order, '') as `order`, a.product_code as productCode, b.product_name as productName,
+        a.number, a.unit, a.price, round((a.price * a.number),2) as totalPrice, c.store_name as storeName,
+        a.create_time as createTime, a.operator_account as operatorAccount
+        from inventory_out_store_record a left join inventory_basic_setting_commodity b on (a.product_code = b.product_code and a.account = b.account)
+        left join inventory_basic_setting_store c on a.in_store = c.id
+        where a.account = #{account} and a.exit_order = #{order}
+    </select>
+
+    <select id="storeCombineList" parameterType="map" resultType="map">
+        select a.id, a.product_code as productCode, b.product_name as productName, b.commodity_id as commodityId, b.product_classify as productClassify,
+        sum(a.initial_store) as initialStore, sum(a.total_store) as totalStore, a.unit, b.custom_id as customId
+        from inventory_store_manage a left join inventory_basic_setting_commodity b on (a.product_code = b.product_code and a.account = b.account)
+        left join inventory_basic_setting_store c on a.in_store = c.id
+        where a.account = #{account}
+        <if test="productClassify != null and productClassify != ''">
+            AND b.product_classify = #{productClassify}
+        </if>
+        <if test="productName != null and productName != ''">
+            AND b.product_name like concat('%',  #{productName}, '%')
+        </if>
+        <if test="commodityId != null and commodityId != ''">
+            AND b.commodity_id = #{commodityId}
+        </if>
+        <if test="productCode != null and productCode != ''">
+            AND a.product_code = #{productCode}
+        </if>
+        group by productCode
+        order by a.update_time desc
+    </select>
+
+    <insert id="transferInSave" parameterType="map">
+        insert into inventory_in_store_record(
+        account,
+        product_code,
+        number,
+        unit,
+        price,
+        total_price,
+        in_store,
+        in_store_type,
+        operator_account,
+        create_time,
+        is_display
+        ) values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.account}, #{item.productCode}, #{item.number}, #{item.unit}, #{item.price}, #{item.number} * #{item.price},
+                #{item.inStore}, #{item.inStoreType}, #{item.operatorAccount}, #{item.createTime}, #{item.isDisplay})
+            </foreach>
+        </if>
+    </insert>
+
+    <insert id="transferOutSave" parameterType="map">
+        insert into inventory_out_store_record(
+        account,
+        product_code,
+        number,
+        unit,
+        price,
+        in_store,
+        out_store_type,
+        operator_account,
+        create_time,
+        is_display
+        ) values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.account}, #{item.productCode}, #{item.number}, #{item.unit}, #{item.price}, #{item.transferInStore},
+                #{item.outStoreType}, #{item.operatorAccount}, #{item.createTime}, #{item.isDisplay})
+            </foreach>
+        </if>
+    </insert>
+
+    <select id="storeTypeList" parameterType="map" resultType="map">
+        select id, `name`, `type` from inventory_common_store_type
+        union all
+        select id, `type` as `name`, '1' as type from inventory_in_store_type
+        where account = #{account}
+        union all
+        select id, `type` as `name`, '2' as type from inventory_out_store_type
+        where account = #{account}
+    </select>
+
+    <select id="storeDetail" parameterType="map" resultType="map">
+        select a.account, a.productCode, a.createTime, a.storeType, a.type, a.`order`, a.batchNumber, a.inNumber, a.outNumber,
+        a.price, a.unit, a.inStore, a.totalPrice, a.operatorAccount, b.store_name as storeName from
+        (select create_time as createTime, in_store_type as storeType, 1 as `type`, ifnull(enter_order, '') as `order`, ifnull(batch_number, '') as batchNumber, number as inNumber,
+         '' as outNumber, price, unit, in_store as inStore, total_price as totalPrice, operator_account as operatorAccount, account, product_code as productCode
+        from inventory_in_store_record
+        union all
+        select create_time as createTime, out_store_type as storeType, 2 as `type`, ifnull(exit_order, '') as `order`, '' as batchNumber, '' as inNumber, number as outNumber,
+        price, unit, in_store as inStore, round((number * price),2) as totalPrice, operator_account as operatorAccount, account, product_code as productCode
+        from inventory_out_store_record) a left join inventory_basic_setting_store b on a.inStore = b.id
+        where a.account = #{account} and a.productCode = #{productCode}
+        <if test="storeType != null and storeType != ''">
+            AND a.storeType = #{storeType}
+        </if>
+        <if test="type != null and type != ''">
+            AND a.type = #{type}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            <![CDATA[ and a.createTime  >=  #{beginTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+
+            <![CDATA[ and a.createTime  <=  #{endTime}  ]]>
+        </if>
+        <if test="inStore != null and inStore != ''">
+            AND a.inStore = #{inStore}
+        </if>
+        order by createTime desc
+
+    </select>
+
+    <select id="getStoreTypeName" parameterType="map" resultType="string">
+        select `name` from
+        (select id, `name`, `type` from inventory_common_store_type
+        union all
+        select id, `type` as `name`, '1' as type from inventory_in_store_type
+        where account = #{account}
+        union all
+        select id, `type` as `name`, '2' as type from inventory_out_store_type
+        where account = #{account}) a
+        where id = #{storeType} and type = #{type}
+    </select>
+
+    <select id="productDetail" parameterType="map" resultType="map">
+        select a.product_code as productCode, a.product_name as productName, b.custom_name as customName
+        from inventory_basic_setting_commodity a left join inventory_basic_setting_custom b
+        on (a.custom_id = b.id and a.account = b.account)
+        where a.account = #{account} and a.product_code = #{productCode}
+    </select>
+
+    <select id="inStoreNumber" parameterType="map" resultType="string">
+        select sum(number) as inNumber from inventory_in_store_record
+        where account = #{account} and product_code = #{productCode} and in_store_type != #{inStoreType}
+        group by product_code
+    </select>
+
+    <select id="outStoreNumber" parameterType="map" resultType="string">
+        select sum(number) as outNumber from inventory_out_store_record
+        where account = #{account} and product_code = #{productCode}
+        group by product_code
+    </select>
+
+    <select id="inStoreIsUse" resultType="map" parameterType="map">
+        select id
+        from inventory_in_store_record
+        where account = #{account} and in_store_type = #{id}
+    </select>
+
+    <select id="outStoreIsUse" resultType="map" parameterType="map">
+        select id
+        from inventory_out_store_record
+        where account = #{account} and out_store_type = #{id}
+    </select>
+
+    <select id="storeIsUse" parameterType="map" resultType="map">
+        select id
+        from inventory_store_manage
+        where account = #{account} and in_store = #{id}
+    </select>
+
+    <insert id="splitOutSave" parameterType="map">
+        insert into inventory_out_store_record(
+        account,
+        product_code,
+        number,
+        unit,
+        price,
+        in_store,
+        out_store_type,
+        operator_account,
+        create_time,
+        is_display
+        ) values(
+        #{account},
+        #{productCode},
+        #{number},
+        #{unit},
+        #{price},
+        #{inStore},
+        #{outStoreType},
+        #{operatorAccount},
+        #{createTime},
+        #{isDisplay}
+        )
+    </insert>
+
+    <insert id="mergeRecordSave" parameterType="map">
+        insert into inventory_merge_record(
+        account,
+        product_code,
+        unit,
+        price,
+        in_store,
+        total_store,
+        is_merge,
+        manage_id
+        ) values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.account}, #{item.productCode}, #{item.unit}, #{item.price}, #{item.inStore},
+                #{item.number}, #{item.isMerge}, #{item.manageId})
+            </foreach>
+        </if>
+    </insert>
+
+    <select id="mergeList" parameterType="map" resultType="map">
+        select a.product_code as productCode, b.product_name as productName, b.commodity_id as commodityId, b.product_classify as productClassify,
+        a.unit, a.total_store as totalStore, a.in_store as inStore, c.store_name as storeName, a.price, b.custom_id as customId, round((a.price * a.total_store),2) as totalPrice,
+        case a.is_merge when 1 then '合并项' else '非合并项' end as isMerge
+        from inventory_merge_record a left join inventory_basic_setting_commodity b on (a.product_code = b.product_code and a.account = b.account)
+        left join inventory_basic_setting_store c on a.in_store = c.id
+        where a.account = #{account} and a.manage_id = #{manageId}
+        order by a.update_time desc
+    </select>
+    
+    <update id="mergeRecordUpdate" parameterType="map">
+        update inventory_merge_record
+        set manage_id = #{manageId}
+        where account = #{account} and manage_id = #{id}
+    </update>
+
+    <select id="productIsUse" parameterType="map" resultType="map">
+        select id from inventory_in_store_record
+        where account = #{account} and product_code = #{productCode}
+        union all
+        select id from inventory_out_store_record
+        where account = #{account} and product_code = #{productCode}
+    </select>
+
+    <select id="customIsUse" parameterType="map" resultType="map">
+        select id from inventory_basic_setting_commodity
+        where account = #{account} and custom_id = #{id}
+
+    </select>
+
+    <select id="findMallClass" parameterType="map" resultType="map">
+        select id,classification_name as productCategory,parent_id as pid,classification_code from mall_classification
+
+        where 1=1
+
+        <if test="productTypeId!=null and productTypeId!=''">
+            and classification_code = #{productTypeId}
+        </if>
+        <if test="pid!=null and pid!=null">
+            and id = #{pid}
+        </if>
+    </select>
+
+    <select id="productListOfByName" resultType="map" parameterType="map">
+        select s.id, s.account, s.product_code as productCode, s.product_name as productName, s.commodity_id as commodityId,
+        s.product_classify as productClassify, s.custom_id as customId, s.update_time as updateTime, s.unit,
+        ifnull(s.upper_limit, '不限') as upperLimit, ifnull(s.lower_limit, '不限') as lowerLimit,
+        c.currency_commodity_name as commodityName
+        from inventory_basic_setting_commodity s left join shop_currency_commodity c on s.commodity_id = c.id
+        where account = #{account}
+        <if test="commodityName != null and commodityName != ''">
+            AND c.currency_commodity_name like concat('%', #{commodityName}, '%')
+        </if>
+
+    </select>
+
+    <select id="findCommodityById" resultType="map" parameterType="map">
+        SELECT t1.id AS id,
+                t1.currency_commodity_name AS commodityName,
+                t1.currency_commodity_pinyin AS commodityPinyin,
+                IFNULL(t1.commodity_alias, "") AS commodityAlias,
+                t1.industry_type_id AS industryTypeId,
+                t1.product_type_id AS productTypeId,
+                t3.dict_name AS industryType,
+                t2.classification_name AS productType,
+                t1.related_species_id AS relatedSpeciesId,
+                IFNULL(t1.remark, "") AS remark,
+                IFNULL(t1.traceability_type, "") AS traceaType,
+                t1.image AS image,
+                IFNULL(t1.is_main_product, "") AS isMainProduct,
+                t1.create_time AS createTime,
+                t1.quality_custom_content AS qualityCustomContent,
+                t1.safety_custom_content AS safetyCustomContent,
+                t1.service_id as serviceId,
+                (select s.currency_commodity_name from shop_currency_commodity s where s.id = t1.service_id) as service,
+                t1.service_class_id as serviceClassId,
+                t1.service_people_name as servicePeopleName
+        FROM shop_currency_commodity t1
+        LEFT JOIN product_classification t2 ON t1.product_type_id = t2.classification_code
+        LEFT JOIN system_dict t3 ON t1.industry_type_id = t3.dict_value
+        WHERE t1.id = #{id}
+    </select>
+
+    <select id="findStoreInfo" parameterType="int" resultType="map">
+        SELECT sum(A.total_store) as productAvailability, A.unit as productAvailabilityUnits, A.unit as netWeightUnits,
+        A.unit as packageWeightUnits, A.unit as outputUnits, A.unit as productSalesVolumeUnits, A.unit as maximumUnits
+        FROM inventory_store_manage A LEFT JOIN inventory_basic_setting_commodity B
+        ON A.product_code = B.product_code
+        WHERE B.id = #{id}
+        GROUP BY A.product_code
+    </select>
+
+</mapper>

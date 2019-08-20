@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ExpertInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.ExpertInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="login_account" property="loginAccount" jdbcType="VARCHAR" />
+    <result column="expert_name" property="expertName" jdbcType="VARCHAR" />
+    <result column="expert_type" property="expertType" jdbcType="VARCHAR" />
+    <result column="adept_field" property="adeptField" jdbcType="VARCHAR" />
+    <result column="adept_species" property="adeptSpecies" jdbcType="VARCHAR" />
+    <result column="related_species" property="relatedSpecies" jdbcType="VARCHAR" />
+    <result column="related_industry" property="relatedIndustry" jdbcType="VARCHAR" />
+    <result column="related_product" property="relatedProduct" jdbcType="VARCHAR" />
+    <result column="related_service" property="relatedService" jdbcType="VARCHAR" />
+    <result column="approve_status" property="approveStatus" jdbcType="INTEGER" />
+    <result column="coordinate" property="coordinate" jdbcType="VARCHAR" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+   <sql id="Base_Column_List" >
+        id, login_account,expert_name, expert_type, adept_field, adept_species, related_species,
+        related_industry, related_product, related_service,coordinate ,approve_status,create_time
+   </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+            <include refid="Base_Column_List" />
+        from
+            expert_info
+        where
+            id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!-- 搜索 查询专家表，并在后台通过PAGE实现分页 -->
+    <select id="findExpertTitle" resultType="map" parameterType="map">
+        SELECT
+            t1.display_name AS displayName,
+            t1.avatar,
+            t2.adept_field AS adeptField,
+            t2.adept_species AS adeptSpecies,
+            t1.login_account AS loginAccount
+        FROM
+            login_user t1
+        LEFT JOIN expert_info t2 ON t1.login_account = t2.login_account
+        LEFT JOIN user_info t3 ON t1.login_account = t3.account
+        WHERE
+            t1.user_type = 4
+        AND
+            t1.is_home_display = 1 AND t2.approve_status = 1
+        <if test="district != null and district != ''">
+            AND t3.addr LIKE CONCAT('%',#{district},'%')
+        </if>
+        <if test="speciesArray != null and speciesArray !=''">
+            <foreach collection="speciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t2.adept_species LIKE CONCAT('%',#{item},'%')
+            </foreach>
+        </if>
+        <if test="industryArray != null and industryArray != ''">
+            <foreach collection="industryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t2.related_industry LIKE CONCAT('%',#{item},'%')
+            </foreach>
+        </if>
+        <if test="goodNameArray != null and goodNameArray != ''">
+            <foreach collection="goodNameArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t2.related_product LIKE CONCAT('%',#{item},'%')
+            </foreach>
+        </if>
+        <if test="serviceNameArray != null and serviceNameArray != ''">
+            <foreach collection="serviceNameArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t2.related_service LIKE CONCAT('%',#{item},'%')
+            </foreach>
+        </if>
+        <if test="type != null and type != ''">
+            AND t2.expert_type = #{type}
+        </if>
+        <if test="adeptFieldArray != null and adeptFieldArray != ''">
+            <foreach collection="adeptFieldArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t2.adept_field LIKE CONCAT('%',#{item},'%')
+            </foreach>
+        </if>
+        <if test="title != null and title !=''">
+            AND t1.display_name LIKE CONCAT('%',#{title},'%')
+        </if>
+        order by t2.create_time desc
+    </select>
+
+    <select id="getExpertInfo" parameterType="java.lang.String" resultType="com.ovit.nswy.member.model.ExpertInfo">
+        select *
+        FROM expert_info
+        WHERE login_account = #{loginAccount, jdbcType=VARCHAR}
+    </select>
+    <select id="getApproveStatus" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select approve_status
+        FROM expert_info
+        WHERE login_account = #{loginAccount, jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from expert_info
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.ovit.nswy.member.model.ExpertInfo" >
+        insert into expert_info (id, login_account, expert_name,
+         expert_type, adept_field,
+        adept_species, related_species, related_industry,
+        related_product, related_service,coordinate,
+        approve_status,create_time)
+        values (#{id,jdbcType=INTEGER}, #{loginAccount,jdbcType=VARCHAR}, #{expertName,jdbcType=VARCHAR},
+         #{expertType,jdbcType=VARCHAR}, #{adeptField,jdbcType=VARCHAR},
+        #{adeptSpecies,jdbcType=VARCHAR}, #{relatedSpecies,jdbcType=VARCHAR}, #{relatedIndustry,jdbcType=VARCHAR},
+        #{relatedProduct,jdbcType=VARCHAR}, #{relatedService,jdbcType=VARCHAR}, #{coordinate,jdbcType=VARCHAR},
+        #{approveStatus,jdbcType=INTEGER},now())
+    </insert>
+
+    <update id="update" parameterType="com.ovit.nswy.member.model.ExpertInfo" >
+        update expert_info
+        set login_account = #{loginAccount,jdbcType=VARCHAR},
+        expert_name = #{expertName,jdbcType=VARCHAR},
+        expert_type = #{expertType,jdbcType=VARCHAR},
+        adept_field = #{adeptField,jdbcType=VARCHAR},
+        adept_species = #{adeptSpecies,jdbcType=VARCHAR},
+        related_species = #{relatedSpecies,jdbcType=VARCHAR},
+        related_industry = #{relatedIndustry,jdbcType=VARCHAR},
+        related_product = #{relatedProduct,jdbcType=VARCHAR},
+        related_service = #{relatedService,jdbcType=VARCHAR},
+        coordinate = #{coordinate,jdbcType=VARCHAR},
+        approve_status = #{approveStatus,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <select id="findAll" resultType="map">
+        select
+        id AS id,
+        expert_name AS expertName,
+        adept_field AS adeptField,
+        adept_species AS adeptSpecies
+        from expert_info
+        </select>
+        <select id="selectExpertBySpecies" resultType="map" parameterType="java.lang.String">
+        select t2.display_name AS `name` ,t2.avatar AS img,t1.login_account AS account  from expert_info t1 LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+        where t1.approve_status = '1'
+        and   t1.related_species like concat('%',#{speciesIds},'%') order by t1.create_time asc  LIMIT 6 ;
+    </select>
+</mapper>

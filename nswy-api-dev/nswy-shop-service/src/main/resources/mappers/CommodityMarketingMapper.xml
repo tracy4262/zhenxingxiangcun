@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.shop.pushTemplate.mapper.CommodityMarketingMapper">
+
+    <select id="getYearIdAndTemplateId" parameterType="map" resultType="map">
+        select max(a.year_file_name), a.id as yearId, b.template_id as templateId
+        from reversion_perfect_year_info a left join reversion_user_template_manage b
+        on (a.account = b.account and status = '1')
+        where a.account = #{account}
+    </select>
+
+    <select id="networkStationList" parameterType="map" resultType="map">
+        select a.network_name as  networkName, a.network_type as networkType, a.location, a.address, a.house_number as houseNumber,
+        a.perfect_address as perfectAddress, a.longitude, a.latitude, a.contact, a.office_phone as officePhone, a.phone,
+        case when b.marketing_id is null then 0 else 1 end as is_choose, a.id as outletsId
+        from reversion_business_outlets_info a left join marketing_business_outlets_info b
+        on (a.account = b.account and a.id = b.outlets_id
+        <if test="marketingId!=null and marketingId!=''">
+            and b.marketing_id = #{marketingId}
+        </if>
+        and b.type = #{type})
+        where 1=1
+        <if test="templateId!=null and templateId!=''">
+            and a.template_id = #{templateId}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and a.year_id = #{yearId}
+        </if>
+        <if test="account!=null and account!=''">
+            and a.account = #{account}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <delete id="deleteNetworkInfo" parameterType="map">
+        DELETE FROM marketing_business_outlets_info
+        WHERE account = #{account} AND marketing_id = #{marketingId} and type = #{type}
+    </delete>
+
+    <insert id="batchSaveNetwork" parameterType="map">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO marketing_business_outlets_info (
+            account,
+            outlets_id,
+            marketing_id,
+            network_name,
+            network_type,
+            location,
+            address,
+            house_number,
+            perfect_address,
+            longitude,
+            latitude,
+            contact,
+            office_phone,
+            phone,
+            create_time,
+            `type`
+            ) VALUES
+            (
+            #{item.account},
+            #{item.outletsId},
+            #{item.marketingId},
+            #{item.networkName},
+            #{item.networkType},
+            #{item.location},
+            #{item.address},
+            #{item.houseNumber},
+            #{item.perfectAddress},
+            #{item.longitude},
+            #{item.latitude},
+            #{item.contact},
+            #{item.officePhone},
+            #{item.phone},
+            now(),
+            #{item.type}
+            )
+        </foreach>
+    </insert>
+
+    <select id="getBaseName" resultType="string" parameterType="string">
+        SELECT base_name as baseName from reversion_production_base
+        WHERE id = #{id}
+    </select>
+
+</mapper>
+

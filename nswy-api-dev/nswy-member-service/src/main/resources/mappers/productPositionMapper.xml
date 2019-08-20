@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ProductPositionMapper">
+    <select id="queryGeographicalPosition" parameterType="map" resultType="map">
+        SELECT
+            t1.geographic_position_id AS geographicPositionId,
+            t1. product_id AS productId,
+            t1.west_coordinate AS westCoordinate,
+            t1.east_coordinate AS eastCoordinate,
+            t1.south_coordinate AS southCoordinate,
+            t1.north_coordinate AS northCoordinate,
+            t1.east_west_length AS eastWestLength,
+            t1.south_north_length AS southNorthLength,
+            t1.land_area AS landArea,
+            t1.create_time AS createTime,
+            t1.update_time AS updateTime,
+            t2.geographical_position AS geographicPosition,
+            t2.coordinate AS centerCoordinate,
+            t2.location_id AS locationId
+        FROM
+            geographic_position t1
+        RIGHT JOIN
+            product_base_info t2
+        ON
+            t1.product_id = t2.product_id
+        WHERE
+            t2.product_id = #{productId}
+    </select>
+
+    <update id="saveGeographicalPosition" parameterType="map">
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(*) FROM geographic_position WHERE 1 = 1 AND product_id = #{productId}
+        </selectKey>
+        <if test="count > 0">
+            UPDATE geographic_position SET
+                west_coordinate = #{westCoordinate},
+                east_coordinate = #{eastCoordinate},
+                south_coordinate = #{southCoordinate},
+                north_coordinate = #{northCoordinate},
+                east_west_length = #{eastWestLength},
+                south_north_length = #{southNorthLength},
+                land_area = #{landArea}
+            WHERE product_id = #{productId}
+        </if>
+        <if test="count == 0">
+            INSERT INTO geographic_position (
+                geographic_position_id,
+                product_id,
+                west_coordinate,
+                east_coordinate,
+                south_coordinate,
+                north_coordinate,
+                east_west_length,
+                south_north_length,
+                land_area,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{productId},
+                #{westCoordinate},
+                #{eastCoordinate},
+                #{southCoordinate},
+                #{northCoordinate},
+                #{eastWestLength},
+                #{southNorthLength},
+                #{landArea},
+                NOW()
+            )
+        </if>
+    </update>
+</mapper>

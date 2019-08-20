@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.SpeciesOfFishMapper">
+
+	<select id="getSpeciesOfFish" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+			species_id,species_name
+		from fishing_species
+		where account = #{account} AND type = #{type}
+	</select>
+
+	<insert id="insertSpeciesOfFish" parameterType="java.util.Map">
+		INSERT INTO fishing_species (
+		account,
+		species_id,
+		species_name,
+		type
+		) VALUES
+		<if test="list.size() > 0">
+			<foreach collection="list" item="item" index="index" separator=",">
+				(#{item.account}, #{item.speciesId}, #{item.speciesName}, #{item.type})
+			</foreach>
+		</if>
+	</insert>
+
+	<delete id="deleteSpeciesOfFish" parameterType="java.util.Map">
+		DELETE FROM fishing_species
+		WHERE account = #{account} AND species_id = #{speciesId} AND type = #{type}
+	</delete>
+
+</mapper>

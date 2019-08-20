@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.WaterConditionMapper">
+    <insert id="save" parameterType="map">
+
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(water_condition_id) FROM water_condition WHERE water_condition_id = #{waterConditionId}
+        </selectKey>
+
+        <if test="count > 0">
+            UPDATE water_condition SET
+                domestic_water = #{domesticWater},
+                convenient = #{convenient},
+                safe = #{safe},
+                water_price = #{waterPrice},
+                irrigation_power = #{irrigationPower},
+                drainability = #{drainability},
+                flood = #{flood},
+                drought = #{drought}
+            WHERE product_id = #{productId}
+        </if>
+
+        <if test="count == 0">
+            INSERT INTO water_condition(
+                water_condition_id,
+                product_id,
+                domestic_water,
+                convenient,
+                safe,
+                water_price,
+                irrigation_power,
+                drainability,
+                flood,
+                drought,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{productId},
+                #{domesticWater},
+                #{convenient},
+                #{safe},
+                #{waterPrice},
+                #{irrigationPower},
+                #{drainability},
+                #{flood},
+                #{drought},
+                NOW()
+            )
+        </if>
+    </insert>
+
+    <select id="query" parameterType="map" resultType="map">
+        SELECT
+            water_condition_id AS waterConditionId,
+            product_id AS productId,
+            domestic_water AS domesticWater,
+            convenient AS convenient,
+            safe AS safe,
+            water_price AS waterPrice,
+            irrigation_power AS irrigationPower,
+            drainability AS drainability,
+            flood AS flood,
+            drought AS drought,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM water_condition WHERE product_id = #{productId}
+
+    </select>
+</mapper>

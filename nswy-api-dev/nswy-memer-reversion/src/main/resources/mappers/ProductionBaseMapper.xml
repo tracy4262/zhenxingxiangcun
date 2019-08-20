@@ -1,0 +1,3306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.application.mapper.ProductionBaseMapper">
+
+    <insert id="save" parameterType="map" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO reversion_production_base(
+        account,
+        base_name,
+        land,
+        land_id,
+        location,
+        coordinate,
+        introduction,
+        create_time
+        ) VALUES (
+        #{account},
+        #{productionBaseName},
+        #{land},
+        #{landId},
+        #{location},
+        #{coordinate},
+        #{introduction},
+        NOW()
+        )
+    </insert>
+
+    <update id="update" parameterType="map">
+        UPDATE reversion_production_base
+        <set>
+            <if test="productionBaseName !=null and productionBaseName != ''">
+                base_name = #{productionBaseName},
+            </if>
+            <if test="land !=null and land != ''">
+                land = #{land},
+            </if>
+            <!--<if test="location !=null and location != ''">-->
+                location = #{location},
+            <!--</if>-->
+            <if test="coordinate !=null and coordinate != ''">
+                coordinate = #{coordinate},
+            </if>
+            <!--<if test="introduction !=null and introduction != ''">-->
+                introduction = #{introduction},
+            <!--</if>-->
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM reversion_production_base WHERE id = #{id}
+    </delete>
+
+    <select id="find" resultType="map" parameterType="map">
+        SELECT id, account, base_name as productionBaseName, land, location, coordinate, introduction, create_time as createTime,
+        update_time as updateTime, land_id as landId, complete
+        FROM reversion_production_base
+        WHERE id = #{id}
+    </select>
+
+    <select id="list" parameterType="map" resultType="map">
+        SELECT id, account, base_name as productionBaseName, land, location, coordinate, introduction, create_time as createTime, update_time as updateTime
+        FROM reversion_production_base
+        WHERE account = #{account}
+        <if test="key != null and key !=''">
+            AND base_name LIKE concat('%', #{key}, '%')
+        </if>
+        ORDER BY update_time DESC
+    </select>
+
+    <select id="facilitiesType" resultType="map">
+        SELECT id, name, update_time as updateTime FROM reversion_production_facilities_type
+    </select>
+    
+    <select id="getFacilitiesType" parameterType="int" resultType="string">
+        SELECT name FROM reversion_production_facilities_type WHERE id = #{id}
+    </select>
+
+    <select id="findFacilities" parameterType="map" resultType="map">
+        SELECT id, account, facilities_id as facilitiesId, facilities_info as facilitiesInfo,
+        base_id as baseId, update_time as updateTime
+        FROM reversion_production_facilities_user
+        WHERE account = #{account} AND base_id = #{id}
+    </select>
+
+    <delete id="deleteFacilities" parameterType="map">
+        DELETE FROM reversion_production_facilities_user
+        WHERE account = #{account} AND base_id = #{baseId}
+    </delete>
+
+    <delete id="deleteContactInfo" parameterType="map">
+        DELETE FROM base_member_contact_info
+        WHERE account = #{account} AND base_id = #{baseId}
+    </delete>
+
+    <insert id="batchSaveFacilities" parameterType="map">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO reversion_production_facilities_user (
+            account,
+            base_id,
+            <if test="item.facilitiesId != null and item.facilitiesId != ''">
+                facilities_id,
+            </if>
+            facilities_info
+            ) VALUES
+            (
+            #{item.account},
+            #{item.baseId},
+            <if test="item.facilitiesId != null and item.facilitiesId != ''">
+                #{item.facilitiesId},
+            </if>
+            #{item.facilitiesInfo})
+        </foreach>
+    </insert>
+
+    <select id="findContactInfo" parameterType="map" resultType="map">
+        SELECT id, member_contact_info_id, member_name, member_name_status, member_abbreviation, member_abbreviation_status,
+        contact_name, contact_name_status, card, card_status, seat_phone, seat_phone_status, phone, phone_status, qq_number,
+        qq_number_status, wechat_number, wechat_number_status, email, email_status, website_url, website_url_status,
+        postal_code, postal_code_status, image, image_status, location, location_status, location_id as locationId,
+        address, address_status, house_number, house_number_status, longitude, latitude, lng_lat_status, DATE_FORMAT(create_time, "%Y-%m-%d %T") as create_time
+        FROM base_member_contact_info
+        WHERE account = #{account} AND base_id = #{id}
+    </select>
+
+    <insert id="batchSaveContact" parameterType="map">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO base_member_contact_info (
+            member_contact_info_id,
+            account,
+            base_id,
+            member_name,
+            member_name_status,
+            member_abbreviation,
+            member_abbreviation_status,
+            contact_name,
+            contact_name_status,
+            card,
+            card_status,
+            seat_phone,
+            seat_phone_status,
+            phone,
+            phone_status,
+            qq_number,
+            qq_number_status,
+            wechat_number,
+            wechat_number_status,
+            email,
+            email_status,
+            website_url,
+            website_url_status,
+            postal_code,
+            postal_code_status,
+            image,
+            image_status,
+            location,
+            location_status,
+            location_id,
+            address,
+            address_status,
+            house_number,
+            house_number_status,
+            longitude,
+            latitude,
+            lng_lat_status,
+            create_time
+            ) VALUES
+            (
+            #{item.member_contact_info_id},
+            #{item.account},
+            #{item.baseId},
+            #{item.member_name},
+            #{item.member_name_status},
+            #{item.member_abbreviation},
+            #{item.member_abbreviation_status},
+            #{item.contact_name},
+            #{item.contact_name_status},
+            #{item.card},
+            #{item.card_status},
+            #{item.seat_phone},
+            #{item.seat_phone_status},
+            #{item.phone},
+            #{item.phone_status},
+            #{item.qq_number},
+            #{item.qq_number_status},
+            #{item.wechat_number},
+            #{item.wechat_number_status},
+            #{item.email},
+            #{item.email_status},
+            #{item.website_url},
+            #{item.website_url_status},
+            #{item.postal_code},
+            #{item.postal_code_status},
+            #{item.image},
+            #{item.image_status},
+            #{item.location},
+            #{item.location_status},
+            #{item.locationId},
+            #{item.address},
+            #{item.address_status},
+            #{item.house_number},
+            #{item.house_number_status},
+            #{item.longitude},
+            #{item.latitude},
+            #{item.lng_lat_status},
+            now()
+            )
+        </foreach>
+    </insert>
+
+    <insert id="syncMemberLocation" parameterType="map">
+        INSERT INTO base_member_location_info (
+        account,
+        location,
+        address,
+        house_number,
+        perfect_address,
+        create_time,
+        base_id
+        ) select user_id as account, location, address, house_number, perfect_address, create_time, #{baseId}
+        from reversion_member_location_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncMemberLatitudeLongitude" parameterType="map">
+        INSERT INTO base_member_latitude_longitude (
+        account,
+        longitude,
+        latitude,
+        create_time,
+        base_id
+        ) select user_id as account, longitude, latitude, create_time, #{baseId}
+        from reversion_member_latitude_longitude
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncMemberNeighbor" parameterType="map">
+        INSERT INTO base_member_neighbor_info (
+        account,
+        name,
+        east_longitude,
+        east_latitude,
+        neighbor_name,
+        neighbor_flag,
+        create_time,
+        base_id
+        ) select user_id as account, name, east_latitude, east_longitude, neighbor_name, neighbor_flag, create_time, #{baseId}
+        from reversion_member_neighbor_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncMemberLiveAddress" parameterType="map">
+        INSERT INTO base_member_live_address_info (
+        account,
+        name,
+        url,
+        create_time,
+        base_id
+        ) select user_id as account, name, url, create_time, #{baseId}
+        from reversion_member_live_address_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncLandAreaInfo" parameterType="map">
+        INSERT INTO base_land_area_info (
+        account,
+        land_area,
+        area,
+        unit,
+        proportion,
+        create_time,
+        base_id
+        ) select user_id as account, land_area, area, unit, proportion, create_time, #{baseId}
+        from reversion_land_area_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncTopographicFeature" parameterType="map">
+        INSERT INTO base_topographic_features_info (
+        account,
+        topographic,
+        features,
+        avg_altitude,
+        avg_altitude_unit,
+        max_altitude,
+        max_altitude_unit,
+        min_alititude,
+        min_alititude_unit,
+        create_time,
+        base_id
+        ) select user_id as account, topographic, features, avg_altitude, avg_altitude_unit,
+        max_altitude, max_altitude_unit, min_alititude, min_alititude_unit, create_time, #{baseId}
+        from reversion_topographic_features_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncClimateInfo" parameterType="map">
+        INSERT INTO base_climate_info (
+        account,
+        climate_class,
+        climate_class_type,
+        radiation_dose,
+        sunshine_time,
+        average_temperature,
+        accumulated_temperature,
+        diurnal_temperature_difference,
+        max_temperature,
+        min_temperature,
+        max_days,
+        min_days,
+        max_avg_temperature,
+        min_avg_temperature,
+        no_frost_date,
+        avg_precipitation,
+        avg_vaporization,
+        avg_precipitation_day,
+        dryness,
+        wetness,
+        precipitation_period,
+        natural_disaster,
+        create_time,
+        base_id
+        ) select user_id as account, climate_class, climate_class_type, radiation_dose, sunshine_time, average_temperature,
+        accumulated_temperature, diurnal_temperature_difference, max_temperature,min_temperature,
+        max_days, min_days, max_avg_temperature, min_avg_temperature, no_frost_date, avg_precipitation, avg_vaporization, avg_precipitation_day,
+        dryness, wetness, precipitation_period, natural_disaster, create_time, #{baseId}
+        from reversion_climate_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncBiologicalResources" parameterType="map">
+        INSERT INTO base_biological_resources_info (
+        account,
+        animalList,
+        animalLists,
+        animalData,
+        plantList,
+        plantLists,
+        plantData,
+        create_time,
+        base_id
+        ) select user_id as account, animalList, animalLists, animalData, plantList, plantLists, plantData, create_time, #{baseId}
+        from reversion_biological_resources_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncMineralsInfo" parameterType="map">
+        INSERT INTO base_minerals_info (
+        account,
+        minerals_class,
+        minerals_name,
+        create_time,
+        base_id
+        ) select user_id as account, minerals_class, minerals_name, create_time, #{baseId}
+        from reversion_minerals_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncLandInfo" parameterType="map">
+        INSERT INTO base_land_information (
+        account,
+        land_code,
+        land_name,
+        land_user,
+        land_affect,
+        land_type,
+        fact_area,
+        air_area,
+        land_level,
+        farmland,
+        tenure,
+        use_type,
+        location,
+        longitude,
+        latitude,
+        land_id,
+        base_id
+        ) select account, land_code, land_name, land_user, land_affect, land_type, fact_area,
+        air_area, land_level, farmland, tenure, use_type, location, longitude, latitude, land_id, #{baseId}
+        from reversion_land_information
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_file_id = #{yearId}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncSoilContent" parameterType="map">
+        INSERT INTO base_land_soil_content (
+        account,
+        land_code,
+        fact_area,
+        check_time,
+        phosphor,
+        kalium,
+        organic,
+        ph,
+        picture,
+        depict,
+        land_id,
+        base_id
+        ) select account, land_code, fact_area, check_time, phosphor, kalium, organic, ph, picture, depict, land_id, #{baseId}
+        from reversion_land_soil_content
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_file_id = #{yearId}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncSoilQuality" parameterType="map">
+        INSERT INTO base_land_soil_quality (
+        account,
+        land_code,
+        fact_area,
+        check_time,
+        ph,
+        cadmium,
+        mercury,
+        arsenic,
+        lead,
+        chromium,
+        copper,
+        nickel,
+        zinc,
+        six,
+        cried,
+        benzene,
+        picture,
+        depict,
+        land_id,
+        base_id
+        ) select account, land_code, fact_area, check_time, ph, cadmium, mercury, arsenic, lead,
+        chromium, copper, nickel, zinc, six, cried, benzene, picture, depict, land_id, #{baseId}
+        from reversion_land_soil_quality
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_file_id = #{yearId}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncWaterQuality" parameterType="map">
+        INSERT INTO base_land_water_quality (
+        account,
+        land_code,
+        fact_area,
+        check_time,
+        chromium,
+        manganese,
+        oxygen,
+        ammonia,
+        nitrogen,
+        phosphorus,
+        nutrition,
+        water_quality,
+        picture,
+        depict,
+        land_id,
+        base_id
+        ) select account, land_code, fact_area, check_time, chromium, manganese, oxygen,
+        ammonia, nitrogen, phosphorus, nutrition, water_quality, picture, depict, land_id, #{baseId}
+        from reversion_land_water_quality
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_file_id = #{yearId}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncLandUse" parameterType="map">
+        INSERT INTO base_massif_use_situation (
+        account,
+        number,
+        name,
+        number_type,
+        type_name,
+        area,
+        conversion_area,
+        type,
+        base_id
+        ) select account, number, name, number_type, type_name, area, conversion_area, type, #{baseId}
+        from reversion_massif_use_situation
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="yearId != null and yearId != ''">
+            AND year_file_id = #{yearId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncAirQuaByAccount" parameterType="map">
+        INSERT INTO base_air_quality_info (
+        account,
+        aqi,
+        pm2_con,
+        pm10_con,
+        quality_level,
+        updateTime,
+        detect_report,
+        update_time,
+        base_id
+        ) select account, aqi, pm2_con, pm10_con, quality_level, updateTime, detect_report, update_time, #{baseId}
+        from reversion_air_quality_info
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </insert>
+
+    <insert id="syncEcologyEnvQua" parameterType="map">
+        INSERT INTO base_ecology_env_quality (
+        account,
+        ecology_env,
+        detect_report,
+        base_id
+        ) select account, ecology_env, detect_report, #{baseId}
+        from reversion_ecology_env_quality
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </insert>
+
+    <insert id="syncSurfaceWaterQua" parameterType="map">
+        INSERT INTO base_surface_water_quality (
+        account,
+        water_quality,
+        detect_report,
+        base_id
+        ) select account, water_quality, detect_report, #{baseId}
+        from reversion_surface_water_quality
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </insert>
+
+    <insert id="syncSecurityFacilitiesInfo" parameterType="map">
+        INSERT INTO base_security_facilities_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select user_id as account, common_name, number_no, name, capacity, unit, investment, contact, location,
+        `group`, number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_security_facilities_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+    </insert>
+
+    <insert id="syncEducationFacilitiesInfo" parameterType="map">
+        INSERT INTO base_education_facilities_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select user_id as account, common_name, number_no, name, capacity, unit, investment, contact, location, `group`,
+        number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_education_facilities_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncOldAgeWelfareFacilitiesInfo" parameterType="map">
+        INSERT INTO base_old_age_welfare_facilities_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select user_id as account, common_name, number_no, name, capacity, unit, investment, contact,
+        location, `group`, number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_old_age_welfare_facilities_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncOtherFacilitiesInfo" parameterType="map">
+        INSERT INTO base_other_facilities_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select user_id as account, common_name, number_no, name, capacity, unit, investment, contact,
+        location, `group`, number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_other_facilities_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncGarbageDisposaFacilitiesInfo" parameterType="map">
+        INSERT INTO base_garbage_disposal_facilities_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select user_id as account, common_name, number_no, name, capacity, unit, investment, contact,
+        location, `group`, number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_garbage_disposal_facilities_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncWaterConservancyFacilitiesInfo" parameterType="map">
+        INSERT INTO base_water_conservancy_facilities_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select user_id as account, common_name, number_no, name, capacity, unit, investment, contact,
+        location, `group`, number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_water_conservancy_facilities_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncCultureFacilitiesInfo" parameterType="map">
+        INSERT INTO base_culture_facilities_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select user_id as account, common_name, number_no, name, capacity, unit, investment, contact,
+        location, `group`, number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_culture_facilities_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncTapWaternFacilitiesInfo" parameterType="map">
+        INSERT INTO base_tap_watern_facilities_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        user_number,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select user_id as account, common_name, number_no, name, capacity, unit, investment, contact, location,
+        user_number, `group`, number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_tap_watern_facilities_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncSportsFacilitiesInfo" parameterType="map">
+        INSERT INTO base_sports_facilities_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select user_id as account, common_name, number_no, name, capacity, unit, investment, contact, location,
+        `group`, number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_sports_facilities_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncCommunicationFacilitiesInfo" parameterType="map">
+        INSERT INTO base_communication_facilities_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        user_number,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select user_id as account, common_name, number_no, name, capacity, unit, investment, contact, location,
+        user_number, `group`, number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_communication_facilities_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncTextPreview" parameterType="map">
+        INSERT INTO base_member_text_preview (
+        account,
+        text_preview,
+        sys_dict_id,
+        create_time,
+        base_id
+        ) select user_id as account, text_preview, sys_dict_id, create_time, #{baseId}
+        from reversion_member_text_preview  where 1=1
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="dictId !=null and dictId!=''">
+            and sys_dict_id = #{dictId}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncTrafficInfo" parameterType="map">
+        INSERT INTO base_traffic_of_user_info (
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        site_info,
+        create_time,
+        base_id
+        )
+        select user_id as account, common_name as commonName, number_no as no, name, capacity, unit, investment, contact,
+        location, `group`, number, description, longitude, latitude, pictureList, site_info, create_time, #{baseId}
+        from reversion_traffic_of_user_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </insert>
+
+    <insert id="syncIndustryInfo" parameterType="map">
+        INSERT INTO base_eco_industry_info (
+        account,
+        name,
+        price,
+        type,
+        base_id
+        ) select account, name, price, type, #{baseId}
+        from reversion_eco_industry_info
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </insert>
+
+    <insert id="syncBreedInfo" parameterType="map">
+        INSERT INTO base_eco_breed_info (
+        account,
+        speci_name,
+        scale,
+        scale_unit,
+        yield,
+        yield_unit,
+        output,
+        type,
+        base_id
+        ) select account, speci_name, scale, scale_unit, yield, yield_unit, output, type, #{baseId}
+        from reversion_eco_breed_info
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </insert>
+
+    <insert id="syncFarmProduct" parameterType="map">
+        INSERT INTO base_eco_farm_product (
+        account,
+        price,
+        output,
+        yield,
+        yield_unit,
+        product_name,
+        after_weight,
+        weight_unit,
+        when_weight,
+        is_conversion,
+        type,
+        base_id
+        ) select account, price, output, yield, yield_unit, product_name, after_weight, weight_unit, when_weight,
+        is_conversion, type, #{baseId}
+        from reversion_eco_farm_product
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </insert>
+
+    <insert id="syncTechnicalProduct" parameterType="map">
+        INSERT INTO base_eco_technical_product (
+        account,
+        product_name,
+        model,
+        yield,
+        yield_unit,
+        price,
+        output,
+        type,
+        base_id
+        ) select account, product_name, model, yield, yield_unit, price, output, type, #{baseId}
+        from reversion_eco_technical_product
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </insert>
+
+    <insert id="syncServiceProduct" parameterType="map">
+        INSERT INTO base_eco_service_product (
+        account,
+        service_name,
+        ability,
+        price,
+        output,
+        type,
+        base_id
+        ) select account, service_name, ability, price, output, type, #{baseId}
+        from reversion_eco_service_product
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </insert>
+
+    <insert id="syncIotdeviceInfo" parameterType="map">
+        INSERT INTO base_iot_device_info (
+        account,
+        common_name,
+        name,
+        no,
+        capacity,
+        investment,
+        contact,
+        address,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) select account, common_name, name, no, capacity, investment, contact, address, location, `group`,
+        number, description, longitude, latitude, pictureList, create_time, #{baseId}
+        from reversion_iot_device_info
+        where account = #{account} and year_id = #{yearId} and template_id = #{templateId}
+    </insert>
+
+    <select id="findTextPreview" parameterType="map" resultType="map">
+        select id, account,text_preview as textPreview, sys_dict_id as dictId, base_id as baseId
+        from base_member_text_preview  where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="dictId !=null and dictId!=''">
+            and sys_dict_id = #{dictId}
+        </if>
+        <if test="baseId !=null">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <select id="findAirQuaByAccount" parameterType="map" resultType="map">
+        select aqi, pm2_con as pm2Con, pm10_con as pm10Con, quality_level as qualityLevel,
+        update_time as updateTime, detect_report as detectReport, base_id as baseId
+        from base_air_quality_info
+        where account = #{account} and base_id = #{baseId}
+    </select>
+
+    <select id="findModuleInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        a.id, a.account, a.app_id as appId, a.create_time as createTime, b.url, a.app_name as appName,a.template_id as templateId
+        from reversion_user_app_setting a left join reversion_full_app_setting b
+        ON a.app_id = b.id
+        where 1=1
+        <if test="account !=null and account!=''">
+            and a.account = #{account}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and a.template_id = #{templateId}
+        </if>
+        <if test="appList!=null">
+            and b.id in
+            <foreach collection="appList" index="index" item="item" open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <insert id="insertAirQuaByAccount" parameterType="java.util.Map">
+        insert into base_air_quality_info (
+        account,
+        aqi,
+        pm2_con,
+        pm10_con,
+        quality_level,
+        update_time,
+        detect_report,
+        base_id
+        ) values (
+        #{account},
+        #{aqi},
+        #{pm2Con},
+        #{pm10Con},
+        #{qualityLevel},
+        #{updateTime},
+        #{detectReport},
+        #{baseId}
+        )
+    </insert>
+
+    <insert id="saveTextPreview" parameterType="map">
+        insert into base_member_text_preview (
+        id,
+        account,
+        text_preview,
+        sys_dict_id,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{textPreview},
+        #{dictId},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <update id="modifyAirQuaByAccount" parameterType="java.util.Map" >
+        UPDATE base_air_quality_info
+        <set>
+            <if test="aqi !=null and aqi !=''">
+                aqi = #{aqi},
+            </if>
+            <if test="pm2Con !=null and pm2Con !=''">
+                pm2_con = #{pm2Con},
+            </if>
+            <if test="pm10Con !=null and pm10Con !=''">
+                pm10_con = #{pm10Con},
+            </if>
+            <if test="qualityLevel !=null and qualityLevel !=''">
+                quality_level = #{qualityLevel},
+            </if>
+            <if test="updateTime !=null and updateTime !=''">
+                update_time = #{updateTime},
+            </if>
+            <!--<if test="detectReport !=null and detectReport !=''">-->
+            detect_report = #{detectReport},
+            <!--</if>-->
+        </set>
+        WHERE account = #{account} and base_id = #{baseId}
+    </update>
+
+    <update id="updateTextPreview" parameterType="map">
+        UPDATE base_member_text_preview
+        <set>
+            <if test="textPreview !=null">
+                text_preview = #{textPreview},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="dictId !=null and dictId!=''">
+            and sys_dict_id = #{dictId}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </update>
+
+    <select id="findSurfaceWaterQua" parameterType="map" resultType="map">
+        select water_quality as waterQuality, detect_report as detectReport, base_id as baseId
+        from base_surface_water_quality
+        where account = #{account} and base_id = #{baseId}
+    </select>
+
+    <insert id="insertSurfaceWaterQua" parameterType="java.util.Map">
+        insert into base_surface_water_quality (
+        account,
+        water_quality,
+        detect_report,
+        base_id
+        ) values (
+        #{account},
+        #{waterQuality},
+        #{detectReport},
+        #{baseId}
+        )
+    </insert>
+
+    <update id="modifySurfaceWaterQua" parameterType="java.util.Map" >
+        UPDATE base_surface_water_quality
+        <set>
+            <if test="waterQuality !=null and waterQuality !=''">
+                water_quality = #{waterQuality},
+            </if>
+            <if test="detectReport !=null and detectReport !=''">
+                detect_report = #{detectReport},
+            </if>
+        </set>
+        WHERE account = #{account} and base_id = #{baseId}
+    </update>
+
+    <select id="findEcologyEnvQua" parameterType="map" resultType="map">
+        select ecology_env as ecologyEnv, detect_report as detectReport, base_id as baseId
+        from base_ecology_env_quality
+        where account = #{account} and base_id = #{baseId}
+    </select>
+
+    <insert id="insertEcologyEnvQua" parameterType="java.util.Map">
+        insert into base_ecology_env_quality (
+        account,
+        ecology_env,
+        detect_report,
+        base_id
+        ) values (
+        #{account},
+        #{ecologyEnv},
+        #{detectReport},
+        #{baseId}
+        )
+    </insert>
+
+    <update id="modifyEcologyEnvQua" parameterType="java.util.Map" >
+        UPDATE base_ecology_env_quality
+        <set>
+            <if test="ecologyEnv !=null and ecologyEnv !=''">
+                ecology_env = #{ecologyEnv},
+            </if>
+            <if test="detectReport !=null and detectReport !=''">
+                detect_report = #{detectReport},
+            </if>
+        </set>
+        WHERE account = #{account} and base_id = #{baseId}
+    </update>
+
+    <select id="findLandInfo" parameterType="map" resultType="map">
+        select id, account, land_code as landCode, land_name as landName, land_user as landUser, land_affect as landAffect,
+        land_type as landType, fact_area as factArea, air_area as airArea, land_level as landLevel, farmland, tenure, use_type as useType,
+        location, longitude, latitude, land_id as landId, base_id as baseId
+        from base_land_information
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="baseId != null and baseId != ''">
+            AND base_id = #{baseId}
+        </if>
+    </select>
+
+    <update id="updateLandInfo" parameterType="map">
+        update base_land_information
+        <set>
+            <if test="landCode !=null and landCode !=''">
+                land_code = #{landCode},
+            </if>
+            <if test="landName !=null and landName !=''">
+                land_name = #{landName},
+            </if>
+            <if test="landUser !=null and landUser !=''">
+                land_user = #{landUser},
+            </if>
+            <if test="landAffect !=null and landAffect !=''">
+                land_affect = #{landAffect},
+            </if>
+            <if test="landType !=null and landType !=''">
+                land_type = #{landType},
+            </if>
+            <if test="factArea !=null and factArea !=''">
+                fact_area = #{factArea},
+            </if>
+            <if test="airArea !=null and airArea !=''">
+                air_area = #{airArea},
+            </if>
+            <if test="landLevel !=null and landLevel !=''">
+                land_level = #{landLevel},
+            </if>
+            <if test="farmland !=null and farmland !=''">
+                farmland = #{farmland},
+            </if>
+            <if test="tenure !=null and tenure !=''">
+                tenure = #{tenure},
+            </if>
+            <if test="useType !=null and useType !=''">
+                use_type = #{useType},
+            </if>
+            <if test="location !=null and location !=''">
+                location = #{location},
+            </if>
+            <if test="longitude !=null and longitude !=''">
+                longitude = #{longitude},
+            </if>
+            <if test="latitude !=null and latitude !=''">
+                latitude = #{latitude},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="findSoilContent" parameterType="map" resultType="map">
+        select id, account, land_code as landCode, fact_area as factArea, check_time as checkTime,
+        phosphor, kalium, organic, ph, picture as pictureList, depict, land_id as landId, base_id as baseId
+        from base_land_soil_content
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="baseId != null and baseId != ''">
+            AND base_id = #{baseId}
+        </if>
+    </select>
+
+    <update id="updateSoilContent" parameterType="map">
+        update base_land_soil_content
+        <set>
+            <if test="landCode !=null and landCode !=''">
+                land_code = #{landCode},
+            </if>
+            <if test="factArea !=null and factArea !=''">
+                fact_area = #{factArea},
+            </if>
+            <if test="checkTime !=null and checkTime !=''">
+                check_time = #{checkTime},
+            </if>
+            <if test="phosphor !=null and phosphor !=''">
+                phosphor = #{phosphor},
+            </if>
+            <if test="kalium !=null and kalium !=''">
+                kalium = #{kalium},
+            </if>
+            <if test="organic !=null and organic !=''">
+                organic = #{organic},
+            </if>
+            <if test="ph !=null and ph !=''">
+                ph = #{ph},
+            </if>
+            <if test="pictureList !=null and pictureList !=''">
+                picture = #{pictureList},
+            </if>
+            <if test="depict !=null and depict !=''">
+                depict = #{depict},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="findSoilQuality" parameterType="map" resultType="map">
+        select id, account, land_code as landCode, fact_area as factArea, check_time as checkTime,
+        ph, cadmium, mercury, arsenic, lead, chromium, copper, nickel, zinc, six, cried, benzene, picture as pictureList,
+        depict, land_id as landId, base_id as baseId
+        from base_land_soil_quality
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="baseId != null and baseId != ''">
+            AND base_id = #{baseId}
+        </if>
+    </select>
+
+    <update id="updateSoilQuality" parameterType="map">
+        update base_land_soil_quality
+        <set>
+            <if test="landCode !=null and landCode !=''">
+                land_code = #{landCode},
+            </if>
+            <if test="factArea !=null and factArea !=''">
+                fact_area = #{factArea},
+            </if>
+            <if test="checkTime !=null and checkTime !=''">
+                check_time = #{checkTime},
+            </if>
+            <if test="ph !=null and ph !=''">
+                ph = #{ph},
+            </if>
+            <if test="cadmium !=null and cadmium !=''">
+                cadmium = #{cadmium},
+            </if>
+            <if test="mercury !=null and mercury !=''">
+                mercury = #{mercury},
+            </if>
+            <if test="arsenic !=null and arsenic !=''">
+                arsenic = #{arsenic},
+            </if>
+            <if test="lead !=null and lead !=''">
+                lead = #{lead},
+            </if>
+            <if test="chromium !=null and chromium !=''">
+                chromium = #{chromium},
+            </if>
+            <if test="copper !=null and copper !=''">
+                copper = #{copper},
+            </if>
+            <if test="nickel !=null and nickel !=''">
+                nickel = #{nickel},
+            </if>
+            <if test="zinc !=null and zinc !=''">
+                zinc = #{zinc},
+            </if>
+            <if test="six !=null and six !=''">
+                six = #{six},
+            </if>
+            <if test="cried !=null and cried !=''">
+                cried = #{cried},
+            </if>
+            <if test="benzene !=null and benzene !=''">
+                benzene = #{benzene},
+            </if>
+            <if test="pictureList !=null and pictureList !=''">
+                picture = #{pictureList},
+            </if>
+            <if test="depict !=null and depict !=''">
+                depict = #{depict},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="findWaterQuality" parameterType="map" resultType="map">
+        select id, account, land_code as landCode, fact_area as factArea, check_time as checkTime,
+        chromium, manganese, oxygen, ammonia, nitrogen, phosphorus, nutrition, water_quality as waterQuality,
+        picture as pictureList, depict, land_id as landId, base_id as baseId
+        from base_land_water_quality
+        WHERE 1=1
+        <if test="account != null and account != ''">
+            AND account = #{account}
+        </if>
+        <if test="landId != null and landId != ''">
+            AND land_id = #{landId}
+        </if>
+        <if test="baseId != null and baseId != ''">
+            AND base_id = #{baseId}
+        </if>
+    </select>
+
+    <update id="updateWaterQuality" parameterType="map">
+        update base_land_water_quality
+        <set>
+            <if test="landCode !=null and landCode !=''">
+                land_code = #{landCode},
+            </if>
+            <if test="factArea !=null and factArea !=''">
+                fact_area = #{factArea},
+            </if>
+            <if test="checkTime !=null and checkTime !=''">
+                check_time = #{checkTime},
+            </if>
+            <if test="chromium !=null and chromium !=''">
+                chromium = #{chromium},
+            </if>
+            <if test="manganese !=null and manganese !=''">
+                manganese = #{manganese},
+            </if>
+            <if test="oxygen !=null and oxygen !=''">
+                oxygen = #{oxygen},
+            </if>
+            <if test="ammonia !=null and ammonia !=''">
+                ammonia = #{ammonia},
+            </if>
+            <if test="nitrogen !=null and nitrogen !=''">
+                nitrogen = #{nitrogen},
+            </if>
+            <if test="phosphorus !=null and phosphorus !=''">
+                phosphorus = #{phosphorus},
+            </if>
+            <if test="nutrition !=null and nutrition !=''">
+                nutrition = #{nutrition},
+            </if>
+            <if test="waterQuality !=null and waterQuality !=''">
+                water_quality = #{waterQuality},
+            </if>
+            <if test="pictureList !=null and pictureList !=''">
+                picture = #{pictureList},
+            </if>
+            <if test="depict !=null and depict !=''">
+                depict = #{depict},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="findLandUse" parameterType="map" resultType="map">
+        select id, number, name, number_type as numberType, type_name as typeName,
+        area, conversion_area as conversionArea, type, base_id as baseId
+        from base_massif_use_situation
+        where account = #{account} and type = #{type} and base_id = #{baseId}
+    </select>
+
+    <insert id="saveLandUse" parameterType="map">
+        replace into base_massif_use_situation (
+        id,
+        account,
+        number,
+        name,
+        number_type,
+        type_name,
+        area,
+        conversion_area,
+        type,
+        base_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.number}, #{item.name}, #{item.numberType},
+                #{item.typeName}, #{item.area}, #{item.conversionArea}, #{item.type},#{item.baseId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteLandUse" parameterType="map">
+        delete from base_massif_use_situation where id = #{id}
+    </delete>
+
+    <select id="physicalTextPreview" parameterType="map" resultType="map">
+        select id, account, text_preview, sys_dict_id, DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time, base_id as baseId
+        from base_member_text_preview
+        where 1=1
+        <if test="user_id !=null and user_id!=''">
+            and account = #{user_id}
+        </if>
+        <if test="parent_id !=null and parent_id!=''">
+            and sys_dict_id = #{parent_id}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <select id="findMemberLocation" parameterType="map" resultType="map">
+        select id, account, location, address, house_number, perfect_address, DATE_FORMAT(create_time,"%Y-%m-%d %T") as create_time, base_id as baseId
+        from base_member_location_info
+        where 1=1
+        <if test="user_id !=null and user_id!=''">
+            and account = #{user_id}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <select id="findMemberLatitudeLongitude" parameterType="map" resultType="map">
+        select id, account, latitude, longitude, DATE_FORMAT(create_time,"%Y-%m-%d %T") as create_time, base_id as baseId
+        from base_member_latitude_longitude
+        where 1=1
+        <if test="user_id !=null and user_id!=''">
+            and account = #{user_id}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <select id="findMemberNeighbor" parameterType="map" resultType="map">
+        select id, account, name, east_latitude, east_longitude, neighbor_name,
+        neighbor_flag, DATE_FORMAT(create_time,"%Y-%m-%d %T") as create_time, base_id as baseId
+        from base_member_neighbor_info
+        where 1=1
+        <if test="user_id !=null and user_id!=''">
+            and account = #{user_id}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <select id="findMemberLiveAddress" parameterType="map" resultType="map">
+        select id, account, name, url, DATE_FORMAT(create_time,"%Y-%m-%d %T") as create_time, base_id as baseId
+        from base_member_live_address_info
+        where 1=1
+        <if test="user_id !=null and user_id!=''">
+            and account = #{user_id}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <insert id="saveMemberLocation" parameterType="map">
+        replace into base_member_location_info (
+        id,
+        account,
+        location,
+        address,
+        house_number,
+        perfect_address,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{user_id},
+        #{location},
+        #{address},
+        #{house_number},
+        #{perfect_address},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <insert id="saveMemberLatitudeLongitude" parameterType="map">
+        replace into base_member_latitude_longitude (
+        id,
+        account,
+        latitude,
+        longitude,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{user_id},
+        #{latitude},
+        #{longitude},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <insert id="saveMemberNeighbor" parameterType="map">
+        replace into base_member_neighbor_info (
+        id,
+        account,
+        name,
+        east_latitude,
+        east_longitude,
+        neighbor_name,
+        neighbor_flag,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{user_id},
+        #{name},
+        #{east_latitude},
+        #{east_longitude},
+        #{neighbor_name},
+        #{neighbor_flag},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <insert id="saveMemberLiveAddress" parameterType="map">
+        replace into base_member_live_address_info (
+        id,
+        account,
+        name,
+        url,
+        create_time,
+        base_id
+        )values (
+        #{id},
+        #{user_id},
+        #{name},
+        #{url},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <delete id="deleteMemberNeighbor" parameterType="map">
+        delete from base_member_neighbor_info where id = #{id}
+    </delete>
+
+    <delete id="deleteMemberLiveAddress" parameterType="map">
+        delete from base_member_live_address_info where id = #{id}
+    </delete>
+
+    <insert id="saveBaseTextPreview" parameterType="map">
+        replace into base_member_text_preview (
+        id,
+        account,
+        text_preview,
+        sys_dict_id,
+        create_time,
+        base_id
+        )values (
+        #{id},
+        #{user_id},
+        #{text_preview},
+        #{sys_dict_id},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <select id="findLandAreaInfo" parameterType="map" resultType="map">
+        select id, account, land_area, area, unit, proportion, DATE_FORMAT(create_time,"%Y-%m-%d %T") as create_time, base_id as baseId
+        from base_land_area_info
+        where 1=1
+        <if test="user_id !=null and user_id!=''">
+            and account = #{user_id}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <insert id="saveLandAreaInfo" parameterType="map">
+        replace into base_land_area_info (
+        id,
+        account,
+        land_area,
+        area,
+        unit,
+        proportion,
+        base_id,
+        create_time
+        ) values (
+        #{id},
+        #{user_id},
+        #{land_area},
+        #{area},
+        #{unit},
+        #{proportion},
+        #{baseId},
+        now()
+        )
+    </insert>
+
+    <delete id="deleteLandAreaInfo" parameterType="map">
+        delete from base_land_area_info where id = #{id}
+    </delete>
+
+    <select id="findTopographicFeature" parameterType="map" resultType="map">
+        select id, account, topographic, features, avg_altitude, avg_altitude_unit, max_altitude,
+        max_altitude_unit, min_alititude, min_alititude_unit, DATE_FORMAT(create_time,"%Y-%m-%d %T") as create_time, base_id as baseId
+        from base_topographic_features_info
+        where 1=1
+        <if test="user_id !=null and user_id!=''">
+            and account = #{user_id}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <insert id="saveTopographicFeature" parameterType="map">
+        replace into base_topographic_features_info (
+        id,
+        account,
+        topographic,
+        features,
+        avg_altitude,
+        avg_altitude_unit,
+        max_altitude,
+        max_altitude_unit,
+        min_alititude,
+        min_alititude_unit,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{user_id},
+        #{topographic},
+        #{features},
+        #{avg_altitude},
+        #{avg_altitude_unit},
+        #{max_altitude},
+        #{max_altitude_unit},
+        #{min_alititude},
+        #{min_alititude_unit},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <select id="findClimateInfo" parameterType="map" resultType="map">
+        select id, account, climate_class, climate_class_type, radiation_dose, sunshine_time, average_temperature,
+        accumulated_temperature, diurnal_temperature_difference, max_temperature,min_temperature,
+        max_days, min_days, max_avg_temperature, min_avg_temperature, no_frost_date, avg_precipitation, avg_vaporization, avg_precipitation_day,
+        dryness, wetness, precipitation_period, natural_disaster, DATE_FORMAT(create_time,"%Y-%m-%d %T") as create_time, base_id as baseId
+        from base_climate_info
+        where 1=1
+        <if test="user_id !=null and user_id!=''">
+            and account = #{user_id}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <insert id="saveClimateInfo" parameterType="map">
+        replace into base_climate_info (
+        id,
+        account,
+        climate_class,
+        climate_class_type,
+        radiation_dose,
+        sunshine_time,
+        average_temperature,
+        accumulated_temperature,
+        diurnal_temperature_difference,
+        max_temperature,
+        min_temperature,
+        max_days,
+        min_days,
+        max_avg_temperature,
+        min_avg_temperature,
+        no_frost_date,
+        avg_precipitation,
+        avg_vaporization,
+        avg_precipitation_day,
+        dryness,
+        wetness,
+        precipitation_period,
+        natural_disaster,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{user_id},
+        #{climate_class},
+        #{climate_class_type},
+        #{radiation_dose},
+        #{sunshine_time},
+        #{average_temperature},
+        #{accumulated_temperature},
+        #{diurnal_temperature_difference},
+        #{max_temperature},
+        #{min_temperature},
+        #{max_days},
+        #{min_days},
+        #{max_avg_temperature},
+        #{min_avg_temperature},
+        #{no_frost_date},
+        #{avg_precipitation},
+        #{avg_vaporization},
+        #{avg_precipitation_day},
+        #{dryness},
+        #{wetness},
+        #{precipitation_period},
+        #{natural_disaster},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <select id="findBiologicalResources" parameterType="map" resultType="map">
+        select id, account, animalList, animalLists, animalData, plantList, plantLists, plantData,
+        DATE_FORMAT(create_time,"%Y-%m-%d %T") as create_time, base_id as baseId
+        from base_biological_resources_info
+        where 1=1
+        <if test="user_id !=null and user_id!=''">
+            and account = #{user_id}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <insert id="saveBiologicalResources" parameterType="map">
+        replace into base_biological_resources_info (
+        id,
+        account,
+        animalList,
+        animalLists,
+        animalData,
+        plantList,
+        plantLists,
+        plantData,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{user_id},
+        #{animalList},
+        #{animalLists},
+        #{animalData},
+        #{plantList},
+        #{plantLists},
+        #{plantData},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <delete id="deleteBiologicalResources" parameterType="map">
+        delete from base_biological_resources_info where id = #{id}
+    </delete>
+
+    <select id="findMineralsInfo" parameterType="map" resultType="map">
+        select id, account, minerals_class, minerals_name, DATE_FORMAT(create_time,"%Y-%m-%d %T") as create_time, base_id as baseId
+        from base_minerals_info
+        where 1=1
+        <if test="user_id !=null and user_id!=''">
+            and account = #{user_id}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <insert id="saveMineralsInfo" parameterType="map">
+        replace into base_minerals_info (
+        id,
+        account,
+        minerals_class,
+        minerals_name,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{user_id},
+        #{minerals_class},
+        #{minerals_name},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <select id="communalTextPreview" parameterType="map" resultType="map">
+        select id, account, text_preview as textPreview, sys_dict_id as parentId,
+        DATE_FORMAT(create_time,"%Y-%m-%d %T") as create_time, base_id as baseId
+        from base_member_text_preview
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="parentId !=null and parentId!=''">
+            and sys_dict_id = #{parentId}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <select id="findPropertyInfo" parameterType="map" resultType="map">
+        select id, property_name as propertyName, account, year_file_id as yearId,template_id as templateId
+        from reversion_perfect_property_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_file_id = #{yearId}
+        </if>
+        <if test="parentId !=null and parentId!=''">
+            and dict_id = #{parentId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <select id="findCommunicationFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        user_number as userNumber,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_communication_facilities_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order  by create_time desc
+    </select>
+
+    <insert id="saveCommunicationFacilitiesInfo" parameterType="map">
+        replace into base_communication_facilities_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        user_number,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{userNumber},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteCommunicationFacilitiesInfo" parameterType="map">
+        delete from base_communication_facilities_info where id = #{id}
+    </delete>
+
+    <select id="findTapWaternFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        user_number as userNumber,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_tap_watern_facilities_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order  by create_time desc
+    </select>
+
+    <insert id="saveTapWaternFacilitiesInfo" parameterType="map">
+        replace into base_tap_watern_facilities_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        user_number,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{userNumber},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteTapWaternFacilitiesInfo" parameterType="map">
+        delete from base_tap_watern_facilities_info where id = #{id}
+    </delete>
+
+    <select id="findWaterConservancyFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_water_conservancy_facilities_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveWaterConservancyFacilitiesInfo" parameterType="map">
+        replace into base_water_conservancy_facilities_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteWaterConservancyFacilitiesInfo" parameterType="map">
+        delete from base_water_conservancy_facilities_info where id = #{id}
+    </delete>
+
+    <select id="findGarbageDisposaFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_garbage_disposal_facilities_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveGarbageDisposaFacilitiesInfo" parameterType="map">
+        replace into base_garbage_disposal_facilities_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteGarbageDisposaFacilitiesInfo" parameterType="map">
+        delete from base_garbage_disposal_facilities_info where id = #{id}
+    </delete>
+
+    <select id="findSecurityFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_security_facilities_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveSecurityFacilitiesInfo" parameterType="map">
+        replace into base_security_facilities_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteSecurityFacilitiesInfo" parameterType="map">
+        delete from base_security_facilities_info where id = #{id}
+    </delete>
+
+    <select id="findEducationFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_education_facilities_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveEducationFacilitiesInfo" parameterType="map">
+        replace into base_education_facilities_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteEducationFacilitiesInfo" parameterType="map">
+        delete from base_education_facilities_info where id = #{id}
+    </delete>
+
+    <select id="findCultureFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_culture_facilities_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveCultureFacilitiesInfo" parameterType="map">
+        replace into base_culture_facilities_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteCultureFacilitiesInfo" parameterType="map">
+        delete from base_culture_facilities_info where id = #{id}
+    </delete>
+
+    <select id="findSportsFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_sports_facilities_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveSportsFacilitiesInfo" parameterType="map">
+        replace into base_sports_facilities_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteSportsFacilitiesInfo" parameterType="map">
+        delete from base_sports_facilities_info where id = #{id}
+    </delete>
+
+    <select id="findOldAgeWelfareFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_old_age_welfare_facilities_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveOldAgeWelfareFacilitiesInfo" parameterType="map">
+        replace into base_old_age_welfare_facilities_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteOldAgeWelfareFacilitiesInfo" parameterType="map">
+        delete from base_old_age_welfare_facilities_info where id = #{id}
+    </delete>
+
+    <select id="findOtherFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_other_facilities_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveOtherFacilitiesInfo" parameterType="map">
+        replace into base_other_facilities_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteOtherFacilitiesInfo" parameterType="map">
+        delete from base_other_facilities_info where id = #{id}
+    </delete>
+
+    <insert id="saveIotDeviceInfo" parameterType="map" keyProperty="iotId" useGeneratedKeys="true">
+        replace into base_iot_device_info(
+        id,
+        account,
+        common_name,
+        name,
+        no,
+        capacity,
+        investment,
+        contact,
+        address,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{name},
+        #{no},
+        #{capacity},
+        #{investment},
+        #{contact},
+        #{address},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{baseId}
+        )
+    </insert>
+
+    <update id="updateIotDeviceInfo" parameterType="map">
+        update base_iot_device_info
+        set common_name = #{commonName}, name = #{name}, no = #{no}, capacity = #{capacity}, investment = #{investment},
+        contact = #{contact}, address = #{address}, location = #{location}, `group` = #{group}, number = #{number},
+        description = #{description}, longitude = #{longitude}, latitude = #{latitude}, pictureList = #{pictureList},
+        create_time = now()
+        where account = #{account} and base_id = #{baseId} and id = #{iotId}
+    </update>
+
+    <select id="findIotDeviceInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        name,
+        no,
+        capacity,
+        investment,
+        contact,
+        address,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        base_id as baseId
+        from base_iot_device_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <delete id="deleteIotDeviceInfo" parameterType="map">
+        delete from base_iot_device_info where id = #{id}
+    </delete>
+
+    <select id="findAllTextPreviewList" parameterType="map" resultType="map">
+        select id as textPreviewId, account, text_preview as textPreview, parent_id as parentId, create_time, base_id as baseId
+        from base_member_all_text_preview  where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="appId !=null and appId!=''">
+            and parent_id = #{appId}
+        </if>
+        <if test="baseId !=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+    </select>
+
+    <insert id="saveAllTextPreview" parameterType="map">
+        replace into base_member_all_text_preview(
+        id,
+        account,
+        text_preview,
+        parent_id,
+        create_time,
+        base_id
+        ) values (
+        #{textPreviewId},
+        #{account},
+        #{textPreview},
+        #{parentId},
+        now(),
+        #{baseId}
+        );
+    </insert>
+
+    <select id="findTrafficOfUserInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        site_info as siteInfo,
+        base_id as baseId
+        from base_traffic_of_user_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="baseId!=null and baseId!=''">
+            and base_id = #{baseId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveTrafficOfUserInfo" parameterType="map">
+        replace into base_traffic_of_user_info(
+        id,
+        account,
+        common_name,
+        number_no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        create_time,
+        site_info,
+        base_id
+        ) values (
+        #{id},
+        #{account},
+        #{commonName},
+        #{no},
+        #{name},
+        #{capacity},
+        #{unit},
+        #{investment},
+        #{contact},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        now(),
+        #{siteInfo},
+        #{baseId}
+        );
+    </insert>
+
+    <delete id="deleteTrafficOfUserInfo" parameterType="map">
+        delete from base_traffic_of_user_info where id = #{id}
+    </delete>
+
+    <select id="findIndustry" parameterType="map" resultType="map">
+        select id, name, price, base_id as baseId
+        from base_eco_industry_info
+        where account = #{account} and base_id = #{baseId} and type = #{type}
+    </select>
+
+    <insert id="saveIndustry" parameterType="map">
+        replace into base_eco_industry_info (
+        id,
+        account,
+        name,
+        price,
+        type,
+        base_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.name}, #{item.price}, #{item.type},#{item.baseId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteIndustry" parameterType="map">
+        delete from base_eco_industry_info where id = #{id}
+    </delete>
+
+    <select id="findBreed" parameterType="map" resultType="map">
+        select id, speci_name as speciName, scale, scale_unit as scaleUnit,
+        yield as Yield, yield_unit as YieldUnit, output, base_id as baseId
+        from base_eco_breed_info
+        where account = #{account} and base_id = #{baseId} and type = #{type}
+    </select>
+
+    <insert id="saveBreed" parameterType="map">
+        replace into base_eco_breed_info (
+        id,
+        account,
+        speci_name,
+        scale,
+        scale_unit,
+        yield,
+        yield_unit,
+        output,
+        type,
+        base_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.speciName}, #{item.scale},
+                #{item.scaleUnit}, #{item.Yield}, #{item.YieldUnit}, #{item.output}, #{item.type},#{item.baseId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteBreed" parameterType="map">
+        delete from base_eco_breed_info where id = #{id}
+    </delete>
+
+    <select id="findFarmProduct" parameterType="map" resultType="map">
+        select id, price, output, yield as Yield, yield_unit as YieldUnit, after_weight as afterWeight,
+        product_name as productTypeName, weight_unit as afterWeightUnit, when_weight as whenWeight,
+        is_conversion as isConversion, base_id as baseId
+        from base_eco_farm_product
+        where account = #{account} and base_id = #{baseId} and type = #{type}
+    </select>
+
+    <insert id="saveFarmProduct" parameterType="map">
+        replace into base_eco_farm_product (
+        id,
+        account,
+        price,
+        output,
+        yield,
+        yield_unit,
+        after_weight,
+        product_name,
+        weight_unit,
+        when_weight,
+        is_conversion,
+        type,
+        base_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.price}, #{item.output}, #{item.Yield},
+                #{item.YieldUnit}, #{item.afterWeight}, #{item.productTypeName}, #{item.afterWeightUnit},
+                #{item.whenWeight}, #{item.isConversion}, #{item.type}, #{item.baseId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteFarmProduct" parameterType="map">
+        delete from base_eco_farm_product where id = #{id}
+    </delete>
+
+    <select id="findTechnicalProduct" parameterType="map" resultType="map">
+        select id, product_name as productName, model,
+        yield as Yield, yield_unit as YieldUnit, price, output, base_id as baseId
+        from base_eco_technical_product
+        where account = #{account} and base_id = #{baseId} and type = #{type}
+    </select>
+
+    <insert id="saveTechnicalProduct" parameterType="map">
+        replace into base_eco_technical_product (
+        id,
+        account,
+        product_name,
+        model,
+        yield,
+        yield_unit,
+        price,
+        output,
+        type,
+        base_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.productName}, #{item.model},
+                #{item.Yield}, #{item.YieldUnit}, #{item.price}, #{item.output}, #{item.type}, #{item.baseId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteTechnicalProduct" parameterType="map">
+        delete from base_eco_technical_product where id = #{id}
+    </delete>
+
+    <select id="findServiceProduct" parameterType="map" resultType="map">
+        select id, service_name as serviceName, ability, price, output, base_id as baseId
+        from base_eco_service_product
+        where account = #{account} and base_id = #{baseId} and type = #{type}
+    </select>
+
+    <insert id="saveServiceProduct" parameterType="map">
+        replace into base_eco_service_product (
+        id,
+        account,
+        service_name,
+        ability,
+        price,
+        output,
+        type,
+        base_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.serviceName}, #{item.ability},
+                #{item.price}, #{item.output}, #{item.type}, #{item.baseId})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteServiceProduct" parameterType="map">
+        delete from base_eco_service_product where id = #{id}
+    </delete>
+
+    <select id="contactList" parameterType="map" resultType="map">
+        select a.member_name, a.member_abbreviation, a.contact_name, a.card, a.seat_phone, a.phone, a.qq_number,
+        a.wechat_number, a.email, a.website_url, a.postal_code, a.image, a.location, a.location_id as locationId,
+        a.address, a.house_number, a.longitude, a.latitude, DATE_FORMAT(a.create_time, "%Y-%m-%d %T")as create_time,
+        case when b.member_contact_info_id is null then 0 else 1 end as is_choose, a.member_contact_info_id
+        from reversion_member_contact_info a left join base_member_contact_info b
+        on (a.user_id = b.account and a.member_contact_info_id = b.member_contact_info_id and b.base_id = #{baseId})
+        where 1=1
+        <if test="account!=null and account !=''">
+            and a.user_id = #{account}
+        </if>
+        <if test="templateId!=null and templateId !=''">
+            and a.template_id = #{templateId}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="iotList" parameterType="map" resultType="map">
+        select a.id as iotId, a.common_name as commonName, a.name, a.no, a.capacity, a.investment, a.contact, a.address, a.location, a.group,
+        a.number, a.description, a.longitude, a.latitude, a.pictureList, DATE_FORMAT(a.create_time, "%Y-%m-%d %T")as createTime,
+        case when b.iot_id is null then 0 else 1 end as isChoose
+        from base_iot_device_info a left join base_iot_mapping b
+        on (a.account = b.account and a.id = b.iot_id)
+        where 1=1
+        <if test="account!=null and account !=''">
+            and a.account = #{account}
+        </if>
+        <if test="baseId!=null and baseId !=''">
+            and a.base_id = #{baseId}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="findBaseIotDeviceInfo" parameterType="map" resultType="map">
+        select b.id, b.iot_id as iotId, a.common_name as commonName, a.name, a.no, a.capacity, a.investment, a.contact, a.address, a.location, a.group,
+        a.number, a.description, a.longitude, a.latitude, a.pictureList, b.status
+        from base_iot_mapping b left join base_iot_device_info a
+        on (a.account = b.account and a.id = b.iot_id)
+        where b.account = #{account} and b.base_id = #{baseId}
+        <if test="status!=null and status !=''">
+            and b.status = 1
+        </if>
+        order by b.update_time desc
+    </select>
+
+    <insert id="saveBaseIotDeviceInfo" parameterType="map">
+        replace into base_iot_mapping (
+        id,
+        account,
+        base_id,
+        iot_id,
+        status
+        ) values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.id}, #{item.account}, #{item.baseId}, #{item.iotId}, #{item.status})
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteIotMapping" parameterType="map">
+        delete from base_iot_mapping where id = #{id}
+    </delete>
+
+    <delete id="deleteIotDevice" parameterType="map">
+        delete from base_iot_device_info where id = #{iotId}
+    </delete>
+
+    <delete id="deleteIotMappingByIotId" parameterType="map">
+        delete from base_iot_mapping where iot_id = #{id}
+    </delete>
+
+    <select id="photoList" parameterType="map" resultType="map">
+        SELECT id, account, image_url as imageUrl, media_name as mediaName, media_describe as mediaDescribe, author,
+        photo_time as photoTime, photo_address as photoAddress, update_time as updateTime
+        FROM base_media_library
+        WHERE account = #{account} and base_id = #{baseId}
+        ORDER BY update_time DESC
+    </select>
+
+    <delete id="deleteBasePhoto" parameterType="map">
+        delete from base_media_library where account = #{account} and base_id = #{baseId}
+    </delete>
+
+    <insert id="batchSavePhoto" parameterType="map">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO base_media_library (
+            account,
+            base_id,
+            image_url,
+            media_name,
+            media_describe,
+            author,
+            photo_time,
+            photo_address
+            ) VALUES
+            (
+            #{item.account},
+            #{item.baseId},
+            #{item.imageUrl},
+            #{item.mediaName},
+            #{item.mediaDescribe},
+            #{item.author},
+            #{item.photoTime},
+            #{item.photoAddress}
+            )
+        </foreach>
+    </insert>
+
+    <select id="findNickName" parameterType="map" resultType="map">
+        select ifnull(realname, '') as nickName from  certification where user_account = #{account}
+    </select>
+
+    <update id="editComplete" parameterType="map">
+        update reversion_production_base set complete = 1 where id = #{baseId}
+    </update>
+
+</mapper>

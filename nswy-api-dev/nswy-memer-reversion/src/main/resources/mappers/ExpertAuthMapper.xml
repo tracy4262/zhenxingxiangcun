@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.ExpertAuthMapper">
+
+    <select id="find" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+          id,
+          expert_name as expertName,
+          expert_type as expertType,
+          adept_field as adeptField,
+          adept_species as adeptSpecies,
+          related_species as relatedSpecies,
+          related_industry as relatedIndustry,
+          related_product as relatedProduct,
+          related_service as relatedService,
+          personal_photo as personalPhoto,
+          qualification_certificate as quaCertificate,
+          title,
+          expert_status as status,
+          approve_status as approveStatus,
+          year_id as yearId,
+          template_id as templateId
+        from reversion_expert_auth
+        where account = #{account}
+        <if test="yearId!='' and yearId!=null">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId!='' and templateId!=null">
+            and template_id = #{templateId}
+        </if>
+
+    </select>
+
+    <select id="findExpertInfo" parameterType="map" resultType="map">
+        select
+            e.id,
+            e.expert_name as expertName,
+            e.expert_type as expertType,
+            e.adept_field as adeptField,
+            e.adept_species as adeptSpecies,
+            e.related_species as relatedSpecies,
+            e.related_industry as relatedIndustry,
+            e.related_product as relatedProduct,
+            e.related_service as relatedService,
+            e.personal_photo as personalPhoto,
+            e.qualification_certificate as quaCertificate,
+            e.title,
+            e.expert_status as status,
+            e.approve_status as approveStatus,
+            e.year_id as yearId,
+            e.template_id as templateId,
+
+            case when l.avatar is null then '' else l.avatar end as avatar,
+
+            case when l.city is null then '' else l.city end as city
+
+            from reversion_expert_auth e left join
+
+            (select u.avatar,u.login_account,c.city   from
+
+            login_user u left join certification c on u.login_account  = c.user_account) l
+
+
+        on e.account = l.login_account
+
+        where 1=1
+        <if test="account!='' and account!=null">
+            and account = #{account}
+        </if>
+
+        <if test="yearId!='' and yearId!=null">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId!='' and templateId!=null">
+            and template_id = #{templateId}
+        </if>
+
+    </select>
+
+    <insert id="save" parameterType="java.util.Map" >
+        replace into reversion_expert_auth(
+        id,
+        expert_name,
+        account,
+        expert_type,
+        adept_field,
+        adept_species,
+        related_species,
+        related_industry,
+        related_product,
+        related_service,
+        personal_photo,
+        qualification_certificate,
+        title,
+        expert_status,
+        create_time,
+        year_id,
+        template_id
+        <if test="approveStatus != null and approveStatus != ''">
+            , approve_status
+        </if>
+        )
+        values (
+        #{id},
+        #{expertName},
+        #{account},
+        #{expertType},
+        #{adeptField},
+        #{adeptSpecies},
+        #{relatedSpecies},
+        #{relatedIndustry},
+        #{relatedProduct},
+        #{relatedService},
+        #{personalPhoto},
+        #{quaCertificate},
+        #{title},
+        #{status},
+        now(),
+        #{yearId},
+        #{templateId}
+        <if test="approveStatus != null and approveStatus != ''">
+            , #{approveStatus}
+        </if>
+        )
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from reversion_expert_auth where id = #{id}
+    </delete>
+
+</mapper>

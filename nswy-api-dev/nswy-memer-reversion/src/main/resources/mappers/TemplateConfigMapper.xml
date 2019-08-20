@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.manage.mapper.TemplateConfigMapper">
+
+	<select id="find" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+		a.id, a.account, a.introduction, a.name as templateName, a.user_type as userType, b.step as step
+		from reversion_template_manage a left join reversion_user_auth_step b
+		on (a.id = b.template_id and a.account = b.account)
+		where 1=1
+		<if test="userType !=null and userType !=''">
+			AND a.userType = #{userType}
+		</if>
+		<if test="account !=null and account !=''">
+			AND a.account = #{account}
+		</if>
+		<if test="templateName !=null and templateName !=''">
+			AND a.name = #{templateName}
+		</if>
+		<if test="step !=null and step !=''">
+			AND b.step = #{step}
+		</if>
+		<if test="id !=null and id !=''">
+			AND a.id = #{id}
+		</if>
+		order by a.update_time desc
+	</select>
+
+	<insert id="save" parameterType="java.util.Map">
+		replace INTO reversion_template_manage (
+			id,
+			account,
+			introduction,
+			name,
+			user_type
+		) VALUES
+			(
+				#{id},
+				#{account},
+				#{introduction},
+				#{templateName},
+				#{userType}
+			)
+	</insert>
+
+	<delete id="delete" parameterType="map">
+		delete from reversion_template_manage where id = #{id}
+	</delete>
+
+	<select id="getUserType" resultType="java.util.Map">
+		select
+		user_type as value, user_type_name as label
+		from reversion_user_type_info
+	</select>
+
+	<select id="isExist" resultType="java.util.Map" parameterType="java.util.Map">
+		select a.id, a.account, a.introduction, a.name as templateName, a.user_type as userType
+		from reversion_template_manage a
+		where 1=1
+		<if test="account !=null and account !=''">
+			AND a.account = #{account}
+		</if>
+		<if test="templateName !=null and templateName !=''">
+			AND a.name = #{templateName}
+		</if>
+		<if test="id !=null and id !=''">
+			AND a.id != #{id}
+		</if>
+	</select>
+
+</mapper>

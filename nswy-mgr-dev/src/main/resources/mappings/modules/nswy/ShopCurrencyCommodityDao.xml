@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ShopCurrencyCommodityDao">
+
+
+	<select id="findList" parameterType="map" resultType="com.ovit.manager.modules.nswy.entity.ShopCurrencyCommityInfo">
+
+		SELECT
+			p.id as shopId,
+			p.currency_commodity_name as commonProductName,
+			p.currency_commodity_pinyin as commonProductPinyin,
+			p.commodity_alias as commodityAlias,
+			d.label as relatedIndustry,
+			p.product_type_id as productType,
+			pc.classification_name as productTypeName,
+			p.related_species_id as relatedSpeciesId,
+			p.aduit_status as approveStatus,
+			DATE_FORMAT(p.create_time,"%Y-%m-%d %T") AS createTime,
+			DATE_FORMAT(p.update_time,"%Y-%m-%d %T") AS updateTime,
+			l.display_name as displayName,
+			p.refuse_reason as refuseReason,
+			p.remark,
+            p.quality_custom_content as quality,
+            p.safety_custom_content as safety
+
+        FROM shop_currency_commodity p
+
+
+        left join (SELECT t1.dict_value as dict_value,t1.dict_name AS label FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+                WHERE t2.type_name = '行业分类') d on p.industry_type_id = d.dict_value
+
+		left join product_classification pc on p.product_type_id = pc.classification_code
+
+		left join login_user l on  p.account = l.login_account
+
+		where 1=1 and (p.type=1 or p.type = 3)
+		<if test="commonProductName != null and commonProductName != ''">
+			and p.currency_commodity_name LIKE CONCAT('%',#{commonProductName},'%')
+		</if>
+		<if test="approveStatus != null and approveStatus != ''">
+			and p.aduit_status = #{approveStatus}
+		</if>
+		<if test="shopId!='' and shopId!=null">
+			and p.id=#{shopId}
+		</if>
+		ORDER BY p.update_time DESC
+
+	</select>
+
+
+
+	<update id="adopt" parameterType="map">
+        UPDATE shop_currency_commodity SET aduit_status = #{approveStatus}
+         <if test="refuse_reason!=null">
+			 ,refuse_reason=#{refuse_reason}
+		 </if>
+         WHERE id = #{shopId}
+    </update>
+
+	<select id="findListCache" parameterType="map" resultType="com.ovit.manager.modules.nswy.entity.ShopCurrencyCommityInfo">
+
+		SELECT
+		p.id as shopId,
+		p.currency_commodity_name as commonProductName,
+		p.currency_commodity_pinyin as commonProductPinyin,
+		p.commodity_alias as commodityAlias,
+		d.label as relatedIndustry,
+		p.product_type_id as productType,
+		pc.classification_name as productTypeName,
+		p.related_species_id as relatedSpeciesId,
+		p.aduit_status as approveStatus,
+		DATE_FORMAT(p.create_time,"%Y-%m-%d %T") AS createTime,
+		l.display_name as displayName,
+		p.refuse_reason as refuseReason,
+		p.remark,
+		p.quality_custom_content as quality,
+		p.safety_custom_content as safety
+
+
+		FROM shop_currency_commodity p
+
+
+		left join (SELECT t1.dict_value as dict_value,t1.dict_name AS label FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+		WHERE t2.type_name = '行业分类') d on p.industry_type_id = d.dict_value
+
+		left join product_classification pc on p.product_type_id = pc.classification_code
+
+		left join login_user l on  p.account = l.login_account
+
+
+		ORDER BY p.create_time DESC
+
+	</select>
+
+	<select id="findShopCurrencyCommodity" parameterType="map" resultType="map">
+		SELECT
+		id AS commodityId,
+		currency_commodity_name AS commodityName,
+		industry_type_id as industryId,
+		product_type_id as productId,
+		related_species_id as classId,
+		account,
+		case when image is null then '' else image end as image,
+		service_id as leftServiceId,
+		service_class_id as serviceClassId,
+		service_people_name as servicePeopleName
+		FROM shop_currency_commodity
+		where 1=1
+		<if test="shopId!='' and shopId!=null">
+			and id=#{shopId}
+		</if>
+	</select>
+
+	<select id="findCurrencyCommodityList" parameterType="map" resultType="map">
+		select
+		id,
+		account,
+		commodity_id as commodityId,
+		commodity_name as commodityName,
+		industry_type_id as industryId,
+		product_type_id as productId,
+		species_id as classId,
+		image
+		from reversion_name_library_currency_commodity_info
+
+		where 1=1
+		<if test="account !=null and account!=''">
+			and account = #{account}
+		</if>
+		<if test="commodityId !=null and commodityId!=''">
+			and commodity_id = #{commodityId}
+		</if>
+
+
+		order  by create_time desc
+	</select>
+
+	<insert id="saveCurrencyCommodityInfo" parameterType="map">
+        insert into reversion_name_library_currency_commodity_info (
+          account,
+          commodity_id,
+          commodity_name,
+          industry_type_id,
+          species_id,
+          product_type_id,
+          image,
+          create_time
+        )values (
+          #{account},
+          #{commodityId},
+          #{commodityName},
+          #{industryId},
+          #{classId},
+          #{productId},
+          #{image},
+          now()
+
+        );
+    </insert>
+
+	<update id="updateCurrencyCommodityInfo" parameterType="map">
+		update reversion_name_library_currency_commodity_info
+		<set>
+			<if test="industryId!=null">
+				industry_type_id = #{industryId},
+			</if>
+			<if test="classId!=null">
+				species_id = #{classId},
+			</if>
+			<if test="productId!=null">
+				product_type_id = #{productId},
+			</if>
+			<if test="image!=null">
+				image = #{image},
+			</if>
+		</set>
+		where commodity_id = #{commodityId} and account = #{account}
+	</update>
+
+
+
+</mapper>

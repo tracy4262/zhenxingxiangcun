@@ -1,0 +1,110 @@
+
+
+@import './colors.less';
+//辅助类
+//-----------------------------------------------------
+//对齐方式
+.tl{text-align:left!important;}
+.tr{text-align:right!important;}
+.tc{text-align:center!important;}
+.tj{text-align:justify;}
+.tn{white-space:nowrap;}
+.b{font-weight:700;}
+.d{text-decoration: line-through;}
+
+// 字体颜色
+.t-green{
+  color: @primary-color !important;
+}
+.t-grey{
+  color: #9B9B9B !important;
+}
+.t-red{
+  color: #ea0406!important
+}
+.t-black{
+  color: rgba(0,0,0,0.85) !important;
+}
+
+.bg-white{
+  background: #fff;
+}
+// 线
+.vui-line{
+  border-bottom: 1px solid #f2f2f2;
+}
+
+//浮动
+//-----------------------------------------------------
+.clear{
+  &:before,
+  &:after {
+    display: table;
+  }
+  &:after {
+    content:"";
+    clear: both;
+  }
+}
+.fl,.fr{display:inline}
+.fr{float:right;}
+.fl{float:left;}
+
+.block{
+  display: block;
+  width: 100%;
+}
+//填充边距方法
+.padding-margin(@counter) when (@counter > 0) {
+  .pd@{counter} {
+    padding: (1px * @counter);
+  }
+  .pt@{counter} {
+    padding-top: (1px * @counter);
+  }
+  .pr@{counter} {
+    padding-right: (1px * @counter);
+  }
+  .pb@{counter} {
+    padding-bottom: (1px * @counter);
+  }
+  .pl@{counter} {
+    padding-left: (1px * @counter);
+  }
+  .mg@{counter} {
+    margin: (1px * @counter);
+  }
+  .mt@{counter} {
+    margin-top: (1px * @counter);
+  }
+  .mr@{counter} {
+    margin-right: (1px * @counter);
+  }
+  .mb@{counter} {
+    margin-bottom: (1px * @counter);
+  }
+  .ml@{counter} {
+    margin-left: (1px * @counter);
+  }
+  .fz@{counter} {
+    font-size: (1px * @counter)!important;
+  }
+  .padding-margin((@counter - 1));    // 递归调用自身
+}
+.padding-margin(200);
+
+// 多文本溢出
+.ells(@line) when (@line > 0) {
+  .ell-@{line} {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: @line; // number行数
+    /*! autoprefixer: ignore next */
+    -webkit-box-orient: vertical;	//方向 vertical
+    /* autoprefixer: on */
+  }
+  .ells((@line - 1))
+}
+.ells(7);

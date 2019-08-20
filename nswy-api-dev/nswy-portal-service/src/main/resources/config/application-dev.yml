@@ -1,0 +1,27 @@
+server:
+  port: 8086
+
+http:
+  eureka:
+    serviceUrl: 127.0.0.1
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone:  http://${http.eureka.serviceUrl}:8761/eureka/
+  instance:
+    preferIpAddress: true
+    statusPageUrlPath: /info
+    healthCheckUrlPath: /health
+    lease-renewal-interval-in-seconds: 2
+    lease-expiration-duration-in-seconds: 4
+ribbon:
+  eureka:
+    enabled: true
+endpoints:
+  jmx:
+    enabled: true
+health:
+  sensitive: false

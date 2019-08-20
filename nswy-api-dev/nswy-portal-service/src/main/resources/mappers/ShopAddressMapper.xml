@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.ShopAddressMapper">
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.portal.model.ShopAddress">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="linkman" jdbcType="VARCHAR" property="linkman" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="add_area" jdbcType="VARCHAR" property="addArea" />
+    <result column="add_detail" jdbcType="VARCHAR" property="addDetail" />
+    <result column="add_info" jdbcType="VARCHAR" property="addInfo" />
+    <result column="add_alias" jdbcType="VARCHAR" property="addAlias" />
+    <result column="is_default" jdbcType="BIT" property="isDefault" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <update id="clearDefault" parameterType="com.ovit.nswy.portal.model.ShopAddress">
+    update shop_address
+    set is_default = #{isDefault,jdbcType=BIT}
+    where  account = #{account,jdbcType=VARCHAR}
+  </update>
+</mapper>

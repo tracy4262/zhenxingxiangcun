@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.BaiduMapMapper">
+    <select id="selectAll" parameterType="map" resultType="map">
+        <!--SELECT  c1.id as id,  c1.corp_name as detailName,  c1.location as position, c1.coordinate AS coordinate, c1.company_profile AS `description`, c1.login_account AS  account  ,c2.user_type as type ,1 AS  kind
+        FROM corp_info c1 LEFT JOIN login_user c2 ON c1.login_account = c2.login_account WHERE c1.approve_status in (1,3)
+        <if test="name != null and name != ''">
+            AND c1.corp_name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="label != null and label != ''">
+            AND c1.location LIKE CONCAT('%', #{label}, '%')
+        </if>
+        UNION ALL
+        SELECT g1.id as id,  g1.gov_name as detailName, g1.location as position, g1.coordinate AS coordinate,  g1.gov_profile AS `description`, g1.login_account AS account, g2.user_type as type   ,2 AS  kind FROM gov_info g1
+        LEFT JOIN login_user g2 ON g1.login_account = g2.login_account WHERE g1.approve_status in (1,3)
+        <if test="name != null and name != ''">
+            AND g1.gov_name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="label != null and label != ''">
+            AND g1.location LIKE CONCAT('%', #{label}, '%')
+        </if>
+        UNION ALL
+        SELECT e1.id AS id,e2.display_name AS detailName, e3.addr as position,e3.coordinate_point AS coordinate, "" AS `description`,account, e2.user_type as type
+        ,4 AS  kind FROM expert_info e1 LEFT JOIN login_user e2 ON e1.login_account =e2.login_account LEFT JOIN user_info e3 ON e1.login_account = e3.account
+        WHERE 1=1
+        <if test="name != null and name != ''">
+            AND e2.display_name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="label != null and label != ''">
+            AND e3.addr LIKE CONCAT('%', #{label}, '%')
+        </if>
+        UNION ALL
+        SELECT p1.product_id AS id, p1.base_name AS detailName, p1.geographical_position as position,p1. coordinate AS coordinate, p1.base_synopsis AS `description`,account,  p2.user_type as type
+        ,3 AS  kind FROM product_base_info p1 LEFT JOIN login_user p2 ON p1.account = p2.login_account
+        WHERE 1=1
+        <if test="name != null and name != ''">
+            AND p1.base_name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="label != null and label != ''">
+            AND p1.geographical_position LIKE CONCAT('%', #{label}, '%')
+        </if>-->
+        select a.member_aptitude_real_info_id as id,a.member_name as detailName,t1.location as position,concat(t1.longitude,',',t1.latitude) as coordinate,a.remark as `description`,a.user_id as account
+        from reversion_member_aptitude_real_info a
+        inner join reversion_user_auth_step u on (a.user_id=u.account and a.template_id=u.template_id)
+        inner join login_user l on a.user_id = l.login_account
+        inner join reversion_member_contact_info t1 on t1.member_name_id = a.member_aptitude_real_info_id
+        left join (select group_concat(b.speci_name) as speciesName,b.account,b.template_id
+        from reversion_eco_breed_info b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+        inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+        group by b.account) t2 on l.login_account =t2.account
+        left join (select group_concat(product_name) as productName,account from (select b.product_name,b.account
+        from reversion_eco_farm_product b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+        inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+        union
+        select b.product_name,b.account
+        from reversion_eco_technical_product b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+        inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+        ) s group by s.account) t3 on l.login_account=t3.account
+        left join (select group_concat(b.service_name) as serviceName,b.account
+        from reversion_eco_service_product b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+        inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+        group by b.account) t4 on l.login_account = t4.account
+        left join (select group_concat(b.name) as industryName,b.account
+        from reversion_eco_industry_info b inner join reversion_user_template_manage u on (b.account=u.account and b.template_id=u.template_id and u.status='1')
+        inner join (select max(year_file_name), id, account from reversion_perfect_year_info group by account) e on (b.account = e.account and b.year_file_id = e.id)
+        group by b.account) t5 on l.login_account=t5.account
+        where u.step = '7' and l.is_to_page =0
+        <if test="name != null and name != ''">
+            AND a.member_name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="label != null and label != ''">
+            AND t1.location LIKE CONCAT('%', #{label}, '%')
+        </if>
+        group by a.user_id
+        union all
+
+        SELECT id,base_name as detailName,location as position,coordinate,introduction,account from reversion_production_base
+        where 1=1
+        <if test="name != null and name != ''">
+            AND base_name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="label != null and label != ''">
+            AND location LIKE CONCAT('%', #{label}, '%')
+        </if>
+    </select>
+</mapper>

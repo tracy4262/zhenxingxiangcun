@@ -1,0 +1,53 @@
+{
+    "code": 200,
+    "msg": "",
+    "data": [{
+        "name": "产品名",
+        "url": "/companyGate/comIndex",
+        "src": "../src/img/hamburger.png",
+        "field": "白菜",
+        "industry": "农业科学"
+    },{
+        "name": "产品名",
+        "url": "/companyGate/comIndex",
+        "src": "../src/img/hamburger.png",
+        "field": "白菜",
+        "industry": "农业科学"
+    },{
+        "name": "产品名",
+        "url": "/companyGate/comIndex",
+        "src": "../src/img/hamburger.png",
+        "field": "白菜",
+        "industry": "农业科学"
+    },{
+        "name": "产品名",
+        "url": "/companyGate/comIndex",
+        "src": "../src/img/hamburger.png",
+        "field": "萝卜",
+        "industry": "农业科学"
+    },{
+        "name": "产品名",
+        "url": "/companyGate/comIndex",
+        "src": "../src/img/hamburger.png",
+        "field": "西瓜",
+        "industry": "农业科学"
+    },{
+        "name": "产品名",
+        "url": "/companyGate/comIndex",
+        "src": "../src/img/hamburger.png",
+        "field": "土豆",
+        "industry": "农业科学"
+    },{
+        "name": "产品名",
+        "url": "/companyGate/comIndex",
+        "src": "../src/img/hamburger.png",
+        "field": "菠菜",
+        "industry": "农业科学"
+    },{
+        "name": "产品名",
+        "url": "/companyGate/comIndex",
+        "src": "../src/img/hamburger.png",
+        "field": "黄瓜",
+        "industry": "农业科学"
+    }]
+}

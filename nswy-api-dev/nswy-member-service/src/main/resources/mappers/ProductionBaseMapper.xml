@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ProductionBaseMapper">
+    <insert id="insertProductionBase" parameterType="map" >
+        INSERT INTO product_base_info (
+            product_id,
+            base_name,
+            geographical_position,
+            coordinate,
+            contact_account,
+            contact_name,
+            contact_tel,
+            base_synopsis,
+            account,
+            location_id,
+            create_time
+        ) VALUES (
+            #{productId},
+            #{baseName},
+            #{geographicalPosition},
+            #{coordinate},
+            #{contactAccount},
+            #{contactName},
+            #{contactTel},
+            #{baseSynopsis},
+            #{loginAccount},
+            #{locationId},
+            NOW()
+        )
+    </insert>
+    <select id="selectAll" parameterType="map" resultType="map">
+        SELECT
+          product_id AS productId,
+          base_name AS baseName,
+          geographical_position AS geographicalPosition,
+          coordinate AS coordinate,
+          contact_account AS contactAccount,
+          contact_name AS contactName,
+          contact_tel AS contactTel,
+          base_synopsis AS baseSynopsis,
+          create_time AS createTime,
+          update_time AS updateTime,
+          account AS account,
+          location_id AS locationId
+        FROM product_base_info WHERE account = #{loginAccount}
+        <if test="baseName != '' and baseName != null">
+            AND base_name LIKE CONCAT('%',#{baseName},'%')
+        </if>
+        <if test="contactName != null and contactName != ''">
+            AND contact_name LIKE CONCAT('%',#{contactName},'%')
+        </if>
+        <if test="contactTel != null and contactTel != ''">
+            AND contact_tel LIKE CONCAT('%',#{contactTel},'%')
+        </if>
+    </select>
+
+    <select id="selectDetailByProductId" resultType="map" parameterType="map">
+           SELECT
+                product_id AS productId,
+                base_name AS baseName,
+                geographical_position AS geographicalPosition,
+                coordinate,
+                contact_account AS contactAccount,
+                contact_name AS contactName,
+                contact_tel AS contactTel,
+                base_synopsis AS baseSynopsis,
+                location_id AS locationId
+            FROM
+                product_base_info
+            WHERE
+                product_id = #{productId}
+    </select>
+    <update id="updateProductBase">
+        UPDATE product_base_info SET
+              base_name = #{baseName},
+              geographical_position= #{geographicalPosition},
+              coordinate= #{coordinate},
+              contact_account= #{contactAccount},
+              contact_name= #{contactName},
+              contact_tel= #{contactTel},
+              base_synopsis= #{baseSynopsis},
+              location_id = #{locationId}
+        WHERE product_id = #{productId}
+    </update>
+
+    <select id="queryByProductId" parameterType="map" resultType="map">
+        SELECT
+            base_name AS baseName,
+            geographical_position AS geographicalPosition,
+            coordinate AS coordinate,
+            contact_account AS contactAccount,
+            contact_name AS contactName,
+            contact_tel AS contactTel,
+            base_synopsis AS baseSynopsis,
+            location_id AS locationId
+        FROM product_base_info WHERE product_id = #{productId}
+    </select>
+
+    <delete id="delete" parameterType="map">
+        DELETE t1,t2 FROM product_base_info t1 LEFT JOIN camera_info t2 ON t1.product_id = t2.product_id WHERE t1.product_id = #{productId}
+    </delete>
+
+    <select id="queryByAccount" parameterType="map" resultType="map">
+        SELECT * FROM product_base_info WHERE account = #{loginAccount}
+    </select>
+
+    <update id="update" parameterType="map">
+        UPDATE
+            product_base_info
+        SET
+            geographical_position = #{geographicPosition},
+            coordinate = #{centerCoordinate},
+            location_id = #{locationId}
+        WHERE
+            product_id = #{productId}
+    </update>
+    <select id="queryIsExist" parameterType="map" resultType="map">
+        SELECT * FROM product_base_info WHERE base_name = #{baseName}
+    </select>
+</mapper>

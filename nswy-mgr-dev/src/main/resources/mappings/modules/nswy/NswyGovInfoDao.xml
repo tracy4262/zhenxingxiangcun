@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.NswyGovInfoDao">
+	<resultMap id="BaseResultMap"
+		type="com.ovit.manager.modules.nswy.entity.NswyGovInfo">
+		<id column="id" property="govInfoId" jdbcType="INTEGER" />
+		<result column="gov_name" property="govName" jdbcType="VARCHAR" />
+		<result column="login_account" property="loginAccount" jdbcType="VARCHAR" />
+		<result column="organization_code" property="organizationCode" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="approve_status" property="approveStatus" jdbcType="VARCHAR" />
+		<result column="gov_type" property="govType" jdbcType="VARCHAR" />
+		<result column="gov_level" property="govLevel" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="logo_picture_list" property="logoPictureList" jdbcType="VARCHAR" />
+		<result column="unit_person_picture_list" property="unitPersonPictureList" jdbcType="VARCHAR" />
+		<result column="coordinate" property="coordinate" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+		id, gov_name, login_account, organization_code, create_time, approve_status, gov_type,
+		gov_level, location, logo_picture_list, unit_person_picture_list, coordinate
+	</sql>
+	<sql id="find_Column_List" >
+		a.id, gov_name, a.login_account, organization_code, create_time, approve_status, gov_type,
+		gov_level, location, logo_picture_list, unit_person_picture_list, coordinate,a.remark
+	</sql>
+	<sql id="userList" >
+		b.id as userId,b.display_name as userName ,b.is_home_display AS isHomeDisplay
+	</sql>
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+		<include refid="find_Column_List" />,
+		<include refid="userList" />
+		FROM gov_info  as a
+		inner JOIN login_user b  on a.login_account= b.login_account
+		where 1=1
+		<if test="approveStatus != null">
+		<if test="approveStatus != 3">
+			AND a.approve_status= #{approveStatus,jdbcType=INTEGER}
+		</if>
+		</if>
+		<if test="govName != null">
+			AND a.gov_name like CONCAT('%',#{govName},'%')
+		</if>
+		<if test="userType != null">
+			AND b.user_type=#{userType}
+		</if>
+		ORDER BY a.create_time desc
+	</select>
+
+	<select id="findListBySuccess" resultMap="BaseResultMap">
+		SELECT
+		<include refid="find_Column_List" />,
+		<include refid="userList" />
+		FROM gov_info  as a
+		inner JOIN login_user b  on a.login_account= b.login_account
+		left join proxy_gov_info c on a.id = c.info_id
+		where c.approve_status = 1
+		<if test="approveStatus != null">
+			<if test="approveStatus != 3">
+				AND a.approve_status= #{approveStatus,jdbcType=INTEGER}
+			</if>
+		</if>
+		<if test="govName != null">
+			AND a.gov_name like CONCAT('%',#{govName},'%')
+		</if>
+		<if test="userType != null">
+			AND b.user_type=#{userType}
+		</if>
+		ORDER BY a.create_time desc
+	</select>
+
+	<select id="getByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from gov_info
+		where id = #{govInfoId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		DELETE  t1 FROM gov_info t1 LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+		where t1.id = #{govInfoId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.ovit.manager.modules.nswy.entity.NswyGovInfo">
+		insert into gov_info (id, gov_name, gov_code,
+		login_account, address, qr_code_url,
+		organization_code, create_time, legal_person_certificate_url,
+		legal_person,approve_status)
+		values (#{id,jdbcType=INTEGER}, #{govName,jdbcType=VARCHAR},
+		#{govCode,jdbcType=VARCHAR},
+		#{loginAccount,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{qrCodeUrl,jdbcType=VARCHAR},
+		#{organizationCode,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{legalPersonCertificateUrl,jdbcType=VARCHAR},
+		#{legalPerson,jdbcType=VARCHAR},
+		#{approveStatus,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.ovit.manager.modules.nswy.entity.NswyGovInfo">
+		insert into gov_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="govName != null">
+				gov_name,
+			</if>
+			<if test="govCode != null">
+				gov_code,
+			</if>
+			<if test="loginAccount != null">
+				login_account,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="qrCodeUrl != null">
+				qr_code_url,
+			</if>
+			<if test="organizationCode != null">
+				organization_code,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="legalPersonCertificateUrl != null">
+				legal_person_certificate_url,
+			</if>
+			<if test="legalPerson != null">
+				legal_person,
+			</if>
+			<if test="approveStatus != null">
+				approve_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="govName != null">
+				#{govName,jdbcType=VARCHAR},
+			</if>
+			<if test="govCode != null">
+				#{govCode,jdbcType=VARCHAR},
+			</if>
+			<if test="loginAccount != null">
+				#{loginAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="qrCodeUrl != null">
+				#{qrCodeUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="organizationCode != null">
+				#{organizationCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="legalPersonCertificateUrl != null">
+				#{legalPersonCertificateUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="legalPerson != null">
+				#{legalPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="approveStatus != null">
+				#{approveStatus,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ovit.manager.modules.nswy.entity.NswyGovInfo" >
+		update gov_info
+		<set >
+			<if test="govName != null" >
+				gov_name = #{govName,jdbcType=VARCHAR},
+			</if>
+			<if test="loginAccount != null" >
+				login_account = #{loginAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="organizationCode != null" >
+				organization_code = #{organizationCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="approveStatus != null" >
+				approve_status = #{approveStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="govType != null" >
+				gov_type = #{govType,jdbcType=VARCHAR},
+			</if>
+			<if test="govLevel != null" >
+				gov_level = #{govLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null" >
+				location = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="logoPictureList != null" >
+				logo_picture_list = #{logoPictureList,jdbcType=VARCHAR},
+			</if>
+			<if test="unitPersonPictureList != null" >
+				unit_person_picture_list = #{unitPersonPictureList,jdbcType=VARCHAR},
+			</if>
+			<if test="coordinate != null" >
+				coordinate = #{coordinate,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null" >
+				remark = #{remark,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where id = #{govInfoId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ovit.manager.modules.nswy.entity.NswyGovInfo" >
+		update gov_info
+		set gov_name = #{govName,jdbcType=VARCHAR},
+		login_account = #{loginAccount,jdbcType=VARCHAR},
+		organization_code = #{organizationCode,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		approve_status = #{approveStatus,jdbcType=VARCHAR},
+		gov_type = #{govType,jdbcType=VARCHAR},
+		gov_level = #{govLevel,jdbcType=VARCHAR},
+		location = #{location,jdbcType=VARCHAR},
+		logo_picture_list = #{logoPictureList,jdbcType=VARCHAR},
+		unit_person_picture_list = #{unitPersonPictureList,jdbcType=VARCHAR},
+		coordinate = #{coordinate,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateLoginUser" parameterType="java.lang.String">
+		UPDATE
+			login_user
+		SET
+			user_type = 3
+		WHERE
+			login_account = #{login_account}
+	</update>
+</mapper>

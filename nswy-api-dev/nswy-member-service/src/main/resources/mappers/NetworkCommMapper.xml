@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.NetworkCommMapper">
+    <insert id="save" parameterType="map">
+        <selectKey keyProperty="count" resultType="int" order="BEFORE">
+            SELECT COUNT(*) FROM network_communication WHERE product_id = #{productId}
+        </selectKey>
+
+        <if test="count > 0">
+            UPDATE network_communication SET
+                post_telephone_service = #{postTelephoneService},
+                fixed_telephone = #{fixedTelephone},
+                broadband_port = #{broadbandPort},
+                tv_port = #{tvPort}
+            WHERE product_id = #{productId}
+        </if>
+
+        <if test="count == 0">
+            INSERT INTO network_communication(
+                network_communication_id,
+                product_id,
+                post_telephone_service,
+                fixed_telephone,
+                broadband_port,
+                tv_port,
+                create_time
+            ) VALUES (
+                UUID(),
+                #{productId},
+                #{postTelephoneService},
+                #{fixedTelephone},
+                #{broadbandPort},
+                #{tvPort},
+                NOW()
+            )
+        </if>
+    </insert>
+
+    <select id="query" parameterType="map" resultType="map">
+        SELECT
+            network_communication_id AS networkCommunicationId,
+            product_id AS productId,
+            post_telephone_service AS postTelephoneService,
+            fixed_telephone AS fixedTelephone,
+            broadband_port AS broadbandPort,
+            tv_port AS tvPort,
+            create_time AS createTime,
+            update_time AS updateTime
+        FROM network_communication WHERE product_id = #{productId}
+
+    </select>
+</mapper>

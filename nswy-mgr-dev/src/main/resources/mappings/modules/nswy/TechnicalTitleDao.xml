@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.TechnicalTitleDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.TechnicalTitleInfo" resultType="com.ovit.manager.modules.nswy.entity.TechnicalTitleInfo">
+      select
+              p.id,
+              p.technical_title_name as technicalTitleName,
+              p.parent_id as pid,
+              case  p.title_type when 0 then '事业单位'
+                                 when 1 then '企业单位' end
+              as titleType,
+              p.create_time
+      from reversion_technical_title_info p left join reversion_technical_title_info i on p.parent_id = i.id
+
+      where 1=1
+      <if test="technicalTitleName !=null and technicalTitleName !=''">
+          and p.technical_title_name like CONCAT('%',#{technicalTitleName},'%')
+      </if>
+
+        <if test="id !=null and id !=''">
+            and p.id =#{id}
+        </if>
+
+        order by create_time desc
+
+    </select>
+
+
+
+    <insert id="saveTitle" parameterType="com.ovit.manager.modules.nswy.entity.TechnicalTitleInfo">
+        insert into reversion_technical_title_info(
+          id,
+          technical_title_name,
+          parent_id,
+          title_type,
+         create_time
+        )values (
+          #{id},
+          #{technicalTitleName},
+          #{pid},
+          #{titleType},
+          now()
+        );
+    </insert>
+
+    <update id="updateTitle" parameterType="com.ovit.manager.modules.nswy.entity.TechnicalTitleInfo">
+        update reversion_technical_title_info set technical_title_name = #{technicalTitleName}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTitle" parameterType="java.lang.String">
+        delete from reversion_technical_title_info where id= #{id}
+    </delete>
+
+</mapper>

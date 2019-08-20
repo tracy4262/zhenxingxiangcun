@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.portal.mapper.ShopCardMapper" >
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.portal.model.ShopCard" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="commodity_type_info_id" property="commodityTypeInfoId" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="ListResultMap" type="com.ovit.nswy.portal.model.response.ShopCardDTO" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="commodity_type_info_id" property="commodityTypeInfoId" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="commodity_name" property="productName" jdbcType="VARCHAR" />
+    <result column="storage_status" property="storageStatus" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="VARCHAR" />
+      <result column="seller" property="seller" jdbcType="VARCHAR" />
+      <result column="product_account" property="productAccount" jdbcType="VARCHAR" />
+      <result column="commodity_image" property="productPic" jdbcType="VARCHAR" />
+    <result column="discount_price" property="productPrice" jdbcType="DECIMAL" />
+    <result column="time_price" property="productOldPrice" jdbcType="DECIMAL" />
+    <result column="discount_date" property="productPriceInfo" jdbcType="VARCHAR" />
+    <result column="product_vbep" property="productNum" jdbcType="INTEGER" />
+    <result column="product_volume" property="minNum" jdbcType="INTEGER" />
+    <result column="max_supply_becomes" property="maxNum" jdbcType="INTEGER" />
+      <result column="freight" property="productLogisticAmount" jdbcType="DECIMAL" />
+      <result column="product_output_unit" property="productOutputUnit" jdbcType="VARCHAR" />
+  </resultMap>
+
+    <resultMap id="ProductResultMap" type="com.ovit.nswy.portal.model.response.ShopProductDTO" >
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <result column="commodity_type_info_id" property="commodityTypeInfoId" jdbcType="VARCHAR" />
+        <result column="commodity_name" property="productName" jdbcType="VARCHAR" />
+        <result column="seller" property="seller" jdbcType="VARCHAR" />
+        <result column="product_account" property="productAccount" jdbcType="VARCHAR" />
+        <result column="commodity_image" property="productPic" jdbcType="VARCHAR" />
+        <result column="discount_price" property="productPrice" jdbcType="DECIMAL" />
+        <result column="time_price" property="productOldPrice" jdbcType="DECIMAL" />
+        <result column="discount_date" property="productPriceInfo" jdbcType="VARCHAR" />
+        <result column="freight" property="productLogisticAmount" jdbcType="DECIMAL" />
+        <result column="product_output_unit" property="productOutputUnit" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="findList" resultMap="BaseResultMap" parameterType="map">
+        SELECT t1.*
+        FROM  shop_card t1
+        WHERE
+        t1.account =  #{account}
+        and t1.commodity_type_info_id=#{commodityId}
+         limit 1;
+    </select>
+
+    <select id="findProductCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT COUNT(product_vbep) AS CNT FROM  shop_commodity_supply_info WHERE commodity_type_info_id = #{pid}
+    </select>
+
+
+
+    <select id="findAllList" resultMap="ListResultMap" parameterType="java.lang.String">
+        SELECT t1.*
+        ,t2.account as product_account
+        ,su.display_name as seller
+        ,t2.commodity_name
+        ,t2.storage_status
+        ,t2.is_delete
+        ,t3.time_price
+        ,t3.discount_price
+        ,t3.discount_date
+        ,t4.product_vbep
+        ,t4.product_volume
+        ,t4.product_output_unit
+        ,t4.max_supply_becomes
+        ,t6.freight
+        ,substring_index(t5.commodity_image,',',  1) as commodity_image
+
+        FROM  shop_card t1
+        JOIN  shop_commodity_info t2   ON
+        t1.commodity_type_info_id = t2.commodity_type_info_id
+        JOIN  shop_commodity_price_info t3   ON
+        t2.commodity_type_info_id = t3.commodity_type_info_id
+        JOIN  shop_commodity_supply_info t4   ON
+        t2.commodity_type_info_id = t4.commodity_type_info_id
+        JOIN  shop_commodity_type_info t5   ON
+        t2.commodity_type_info_id = t5.id
+         JOIN  shop_product_delivery_info t6   ON
+        t2.commodity_type_info_id = t6.commodity_type_info_id
+        JOIN login_user su ON t2.account=su.login_account
+        WHERE
+        t1.account =  #{account}
+        ORDER BY t1.create_time DESC
+    </select>
+
+
+    <select id="findProductById" resultMap="ProductResultMap" parameterType="java.lang.Integer">
+        SELECT t2.commodity_type_info_id
+        ,t2.account as product_account
+        ,su.display_name as seller
+        ,t2.commodity_name
+        ,t3.time_price
+        ,t3.discount_price
+        ,t3.discount_date
+        ,t6.freight
+        ,substring_index(t5.commodity_image,',',  1) as commodity_image
+        ,t4.product_output_unit
+
+        FROM    shop_commodity_info t2
+        JOIN  shop_commodity_price_info t3   ON
+        t2.commodity_type_info_id = t3.commodity_type_info_id
+        JOIN  shop_commodity_type_info t5   ON
+        t2.commodity_type_info_id = t5.id
+         JOIN  shop_product_delivery_info t6   ON
+        t2.commodity_type_info_id = t6.commodity_type_info_id
+        JOIN login_user su ON t2.account=su.login_account
+        join shop_commodity_supply_info t4 on t2.commodity_type_info_id = t4.commodity_type_info_id
+        WHERE
+        t2.commodity_type_info_id =  #{commodityTypeInfoId}
+        limit 1
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.shop.pushTemplate.mapper.ShopOrderMapper" >
+
+
+  <select id="findByCode" resultType="map" parameterType="java.lang.String">
+    SELECT t1.*
+    FROM  shop_order t1
+    WHERE
+    t1.order_code =  #{code}
+  </select>
+
+  <select id="findShopOrderListByPay" resultType="map" parameterType="java.lang.String">
+    SELECT
+      id,order_code as orderCode,account,sell_account as sellerAccount ,amount,
+      logistic_amount as logisticAmount,
+      invoice_type as invoiceType,
+      invoice_info as invoiceInfo,
+      address_info as addressInfo,
+      status,
+      sell_status as sellStatus,
+      has_complaint as hasComplaint,
+      create_time as createTime
+    FROM  shop_order
+    WHERE
+      status = 1
+  </select>
+
+  <select id="findShopCodeByCode" resultType="map" parameterType="java.lang.String">
+    SELECT
+      id,order_code as orderCode,account,sell_account as sellerAccount ,amount,
+      logistic_amount as logisticAmount,
+      invoice_type as invoiceType,
+      invoice_info as invoiceInfo,
+      address_info as addressInfo,
+      status,
+      sell_status as sellStatus,
+      has_complaint as hasComplaint,
+      create_time as createTime
+    FROM  shop_order
+    WHERE
+    order_code =  #{orderCode}
+  </select>
+
+  <insert id="saveShopOrder" parameterType="map">
+    insert into shop_order(
+      order_code,
+      account,
+      sell_account,
+      amount,
+      logistic_amount,
+      invoice_type,
+      invoice_mode,
+      invoice_info,
+      address_info,
+      status,
+      sell_status,
+      has_complaint,
+      <if test="shopType!=null">
+      shop_type,
+      </if>
+      remark
+    ) values (
+      #{orderCode},
+      #{account},
+      #{sellerAccount},
+      #{amount},
+      #{logisticAmount},
+      #{invoiceType},
+      #{invoiceMode},
+      #{invoiceInfo},
+      #{addressInfo},
+      #{status},
+      #{sellStatus},
+      #{hasComplaint},
+      <if test="shopType!=null">
+        #{shopType},
+      </if>
+      #{remark}
+    );
+  </insert>
+
+
+  <select id="findAllBuyList" resultType="map" parameterType="map">
+    SELECT
+      t1.id,t1.order_code as orderCode,t1.account,t1.sell_account as sellerAccount ,t1.amount,
+      t1.logistic_amount as logisticAmount,
+      t1.invoice_type as invoiceType,
+      t1.invoice_info as invoiceInfo,
+      t1.address_info as addressInfo,
+      t1.status,
+      t1.sell_status as sellStatus,
+      t1.has_complaint as hasComplaint,
+      t1.create_time as createTime,
+      t1.shop_type as shopType,
+      su.name as seller
+    FROM  shop_order t1
+    join
+    (select
+
+    l.login_account as account,
+    case when m.memberName is null then '' else m.memberName end as name
+
+    from
+
+    login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+    c on l.login_account  = c.account
+
+    left join (
+    select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+    group by m.user_id
+
+    order by m.create_time asc
+
+    ) m on l.login_account = m.account
+
+    )
+    su on t1.sell_account=su.account
+    WHERE  1=1
+    <if test="account !='' and account!=null">
+      and t1.account = #{account}
+    </if>
+    <if test="status !='' and status!=null">
+      and t1.status = #{status}
+    </if>
+    <if test="inStatus!=null">
+      and t1.status in
+      <foreach collection="inStatus" index="index" item="item" open="(" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="sellStatus !='' and sellStatus!=null">
+      and t1.sell_status = #{sellStatus}
+    </if>
+    <if test="shopType !='' and shopType!=null">
+      and t1.shop_type = #{shopType}
+    </if>
+    <if test="seller !='' and seller!=null">
+      and su.name =  #{seller,jdbcType=VARCHAR}
+    </if>
+    <if test="orderCode !='' and orderCode!=null">
+      and t1.order_code =  #{orderCode,jdbcType=VARCHAR}
+    </if>
+    <if test="sellerAccount !='' and sellerAccount!=null">
+      and t1.sell_account =  #{sellerAccount,jdbcType=VARCHAR}
+    </if>
+    <if test="startDate != null and startDate != '' ">
+      AND t1.create_time >= #{startDate,jdbcType=VARCHAR}
+    </if>
+    <if test="endDate != null and endDate != '' ">
+      AND t1.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+
+  <select id="findAllSellList" resultType="map" parameterType="map">
+    SELECT t1.id,t1.order_code as orderCode,t1.account,t1.sell_account as sellerAccount ,t1.amount,
+    t1.logistic_amount as logisticAmount,
+    t1.invoice_type as invoiceType,
+    t1.invoice_info as invoiceInfo,
+    t1.address_info as addressInfo,
+    t1.status,
+    t1.sell_status as sellStatus,
+    t1.has_complaint as hasComplaint,
+    t1.create_time as createTime,
+    t1.shop_type as shopType,
+    bu.name as buyer
+    FROM  shop_order t1
+    join (select
+
+    l.login_account as account,
+    case when m.memberName is null then '' else m.memberName end as name
+
+    from
+
+    login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+    c on l.login_account  = c.account
+
+    left join (
+    select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+    group by m.user_id
+
+    order by m.create_time asc
+
+    ) m on l.login_account = m.account ) bu on t1.account=bu.account
+    WHERE  t1.sell_account =  #{account}
+    <if test="status !='' and status!=null">
+      and t1.status = #{status}
+    </if>
+    <if test="inStatus!=null">
+      and t1.status in
+      <foreach collection="inStatus" index="index" item="item" open="(" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="sellStatus !='' and sellStatus!=null">
+      and t1.sell_status = #{sellStatus}
+    </if>
+    <if test="shopType !='' and shopType!=null">
+      and t1.shop_type = #{shopType}
+    </if>
+
+    <if test="buyer !='' and buyer!=null">
+      and bu.name =  #{buyer,jdbcType=VARCHAR}
+    </if>
+    <if test="orderCode !='' and orderCode!=null">
+      and t1.order_code =  #{orderCode,jdbcType=VARCHAR}
+    </if>
+    <if test="sellerAccount !='' and sellerAccount!=null">
+      and t1.sell_account =  #{sellerAccount,jdbcType=VARCHAR}
+    </if>
+    <if test="startDate != null and startDate != '' ">
+      AND t1.create_time >= #{startDate,jdbcType=VARCHAR}
+    </if>
+    <if test="endDate != null and endDate != '' ">
+      AND t1.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+
+  <select id="findBuyList" resultType="map" parameterType="map">
+     SELECT distinct
+        t1.id,t1.order_code as orderCode,t1.account,t1.sell_account as sellerAccount ,t1.amount,
+        t1.logistic_amount as logisticAmount,
+        t1.invoice_type as invoiceType,
+        t1.invoice_info as invoiceInfo,
+        t1.address_info as addressInfo,
+        t1.status,
+        t1.sell_status as sellStatus,
+        t1.has_complaint as hasComplaint,
+    t1.create_time as createTime,
+        su.name as seller
+    FROM  shop_order t1
+    join (select
+
+    l.login_account as account,
+    case when m.memberName is null then '' else m.memberName end as name
+
+    from
+
+    login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+    c on l.login_account  = c.account
+
+    left join (
+    select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+    group by m.user_id
+
+    order by m.create_time asc
+
+    ) m on l.login_account = m.account ) su on t1.sell_account=su.account
+    join shop_order_product t2 on t1.order_code=t2.order_code_id
+    WHERE  t1.account =  #{account}
+    <if test="productName !='' and productName!=null">
+      and t2.product_name like CONCAT('%',#{productName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="status !='' and status!=null">
+      and t1.status = #{status}
+    </if>
+    <if test="inStatus!=null">
+      and t1.status in
+      <foreach collection="inStatus" index="index" item="item" open="(" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="sellStatus !='' and sellStatus!=null">
+      and t1.sell_status = #{sellStatus}
+    </if>
+    <if test="seller !='' and seller!=null">
+      and su.name =  #{seller,jdbcType=VARCHAR}
+    </if>
+    <if test="startDate != null and startDate != '' ">
+      AND t1.create_time >= #{startDate,jdbcType=VARCHAR}
+    </if>
+    <if test="endDate != null and endDate != '' ">
+      AND t1.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+
+
+  <select id="findSellList" resultType="map" parameterType="map">
+    SELECT distinct t1.id,t1.order_code as orderCode,t1.account,t1.sell_account as sellerAccount ,t1.amount,
+    t1.logistic_amount as logisticAmount,
+    t1.invoice_type as invoiceType,
+    t1.invoice_info as invoiceInfo,
+    t1.address_info as addressInfo,
+    t1.status,
+    t1.sell_status as sellStatus,
+    t1.has_complaint as hasComplaint,
+    t1.create_time as createTime,
+    bu.name as buyer
+    FROM  shop_order t1
+    join (select
+
+    l.login_account as account,
+    case when m.memberName is null then '' else m.memberName end as name
+
+    from
+
+    login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+    c on l.login_account  = c.account
+
+    left join (
+    select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+    group by m.user_id
+
+    order by m.create_time asc
+
+    ) m on l.login_account = m.account) bu on t1.account=bu.account
+    join shop_order_product t2 on t1.order_code=t2.order_code_id
+    WHERE  t1.sell_account =  #{account}
+    <if test="productName !='' and productName!=null">
+      and t2.product_name like CONCAT('%',#{productName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="status !='' and status!=null">
+      and t1.status = #{status}
+    </if>
+    <if test="inStatus!=null">
+      and t1.status in
+      <foreach collection="inStatus" index="index" item="item" open="(" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="sellStatus !='' and sellStatus!=null">
+      and t1.sell_status = #{sellStatus}
+    </if>
+    <if test="buyer !='' and buyer!=null">
+      and bu.name =  #{buyer,jdbcType=VARCHAR}
+    </if>
+    <if test="startDate != null and startDate != '' ">
+      AND t1.create_time >= #{startDate,jdbcType=VARCHAR}
+    </if>
+    <if test="endDate != null and endDate != '' ">
+      AND t1.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+
+  <select id="findDetailById" resultType="map" parameterType="java.lang.Integer">
+  SELECT t1.*
+   ,t2.display_name as seller,t3.display_name as buyer
+  FROM  shop_order t1
+  JOIN login_user t2 on t1.sell_account=t2.login_account
+  JOIN login_user t3 on t1.account=t3.login_account
+  WHERE
+  t1.id =  #{id}
+</select>
+
+  <select id="findDetailByCode" resultType="map" parameterType="map">
+  SELECT
+  t1.id,t1.order_code as orderCode,t1.account,t1.sell_account as sellerAccount ,t1.amount,
+    t1.logistic_amount as logisticAmount,
+    t1.invoice_type as invoiceType,
+    t1.invoice_info as invoiceInfo,
+    t1.invoice_mode as invoiceMode,
+    t1.address_info as addressInfo,
+    t1.status,
+    t1.sell_status as sellStatus,
+    t1.has_complaint as hasComplaint,
+    t1.create_time as createTime,
+    t1.shop_type as shopType,
+    bu.name as sellerName,t3.name as buyerName
+  FROM  shop_order t1
+  JOIN (select
+
+    l.login_account as account,
+    case when m.memberName is null then '' else m.memberName end as name
+
+    from
+
+    login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+    c on l.login_account  = c.account
+
+    left join (
+    select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+    group by m.user_id
+
+    order by m.create_time asc
+
+    ) m on l.login_account = m.account) bu on t1.sell_account=bu.account
+
+
+  JOIN (select
+
+    l.login_account as account,
+    case when m.memberName is null then '' else m.memberName end as name
+
+    from
+
+    login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+    c on l.login_account  = c.account
+
+    left join (
+    select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+    (select u.template_id as templateId,u.account
+
+    from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+    group by m.user_id
+
+    order by m.create_time asc
+
+    ) m on l.login_account = m.account) t3 on t1.account=t3.account
+
+
+  WHERE 1=1
+  <if test="orderCode!=null and orderCode!=''">
+    and t1.order_code =  #{orderCode}
+  </if>
+
+
+</select>
+
+  <select id="findUserId" resultType="java.lang.String" parameterType="java.lang.String">
+    SELECT  nswy_id_model
+    from network_info
+    where account = #{account,jdbcType=VARCHAR}
+  </select>
+
+  <select id="findOrderCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT  count(id) as ncount
+    from shop_order t1
+    where t1.order_code = #{code,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateState" parameterType="java.util.Map">
+    update shop_order
+    set status = #{status}
+    where order_code =  #{orderCode,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateBuyerState" parameterType="java.util.Map">
+    update shop_order
+    set status = #{status},update_time = now()
+    where order_code =  #{orderCode,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateSellState" parameterType="java.util.Map">
+    update shop_order
+    set sell_status = #{state}
+    where order_code =  #{code,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateComplaintState" parameterType="java.lang.String">
+  update shop_order
+  set has_complaint = 1
+  where order_code =  #{code,jdbcType=VARCHAR}
+</update>
+
+  <update id="ClearShopCard" parameterType="java.util.Map">
+    delete sc FROM shop_card sc
+   join shop_order_product op on sc.commodity_type_info_id = op.commodity_type_info_id
+    where op.order_code_id = #{code,jdbcType=VARCHAR} and sc.account=#{account,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="ReduceProductVbep" parameterType="java.lang.String">
+  UPDATE shop_order_product op, shop_commodity_supply_info t4
+  SET t4.product_vbep = t4.product_vbep + op.number
+  WHERE t4.commodity_type_info_id = op.commodity_type_info_id
+  AND op.order_code_id =  #{code,jdbcType=VARCHAR}
+  </update>
+
+  <update id="UndercarriageProduct" parameterType="java.lang.String">
+   UPDATE shop_order_product op,shop_commodity_info t1, shop_commodity_supply_info t4
+   SET t1.storage_status = '2'
+   WHERE t1.commodity_type_info_id=t4.commodity_type_info_id
+   AND t4.commodity_type_info_id = op.commodity_type_info_id
+   AND t4.product_vbep &lt;t4.product_volume
+   AND op.order_code_id =  #{code,jdbcType=VARCHAR}
+</update>
+  
+  <select id="getShopTypeByOrderCode" parameterType="map" resultType="string">
+    SELECT ifnull(shop_type, '') as shopType
+    FROM shop_order
+    WHERE order_code = #{orderCode,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateBidStatus" parameterType="map">
+    UPDATE shop_bidding_list
+    SET status = #{bidStatus}
+    WHERE `order` = #{orderCode,jdbcType=VARCHAR}
+
+  </update>
+
+  <select id="getMargin" parameterType="map" resultType="string">
+    select
+      margin
+    FROM shop_bidding_list
+    WHERE 1=1
+    <if test="code !=null and code !=''">
+      and `order` = #{code}
+    </if>
+
+  </select>
+</mapper>

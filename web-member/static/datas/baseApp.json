@@ -1,0 +1,76 @@
+{
+    "code": 200,
+    "msg": "数据请求成功",
+    "data": [
+        [{
+                "title": "代理管理",
+                "url": "/pro/daili"
+            },
+            {
+                "title": "关系圈管理",
+                "url": "/member/relationManage/relationManageHome"
+            },
+            {
+                "title": "公众号管理",
+                "url": "/member/publicNumManage"
+            },
+            {
+                "title": "关注管理",
+                "url": "/pro/follow"
+            },
+            {
+                "title": "收藏管理",
+                "url": "/pro/collect"
+            },
+            {
+                "title": "聘请管理",
+                "url": "/member/employManage"
+            },
+            {
+                "title": "名称库管理",
+                "url": "/pro/nameLibrary"
+            },
+            {
+                "title": "种养户管理",
+                "url": "/member/grow/growIndex"
+            },
+            {
+                "title": "土地信息管理",
+                "url": "/pro/member"
+            },
+            {
+                "title": "贮藏管理",
+                "url": "/pro/member"
+            },
+            {
+                "title": "库存管理",
+                "url": "/pro/member"
+            },
+            {
+                "title": "生产管理",
+                "url": "/pro/member"
+            }
+        ],
+        [{
+                "title": "认证管理",
+                "url": "/member/registerIndex"
+            },
+            {
+                "title": "编码管理",
+                "url": "/member/companyCodeManage"
+            },
+            {
+                "title": "订单管理",
+                "url": "/pro/member"
+            },
+            {
+                "title": "客服管理",
+                "url": "/pro/member"
+            },
+            {
+                "title": "资金账户",
+                "url": "/member/fundAccountManage"
+            }
+        ]
+    ]
+}

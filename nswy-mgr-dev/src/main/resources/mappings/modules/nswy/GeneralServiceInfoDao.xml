@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.GeneralServiceInfoDao">
+
+	<select id="findList" parameterType="map" resultType="com.ovit.manager.modules.nswy.entity.GeneralServiceInfo">
+		SELECT
+		    a.id as serviceId,
+			a.currency_commodity_name as name,
+			a.commodity_alias as alias,
+		    d.dict_name as industryTypeName,
+			pc.classification_name as productTypeName,
+		    a.remark
+		from shop_currency_commodity a
+		left join (SELECT t1.dict_value as dict_value,t1.dict_name as dict_name  FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+		) d on a.industry_type_id = d.dict_value
+		left join product_classification pc on a.product_type_id = pc.classification_code
+
+		where 1=1 and type = 2
+		<if test="serviceId !=null and serviceId != ''">
+			and a.id =#{serviceId}
+		</if>
+		<if test="name !=null and name != ''">
+			and a.currency_commodity_name like CONCAT('%',#{name},'%')
+		</if>
+		ORDER BY a.update_time DESC
+	</select>
+
+	<select id="findGeneralService" parameterType="map" resultType="map">
+		select
+			id as serviceId,
+			currency_commodity_name as name,
+			commodity_alias as alias,
+			remark
+		from shop_currency_commodity
+		where type !=2
+
+	</select>
+
+	<update id="updateGeneralService" parameterType="com.ovit.manager.modules.nswy.entity.GeneralServiceInfo">
+		update shop_currency_commodity
+		<set>
+			currency_commodity_name = #{name},
+			commodity_alias = #{alias},
+			remark = #{remark}
+		</set>
+		where id=#{serviceId}
+
+	</update>
+
+	<insert id="saveGeneralService" parameterType="com.ovit.manager.modules.nswy.entity.GeneralServiceInfo">
+		insert into shop_currency_commodity(
+			type,
+			currency_commodity_name,
+			commodity_alias,
+			remark
+		)values (
+					#{type},
+					#{name},
+					#{alias},
+					#{remark}
+				);
+	</insert>
+
+	<delete id="deleteService" parameterType="java.lang.Integer">
+		delete from shop_currency_commodity where id= #{serviceId}
+	</delete>
+
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ShopCommodityDao">
+
+
+	<select id="findList" parameterType="map" resultType="com.ovit.manager.modules.nswy.entity.ShopCommityInfo">
+
+		SELECT
+			p.id as shopId,
+			c.currency_commodity_name as commonProductName,
+			f.commodity_name as commodityName,
+			t.sale_market_id as salesMarket,
+			d.label as relatedIndustry,
+			t.product_class_id as productType,
+			pc.classification_name as productTypeName,
+			t.species_relation_id as relatedSpeciesId,
+			t.variety_id as varietyId,
+			p.is_nav_display as isNavDisplay,
+			p.is_shop_display as isShopDisplay,
+			p.approve_status as approveStatus,
+			DATE_FORMAT(p.create_time,"%Y-%m-%d %T") AS createTime,
+			p.order_num as orderNum,
+			l.display_name as displayName,
+			p.is_home_display as isHomeDisplay,
+			s.time_price as timePrice,
+			DATE_FORMAT(p.update_time,"%Y-%m-%d %T") AS updateTime
+        FROM shop_product_commitment_info p
+
+
+		left join shop_commodity_type_info t on p.commodity_type_info_id   = t.id
+
+        left join shop_currency_commodity c  on t.currency_commodity_id  =  c.id
+
+		left join shop_commodity_price_info s on s.commodity_type_info_id = t.id
+
+		left join shop_commodity_info f on f.commodity_type_info_id = p.commodity_type_info_id
+
+        left join (SELECT t1.dict_value AS dict_value,t1.dict_name AS label FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+                WHERE t2.type_name = '行业分类') d on t.profession_class_id = d.dict_value
+
+		left join product_classification pc on t.product_class_id = pc.classification_code
+
+		left join login_user l on  p.account = l.login_account
+
+		where 1=1
+		<if test="commodityName != null and commodityName != ''">
+			and f.commodity_name LIKE CONCAT('%',#{commodityName},'%')
+		</if>
+		<if test="approveStatus != null and approveStatus != ''">
+			and p.approve_status = #{approveStatus}
+		</if>
+		ORDER BY p.update_time DESC
+
+	</select>
+
+	<update id="adopt" parameterType="map">
+        UPDATE shop_product_commitment_info SET approve_status = #{approveStatus} WHERE id = #{shopId}
+    </update>
+
+	<update id="updateHome" parameterType="map">
+        UPDATE shop_product_commitment_info SET is_home_display = #{isHomeDisplay} WHERE id = #{shopId}
+    </update>
+
+	<update id="updateNavDisplay" parameterType="map">
+        UPDATE shop_product_commitment_info SET is_nav_display = #{isNavDisplay} WHERE id = #{shopId}
+    </update>
+
+	<update id="updateShopDisplay" parameterType="map">
+        UPDATE shop_product_commitment_info SET is_shop_display = #{isShopDisplay} WHERE id = #{shopId}
+    </update>
+
+	<update id="updateOrderNum" parameterType="map">
+        UPDATE shop_product_commitment_info SET order_num = #{orderNum} WHERE id = #{shopId}
+    </update>
+
+
+
+</mapper>

@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.application.mapper.EmployMapper">
+
+    <select id="findExpert" resultType="java.util.Map" parameterType="java.util.Map">
+        select a.account, b.city as location, a.expert_name as expertName, a.personal_photo as avatar,
+        case c.status when null then "邀请" when 0 then "邀请中" when 1 then "已邀请" else "邀请" end as status
+        from reversion_expert_auth a
+        left join certification b on a.account = b.user_account
+        left join reversion_employ_manage c on (a.account = c.beinvited_account and c.`send_account`= #{account})
+        where a.approve_status = 1
+        <if test="relatedIndustry!='' and relatedIndustry!=null">
+            and a.related_industry like concat(concat('%',#{relatedIndustry},'%'))
+        </if>
+        <if test="relatedSpecies!='' and relatedSpecies!=null">
+            and a.related_species like concat(concat('%',#{relatedSpecies},'%'))
+        </if>
+        <if test="expertName!='' and expertName!=null">
+            and a.expert_name like concat(concat('%',#{expertName},'%'))
+        </if>
+        <if test="location!='' and location!=null">
+            and b.city like concat(concat('%',#{location},'%'))
+        </if>
+        group by a.account
+    </select>
+
+    <select id="findConsultExpert" parameterType="map" resultType="map">
+        select a.id, a.account, c.city as location, b.expert_name as expertName, b.personal_photo as avatar,
+        case when d.id is null then "聘请" else "已聘请" end as status
+        from fishing_service a left join consult_service e on a.id = e.service_id
+        left join reversion_expert_auth b on b.id = e.expert_id
+        left join certification c on b.account = c.user_account
+        left join consult_order_manage d on (a.id = d.consult_id and d.account = #{account})
+        where a.flag = 1 and a.type = 5 and a.account!=''
+        <if test="relatedIndustry!='' and relatedIndustry!=null">
+            and b.related_industry like concat(concat('%',#{relatedIndustry},'%'))
+        </if>
+        <if test="relatedSpecies!='' and relatedSpecies!=null">
+            and b.related_species like concat(concat('%',#{relatedSpecies},'%'))
+        </if>
+        <if test="expertName!='' and expertName!=null">
+            and b.expert_name like concat(concat('%',#{expertName},'%'))
+        </if>
+        <if test="location!='' and location!=null">
+            and c.city like concat(concat('%',#{location},'%'))
+        </if>
+    </select>
+
+    <select id="findInvite" parameterType="map" resultType="map">
+        select id, send_account as sendAccount, beinvited_account as beinvitedAccount, status, establish_time as establishTime
+        from reversion_employ_manage
+        where 1=1
+        <if test="sendAccount!='' and sendAccount!=null">
+            and send_account = #{sendAccount}
+        </if>
+        <if test="beInvitedAccount!='' and beInvitedAccount!=null">
+            and beinvited_account = #{beInvitedAccount}
+        </if>
+    </select>
+
+    <insert id="saveNotice" parameterType="map">
+        insert into reversion_employ_invite_notice(
+        send_account,
+        beinvited_account,
+        invited_time
+        ) values(
+          #{sendAccount},
+          #{beInvitedAccount},
+          now()
+        )
+    </insert>
+
+    <insert id="saveInvite" parameterType="map">
+        insert into reversion_employ_manage(
+        send_account,
+        beinvited_account
+        ) values(
+        #{sendAccount},
+        #{beInvitedAccount}
+        )
+    </insert>
+
+    <delete id="deleteInvite" parameterType="map">
+        delete from reversion_employ_manage
+        where send_account = #{sendAccount} and beinvited_account = #{beInvitedAccount}
+    </delete>
+
+    <delete id="deleteNotice" parameterType="map">
+        delete from reversion_employ_invite_notice
+        where send_account = #{sendAccount} and beinvited_account = #{beInvitedAccount}
+    </delete>
+
+    <update id="updateInvite" parameterType="map">
+        update reversion_employ_manage
+        set status = #{status}
+        where 1=1
+        <if test="sendAccount!='' and sendAccount!=null">
+            and send_account = #{sendAccount}
+        </if>
+        <if test="beInvitedAccount!='' and beInvitedAccount!=null">
+            and beinvited_account = #{beInvitedAccount}
+        </if>
+    </update>
+
+    <select id="manage" parameterType="map" resultType="map">
+        select a.id, b.beinvited_account as account,
+        a.expert_name as expertName,
+        a.expert_type as expertType,
+        a.adept_field as adeptField,
+        a.adept_species as adeptSpecies,
+        a.related_species as relatedSpecies,
+        a.related_industry as relatedIndustry,
+        a.related_product as relatedProduct,
+        a.related_service as relatedService,
+        case b.status when 0 then "待处理" when 1 then "已邀请" else "拒绝" end as status
+        from reversion_employ_manage b
+        left join reversion_expert_auth a on b.beinvited_account = a.account
+        left join certification c on a.account = c.user_account
+        where b.send_account = #{account} and a.approve_status = 1
+        <!-- 聘请处理中-->
+        <if test="type == 0">
+            and (b.status = 0 or b.status = 2)
+        </if>
+        <!-- 已聘请-->
+        <if test="type == 1">
+            and b.status = 1
+        </if>
+        <if test="relatedIndustry!='' and relatedIndustry!=null">
+            and a.related_industry like concat(concat('%',#{relatedIndustry},'%'))
+        </if>
+        <if test="relatedSpecies!='' and relatedSpecies!=null">
+            and a.related_species like concat(concat('%',#{relatedSpecies},'%'))
+        </if>
+        <if test="expertName!='' and expertName!=null">
+            and a.expert_name like concat(concat('%',#{expertName},'%'))
+        </if>
+        <if test="location!='' and location!=null">
+            and c.city like concat(concat('%',#{location},'%'))
+        </if>
+        order by b.establish_time desc
+    </select>
+
+    <select id="beInvited" parameterType="map" resultType="map">
+        select send_account as sendAccount, beinvited_account as beinvitedAccount, invited_time as invitedTime
+        from reversion_employ_invite_notice
+        where beinvited_account = #{account}
+        order by invited_time desc
+    </select>
+
+    <select id="beEmployed" parameterType="map" resultType="map">
+        select a.id, a.account as sendAccount, b.account as beinvitedAccount, a.create_time as establishTime,
+        a.end_time as endTime, a.status, a.money
+        from consult_order_manage a left join fishing_service b
+        on a.consult_id = b.id
+        where b.account = #{account}
+        order by a.create_time desc
+    </select>
+
+    <select id="consultManage" parameterType="map" resultType="map">
+        <!--select a.id, b.account as account,
+        d.expert_name as expertName,
+        d.expert_type as expertType,
+        d.adept_field as adeptField,
+        d.adept_species as adeptSpecies,
+        d.related_species as relatedSpecies,
+        d.related_industry as relatedIndustry,
+        d.related_product as relatedProduct,
+        d.related_service as relatedService,
+        d.personal_photo as personalPhoto,
+        d.title,
+        a.money,
+        a.end_time as endTime,
+        a.status,
+        a.consult_id as consultI,
+        from consult_order_manage a
+        inner join fishing_service b on b.id = a.consult_id
+        left join consult_service e on b.id = e.service_id
+        left join certification c on a.account = c.user_account
+        left join reversion_expert_auth d on d.id = e.expert_id
+        where a.account = #{account}-->
+        select * from (select a.id, b.account as account,
+        d.expert_name as expertName,
+        d.expert_type as expertType,
+        d.adept_field as adeptField,
+        d.adept_species as adeptSpecies,
+        d.related_species as relatedSpecies,
+        d.related_industry as relatedIndustry,
+        d.related_product as relatedProduct,
+        d.related_service as relatedService,
+        d.personal_photo as personalPhoto,
+        d.title,
+        a.money,
+        a.end_time as endTime,
+        a.status,
+        a.consult_id as consultId
+        from consult_order_manage a
+        inner join fishing_service b on b.id = a.consult_id
+        left join consult_service e on b.id = e.service_id
+        left join certification c on a.account = c.user_account
+        left join reversion_expert_auth d on d.id = e.expert_id
+        where a.account = #{account}
+        order by a.end_time desc limit 100
+        <if test="relatedIndustry!='' and relatedIndustry!=null">
+            and d.related_industry like concat(concat('%',#{relatedIndustry},'%'))
+        </if>
+        <if test="relatedSpecies!='' and relatedSpecies!=null">
+            and d.related_species like concat(concat('%',#{relatedSpecies},'%'))
+        </if>
+        <if test="expertName!='' and expertName!=null">
+            and d.expert_name like concat(concat('%',#{expertName},'%'))
+        </if>
+        <if test="location!='' and location!=null">
+            and c.city like concat(concat('%',#{location},'%'))
+        </if>
+        ) s
+        <if test="type!=null and type!=''">
+          group by account
+        </if>
+        order by endTime desc
+    </select>
+
+    <select id="orderDetail" parameterType="int" resultType="map">
+        select account, employ_time as employTime, `count`, `name`, phone, location, money, end_time as endTime, status, `data`
+        from consult_order_manage where id = #{id}
+    </select>
+
+    <select id="orderList" resultType="map">
+        select id, end_time as endTime from consult_order_manage where status = 0
+    </select>
+
+    <update id="updateConsultOrder" parameterType="int">
+        UPDATE consult_order_manage
+        SET status = 1
+        WHERE id = #{id}
+    </update>
+
+    <select id="findOrderList" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+        s.id,
+        s.order_code as orderCode,
+        s.account,
+        s.sell_account as sellAccount,
+        s.price,
+        s.contact_name as contactName,
+        s.status,
+        s.phone,
+        s.date,
+        s.time,
+        s.type,
+        s.room_id as roomId,
+        s.discount_price as discountPrice,
+        s.service_id as serviceId,
+        s.set_meal as setMeal,
+        s.set_meal_name as setMealName,
+        s.buyers_name as buyersName,
+        s.buyers_phone as buyersPhone,
+        s.create_time as createTime,
+        s.user_time as userTime,
+        s.check_type as checkType,
+        s.refund_amount as refundAmount,
+        s.remarks,
+        s.payment_time as paymentTime,
+        s.handle_personnel as  handlePersonnel,
+        s.processing_time as processingTime
+
+        from service_order_management s
+
+        where 1=1 and s.status = 0 and s.type != 5
+
+
+
+        order by s.create_time desc
+    </select>
+    <update id="updateServiceOrder" parameterType="int">
+        UPDATE service_order_management
+        SET status = 7
+        WHERE id = #{id}
+    </update>
+
+</mapper>

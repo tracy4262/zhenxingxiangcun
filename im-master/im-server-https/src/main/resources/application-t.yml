@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: im-server
+
+im:
+  server:
+    port: 20000
+  index:
+    url: http://localhost:8081/demo
+  anchor:
+    url: http://localhost:8081/anchor
+  visitor:
+    url: http://localhost:8081/visitor
+  ssl:
+    path: /opt/im-server-https/config
+#  jedis:
+#    #JedisProxySingle JedisProxyCluster
+#    #class: JedisProxyCluster
+#    class: JedisProxySingle
+#    hosts: 192.168.7.225:6379
+#    maxTotal: 50
+#    maxIdle: 10
+#    minIdle: 5

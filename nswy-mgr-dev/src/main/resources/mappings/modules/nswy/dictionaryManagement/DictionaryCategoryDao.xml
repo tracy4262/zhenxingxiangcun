@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryCategoryDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryCategory"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryCategory">
+        select
+        p.dict_id as id,
+        p.dict_name as name,
+        case when p.parent_id is null then 0 else p.parent_id end as pid,
+        p.pinyin,
+        p.dict_type as dictType,
+        p.level,
+        p.dict_value as value,
+        p.remark,
+        p.create_time as createTime
+        from system_dict p left join system_dict i on p.parent_id = i.dict_id
+        where 1=1 and p.dict_type = 'ba4d3d9c-cc38-4ddb-a7f2-25cd1323c2f7'
+        <if test="name!=null and name!=''">
+            and p.dict_name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.dict_id = #{id}
+        </if>
+        order by p.create_time desc
+    </select>
+
+    <insert id="saveCategory"
+            parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryCategory">
+        insert into system_dict(dict_id,
+                                            dict_name,
+                                            parent_id,
+                                            pinyin,
+                                            level,
+                                            dict_type,
+                                            dict_value,
+                                            remark,
+                                            create_time)
+        values (#{id},
+                #{name},
+                #{pid},
+                #{pinyin},
+                #{level},
+                #{dictType},
+                #{value},
+                #{remark},
+                now());
+    </insert>
+
+    <update id="updateCategory"
+            parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryCategory">
+        update system_dict
+        set
+            dict_name = #{name},
+            pinyin = #{pinyin},
+            dict_value    = #{value},
+            remark        = #{remark}
+
+        where dict_id = #{id}
+    </update>
+
+    <delete id="deleteCategory" parameterType="java.lang.String">
+        delete
+        from system_dict
+        where dict_id = #{id}
+    </delete>
+
+</mapper>

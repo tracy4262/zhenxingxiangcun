@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.StandardDao">
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.StandardInfo" resultType="com.ovit.manager.modules.nswy.entity.StandardInfo">
+        SELECT
+        s.standard_id,
+        s.standard_detail_id,
+        s.classified_id,
+        s.title,
+        s.abstracts,
+        CASE s.source
+        WHEN 'O' THEN '原创'
+        WHEN 'R' THEN '转载'
+        END AS source,
+        s.author,
+        s.ycauthor,
+        s.account,
+        s.location,
+        s.product_id,
+        s.species_id,
+        s.service_id,
+        s.industrial_id,
+        s.unscramble_expert,
+        s.friend_reminding,
+        s.reminding_content,
+        s.is_sms,
+        s.is_publish,
+        s.componsation,
+        CASE s.approve_status
+        WHEN '0' THEN '待审核'
+        WHEN '1' THEN '删除'
+        WHEN '2' THEN '审核通过'
+        WHEN '3' THEN '拒绝'
+        END AS approveStatus,
+        s.is_nav_display,
+        s.is_to_page,
+        s.order_num,
+        s.label,
+        s.browse_number,
+        s.is_report,
+        s.create_time,
+        d.release_unit
+        FROM
+        standard s left join standard_detail d on s.standard_detail_id = d.standard_detail_id
+        where 1=1
+        <if test="title != null and title != ''">
+            and s.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="approveStatus != null and approveStatus != ''">
+            and s.approve_status = #{approveStatus}
+        </if>
+        ORDER BY s.create_time DESC
+    </select>
+    <delete id="deleteStandard" parameterType="java.lang.Integer">
+        DELETE
+            t1,t2,t3,t4,t5
+        FROM
+            standard t1
+        LEFT JOIN standard_detail t2 ON t1.standard_detail_id = t2.standard_detail_id
+        LEFT JOIN standard_comment t3 ON t1.standard_id = t3.standard_id
+        LEFT JOIN thumb_comment t4 ON t3.comment_id = t4.comment_id
+        LEFT JOIN thumb_detail t5 ON t5.detail_id = t1.standard_detail_id
+        WHERE t1.standard_id = #{standardId}
+    </delete>
+
+    <update id="standardRefuse" parameterType="java.lang.Integer">
+        UPDATE standard SET approve_status = 3 WHERE standard_id = #{standardId}
+    </update>
+
+    <update id="standardAdopt" parameterType="java.lang.Integer">
+        UPDATE standard SET approve_status = 2 WHERE standard_id = #{standardId}
+    </update>
+
+    <update id="standardUpdateHome" parameterType="map" >
+        UPDATE standard SET is_to_page = #{status} WHERE standard_id = #{id}
+    </update>
+
+    <update id="standardUpdateNavDisplay" parameterType="map">
+        UPDATE standard SET is_nav_display = #{status} WHERE standard_id = #{id}
+    </update>
+
+    <update id="standardSetOrderNum" parameterType="map">
+        UPDATE standard SET order_num = #{orderNum} WHERE standard_id = #{id}
+    </update>
+</mapper>

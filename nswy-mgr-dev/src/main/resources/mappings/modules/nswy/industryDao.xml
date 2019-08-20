@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.IndustryDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.IndustryInfo"
+            resultType="com.ovit.manager.modules.nswy.entity.IndustryInfo">
+        select
+            t1.dict_id as id,
+            case when t1.parent_id is null then 0 else t1.parent_id end as pid,
+            t1.dict_name as dictName
+        from system_dict t1 left JOIN system_dict t2 ON t1.parent_id = t2.dict_id
+
+        where t1.dict_type='ba4d3d9c-cc38-4ddb-a7f2-25cd1323c2f7'
+
+        <if test="dictName !=null and dictName !=''">
+            and t1.dict_name like CONCAT('%',#{dictName},'%')
+        </if>
+        <if test="id !=null and id !=''">
+            and t1.dict_id =#{id}
+        </if>
+
+        order by t1.dict_value asc
+    </select>
+
+    <select id="findByPidDesc" parameterType="com.ovit.manager.modules.nswy.entity.IndustryInfo"
+            resultType="com.ovit.manager.modules.nswy.entity.IndustryInfo">
+        select
+            t1.dict_id as id,
+            case when t1.parent_id is null then 0 else t1.parent_id end as pid,
+            t1.dict_name as dictName,
+            dict_value
+        from system_dict t1
+
+        where t1.dict_type='ba4d3d9c-cc38-4ddb-a7f2-25cd1323c2f7'
+
+        <choose>
+            <when test='pid == "0"'>
+                and t1.parent_id is null
+
+            </when>
+            <otherwise>
+                and t1.parent_id = #{pid}
+
+            </otherwise>
+        </choose>
+
+
+        order by t1.dict_value desc
+    </select>
+
+    <select id="findByIdDesc" parameterType="com.ovit.manager.modules.nswy.entity.IndustryInfo"
+            resultType="com.ovit.manager.modules.nswy.entity.IndustryInfo">
+        select
+        t1.dict_id as id,
+        case when t1.parent_id is null then 0 else t1.parent_id end as pid,
+        t1.dict_name as dictName,
+        dict_value
+        from system_dict t1
+
+        where t1.dict_type='ba4d3d9c-cc38-4ddb-a7f2-25cd1323c2f7'
+        and t1.dict_id = #{pid}
+
+
+        order by t1.dict_value desc
+    </select>
+
+    <insert id="saveIndustry" parameterType="com.ovit.manager.modules.nswy.entity.IndustryInfo">
+        insert into system_dict(
+            dict_id,
+            parent_id,
+            dict_name,
+            dict_type,
+            dict_value,
+            create_time
+            )
+        values (
+                #{id},
+                #{pid},
+                #{dictName},
+                #{dictType},
+                #{dictValue},
+                now()
+               );
+    </insert>
+
+
+    <update id="updateIndustry" parameterType="com.ovit.manager.modules.nswy.entity.IndustryInfo">
+        update system_dict
+        set dict_name = #{dictName}
+        where dict_id = #{id}
+    </update>
+
+    <delete id="deleteIndustry" parameterType="java.lang.String">
+        delete
+        from system_dict
+        where dict_id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,56 @@
+
+//字体图标
+//-----------------------------------------------------
+$font-icon-path              : '../fonts/iconfont';
+$font-icon-name              : 'iconfont';
+$font-svg-id                 : 'iconfont';
+
+// @include font-face($font-icon-name,$font-icon-path,normal,normal);
+@font-face {
+    font-family: iconfont;
+    font-weight: 400;
+    font-style: normal;
+    src: url('#{$font-icon-path}.eot');
+    src: url('#{$font-icon-path}.eot?#iefix') format('eot'),
+         url('#{$font-icon-path}.svg#iconfont') format('svg'),
+         url('#{$font-icon-path}.woff') format('woff'),
+         url('#{$font-icon-path}.ttf') format('truetype')
+}
+
+[class^="icon-"],
+[class*=" icon-"]{
+    position: relative;
+    line-height: 1;
+    &:before{
+        display: inline-block;
+        vertical-align: middle;
+        font-family: $font-icon-name;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+
+
+@font-face {font-family: "socialshare";
+  src: url('../fonts/iconfont.eot'); /* IE9*/
+  src: url('../fonts/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../fonts/iconfont.woff') format('woff'), /* chrome, firefox */
+  url('../fonts/iconfont.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('../fonts/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+// .icon-tencent:before { content: "\f07a"; }
+.icon-qq:before { content: "\f11a"; }
+.icon-weibo:before { content: "\f12a"; }
+.icon-wechat:before { content: "\f09a"; }
+// .icon-douban:before { content: "\f10a"; }
+// .icon-heart:before { content: "\f20a"; }
+// .icon-like:before { content: "\f00a"; }
+.icon-qzone:before { content: "\f08a"; }
+// .icon-linkedin:before { content: "\f01a"; }
+// .icon-diandian:before { content: "\f05a"; }
+// .icon-facebook:before { content: "\f03a"; }
+// .icon-google:before { content: "\f04a"; }
+// .icon-twitter:before { content: "\f06a"; }

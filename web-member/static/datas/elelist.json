@@ -1,0 +1,37 @@
+{
+    "code": 200,
+    "msg": "请求成功",
+    "data": [{
+      "name": "文本框组件",
+      "type": "text",
+      "checked": true
+    }, {
+      "name": "文本域组件",
+      "type": "textarea",
+      "checked": false
+    }, {
+      "name": "下拉组件",
+      "type": "select",
+      "checked": false
+    }, {
+      "name": "单选框组件",
+      "type": "radio",
+      "checked": false
+    }, {
+      "name": "复选框组件",
+      "type": "checkbox",
+      "checked": false
+    }, {
+      "name": "开关组件",
+      "type": "switch",
+      "checked": false
+    }, {
+      "name": "农药残留指标",
+      "type": "pesticidePick",
+      "checked": false
+    }, {
+      "name": "污染物残留指标",
+      "type": "pollutePick",
+      "checked": false
+    }]
+}

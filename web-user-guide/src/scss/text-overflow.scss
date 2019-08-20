@@ -1,0 +1,18 @@
+// Text overflow
+// Requires inline-block or block for proper styling
+
+@mixin ell($multi-line:false, $line-clamp:0,$box-orient:initial){
+	overflow: hidden;
+	text-overflow: ellipsis;
+	@if $multi-line==true {
+		white-space: normal;
+		display: -webkit-box;
+		-webkit-line-clamp: $line-clamp; // number行数
+		/*! autoprefixer: off */
+		-webkit-box-orient: $box-orient;	//方向 vertical
+		/* autoprefixer: on */
+	} @else {
+		white-space: nowrap;
+		display:block;
+	}
+}

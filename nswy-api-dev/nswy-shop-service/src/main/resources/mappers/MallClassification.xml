@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.shop.pushTemplate.mapper.MallClassificationInfoMapper">
+    <select id="findMallClassification" resultType="map">
+        SELECT id, classification_name as className, classification_code as productCode, parent_id as parentId FROM mall_classification
+        WHERE 1=1
+        <if test="parentId != null and parentId != ''">
+            AND parent_id = #{parentId}
+        </if>
+        <if test="parentId == null || parentId == ''">
+            AND (parent_id IS NULL OR  parent_id = '')
+        </if>
+        <if test="code != null and code != ''">
+            AND classification_code LIKE CONCAT(#{code}, '%')
+        </if>
+        ORDER BY classification_code
+    </select>
+</mapper>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.relationship.mapper.RelationshipFriendMapper">
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.relationship.model.RelationshipFriend">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="friend_id" jdbcType="INTEGER" property="friendId" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="from_account" jdbcType="VARCHAR" property="fromAccount" />
+    <result column="agree_type" jdbcType="INTEGER" property="agreeType" />
+    <result column="request_message" jdbcType="VARCHAR" property="requestMessage" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_read" jdbcType="INTEGER" property="isRead" />
+    <result column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="from_account_id" jdbcType="INTEGER" property="fromAccountId" />
+  </resultMap>
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.CoterieMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.Coterie">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="coterie_name" jdbcType="VARCHAR" property="coterieName" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="follower_num" jdbcType="INTEGER" property="followerNum" />
+		<result column="active_value" jdbcType="INTEGER" property="activeValue" />
+		<result column="avartar" jdbcType="VARCHAR" property="avartar" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="category" jdbcType="VARCHAR" property="category" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, coterie_name, description, follower_num, active_value, avartar,
+		create_time,category
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from coterie
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+   <select id="searchCoterie" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List" />
+       FROM coterie c where 1=1
+        <if test="coterieName !='null'">
+            AND c.coterie_name=#{coterieName,jdbcType=VARCHAR}
+        </if>
+        AND EXISTS
+        (SELECT 1 FROM coterie_member f
+        WHERE f.coterie_id = c.id
+        AND f.account =#{account,jdbcType=VARCHAR})
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from coterie
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.Coterie">
+		insert into coterie (id, coterie_name, description,
+		follower_num, active_value, avartar,
+		create_time)
+		values (#{id,jdbcType=INTEGER}, #{coterieName,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{followerNum,jdbcType=INTEGER}, #{activeValue,jdbcType=INTEGER}, #{avartar,jdbcType=VARCHAR},
+		now())
+	</insert>
+	<insert id="insertSelective" parameterType="com.ovit.nswy.member.model.Coterie">
+		insert into coterie
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="coterieName != null">
+				coterie_name,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="followerNum != null">
+				follower_num,
+			</if>
+			<if test="activeValue != null">
+				active_value,
+			</if>
+			<if test="avartar != null">
+				avartar,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="coterieName != null">
+				#{coterieName,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="followerNum != null">
+				#{followerNum,jdbcType=INTEGER},
+			</if>
+			<if test="activeValue != null">
+				#{activeValue,jdbcType=INTEGER},
+			</if>
+			<if test="avartar != null">
+				#{avartar,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				now(),
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ovit.nswy.member.model.Coterie">
+		update coterie
+		<set>
+			<if test="coterieName != null">
+				coterie_name = #{coterieName,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="followerNum != null">
+				follower_num = #{followerNum,jdbcType=INTEGER},
+			</if>
+			<if test="activeValue != null">
+				active_value = #{activeValue,jdbcType=INTEGER},
+			</if>
+			<if test="avartar != null">
+				avartar = #{avartar,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time =now(),
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.Coterie">
+		update coterie
+		set coterie_name = #{coterieName,jdbcType=VARCHAR},
+		description = #{description,jdbcType=VARCHAR},
+		follower_num = #{followerNum,jdbcType=INTEGER},
+		active_value = #{activeValue,jdbcType=INTEGER},
+		avartar = #{avartar,jdbcType=VARCHAR},
+		create_time =now()
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

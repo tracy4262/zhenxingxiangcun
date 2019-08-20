@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.InformationDetailMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.InformationDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="browse_number" property="browseNumber" jdbcType="INTEGER" />
+		<result column="is_report" property="isReport" jdbcType="INTEGER" />
+		<result column="editer" property="editer" jdbcType="VARCHAR" />
+		<result column="previous_id" property="previousId" jdbcType="INTEGER" />
+		<result column="previous_title" property="previousTitle" jdbcType="VARCHAR" />
+		<result column="next_id" property="nextId" jdbcType="INTEGER" />
+		<result column="next_title" property="nextTitle" jdbcType="VARCHAR" />
+		<result column="thumb_up_num" property="thumbUpNum" jdbcType="INTEGER" />
+		<result column="label" property="label" jdbcType="VARCHAR" />
+        <result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="ycauthor" property="ycAuthor" jdbcType="VARCHAR"/>
+		<result column="summary" property="summary" jdbcType="VARCHAR"/>
+		<result column="imageAdd" property="imageAdd" jdbcType="VARCHAR"/>
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.ovit.nswy.member.model.InformationDetail"
+		extends="BaseResultMap">
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+        <result column="informationDetailId" property="information_detail_id" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		id, title, create_time, source, browse_number, is_report, editer,
+		previous_id, previous_title,
+		next_id, next_title, thumb_up_num,label,account,ycauthor
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from information_detail
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="findInformationDetail" resultType="java.util.Map" parameterType="java.lang.Integer">
+		SELECT
+		i.id as id, i.title, i.create_time as createTime, i.source, i.browse_number as browseNumber, i.is_report as isReport, i.editer,
+		i.previous_id as previousId, i.previous_title as previousTitle,
+		i.next_id as nextId, i.next_title as nextTitle, i.thumb_up_num as thumbUpNum,i.label,i.account,i.ycauthor,i.content
+		,f.column_type AS columnType,f.doc_type AS docType,f.id AS informationId,f.abstracts
+
+	   	FROM  information_detail i LEFT JOIN information f ON i.id=f.information_detail_id
+
+		where i.id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectMinId" resultType="java.lang.Integer" >
+		select min(id) from information_detail
+	</select>
+	<select id="selectMaxId" resultType="java.lang.Integer" >
+		select max(id) from information_detail
+	</select>
+	<select id="findColumnInforMation" resultMap="ResultMapWithBLOBs"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from information_detail
+        where account=#{account}
+        <if test="label != '全部'">
+            and label like concat(concat('%',#{label}),'%')
+        </if>
+        order by create_time desc
+	</select>
+
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.InformationDetail"
+			useGeneratedKeys="true" keyProperty="id">
+		insert into information_detail (id, title, create_time,
+		source, browse_number, is_report,
+		editer, previous_id, previous_title,
+		next_id, next_title,label,
+		content,account,ycauthor)
+		values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},now(),
+		#{source,jdbcType=VARCHAR}, 0,
+		#{isReport,jdbcType=INTEGER},
+		#{editer,jdbcType=VARCHAR}, #{previousId,jdbcType=INTEGER}, #{previousTitle,jdbcType=VARCHAR},
+		#{nextId,jdbcType=INTEGER}, #{nextTitle,jdbcType=VARCHAR},#{label,jdbcType=VARCHAR},
+		#{content,jdbcType=LONGVARCHAR},#{account,jdbcType=VARCHAR},#{ycAuthor,jdbcType=VARCHAR})
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.InformationDetail">
+		update information_detail
+		set title = #{title,jdbcType=VARCHAR},
+		create_time =now(),
+		source = #{source,jdbcType=VARCHAR},
+		browse_number = #{browseNumber,jdbcType=INTEGER},
+		is_report = #{isReport,jdbcType=INTEGER},
+		editer = #{editer,jdbcType=VARCHAR},
+		previous_id = #{previousId,jdbcType=INTEGER},
+		previous_title = #{previousTitle,jdbcType=VARCHAR},
+		next_id = #{nextId,jdbcType=INTEGER},
+		next_title = #{nextTitle,jdbcType=VARCHAR},
+		thumb_up_num = #{thumbUpNum,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateThumbUpNum" parameterType="com.ovit.nswy.member.model.InformationDetail">
+		update information_detail
+		set
+		thumb_up_num = thumb_up_num+1
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateBrowse" parameterType="java.util.Map">
+		update ${table}
+		set
+		browse_number = browse_number+1
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+   <select id="findByLabel" parameterType="map" resultType="com.ovit.nswy.member.model.InformationDetail">
+	   SELECT i.*, f.column_type AS columnType, CASE f.doc_type WHEN '020101' THEN '行业动态'
+	   WHEN '020102' THEN '企业动态'
+	   WHEN '020103' THEN '专家动态'
+	   WHEN '020104' THEN '乡村动态'
+	   WHEN '020105' THEN '群协动态'
+	   WHEN '020106' THEN '国际动态'
+	   WHEN '020107' THEN '会员动态'
+	   WHEN '020108' THEN '城乡互动'
+	   ELSE '资讯' END as docType, f.id AS informationId, f.abstracts, b.cover_photo, b.author
+	   FROM information_detail i LEFT JOIN information f ON i.id = f.information_detail_id
+	   LEFT JOIN information_book_info b ON i.id = b.information_detail_id
+	   where
+        <foreach collection="list" item="item" index="index" separator="or" open="("  close=")">
+            (f.species_name like concat(concat('%',#{item,jdbcType=VARCHAR}),'%'))
+        </foreach>
+	   <if test="key !='' and key!=null">
+		   and i.title like concat(concat('%',#{key},'%'))
+	   </if>
+       order by create_time desc
+   </select>
+
+    <select id="newinfo" resultMap="ResultMapWithBLOBs">
+       SELECT * FROM information WHERE approve_status = 2 ORDER BY create_time DESC LIMIT 5;
+    </select>
+
+	<select id="findInforMationDetailLeftInforMation" resultMap="ResultMapWithBLOBs" parameterType="java.util.Map">
+		SELECT
+		i.*,f.column_type AS columnType,CASE f.doc_type WHEN '020101' THEN '行业动态'
+		WHEN '020102' THEN '企业动态'
+		WHEN '020103' THEN '专家动态'
+		WHEN '020104' THEN '乡村动态'
+		WHEN '020105' THEN '群协动态'
+		WHEN '020106' THEN '国际动态'
+		WHEN '020107' THEN '会员动态'
+		WHEN '020108' THEN '城乡互动'
+		ELSE '资讯' END as docType,f.id as informationId,f.abstracts as summary,b.cover_photo as coverPhoto,b.author,i.create_time as createTime,f.imageAdd
+		FROM information_detail i
+		LEFT JOIN (SELECT id,doc_type,column_type,information_detail_id,abstracts,image_add as imageAdd FROM information  WHERE information_detail_id IN (SELECT id FROM information_detail  WHERE account=#{account}) ) f
+		ON i.id=f.information_detail_id
+		LEFT JOIN information_book_info b ON i.id=b.information_detail_id
+		where i.account=#{account}
+		<if test="label != '全部'">
+			and i.label like concat(concat('%',#{label}),'%')
+		</if>
+		<if test ="docType !=null and docType !=''">
+			and f.doc_type = #{docType}
+		</if>
+		order by i.create_time desc
+	</select>
+
+	<select id="relevantInformation" parameterType="map" resultType="com.ovit.nswy.member.model.InformationDetail">
+		SELECT i.*, f.column_type AS columnType, CASE f.doc_type WHEN '020101' THEN '行业动态'
+		WHEN '020102' THEN '企业动态'
+		WHEN '020103' THEN '专家动态'
+		WHEN '020104' THEN '乡村动态'
+		WHEN '020105' THEN '群协动态'
+		WHEN '020106' THEN '国际动态'
+		WHEN '020107' THEN '会员动态'
+		WHEN '020108' THEN '城乡互动'
+		ELSE '资讯' END as docType, f.id AS informationId, f.abstracts, b.cover_photo, b.author
+		FROM information_detail i LEFT JOIN information f ON i.id = f.information_detail_id
+		LEFT JOIN information_book_info b ON i.id = b.information_detail_id
+		where f.species_id like concat('%',#{speciesId},'%')
+		and f.approve_status = 2
+		order by create_time desc
+	</select>
+
+</mapper>

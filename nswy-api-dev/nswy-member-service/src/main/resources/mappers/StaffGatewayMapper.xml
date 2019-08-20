@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.StaffGatewayMapper">
+    <select id="findRelationshipDictInfo" parameterType="map" resultType="map">
+        select
+
+          r.id,r.name as groupName,r.parent_id as pid
+
+        from reversion_relationship_circle_dict_info r order by create_time desc
+    </select>
+
+
+    <select id="findGroupList" parameterType="map" resultType="map">
+        select
+          r.id,
+          r.account,
+          r.template_id as templateId,
+          r.group_name as groupName,
+          r.parent_id as pid,
+          r.number,
+          r.is_default as isDefault,
+          case when r.status is null then 0 else r.status end status
+        from reversion_staff_gateway_circle_group_info r left join reversion_staff_gateway_circle_group_info g on r.parent_id = g.id
+
+       where 1=1
+           <if test="account!= null and account!=''">
+               and r.account = #{account}
+           </if>
+
+           <if test="templateId!= null and templateId!=''">
+               and r.template_id = #{templateId}
+           </if>
+
+           <if test="id!=null and id!=''">
+                and r.id = #{id}
+           </if>
+
+        order by r.create_time desc
+    </select>
+
+    <select id="findGroupByGroupName" parameterType="map" resultType="map">
+        select
+        r.id,
+        r.account,
+        r.template_id as templateId,
+        r.group_name as groupName,
+        r.parent_id as pid,
+        r.number,
+        r.is_default as isDefault,
+        case when r.status is null then 0 else r.status end status
+        from reversion_staff_gateway_circle_group_info r left join reversion_staff_gateway_circle_group_info g on r.parent_id = g.id
+
+        where 1=1
+        <if test="account!= null and account!=''">
+            and r.account = #{account}
+        </if>
+
+        <if test="templateId!= null and templateId!=''">
+            and r.template_id = #{templateId}
+        </if>
+
+        <if test="groupName!=null and groupName!=''">
+            and r.group_name = #{groupName}
+        </if>
+
+        order by r.create_time desc
+    </select>
+
+    <select id="findGroupByPid" parameterType="map" resultType="map">
+         select
+          r.id,
+          r.account,
+          r.template_id as templateId,
+          r.group_name as groupName,
+          r.parent_id as pid,
+          r.number,
+          r.is_default as isDefault
+        from reversion_staff_gateway_circle_group_info r
+
+        where  1=1
+        <if test="pid!=null and pid!=''">
+           and id = #{pid}
+        </if>
+
+
+
+    </select>
+
+
+    <select id="findGroupById" parameterType="map" resultType="map">
+        select
+        r.id,
+        r.account,
+        r.template_id as templateId,
+        r.group_name as groupName,
+        r.parent_id as pid,
+        r.number,
+        r.is_default as isDefault
+        from reversion_staff_gateway_circle_group_info r
+
+        where  1=1
+
+        <if test="id!=null and id!=''">
+            and parent_id = #{id}
+        </if>
+
+
+
+    </select>
+
+    <update id="updateGroup" parameterType="map">
+        update reversion_staff_gateway_circle_group_info set number = #{number} where id = #{id}
+    </update>
+
+    <update id="updateGroupStatus" parameterType="map">
+        update reversion_staff_gateway_circle_group_info set status = 1 where id = #{id}
+    </update>
+
+    <insert id="saveGroup" parameterType="map">
+        replace into reversion_staff_gateway_circle_group_info (
+           id,
+           account,
+           template_id,
+           group_name,
+           parent_id,
+           is_default,
+           create_time
+        ) values (
+            #{id},
+            #{account},
+            #{templateId},
+            #{groupName},
+            #{pid},
+            #{isDefault},
+            now()
+        );
+    </insert>
+
+    <delete id="deleteGroup" parameterType="map">
+        delete from reversion_relationship_circle_group_info where id= #{id}
+    </delete>
+
+    <select id="findGroupFriendList" parameterType="map" resultType="map">
+        select
+        f.id,
+        f.account,
+        f.group_friend_account as friendAccount,
+        f.member_name as groupFriendAccountName,
+        f.group_id as groupId,
+        f.card,
+        f.phone,
+        f.sex,
+        l.avatar as groupFriendAvatar,
+        f.create_time as createTime,
+        f.is_default as isDefault,
+        (select m.member_name as memberName from  reversion_member_aptitude_real_info m where m.user_id = f.account and m.template_id = ( select
+        template_id from reversion_user_template_manage u  where u.account = f.account and u.status = 1) order by m.create_time asc LIMIT 1) as accountName
+
+        from reversion_staff_gateway_group_friend_info f  left join login_user l on f.group_friend_account = l.login_account
+        where 1=1
+        <if test="account !=null and account!=''">
+            and  f.account = #{account}
+        </if>
+        <if test="friendAccount !=null and friendAccount!=''">
+            and  f.group_friend_account = #{friendAccount}
+        </if>
+        <if test="groupId !=null and groupId!=''">
+            and  f.group_id = #{groupId}
+        </if>
+
+        <if test="keyword !=null and keyword!=''">
+            and (f.group_friend_account like concat('%',#{keyword},'%') or f.member_name  like concat('%',#{keyword},'%') )
+
+        </if>
+        <if test="isDefault !=null and isDefault!=''">
+            and  f.is_default = #{isDefault}
+        </if>
+
+        order by f.create_time desc
+
+
+    </select>
+
+    <insert id="insertGroupFriendInfo" parameterType="map">
+		insert into reversion_staff_gateway_group_friend_info (
+			account,
+			group_friend_account,
+			member_name,
+			card,
+			phone,
+			sex,
+			group_id,
+			is_default,
+			create_time
+		) values (
+			#{account},
+			#{friendAccount},
+			#{groupFriendAccountName},
+			#{card},
+			#{phone},
+			#{sex},
+			#{groupId},
+			#{isDefault},
+			now()
+		);
+	</insert>
+
+    <update id="updateStaffInfo" parameterType="map">
+        update reversion_staff_gateway_group_friend_info
+          <set>
+              <if test="groupFriendAccountName !=null">
+                  member_name = #{groupFriendAccountName},
+              </if>
+              <if test="phone !=null">
+                  phone = #{phone},
+              </if>
+              <if test="sex !=null">
+                  sex = #{sex},
+              </if>
+
+              <if test="card !=null">
+                  card = #{card},
+              </if>
+          </set>
+
+       where id = #{id}
+    </update>
+
+
+
+    <update id="moveGroupFriendInfo" parameterType="map">
+        update reversion_staff_gateway_group_friend_info set group_id = #{newGroupId} where id = #{id}
+    </update>
+
+    <delete id="deleteGroupFriendInfo" parameterType="map">
+        delete from reversion_staff_gateway_group_friend_info where id= #{id}
+    </delete>
+
+
+    <select id="findEmployeeRoster" parameterType="map" resultType="map">
+
+        select
+
+        id,user_id as account ,name as groupFriendAccountName,sex,card,phone,staff_account as friendAccount,
+
+        template_id as templateId
+
+        from reversion_employee_roster  where staff_account is not null
+
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+    <select id="findMemberIdentityInfo" parameterType="map" resultType="map">
+
+        select
+            user_id as friendAccount,
+            member_name as groupFriendAccountName,
+            phone,
+            sex,
+            card
+        from reversion_member_identity_info where 1=1
+
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+        order by create_time asc limit 1
+    </select>
+
+
+    <select id="findLogin" parameterType="java.util.Map" resultType="java.util.Map">
+        select u.login_account from login_user u where u.login_account=#{friendAccount}
+        <if test="loginPasswd!='' and loginPasswd!=null">
+            and u.login_passwd = #{loginPasswd}
+        </if>
+
+    </select>
+
+    <insert id="insertLogin" parameterType="java.util.Map">
+		insert into login_user ( unique_id, login_account,
+		login_passwd, register_time,user_type
+		)
+		values (
+		#{unique_id},#{friendAccount},#{loginPasswd},now(),#{user_type}
+		)
+	</insert>
+
+    <select id="findStaffGatewayGroup" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        group_id,account,group_friend_account
+        from reversion_staff_gateway_group_friend_info
+        where 1=1
+        <if test="account!='' and account!=null">
+            and account = #{account}
+        </if>
+        <if test="friendAccount!='' and friendAccount!=null">
+            and group_friend_account = #{friendAccount}
+        </if>
+    </select>
+
+</mapper>

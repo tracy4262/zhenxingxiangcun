@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.FansMapper">
+	<select id="getFans" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			a.`account` AS account,
+			a.`fans_account` AS fans_account,
+			a.`id` AS id,
+			a.`create_time` AS create_time,
+			b.`display_name` AS display_name,
+			b.`avatar` AS avatar,
+			b.user_type AS userType
+		FROM
+			fans a
+		LEFT JOIN
+			login_user b
+		ON
+			a.`fans_account` = b.`login_account`
+		WHERE
+			account = #{login_account}
+		<if test="fans_account != null and fans_account !=''">
+			AND fans_account LIKE CONCAT('%',#{fans_account},'%')
+		</if>
+	</select>
+	
+	<select id="getLike" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			a.`account` AS account,
+			a.`fans_account` AS fans_account,
+			a.`id` AS id,
+			a.`create_time` AS create_time,
+			b.`display_name` AS display_name,
+			b.`avatar` AS avatar,
+			b.user_type AS userType
+		FROM
+			fans a
+		LEFT JOIN
+			login_user b
+		ON
+			a.`account` = b.`login_account`
+		WHERE
+			fans_account = #{login_account}
+		<if test="account != null and account != ''">
+			AND account LIKE  CONCAT('%',#{account},'%')
+		</if>
+	</select>
+
+	<insert id="add" parameterType="java.util.Map">
+		INSERT INTO
+			fans
+		(
+			account,
+			fans_account
+		)
+		VALUES
+		(
+			#{fans_account},
+			#{login_account}
+		)
+	</insert>
+
+	<delete id="del" parameterType="java.util.Map">
+		DELETE FROM
+			fans
+		WHERE
+			id = #{id}
+	</delete>
+
+	<select id="status" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			1
+		FROM
+			fans
+		WHERE
+			account = #{fans_account}
+		AND
+			fans_account = #{account}
+		limit 1
+	</select>
+
+	<delete id="cancel" parameterType="java.util.Map">
+		DELETE FROM
+			fans
+		WHERE
+			account = #{login_account}
+		AND
+			fans_account = #{fans_account}
+	</delete>
+
+	<select id="getFansTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			fans
+		WHERE
+			account = #{login_account}
+	</select>
+
+	<select id="getLikeTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			fans
+		WHERE
+			fans_account = #{login_account}
+	</select>
+</mapper>

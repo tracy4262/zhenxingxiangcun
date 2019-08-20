@@ -1,0 +1,1381 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.CommunalFacilitiesMapper">
+
+    <select id="findPropertyInfo" parameterType="map" resultType="map">
+        select id, property_name as propertyName, account, year_file_id as yearId,template_id as templateId
+        from reversion_perfect_property_info
+        where 1=1
+        <if test="account !=null and account!=''">
+            and account = #{account}
+        </if>
+        <if test="yearId !=null and yearId!=''">
+            and year_file_id = #{yearId}
+        </if>
+        <if test="parentId !=null and parentId!=''">
+            and dict_id = #{parentId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+    </select>
+
+     <select id="findTrafficOfUserInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        traffic_of_user_name as trafficOfUserName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,
+        template_id as templateId,
+        site_info as siteInfo
+        from reversion_traffic_of_user_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+         <if test="templateId !=null and templateId!=''">
+             and template_id = #{templateId}
+         </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateTrafficOfUserInfoName" parameterType="map">
+        update reversion_traffic_of_user_info set traffic_of_user_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveTrafficOfUserInfo" parameterType="map">
+        replace into reversion_traffic_of_user_info(
+            id,
+             user_id,
+             year_id,
+             traffic_of_user_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time,
+             site_info
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{trafficOfUserName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now(),
+              #{siteInfo}
+
+        );
+    </insert>
+
+    <delete id="deleteTrafficOfUserInfo" parameterType="map">
+        delete from reversion_traffic_of_user_info where id = #{id}
+    </delete>
+
+    <select id="findTrafficInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        traffic_name as trafficName,
+        start_site as startSite,
+        key_site as keySite,
+        important_site as importantSite,
+        detail,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_traffic_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateTrafficInfoName" parameterType="map">
+        update reversion_traffic_info set traffic_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveTrafficInfo" parameterType="map">
+        replace into reversion_traffic_info(
+            id,
+             user_id,
+             year_id,
+             traffic_name,
+             start_site,
+             key_site,
+             important_site,
+             detail,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{trafficName},
+              #{startSite},
+              #{keySite},
+              #{importantSite},
+              #{detail},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteTrafficInfo" parameterType="map">
+        delete from reversion_traffic_info where id = #{id}
+    </delete>
+
+
+
+
+    <select id="findCommunicationFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        communication_facilities_info_name as communicationFacilitiesInfoName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        user_number as userNumber,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_communication_facilities_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId!=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateCommunicationFacilitiesInfoName" parameterType="map">
+        update reversion_communication_facilities_info set communication_facilities_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveCommunicationFacilitiesInfo" parameterType="map">
+        replace into reversion_communication_facilities_info(
+            id,
+             user_id,
+             year_id,
+             communication_facilities_info_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             user_number,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{communicationFacilitiesInfoName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{userNumber},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteCommunicationFacilitiesInfo" parameterType="map">
+        delete from reversion_communication_facilities_info where id = #{id}
+    </delete>
+
+
+    <select id="findTextPreview" parameterType="map" resultType="map">
+        select
+
+        id,user_id as account,text_preview as textPreview,is_complete as isComplete,sys_dict_id as parentId,year_id as yearId,template_id as templateId,
+
+        DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time
+
+        from reversion_member_text_preview  where 1=1
+
+
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="parentId !=null and parentId!=''">
+            and sys_dict_id = #{parentId}
+        </if>
+
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order by create_time desc
+
+    </select>
+
+
+    <select id="findTextPreviewList" parameterType="map" resultType="map">
+        select
+
+        id,user_id as account,text_preview as textPreview,is_complete as isComplete,sys_dict_id as parentId,year_id as yearId,template_id as templateId,
+
+        DATE_FORMAT(create_time,"%Y-%m-%d %T")as create_time
+
+        from reversion_member_text_preview  where 1=1
+
+
+        <if test="account !=null and account!=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="parentId !=null and parentId!=''">
+            and sys_dict_id = #{parentId}
+        </if>
+
+        <if test="yearId !=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order by create_time desc
+
+    </select>
+
+    <insert id="saveTextPreview" parameterType="map">
+          replace into reversion_member_text_preview (
+                id,
+                user_id,
+                text_preview,
+                is_complete,
+                sys_dict_id,
+                year_id,
+                template_id,
+                create_time
+          )values (
+                #{id},
+                #{account},
+                #{textPreview},
+                #{isComplete},
+                #{parentId},
+                #{yearId},
+                #{templateId},
+                now()
+          )
+    </insert>
+
+
+
+    <select id="findTapWaternFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        tap_watern_facilities_info_name as tapWaternFacilitiesInfoName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        user_number as userNumber,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_tap_watern_facilities_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateTapWaternFacilitiesInfoName" parameterType="map">
+        update reversion_tap_watern_facilities_info set tap_watern_facilities_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveTapWaternFacilitiesInfo" parameterType="map">
+        replace into reversion_tap_watern_facilities_info(
+            id,
+             user_id,
+             year_id,
+             tap_watern_facilities_info_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             user_number,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{tapWaternFacilitiesInfoName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{userNumber},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteTapWaternFacilitiesInfo" parameterType="map">
+        delete from reversion_tap_watern_facilities_info where id = #{id}
+    </delete>
+
+
+
+    <select id="findWaterConservancyFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        water_conservancy_facilities_info_name as waterConservancyFacilitiesInfoName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_water_conservancy_facilities_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateWaterConservancyFacilitiesInfoName" parameterType="map">
+        update reversion_water_conservancy_facilities_info set water_conservancy_facilities_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveWaterConservancyFacilitiesInfo" parameterType="map">
+        replace into reversion_water_conservancy_facilities_info(
+            id,
+             user_id,
+             year_id,
+             water_conservancy_facilities_info_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{waterConservancyFacilitiesInfoName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteWaterConservancyFacilitiesInfo" parameterType="map">
+        delete from reversion_water_conservancy_facilities_info where id = #{id}
+    </delete>
+
+
+
+    <select id="findGarbageDisposaFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        garbage_disposa_facilities_info_name as garbageDisposaFacilitiesInfoName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_garbage_disposal_facilities_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateGarbageDisposaFacilitiesInfoName" parameterType="map">
+        update reversion_garbage_disposal_facilities_info set garbage_disposa_facilities_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveGarbageDisposaFacilitiesInfo" parameterType="map">
+        replace into reversion_garbage_disposal_facilities_info(
+            id,
+             user_id,
+             year_id,
+             garbage_disposa_facilities_info_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{garbageDisposaFacilitiesInfoName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteGarbageDisposaFacilitiesInfo" parameterType="map">
+        delete from reversion_garbage_disposal_facilities_info where id = #{id}
+    </delete>
+
+
+
+
+    <select id="findSecurityFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        security_facilities_info_name as securityFacilitiesInfoName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_security_facilities_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateSecurityFacilitiesInfoName" parameterType="map">
+        update reversion_security_facilities_info set security_facilities_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveSecurityFacilitiesInfo" parameterType="map">
+        replace into reversion_security_facilities_info(
+            id,
+             user_id,
+             year_id,
+             security_facilities_info_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{securityFacilitiesInfoName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteSecurityFacilitiesInfo" parameterType="map">
+        delete from reversion_security_facilities_info where id = #{id}
+    </delete>
+
+
+    <select id="findEducationFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        education_facilities_info_name as educationFacilitiesInfoName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_education_facilities_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateEducationFacilitiesInfoName" parameterType="map">
+        update reversion_education_facilities_info set education_facilities_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveEducationFacilitiesInfo" parameterType="map">
+        replace into reversion_education_facilities_info(
+            id,
+             user_id,
+             year_id,
+             education_facilities_info_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{educationFacilitiesInfoName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteEducationFacilitiesInfo" parameterType="map">
+        delete from reversion_education_facilities_info where id = #{id}
+    </delete>
+
+
+
+    <select id="findCultureFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        culture_facilities_info_name as cultureFacilitiesInfoName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_culture_facilities_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateCultureFacilitiesInfoName" parameterType="map">
+        update reversion_culture_facilities_info set culture_facilities_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveCultureFacilitiesInfo" parameterType="map">
+        replace into reversion_culture_facilities_info(
+            id,
+             user_id,
+             year_id,
+             culture_facilities_info_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{cultureFacilitiesInfoName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteCultureFacilitiesInfo" parameterType="map">
+        delete from reversion_culture_facilities_info where id = #{id}
+    </delete>
+
+
+
+
+    <select id="findSportsFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        sports_facilities_info_name as sportsFacilitiesInfoName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_sports_facilities_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateSportsFacilitiesInfoName" parameterType="map">
+        update reversion_sports_facilities_info set sports_facilities_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveSportsFacilitiesInfo" parameterType="map">
+        replace into reversion_sports_facilities_info(
+            id,
+             user_id,
+             year_id,
+             sports_facilities_info_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{sportsFacilitiesInfoName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteSportsFacilitiesInfo" parameterType="map">
+        delete from reversion_sports_facilities_info where id = #{id}
+    </delete>
+
+
+    <select id="findOldAgeWelfareFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        old_age_welfare_facilities_info_name as oldAgeWelfareFacilitiesInfoName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_old_age_welfare_facilities_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateOldAgeWelfareFacilitiesInfoName" parameterType="map">
+        update reversion_old_age_welfare_facilities_info set old_age_welfare_facilities_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveOldAgeWelfareFacilitiesInfo" parameterType="map">
+        replace into reversion_old_age_welfare_facilities_info(
+            id,
+             user_id,
+             year_id,
+             old_age_welfare_facilities_info_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{oldAgeWelfareFacilitiesInfoName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteOldAgeWelfareFacilitiesInfo" parameterType="map">
+        delete from reversion_old_age_welfare_facilities_info where id = #{id}
+    </delete>
+
+
+    <select id="findOtherFacilitiesInfo" parameterType="map" resultType="map">
+        select
+        id,
+        user_id as account,
+        year_id as yearId,
+        other_facilities_info_name as otherFacilitiesInfoName,
+        common_name as commonName,
+        number_no as no,
+        name,
+        capacity,
+        unit,
+        investment,
+        contact,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,template_id as templateId
+
+        from reversion_other_facilities_info
+
+        where 1=1
+        <if test="account!=null and account !=''">
+            and user_id = #{account}
+        </if>
+
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+
+        order  by create_time desc
+
+    </select>
+
+    <update id="updateOtherFacilitiesInfoName" parameterType="map">
+        update reversion_other_facilities_info set other_facilities_info_name = #{propertyName} where user_id = #{account} and year_id = #{yearId}
+    </update>
+
+    <insert id="saveOtherFacilitiesInfo" parameterType="map">
+        replace into reversion_other_facilities_info(
+            id,
+             user_id,
+             year_id,
+             other_facilities_info_name,
+             common_name,
+             number_no,
+             name,
+             capacity,
+             unit,
+             investment,
+             contact,
+             location,
+             `group`,
+             number,
+             description,
+             longitude,
+             latitude,
+             pictureList,
+             status,
+             template_id,
+             create_time
+
+        ) values (
+              #{id},
+              #{account},
+              #{yearId},
+              #{otherFacilitiesInfoName},
+              #{commonName},
+              #{no},
+              #{name},
+              #{capacity},
+              #{unit},
+              #{investment},
+              #{contact},
+              #{location},
+              #{group},
+              #{number},
+              #{description},
+              #{longitude},
+              #{latitude},
+              #{pictureList},
+              #{status},
+              #{templateId},
+              now()
+
+        );
+    </insert>
+
+    <delete id="deleteOtherFacilitiesInfo" parameterType="map">
+        delete from reversion_other_facilities_info where id = #{id}
+    </delete>
+
+    <insert id="saveIotDeviceInfo" parameterType="map">
+        replace into reversion_iot_device_info(
+        id,
+        account,
+        year_id,
+        common_name,
+        name,
+        no,
+        capacity,
+        investment,
+        contact,
+        address,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        template_id,
+        create_time
+        ) values (
+        #{id},
+        #{account},
+        #{yearId},
+        #{commonName},
+        #{name},
+        #{no},
+        #{capacity},
+        #{investment},
+        #{contact},
+        #{address},
+        #{location},
+        #{group},
+        #{number},
+        #{description},
+        #{longitude},
+        #{latitude},
+        #{pictureList},
+        #{status},
+        #{templateId},
+        now()
+        )
+    </insert>
+
+    <select id="findIotDeviceInfo" parameterType="map" resultType="map">
+        select
+        id,
+        account,
+        year_id as yearId,
+        common_name as commonName,
+        name,
+        no,
+        capacity,
+        investment,
+        contact,
+        address,
+        location,
+        `group`,
+        number,
+        description,
+        longitude,
+        latitude,
+        pictureList,
+        status,
+        create_time,
+        template_id as templateId
+        from reversion_iot_device_info
+        where 1=1
+        <if test="account!=null and account !=''">
+            and account = #{account}
+        </if>
+        <if test="yearId!=null and yearId!=''">
+            and year_id = #{yearId}
+        </if>
+        <if test="templateId !=null and templateId!=''">
+            and template_id = #{templateId}
+        </if>
+        order by create_time desc
+    </select>
+
+    <delete id="deleteIotDeviceInfo" parameterType="map">
+        delete from reversion_iot_device_info where id = #{id}
+    </delete>
+
+</mapper>

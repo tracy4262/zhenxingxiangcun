@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryEnvironmentDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryEnvironment"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryEnvironment">
+        select
+               p.id,
+        p.environment as name,
+        p.parent_id as pid,
+        p.level,
+        p.value,
+        p.remark,
+        p.create_time as createTime
+        from growing_environment p left join growing_environment i on p.parent_id = i.id
+        where 1=1
+        <if test="name!=null and name!=''">
+            and p.environment like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+        order by p.create_time desc
+    </select>
+
+    <insert id="saveEnvironment" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryEnvironment">
+        insert into growing_environment(
+            id,
+            environment,
+            parent_id,
+            level,
+            value,
+            remark,
+            create_time
+        )values (
+                    #{id},
+                    #{name},
+                    #{pid},
+                    #{level},
+                    #{value},
+                    #{remark},
+                    now()
+                );
+    </insert>
+
+    <update id="updateEnvironment" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryEnvironment">
+        update growing_environment
+        set
+            environment = #{name},
+            value = #{value},
+            remark = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEnvironment" parameterType="java.lang.String">
+        delete from growing_environment where id= #{id}
+    </delete>
+
+</mapper>

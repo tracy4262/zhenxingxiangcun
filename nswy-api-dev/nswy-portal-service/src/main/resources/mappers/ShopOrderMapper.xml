@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.portal.mapper.ShopOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.portal.model.ShopOrder" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="sell_account" property="sellAccount" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="logistic_amount" property="logisticAmount" jdbcType="DECIMAL" />
+    <result column="invoice_type" property="invoiceType" jdbcType="INTEGER" />
+    <result column="invoice_mode" property="invoiceMode" jdbcType="INTEGER" />
+    <result column="invoice_info" property="invoiceInfo" jdbcType="VARCHAR" />
+    <result column="address_info" property="addressInfo" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="sell_status" property="sellStatus" jdbcType="INTEGER" />
+    <result column="has_complaint" property="hasComplaint" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+
+  <resultMap id="ListResultMap" type="com.ovit.nswy.portal.model.response.ShopOrderDTO" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="sell_account" property="sellAccount" jdbcType="VARCHAR" />
+    <result column="seller" property="seller" jdbcType="VARCHAR" />
+    <result column="buyer" property="buyer" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="logistic_amount" property="logisticAmount" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="sell_status" property="sellStatus" jdbcType="INTEGER" />
+    <result column="has_complaint" property="hasComplaint" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="ListBaseResultMap" type="com.ovit.nswy.portal.model.response.ShopOrderDTO" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="sell_account" property="sellAccount" jdbcType="VARCHAR" />
+    <result column="seller" property="seller" jdbcType="VARCHAR" />
+    <result column="buyer" property="buyer" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="logistic_amount" property="logisticAmount" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="sell_status" property="sellStatus" jdbcType="INTEGER" />
+    <result column="has_complaint" property="hasComplaint" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <collection property="shopProducts" column="order_code"   select="com.ovit.nswy.portal.mapper.ShopOrderProductMapper.findExtendByOrderCode" >
+    </collection>
+  </resultMap>
+
+  <resultMap id="DetailResultMap" type="com.ovit.nswy.portal.model.response.ShopOrderDetailDTO" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="sell_account" property="sellAccount" jdbcType="VARCHAR" />
+    <result column="seller" property="seller" jdbcType="VARCHAR" />
+    <result column="buyer" property="buyer" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="logistic_amount" property="logisticAmount" jdbcType="DECIMAL" />
+    <result column="invoice_type" property="invoiceType" jdbcType="INTEGER" />
+    <result column="invoice_mode" property="invoiceMode" jdbcType="INTEGER" />
+    <result column="invoice_info" property="invoiceInfo" jdbcType="VARCHAR" />
+    <result column="address_info" property="addressInfo" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="sell_status" property="sellStatus" jdbcType="INTEGER" />
+    <result column="has_complaint" property="hasComplaint" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <collection property="shopProducts" column="order_code"   select="com.ovit.nswy.portal.mapper.ShopOrderProductMapper.findByOrderCode" >
+    </collection>
+  </resultMap>
+
+  <select id="findByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT t1.*
+    FROM  shop_order t1
+    WHERE
+    t1.order_code =  #{code}
+  </select>
+
+  <select id="findAllBuyList" resultMap="ListBaseResultMap" parameterType="map">
+    SELECT t1.*,
+    su.display_name as seller
+    FROM  shop_order t1
+    join login_user su on t1.sell_account=su.login_account
+    WHERE  t1.account =  #{account}
+    <if test="status !='' and status!=null">
+      and t1.status = #{status}
+    </if>
+    <if test="inStatus!=null">
+      and t1.status in
+      <foreach collection="inStatus" index="index" item="item" open="(" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="sellStatus !='' and sellStatus!=null">
+      and t1.sell_status = #{sellStatus}
+    </if>
+    <if test="seller !='' and seller!=null">
+      and su.display_name =  #{seller,jdbcType=VARCHAR}
+    </if>
+    <if test="startDate != null and startDate != '' ">
+      AND t1.create_time >= #{startDate,jdbcType=VARCHAR}
+    </if>
+    <if test="endDate != null and endDate != '' ">
+      AND t1.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+
+  <select id="findAllSellList" resultMap="ListBaseResultMap" parameterType="map">
+    SELECT t1.*,
+    bu.display_name as buyer
+    FROM  shop_order t1
+    join login_user bu on t1.account=bu.login_account
+    WHERE  t1.sell_account =  #{account}
+    <if test="status !='' and status!=null">
+      and t1.status = #{status}
+    </if>
+    <if test="inStatus!=null">
+      and t1.status in
+      <foreach collection="inStatus" index="index" item="item" open="(" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="sellStatus !='' and sellStatus!=null">
+      and t1.sell_status = #{sellStatus}
+    </if>
+    <if test="buyer !='' and buyer!=null">
+      and bu.display_name =  #{buyer,jdbcType=VARCHAR}
+    </if>
+    <if test="startDate != null and startDate != '' ">
+      AND t1.create_time >= #{startDate,jdbcType=VARCHAR}
+    </if>
+    <if test="endDate != null and endDate != '' ">
+      AND t1.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+
+  <select id="findBuyList" resultMap="ListResultMap" parameterType="map">
+     SELECT distinct t1.*,
+      su.display_name as seller
+    FROM  shop_order t1
+    join login_user su on t1.sell_account=su.login_account
+    join shop_order_product t2 on t1.order_code=t2.order_code_id
+    WHERE  t1.account =  #{account}
+    <if test="productName !='' and productName!=null">
+      and t2.product_name like CONCAT('%',#{productName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="status !='' and status!=null">
+      and t1.status = #{status}
+    </if>
+    <if test="inStatus!=null">
+      and t1.status in
+      <foreach collection="inStatus" index="index" item="item" open="(" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="sellStatus !='' and sellStatus!=null">
+      and t1.sell_status = #{sellStatus}
+    </if>
+    <if test="seller !='' and seller!=null">
+      and su.display_name =  #{buyer,jdbcType=VARCHAR}
+    </if>
+    <if test="startDate != null and startDate != '' ">
+      AND t1.create_time >= #{startDate,jdbcType=VARCHAR}
+    </if>
+    <if test="endDate != null and endDate != '' ">
+      AND t1.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+
+
+  <select id="findSellList" resultMap="ListResultMap" parameterType="map">
+    SELECT distinct t1.*,
+    bu.display_name as buyer
+    FROM  shop_order t1
+    join login_user bu on t1.account=bu.login_account
+    join shop_order_product t2 on t1.order_code=t2.order_code_id
+    WHERE  t1.sell_account =  #{account}
+    <if test="productName !='' and productName!=null">
+      and t2.product_name like CONCAT('%',#{productName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="status !='' and status!=null">
+      and t1.status = #{status}
+    </if>
+    <if test="inStatus!=null">
+      and t1.status in
+      <foreach collection="inStatus" index="index" item="item" open="(" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="sellStatus !='' and sellStatus!=null">
+      and t1.sell_status = #{sellStatus}
+    </if>
+    <if test="buyer !='' and buyer!=null">
+      and bu.display_name =  #{seller,jdbcType=VARCHAR}
+    </if>
+    <if test="startDate != null and startDate != '' ">
+      AND t1.create_time >= #{startDate,jdbcType=VARCHAR}
+    </if>
+    <if test="endDate != null and endDate != '' ">
+      AND t1.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+    </if>
+    ORDER BY t1.create_time DESC
+  </select>
+
+  <select id="findDetailById" resultMap="DetailResultMap" parameterType="java.lang.Integer">
+  SELECT t1.*
+   ,t2.display_name as seller,t3.display_name as buyer
+  FROM  shop_order t1
+  JOIN login_user t2 on t1.sell_account=t2.login_account
+  JOIN login_user t3 on t1.account=t3.login_account
+  WHERE
+  t1.id =  #{id}
+</select>
+
+  <select id="findDetailByCode" resultMap="DetailResultMap" parameterType="java.lang.String">
+  SELECT t1.*
+  ,t2.display_name as seller,t3.display_name as buyer
+  FROM  shop_order t1
+  JOIN login_user t2 on t1.sell_account=t2.login_account
+  JOIN login_user t3 on t1.account=t3.login_account
+  WHERE
+  t1.order_code =  #{code}
+</select>
+
+  <select id="findUserId" resultType="java.lang.String" parameterType="java.lang.String">
+    SELECT  nswy_id_model
+    from network_info
+    where account = #{account,jdbcType=VARCHAR}
+  </select>
+
+  <select id="findOrderCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT  count(id) as ncount
+    from shop_order t1
+    where t1.order_code = #{code,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateState" parameterType="java.util.Map">
+    update shop_order
+    set status = #{state}
+    where order_code =  #{code,jdbcType=VARCHAR}
+  </update>
+  <update id="updateSellState" parameterType="java.util.Map">
+    update shop_order
+    set sell_status = #{state}
+    where order_code =  #{code,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateComplaintState" parameterType="java.lang.String">
+  update shop_order
+  set has_complaint = 1
+  where order_code =  #{code,jdbcType=VARCHAR}
+</update>
+
+  <update id="ClearShopCard" parameterType="java.util.Map">
+    delete sc FROM shop_card sc
+   join shop_order_product op on sc.commodity_type_info_id = op.commodity_type_info_id
+    where op.order_code_id = #{code,jdbcType=VARCHAR} and sc.account=#{account,jdbcType=VARCHAR}
+  </update>
+
+  <update id="RaiseProductVbep" parameterType="java.lang.String">
+    UPDATE shop_order_product op, shop_commodity_supply_info t4
+    SET t4.product_vbep = t4.product_vbep - op.number
+    WHERE t4.commodity_type_info_id = op.commodity_type_info_id
+    AND op.order_code_id =  #{code,jdbcType=VARCHAR}
+  </update>
+
+  <update id="ReduceProductVbep" parameterType="java.lang.String">
+  UPDATE shop_order_product op, shop_commodity_supply_info t4
+  SET t4.product_vbep = t4.product_vbep + op.number
+  WHERE t4.commodity_type_info_id = op.commodity_type_info_id
+  AND op.order_code_id =  #{code,jdbcType=VARCHAR}
+  </update>
+
+  <update id="UndercarriageProduct" parameterType="java.lang.String">
+   UPDATE shop_order_product op,shop_commodity_info t1, shop_commodity_supply_info t4
+   SET t1.storage_status = '2'
+   WHERE t1.commodity_type_info_id=t4.commodity_type_info_id
+   AND t4.commodity_type_info_id = op.commodity_type_info_id
+   AND t4.product_vbep &lt;t4.product_volume
+   AND op.order_code_id =  #{code,jdbcType=VARCHAR}
+</update>
+</mapper>

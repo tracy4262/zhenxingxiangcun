@@ -1,0 +1,481 @@
+
+.wrapper,
+.layouts{
+    h1,
+    .h1 {
+        font-size:$font-size + 24;
+    }
+
+    h2,
+    .h2 {
+        font-size: $font-size + 18;
+    }
+
+    h3,
+    .h3 {
+        font-size:$font-size + 12;
+    }
+
+    h4,
+    .h4 {
+        font-size: $font-size + 6;
+    }
+
+    h5,
+    .h5 {
+        font-size: $font-size + 4;
+    }
+
+    h6,
+    .h6 {
+        font-size: $font-size;
+    }
+
+}
+.layouts{
+    width: 1200px;
+    margin: 0 auto;
+}
+
+// .min-nav{
+//     background: rgba(255,255,255,0.87);
+//     .item{
+//         font-size: 14px;
+//         color: #4A4A4A;
+//         padding:10px 15px;
+//         text-align: center;
+//         &.on,
+//         &:hover{
+//             color: #fff;
+//             background: #00c587;
+//         }
+//         &:hover{
+//             .sub{
+//                 display: block;
+//             }
+//         }
+//         .sub{
+//             display: none;
+//             position: absolute;
+//             top:0;
+//             background: #fff;
+//             padding:15px;
+//             overflow: auto;
+//         }
+//         .sub-class,
+//         .sub-link{
+//             display: inline-block;
+//             &:hover{
+//                 color:  #4fac77;
+//             }
+            
+//         }
+
+//         .sub-class{
+//             padding:4px 10px;
+//             color: #646464;
+//         }
+//         .sub-link{
+//             padding:0 10px;
+//             border:1px solid #E5E5E5;
+//             border-top: 0;
+//             border-bottom: 0;
+//             color: #8D8D8D;
+//             margin:0 -1px 10px 0;
+//         }
+//     }
+//     .shop-logo{
+//         margin: -1px;
+//         display: block;
+//         height: 84px;
+//         border: 1px solid #ddd;
+//         img{
+//             width: 100%;
+//             height: 100%;
+//         }
+
+//     }
+// }
+
+// .auction-bannner{
+//     .ivu-carousel-item{
+//         position: relative;
+//     }
+//     .tit{
+//         position: absolute;
+//         bottom: 0;
+//         left: 0;
+//         right: 0;
+//         padding: 10px;
+//         background: #4A4A4A;
+//         color: #fff;
+//     }
+//     .item{
+//         font-size:14px;
+//     }
+// }
+// .goods-list{
+//     // margin-top: 50px;
+//     >.hd{
+//         .tit{
+//             padding:5px;
+//             border-bottom:2px solid #D8D8D8;
+//             font-size: 20px;
+//         }
+//     }
+//     .fliter{
+//         background: rgba(241,241,241,0.51);
+//         border: 1px solid rgba(218,218,218,0.39);
+//     }
+
+//     .goods{
+//         margin: 0 10px;
+//         color: #4a4a4a;
+//         display: block;
+//         box-shadow: none;
+//         overflow: hidden;
+//         transition:box-shadow .2s $ease-in-sine;
+//         &:hover{
+//             box-shadow: 0 0 0 2px #00c587;
+//         }
+//         .hd{
+//             background:#00c587;
+//             padding:10px;
+//             color:#fff;
+//             .item{
+//                 background: rgba(21,46,32,0.29);
+//                 border-radius: 4px;
+//                 padding:3px 5px;
+//                 margin:0 2px;
+//                 font-size:16px;
+//             }
+//         }
+//         .bd,.info{
+//             border-left: 1px solid #E8E8E8;
+//             border-right: 1px solid #E8E8E8;
+//         }
+//         .info{
+//             span{
+//                 display:inline-block;
+//                 vertical-align: middle;
+//             }
+            
+//         }
+//         .bd{
+//             height:210px;
+//             overflow:hidden;
+//             img{
+//                 display:block;
+//                 height:100%;
+//                 max-width:100%;
+//                 margin: auto;
+//                 transition:transform .2s $ease-in-sine;
+//             }
+//             &:hover{
+//                 img{
+//                     transform:scale(1.1);
+//                 }
+//             }
+//         }
+//         .fd{
+//             .ivu-btn{
+//                 font-size:16px;
+//                 border-radius:0;
+//             }
+//         }
+//     }
+// }
+// .hot-auction{
+//     .goods{
+//         height: 383px;
+//     }
+    
+// }
+// .group-buy-list{
+//     .fd{
+//         border:1px solid #00c587;
+//         .ivu-btn{
+//             height: 51.6px;
+//         }
+//     }
+
+// }
+// .fix-price-product{
+//     .goods{
+//         border-style: solid;
+//         border-width: 1px;
+//         border-color: #e8e8e8 transparent;
+//     }
+// }
+
+
+
+// //
+// .mall-news{
+//     li{
+//         font-size: 14px;
+//         position: relative;
+//         .tit{
+//             display: block;
+//             padding: 8px 10px;
+//             color:#4A4A4A;
+//             &:hover{
+//                 color: #00c587;
+//             }
+//         }
+//     }
+//     &.has-num{
+//         li{
+//             &:nth-child(1){
+//                 .num{
+//                     background: rgba(255,0,54,0.66);
+//                 }
+//             }
+//             &:nth-child(2){
+//                 .num{
+//                     background: rgba(255,121,33,0.74);
+//                 }
+//             }
+//             &:nth-child(3){
+//                 .num{
+//                     background: #4B8EFF;
+//                 }
+//             }
+//             .num{
+//                 color: #fff;
+//                 border-radius: 3px;
+//                 background: #9b9b9b;
+//                 width: 15px;
+//                 height: 15px;
+//                 font-size: 12px;
+//                 text-align: center;
+//                 display: inline-block;
+//                 line-height: 16px;
+//                 vertical-align: middle;
+
+//             }
+//         }
+//     }
+//     &.has-dot{
+//         li{
+//             &:before{
+//                 content:'';
+//                 position: absolute;
+//                 width: 4px;
+//                 height: 4px;
+//                 border-radius: 100%;
+//                 background: #CCCCCC;
+//                 top: 76%;
+//                 left:0;
+//                 transform: translateY(-50%)
+//             }
+            
+//         }
+//     }
+// }
+// .agro-news{
+//     li{
+//         // &:nth-child(1),
+//         // &:nth-child(6){
+//         //     font-size: 16px;
+//         //     font-weight: 700;
+//         // }
+//     }
+// }
+// .read-rate{
+//     li{
+//         padding: 7px 10px;
+//         .tit{
+//             padding: 0 5px;
+//         }
+//     }
+// }
+// .hot-classify{
+//     position:relative;;
+//     .min-nav{
+//         position: relative;
+//         border: 1px solid #ddd;
+//         padding: 30px 0;
+//         height: 460px;
+//         .item{
+//             width: auto;
+//         }
+//         .sub-item{
+//             left: 198px;
+//             width: 1001px;
+//             top: -1px;
+//             padding: 0;
+//             z-index: 99;
+//             height: 443px;
+//             border: 1px solid #efefef;
+//         }
+//     }
+// }
+// .hot-classify,
+// .serve-classify{
+//     .classify-search{
+//         position:absolute;
+//         top:0;
+//         left:0;
+//         right:0;
+//         bottom:0;
+//         .ivu-select-input{
+//             padding-left: 25px;
+//             height: 36px;
+//         }
+//         .ivu-select-dropdown{
+//             max-height: 100%;
+//             margin: 1px 0 0;
+//         }
+//         .ivu-select-visible .ivu-select-selection{
+//             box-shadow:0 0 5px 1px rgba(0,0,0,.2)!important;
+//         }
+//         .ivu-select-selection{
+//             height: 36px;
+//             box-shadow: 0 0 1px 1px rgba(0,0,0,.2);
+//             &,&:hover{
+//                 // box-shadow: none;
+//                 border: none;
+//                 border-radius:0;
+//             }
+//         }
+//     }
+
+// }
+// .serve-classify{
+//     .list{
+//         a{
+//             font-size: 14px;
+//             color: #999;
+//             text-align: center;
+//             display: block;
+//             padding-top:18px;
+//             &:hover{
+//                 color: #00c587;
+//             }
+//         }
+//     }
+// }
+// .recom-list{
+//     .link{
+//         color: #4a4a4a;
+//         font-size: 14px;
+//         display: inline-block;
+//         margin: 2px 5px 0;
+//         &:hover{
+//             color: #00c587;
+//         }
+
+//     }
+//     .item{
+//         position: relative;
+//         border: 1px solid #efefef;
+//         border-right: none;
+//         margin-bottom: -1px;
+//         overflow: hidden;
+//         a{
+//             color: #333;
+//         }
+//         &:hover{
+//             img{
+//                 transform: translateX(0)
+//             }
+//         }
+//         img{
+//             max-width: 100%;
+//             transform: translateX(20px);
+//             transition:transform .2s $ease-in-sine;
+//         }
+//     }
+//     .info{
+//         position: absolute;
+//         z-index:2;
+//         top: 20px;
+//         left: 20px;
+//     }
+// }
+// .recom-list,
+// .info-list{
+//     .link{
+//         color: #4a4a4a;
+//         font-size: 14px;
+//         display: inline-block;
+//         margin: 2px 5px 0;
+//         &:hover{
+//             color: #00c587;
+//         }
+
+//     }
+// }
+// .slick{
+//     margin-top: 20px;
+//     overflow: hidden;
+//     img{
+//         padding:5px;
+//     }
+// }
+
+// .tab-detail{
+//     >.ivu-tabs-bar{
+
+//         .ivu-tabs-nav-scroll{
+//             background: #f8f8f8;
+//             border-bottom: 2px solid #00c587;
+//             .ivu-tabs-tab{
+//                 padding:10px 16px;
+//                 &-active,&:hover{
+//                     background: #00c587 ;
+//                     color:#fff !important;
+
+//                 }
+//             }
+//         }
+//     }
+// }
+// .detail-info{
+//     .vui-clocker-tpl{
+//         position: absolute;
+//         top: 82px;
+//         right: 168px;
+//         color: #fff;
+//         .item{
+//             font-size: 12px;
+//             background: rgba(21,46,32,0.29);
+//             border-radius: 4px;
+//             padding:3px;
+//         }
+//     }
+// }
+
+// .land-info{
+//     .ivu-table-header{
+//         display: none;
+//     }
+// }
+
+.album{
+    .wrap{
+        display: block;
+        position: relative;
+        padding: 1px;
+        border: 1px solid #ddd;
+        .ivu-dropdown{
+            border:1px solid #ddd;
+            background:#fff;
+            position:absolute;
+            top:10px;
+            right:10px;
+        }
+        .photo-num{
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            background: rgba(0,0,0,.5);
+            color: #fff;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        img{height:100%}
+    }
+}

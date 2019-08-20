@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.PrivacyInfoMapper">
+
+    <select id="findPrivacyInfo" resultType="java.util.Map" parameterType="java.util.Map" >
+       SELECT
+            p.id,
+            p.account,
+            p.privacy_information_name,
+            p.image,
+            p.`name`,
+            p.name_model,
+            p.name_status,
+            p.sex,
+            p.sex_model,
+            p.sex_status,
+            p.nation,
+            p.nation_model,
+            p.nation_status,
+            p.birthday,
+            p.birthday_model,
+            p.birthday_status,
+            p.profession,
+            p.profession_model,
+            p.profession_status,
+            p.position,
+            p.position_model,
+            p.position_status,
+            p.excel_species,
+            p.excel_species_model,
+            p.excel_species_status,
+            p.phone,
+            p.phone_model,
+            p.phone_status,
+            p.resident,
+            p.resident_model,
+            p.resident_status,
+            p.coordinate_position,
+            p.coordinate_position_model,
+            p.coordinate_position_status,
+            p.postal_code,
+            p.postal_code_model,
+            p.postal_code_status,
+            p.telephone,
+            p.telephone_model,
+            p.telephone_status,
+            p.house_number,
+            p.house_number_model,
+            p.house_number_status,
+            p.update_time,
+            p.addr_Detail,
+            p.addr_Detail_model,
+            p.addr_Detail_status,
+            p.status,
+            p.year_id,
+            p.template_id as templateId
+
+        FROM privacy_info p
+
+        where p.account = #{user_id}
+
+        <if test="year_id!='' and year_id!=null">
+            and p.year_id = #{year_id}
+        </if>
+        <if test="templateId!='' and templateId!=null">
+            and p.template_id = #{templateId}
+        </if>
+
+    </select>
+
+
+     <insert id="insertPrivacyInfo" parameterType="java.util.Map" >
+        replace into privacy_info(
+        id,
+        account,
+        privacy_information_name,
+        image,
+        `name`,
+        name_model,
+        name_status,
+        sex,
+        sex_model,
+        sex_status,
+        nation,
+        nation_model,
+        nation_status,
+        birthday,
+        birthday_model,
+        birthday_status,
+        profession,
+        profession_model,
+        profession_status,
+        `position`,
+        position_model,
+        position_status,
+        excel_species,
+        excel_species_model,
+        excel_species_status,
+        phone,
+        phone_model,
+        phone_status,
+        resident,
+        resident_model,
+        resident_status,
+        coordinate_position,
+        coordinate_position_model,
+        coordinate_position_status,
+        postal_code,
+        postal_code_model,
+        postal_code_status,
+        telephone,
+        telephone_model,
+        telephone_status,
+        house_number,
+        house_number_model,
+        house_number_status,
+        addr_Detail,
+        addr_Detail_model,
+        addr_Detail_status,
+        status,
+        year_id,
+        template_id
+        )
+        values (
+        #{id},
+        #{user_id},
+        #{privacy_information_name},
+        #{avatar},
+        #{userName.name},
+        #{userName.model},
+        #{userName.status},
+        #{sex.name},
+        #{sex.model},
+        #{sex.status},
+        #{ethnicGroup.name},
+        #{ethnicGroup.model},
+        #{ethnicGroup.status},
+        #{birthday.name},
+        #{birthday.model},
+        #{birthday.status},
+        #{profession.name},
+        #{profession.model},
+        #{profession.status},
+        #{professionalTitle.name},
+        #{professionalTitle.model},
+        #{professionalTitle.status},
+        #{species.name},
+        #{species.model},
+        #{species.status},
+        #{phone.name},
+        #{phone.model},
+        #{phone.status},
+        #{addr.name},
+        #{addr.model},
+        #{addr.status},
+        #{coordinatePoint.name},
+        #{coordinatePoint.model},
+        #{coordinatePoint.status},
+        #{postalCode.name},
+        #{postalCode.model},
+        #{postalCode.status},
+        #{tel.name},
+        #{tel.model},
+        #{tel.status},
+        #{number.name},
+        #{number.model},
+        #{number.status},
+        #{addrDetail.name},
+        #{addrDetail.model},
+        #{addrDetail.status},
+        #{status},
+        #{year_id},
+        #{templateId}
+        )
+    </insert>
+
+     <update id="updateByLoginUserAvatar" parameterType="map">
+          update login_user set avatar= #{avatar}, display_name = #{userName.model} where  login_account= #{user_id}
+     </update>
+
+     <update id="updateMemberVirtual" parameterType="map">
+          update reversion_member_virtual_info set  user_abbreviation = #{userName.model},seat_phone = #{tel.model} ,phone = #{phone.model},location=#{addr.model}
+          where user_id = #{user_id}
+     </update>
+
+     <update id="updatePrivacyInfoName" parameterType="map">
+          update privacy_info set privacy_information_name = #{propertyName} where account = #{account} and year_id = #{yearId}
+     </update>
+
+
+</mapper>

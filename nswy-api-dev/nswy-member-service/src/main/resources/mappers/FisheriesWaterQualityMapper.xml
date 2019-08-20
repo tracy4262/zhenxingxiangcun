@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.FisheriesWaterQualityMapper" >
+  <select id="query" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+      fisheries_id AS fisheriesId,
+      color_sniff_taste AS colorSniffTaste,
+      ph AS ph,
+      dissolved_oxygen AS dissolvedOxygen,
+      biochemical_oxygen_demand_fresh AS biochemicalOxygenDemandFresh,
+      biochemical_oxygen_demand_sea AS biochemicalOxygenDemandSea,
+      escherichia AS escherichia,
+      mercury_fresh AS mercuryFresh,
+      mercury_sea AS mercurySea,
+      cadmium AS cadmium,
+      lead_fresh AS leadFresh,
+      lead_sea AS leadSea,
+      copper AS copper,
+      arsenic_fresh AS arsenicFresh,
+      arsenic_sea AS arsenicSea,
+      hexavalent_chromium_fresh AS hexavalentChromiumFresh,
+      hexavalent_chromium_sea AS hexavalentChromiumSea,
+      volatile_phenol AS volatilePhenol,
+      petroleum AS petroleum,
+      labile_phosphate_sea AS labilePhosphateSea
+    FROM
+      fisheries_water_quality
+    WHERE
+      product_id = #{productId}
+  </select>
+
+  <update id="update" parameterType="java.util.Map">
+      UPDATE
+        fisheries_water_quality
+      SET
+        color_sniff_taste = #{colorSniffTaste},
+        ph = #{ph},
+        dissolved_oxygen = #{dissolvedOxygen},
+        biochemical_oxygen_demand_fresh = #{biochemicalOxygenDemandFresh},
+        biochemical_oxygen_demand_sea = #{biochemicalOxygenDemandSea},
+        escherichia = #{escherichia},
+        mercury_fresh = #{mercuryFresh},
+        mercury_sea = #{mercurySea},
+        cadmium = #{cadmium},
+        lead_fresh = #{leadFresh},
+        lead_sea = #{leadSea},
+        copper = #{copper},
+        arsenic_fresh = #{arsenicFresh},
+        arsenic_sea = #{arsenicSea},
+        hexavalent_chromium_fresh = #{hexavalentChromiumFresh},
+        hexavalent_chromium_sea = #{hexavalentChromiumSea},
+        volatile_phenol = #{volatilePhenol},
+        petroleum = #{petroleum},
+        labile_phosphate_sea = #{labilePhosphateSea}
+      WHERE
+        fisheries_id = #fisheriesId}
+  </update>
+
+  <insert id="add" parameterType="java.util.Map">
+    INSERT INTO
+      fisheries_water_quality
+    (
+      fisheries_id,
+      product_id,
+      color_sniff_taste,
+      ph,
+      dissolved_oxygen,
+      biochemical_oxygen_demand_fresh,
+      biochemical_oxygen_demand_sea,
+      escherichia,
+      mercury_fresh,
+      mercury_sea,
+      cadmium,
+      lead_fresh,
+      lead_sea,
+      copper,
+      arsenic_fresh,
+      arsenic_sea,
+      hexavalent_chromium_fresh,
+      hexavalent_chromium_sea,
+      volatile_phenol,
+      petroleum,
+      labile_phosphate_sea
+    )
+    VALUES
+    (
+      UUID(),
+      #{productId},
+      #{colorSniffTaste},
+      #{ph},
+      #{dissolvedOxygen},
+      #{biochemicalOxygenDemandFresh},
+      #{biochemicalOxygenDemandSea},
+      #{escherichia},
+      #{mercuryFresh},
+      #{mercurySea},
+      #{cadmium},
+      #{leadFresh},
+      #{leadSea},
+      #{copper},
+      #{arsenicFresh},
+      #{arsenicSea},
+      #{hexavalentChromiumFresh},
+      #{hexavalentChromiumSea},
+      #{volatilePhenol},
+      #{petroleum},
+      #{labilePhosphateSea}
+    )
+  </insert>
+</mapper>

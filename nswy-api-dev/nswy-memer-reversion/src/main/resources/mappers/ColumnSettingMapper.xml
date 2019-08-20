@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.certification.mapper.ColumnSettingMapper">
+
+    <select id="findColumnSettingByAccount" parameterType="map" resultType="map">
+        select id, user_id as account, template_type as templateType, column_name as columnName,
+        column_attribution as attribution, attribution_id as attributionId,is_display as display,
+        access_authority as authority, template_id as templateId from reversion_column_settings
+        where 1=1
+        <if test="account != null and account != ''">
+            AND user_id = #{account}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+        order by `order`
+    </select>
+    
+    <delete id="deleteSettingByAccount" parameterType="map">
+        delete from reversion_column_settings where 1=1
+        <if test="account != null and account != ''">
+            AND user_id = #{account}
+        </if>
+        <if test="templateId != null and templateId != ''">
+            AND template_id = #{templateId}
+        </if>
+    </delete>
+    
+    <insert id="saveSettingInfo" parameterType="java.util.List">
+          insert into reversion_column_settings(
+          user_id,
+          template_type,
+          `column_name`,
+          column_attribution,
+          attribution_id,
+          is_display,
+          access_authority,
+          `order`,
+          template_id
+          )
+          values
+          <if test="list.size() > 0">
+              <foreach collection="list" item="item" index="index" separator=",">
+                  (#{item.account}, #{item.templateType}, #{item.columnName}, #{item.attribution}, #{item.attributionId}
+                  , #{item.display}, #{item.authority}, #{item.order}, #{item.templateId})
+              </foreach>
+          </if>
+
+    </insert>
+
+    <select id="findColumnDict" parameterType="int" resultType="map">
+        select id, label, `value`
+        from column_dict where parent_id = #{id}
+    </select>
+
+
+</mapper>

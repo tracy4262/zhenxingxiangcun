@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.FishingProductMapper">
+
+	<select id="findFishingProduct" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT distinct
+			f.id,
+			f.account,
+			f.species_id,
+			f.product_name,
+			f.product_price,
+			f.discount_price,
+			f.discount_proportion,
+			f.unit,
+			f.fishing_time,
+			f.contact_name,
+			f.contact_phone,
+			f.address,
+			f.coordinate,
+			case f.status when '0' then '休息中'
+				else '营业中' end as status,
+			f.images_detail,
+			f.image_url,
+			s.species_name,
+			f.type
+		FROM fishing_product f
+		left join fishing_species s on f.species_id = s.species_id
+
+		where 1=1
+		<if test="type!='' and type!=null">
+			and f.type = #{type}
+		</if>
+		<if test="account!='' and account!=null">
+			and f.account = #{account}
+			and s.account  = #{account}
+		</if>
+		<if test="id!='' and id!=null">
+			and f.id = #{id}
+		</if>
+		<if test="species_id !='' and species_id !=null">
+			and f.species_id = #{species_id}
+		</if>
+		<if test="status !='' and status!=null">
+			and f.status = #{status}
+		</if>
+
+		order by f.create_time desc
+
+	</select>
+
+	<insert id="insertFishingProduct" parameterType="java.util.Map">
+		insert
+		into
+		fishing_product
+		(
+			account,
+			species_id,
+			product_name,
+			product_price,
+			discount_price,
+			discount_proportion,
+			unit,
+			fishing_time,
+			contact_name,
+			contact_phone,
+			address,
+			coordinate,
+			status,
+			images_detail,
+			image_url,
+			type,
+			create_time
+		)
+		value
+		(
+		#{account},
+		#{species_id},
+		#{product_name},
+		#{product_price},
+		#{discount_price},
+		#{discount_proportion},
+		#{unit},
+		#{fishing_time},
+		#{contact_name},
+		#{contact_phone},
+		#{address},
+		#{coordinate},
+		#{status},
+		#{images_detail},
+		#{image_url},
+		#{type},
+		now()
+		)
+	</insert>
+
+	<update id="updateFishingProduct" parameterType="java.util.Map">
+		update fishing_product
+		<set>
+			<if test="species_id!=null">
+				species_id =#{species_id},
+			</if>
+			<if test="product_name!=null">
+				product_name =#{product_name},
+			</if>
+			<if test="product_price!=null">
+				product_price =#{product_price},
+			</if>
+			<if test="discount_price!=null">
+				discount_price =#{discount_price},
+			</if>
+			<if test="discount_proportion!=null">
+				discount_proportion =#{discount_proportion},
+			</if>
+			<if test="unit!=null">
+				unit =#{unit},
+			</if>
+			<if test="fishing_time!=null">
+				fishing_time =#{fishing_time},
+			</if>
+			<if test="contact_name!=null">
+				contact_name =#{contact_name},
+			</if>
+			<if test="contact_phone!=null">
+				contact_phone =#{contact_phone},
+			</if>
+			<if test="address!=null">
+				address =#{address},
+			</if>
+			<if test="coordinate!=null">
+				coordinate =#{coordinate},
+			</if>
+			<if test="status!=null">
+				status =#{status},
+			</if>
+			<if test="images_detail!=null">
+				images_detail =#{images_detail},
+			</if>
+			<if test="image_url!=null">
+				image_url =#{image_url},
+			</if>
+			update_time = now()
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteFishingProduct" parameterType="java.util.Map">
+		delete from fishing_product where id = #{id}
+	</delete>
+
+	<select id="findProductInfoBySpeciesId" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+			*
+		from fishing_product
+		where species_id = #{speciesId} AND account = #{account} AND type = #{type}
+	</select>
+
+</mapper>

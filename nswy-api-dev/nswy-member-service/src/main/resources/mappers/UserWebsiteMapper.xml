@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.UserWebsiteMapper" >
+  <resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.UserWebsite" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="banner" property="banner" jdbcType="VARCHAR" />
+    <result column="summary" property="summary" jdbcType="VARCHAR" />
+    <result column="template" property="template" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modular" property="modular" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="current_type" jdbcType="INTEGER" property="currentType" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.ovit.nswy.member.model.UserWebsite" extends="BaseResultMap" >
+    <result column="introduce" property="introduce" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, status, position, logo, banner, summary, template, create_time, modular,
+    account, current_type
+  </sql>
+  <sql id="Blob_Column_List" >
+    introduce
+  </sql>
+  <select id="selectByAccount" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from user_website
+    where account = #{account,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByAccount" parameterType="java.lang.String" >
+    delete from user_website
+    where account = #{account,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ovit.nswy.member.model.UserWebsite" >
+    insert into user_website (id, name, status,
+    position, logo, banner,
+    summary, template, create_time,
+    modular, account, introduce, current_type
+    )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+    #{position,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, #{banner,jdbcType=VARCHAR},
+    #{summary,jdbcType=VARCHAR}, #{template,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+    #{modular,jdbcType=VARCHAR},
+    #{account,jdbcType=VARCHAR}, #{introduce,jdbcType=LONGVARCHAR}, #{currentType,jdbcType=INTEGER}
+    )
+  </insert>
+
+
+  <update id="updateByAccount" parameterType="com.ovit.nswy.member.model.UserWebsite" >
+    update user_website
+    <set>
+      <if test="name!=null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce!=null">
+        introduce =#{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="status!=null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="position!=null">
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="logo!=null">
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="banner!=null">
+        banner = #{banner,jdbcType=VARCHAR},
+      </if>
+      <if test="summary!=null">
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="template!=null">
+        template = #{template,jdbcType=VARCHAR},
+      </if>
+      <if test="modular!=null">
+        modular = #{modular,jdbcType=VARCHAR},
+      </if>
+      <if test="currentType != null">
+        current_type = #{currentType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where account = #{account,jdbcType=INTEGER}
+  </update>
+</mapper>

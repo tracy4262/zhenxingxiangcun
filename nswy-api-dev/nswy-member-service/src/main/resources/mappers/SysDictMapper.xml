@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.SysDictMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.SysDict">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="dict_name" property="dictName" jdbcType="VARCHAR" />
+		<result column="dict_value" property="dictValue" jdbcType="VARCHAR" />
+		<!-- <result column="parent_id" property="parentId" jdbcType="INTEGER" 
+			/> -->
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<collection property="children" ofType="com.ovit.nswy.member.model.SysDict"
+			column="parent">
+			<id column="id" property="id" jdbcType="INTEGER" />
+			<result column="dict_name" property="dictName" jdbcType="VARCHAR" />
+			<result column="dict_value" property="dictValue" jdbcType="VARCHAR" />
+			<!-- <result column="parent_id" property="parentId" jdbcType="INTEGER" 
+				/> -->
+			<result column="status" property="status" jdbcType="INTEGER" />
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, dict_name, dict_value, parent_id, status
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sys_dict
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="findByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from sys_dict
+		where id=(SELECT parent_id FROM sys_dict WHERE
+		dict_name=#{name,jdbcType=VARCHAR})
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sys_dict
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.SysDict">
+		insert into sys_dict (id, dict_name, dict_value,
+		parent_id, status)
+		values (#{id,jdbcType=INTEGER}, #{dictName,jdbcType=VARCHAR},
+		#{dictValue,jdbcType=VARCHAR},
+		#{parentId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.ovit.nswy.member.model.SysDict">
+		insert into sys_dict
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="dictName != null">
+				dict_name,
+			</if>
+			<if test="dictValue != null">
+				dict_value,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="dictName != null">
+				#{dictName,jdbcType=VARCHAR},
+			</if>
+			<if test="dictValue != null">
+				#{dictValue,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ovit.nswy.member.model.SysDict">
+		update sys_dict
+		<set>
+			<if test="dictName != null">
+				dict_name = #{dictName,jdbcType=VARCHAR},
+			</if>
+			<if test="dictValue != null">
+				dict_value = #{dictValue,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.SysDict">
+		update sys_dict
+		set dict_name = #{dictName,jdbcType=VARCHAR},
+		dict_value = #{dictValue,jdbcType=VARCHAR},
+		parent_id = #{parentId,jdbcType=INTEGER},
+		status = #{status,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

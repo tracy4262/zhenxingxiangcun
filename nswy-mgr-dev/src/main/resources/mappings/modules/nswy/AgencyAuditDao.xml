@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.AgencyAuditDao" >
+  <resultMap id="BaseResultMap" type="com.ovit.manager.modules.nswy.entity.AgencyAudit" >
+    <id column="id" property="agencyAuditId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="agencyer" property="agencyer" jdbcType="VARCHAR" />
+    <result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
+    <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="register_address" property="registerAddress" jdbcType="VARCHAR" />
+    <result column="agent_agreement_picture_list" property="agentAgreementPictureList" jdbcType="VARCHAR" />
+    <result column="business_license_picture_list" property="businessLicensePictureList" jdbcType="VARCHAR" />
+    <result column="agent_identity_card_picture_list" property="agentIdentityCardPictureList" jdbcType="VARCHAR" />
+    <result column="legal_identity_card_picture_list" property="legalIdentityCardPictureList" jdbcType="VARCHAR" />
+    <result column="audit_status" property="auditStatus" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type, name, account, agencyer, credit_code, legal_name, phone, register_address,
+    agent_agreement_picture_list, business_license_picture_list, agent_identity_card_picture_list, 
+    legal_identity_card_picture_list, audit_status, create_time
+  </sql>
+
+  <sql id="agent_Column_List" >
+    a.id, type, name, account, agencyer, credit_code, legal_name, phone, register_address,
+    agent_agreement_picture_list, business_license_picture_list, agent_identity_card_picture_list,
+    legal_identity_card_picture_list, audit_status, a.create_time
+  </sql>
+  <sql id="user_Column_List" >
+   b.id as userId,b.user_type as userType
+  </sql>
+  <sql id="agency_user_Column_List" >
+   c.display_name AS agencyName
+  </sql>
+  <select id="findList" resultMap="BaseResultMap"
+          parameterType="com.ovit.manager.modules.nswy.entity.AgencyAudit">
+    select <include refid="agent_Column_List" />,<include refid="user_Column_List" />,<include refid="agency_user_Column_List" />
+    from agency_audit a
+    LEFT JOIN login_user b  on a.account = b.login_account
+      LEFT JOIN login_user c  on a.agencyer = c.login_account
+    where 1=1
+    <if test="userType != null">
+      AND b.user_type = #{userType,jdbcType=INTEGER}
+    </if>
+    <if test="auditStatus != null">
+      <if test="auditStatus != 3">
+        AND a.audit_status= #{auditStatus,jdbcType=INTEGER}
+      </if>
+    </if>
+    <if test="name != null">
+      AND a.name like CONCAT('%',#{name},'%')
+    </if>
+    ORDER BY a.create_time DESC
+  </select>
+
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="agent_Column_List" />,<include refid="user_Column_List" />
+    from agency_audit as a
+    inner JOIN login_user b  on a.account= b.login_account
+    where a.id = #{agencyAuditId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from agency_audit
+    where id = #{agencyAuditId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ovit.manager.modules.nswy.entity.AgencyAudit" >
+    insert into agency_audit (id, type, name, 
+      account, agencyer, credit_code, 
+      legal_name, phone, register_address, 
+      agent_agreement_picture_list, business_license_picture_list, 
+      agent_identity_card_picture_list, legal_identity_card_picture_list, 
+      audit_status, create_time)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{account,jdbcType=VARCHAR}, #{agencyer,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}, 
+      #{legalName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{registerAddress,jdbcType=VARCHAR}, 
+      #{agentAgreementPictureList,jdbcType=VARCHAR}, #{businessLicensePictureList,jdbcType=VARCHAR}, 
+      #{agentIdentityCardPictureList,jdbcType=VARCHAR}, #{legalIdentityCardPictureList,jdbcType=VARCHAR}, 
+      #{auditStatus,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ovit.manager.modules.nswy.entity.AgencyAudit" >
+    insert into agency_audit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="agencyer != null" >
+        agencyer,
+      </if>
+      <if test="creditCode != null" >
+        credit_code,
+      </if>
+      <if test="legalName != null" >
+        legal_name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="registerAddress != null" >
+        register_address,
+      </if>
+      <if test="agentAgreementPictureList != null" >
+        agent_agreement_picture_list,
+      </if>
+      <if test="businessLicensePictureList != null" >
+        business_license_picture_list,
+      </if>
+      <if test="agentIdentityCardPictureList != null" >
+        agent_identity_card_picture_list,
+      </if>
+      <if test="legalIdentityCardPictureList != null" >
+        legal_identity_card_picture_list,
+      </if>
+      <if test="auditStatus != null" >
+        audit_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="agencyer != null" >
+        #{agencyer,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null" >
+        #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="legalName != null" >
+        #{legalName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="registerAddress != null" >
+        #{registerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="agentAgreementPictureList != null" >
+        #{agentAgreementPictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicensePictureList != null" >
+        #{businessLicensePictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="agentIdentityCardPictureList != null" >
+        #{agentIdentityCardPictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="legalIdentityCardPictureList != null" >
+        #{legalIdentityCardPictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null" >
+        #{auditStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ovit.manager.modules.nswy.entity.AgencyAudit" >
+    update agency_audit
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="agencyer != null" >
+        agencyer = #{agencyer,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null" >
+        credit_code = #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="legalName != null" >
+        legal_name = #{legalName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="registerAddress != null" >
+        register_address = #{registerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="agentAgreementPictureList != null" >
+        agent_agreement_picture_list = #{agentAgreementPictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicensePictureList != null" >
+        business_license_picture_list = #{businessLicensePictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="agentIdentityCardPictureList != null" >
+        agent_identity_card_picture_list = #{agentIdentityCardPictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="legalIdentityCardPictureList != null" >
+        legal_identity_card_picture_list = #{legalIdentityCardPictureList,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null" >
+        audit_status = #{auditStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{agencyAuditId,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateByaudit" parameterType="com.ovit.manager.modules.nswy.entity.AgencyAudit" >
+    update agency_audit
+    <set >
+      <if test="auditStatus != null" >
+        audit_status = #{auditStatus,jdbcType=VARCHAR}
+      </if>
+
+    </set>
+    where id = #{agencyAuditId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.ovit.manager.modules.nswy.entity.AgencyAudit" >
+    update agency_audit
+    set type = #{type,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      agencyer = #{agencyer,jdbcType=VARCHAR},
+      credit_code = #{creditCode,jdbcType=VARCHAR},
+      legal_name = #{legalName,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      register_address = #{registerAddress,jdbcType=VARCHAR},
+      agent_agreement_picture_list = #{agentAgreementPictureList,jdbcType=VARCHAR},
+      business_license_picture_list = #{businessLicensePictureList,jdbcType=VARCHAR},
+      agent_identity_card_picture_list = #{agentIdentityCardPictureList,jdbcType=VARCHAR},
+      legal_identity_card_picture_list = #{legalIdentityCardPictureList,jdbcType=VARCHAR},
+      audit_status = #{auditStatus,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

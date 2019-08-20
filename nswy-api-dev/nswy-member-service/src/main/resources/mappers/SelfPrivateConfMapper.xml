@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.SelfPrivateConfMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.SelfPrivateConf">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_account" property="userAccount" jdbcType="VARCHAR" />
+		<result column="view_info" property="viewInfo" jdbcType="INTEGER" />
+		<result column="view_visitor" property="viewVisitor" jdbcType="INTEGER" />
+		<result column="circle_reminder" property="circleReminder"
+			jdbcType="INTEGER" />
+		<result column="ignore_dynamics" property="ignoreDynamics"
+			jdbcType="VARCHAR" />
+		<result column="public_info" property="publicInfo" jdbcType="VARCHAR" />
+		<result column="personal_info" property="personalInfo"
+			jdbcType="INTEGER" />
+		<result column="approve" property="approve" jdbcType="INTEGER" />
+		<result column="photo" property="photo" jdbcType="INTEGER" />
+		<result column="circle" property="circle" jdbcType="INTEGER" />
+		<result column="contact_info" property="contactInfo" jdbcType="INTEGER" />
+		<result column="product" property="product" jdbcType="INTEGER" />
+		<result column="service" property="service" jdbcType="INTEGER" />
+		<result column="repository" property="repository" jdbcType="INTEGER" />
+		<result column="policy" property="policy" jdbcType="INTEGER" />
+		<result column="studio" property="studio" jdbcType="INTEGER" />
+		<result column="verification" property="verification" jdbcType="INTEGER" />
+		<result column="certificate" property="certificate" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_account, view_info, view_visitor, circle_reminder,
+		ignore_dynamics, public_info,
+		personal_info, approve, photo, circle, contact_info, product, service, repository,
+		policy, studio, verification, certificate
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from self_private_conf
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from self_private_conf
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.SelfPrivateConf">
+		insert into self_private_conf (id, user_account, view_info,
+		view_visitor, circle_reminder, ignore_dynamics,
+		public_info, personal_info, approve,
+		photo, circle, contact_info,
+		product, service, repository,
+		policy, studio, verification,
+		certificate)
+		values (#{id,jdbcType=INTEGER}, #{userAccount,jdbcType=VARCHAR},
+		#{viewInfo,jdbcType=INTEGER},
+		#{viewVisitor,jdbcType=INTEGER}, #{circleReminder,jdbcType=INTEGER},
+		#{ignoreDynamics,jdbcType=VARCHAR},
+		#{publicInfo,jdbcType=VARCHAR}, #{personalInfo,jdbcType=INTEGER}, #{approve,jdbcType=INTEGER},
+		#{photo,jdbcType=INTEGER}, #{circle,jdbcType=INTEGER},
+		#{contactInfo,jdbcType=INTEGER},
+		#{product,jdbcType=INTEGER}, #{service,jdbcType=INTEGER}, #{repository,jdbcType=INTEGER},
+		#{policy,jdbcType=INTEGER}, #{studio,jdbcType=INTEGER},
+		#{verification,jdbcType=INTEGER},
+		#{certificate,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.ovit.nswy.member.model.SelfPrivateConf">
+		insert into self_private_conf
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userAccount != null">
+				user_account,
+			</if>
+			<if test="viewInfo != null">
+				view_info,
+			</if>
+			<if test="viewVisitor != null">
+				view_visitor,
+			</if>
+			<if test="circleReminder != null">
+				circle_reminder,
+			</if>
+			<if test="ignoreDynamics != null">
+				ignore_dynamics,
+			</if>
+			<if test="publicInfo != null">
+				public_info,
+			</if>
+			<if test="personalInfo != null">
+				personal_info,
+			</if>
+			<if test="approve != null">
+				approve,
+			</if>
+			<if test="photo != null">
+				photo,
+			</if>
+			<if test="circle != null">
+				circle,
+			</if>
+			<if test="contactInfo != null">
+				contact_info,
+			</if>
+			<if test="product != null">
+				product,
+			</if>
+			<if test="service != null">
+				service,
+			</if>
+			<if test="repository != null">
+				repository,
+			</if>
+			<if test="policy != null">
+				policy,
+			</if>
+			<if test="studio != null">
+				studio,
+			</if>
+			<if test="verification != null">
+				verification,
+			</if>
+			<if test="certificate != null">
+				certificate,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userAccount != null">
+				#{userAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="viewInfo != null">
+				#{viewInfo,jdbcType=INTEGER},
+			</if>
+			<if test="viewVisitor != null">
+				#{viewVisitor,jdbcType=INTEGER},
+			</if>
+			<if test="circleReminder != null">
+				#{circleReminder,jdbcType=INTEGER},
+			</if>
+			<if test="ignoreDynamics != null">
+				#{ignoreDynamics,jdbcType=VARCHAR},
+			</if>
+			<if test="publicInfo != null">
+				#{publicInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="personalInfo != null">
+				#{personalInfo,jdbcType=INTEGER},
+			</if>
+			<if test="approve != null">
+				#{approve,jdbcType=INTEGER},
+			</if>
+			<if test="photo != null">
+				#{photo,jdbcType=INTEGER},
+			</if>
+			<if test="circle != null">
+				#{circle,jdbcType=INTEGER},
+			</if>
+			<if test="contactInfo != null">
+				#{contactInfo,jdbcType=INTEGER},
+			</if>
+			<if test="product != null">
+				#{product,jdbcType=INTEGER},
+			</if>
+			<if test="service != null">
+				#{service,jdbcType=INTEGER},
+			</if>
+			<if test="repository != null">
+				#{repository,jdbcType=INTEGER},
+			</if>
+			<if test="policy != null">
+				#{policy,jdbcType=INTEGER},
+			</if>
+			<if test="studio != null">
+				#{studio,jdbcType=INTEGER},
+			</if>
+			<if test="verification != null">
+				#{verification,jdbcType=INTEGER},
+			</if>
+			<if test="certificate != null">
+				#{certificate,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ovit.nswy.member.model.SelfPrivateConf">
+		update self_private_conf
+		<set>
+			<if test="userAccount != null">
+				user_account = #{userAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="viewInfo != null">
+				view_info = #{viewInfo,jdbcType=INTEGER},
+			</if>
+			<if test="viewVisitor != null">
+				view_visitor = #{viewVisitor,jdbcType=INTEGER},
+			</if>
+			<if test="circleReminder != null">
+				circle_reminder = #{circleReminder,jdbcType=INTEGER},
+			</if>
+			<if test="ignoreDynamics != null">
+				ignore_dynamics = #{ignoreDynamics,jdbcType=VARCHAR},
+			</if>
+			<if test="publicInfo != null">
+				public_info = #{publicInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="personalInfo != null">
+				personal_info = #{personalInfo,jdbcType=INTEGER},
+			</if>
+			<if test="approve != null">
+				approve = #{approve,jdbcType=INTEGER},
+			</if>
+			<if test="photo != null">
+				photo = #{photo,jdbcType=INTEGER},
+			</if>
+			<if test="circle != null">
+				circle = #{circle,jdbcType=INTEGER},
+			</if>
+			<if test="contactInfo != null">
+				contact_info = #{contactInfo,jdbcType=INTEGER},
+			</if>
+			<if test="product != null">
+				product = #{product,jdbcType=INTEGER},
+			</if>
+			<if test="service != null">
+				service = #{service,jdbcType=INTEGER},
+			</if>
+			<if test="repository != null">
+				repository = #{repository,jdbcType=INTEGER},
+			</if>
+			<if test="policy != null">
+				policy = #{policy,jdbcType=INTEGER},
+			</if>
+			<if test="studio != null">
+				studio = #{studio,jdbcType=INTEGER},
+			</if>
+			<if test="verification != null">
+				verification = #{verification,jdbcType=INTEGER},
+			</if>
+			<if test="certificate != null">
+				certificate = #{certificate,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.SelfPrivateConf">
+		update self_private_conf
+		set user_account = #{userAccount,jdbcType=VARCHAR},
+		view_info = #{viewInfo,jdbcType=INTEGER},
+		view_visitor = #{viewVisitor,jdbcType=INTEGER},
+		circle_reminder = #{circleReminder,jdbcType=INTEGER},
+		ignore_dynamics = #{ignoreDynamics,jdbcType=VARCHAR},
+		public_info = #{publicInfo,jdbcType=VARCHAR},
+		personal_info = #{personalInfo,jdbcType=INTEGER},
+		approve = #{approve,jdbcType=INTEGER},
+		photo = #{photo,jdbcType=INTEGER},
+		circle = #{circle,jdbcType=INTEGER},
+		contact_info = #{contactInfo,jdbcType=INTEGER},
+		product = #{product,jdbcType=INTEGER},
+		service = #{service,jdbcType=INTEGER},
+		repository = #{repository,jdbcType=INTEGER},
+		policy = #{policy,jdbcType=INTEGER},
+		studio = #{studio,jdbcType=INTEGER},
+		verification = #{verification,jdbcType=INTEGER},
+		certificate = #{certificate,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

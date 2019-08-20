@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.portal.mapper.ShopCommodityListMapper">
+
+    <!--查询商品列表-->
+    <select id="findShopCommodityList" parameterType="map" resultType="map">
+       select
+            t.commodity_image as src,
+            d.commodity_name as name,
+            s.product_address as address,
+            p.time_price as discount,
+            p.discount_price as price,
+            DATE_FORMAT(p.discount_date,"%Y-%m-%d %T") AS time,
+            (select l.display_name from login_user l where l.login_account = t.account) as seller,
+            (select l.avatar from login_user l where l.login_account = t.account) as avatar,
+            case when ROUND((select count(commodity_type_info_id) from shop_order_comment oc where oc.commodity_type_info_id = t.id and oc.reputation = 3 )/
+            (select count(commodity_type_info_id) from shop_order_comment o where o.commodity_type_info_id = t.id )*100
+            )   is null then -1 when
+            ROUND((select count(commodity_type_info_id) from shop_order_comment oc where oc.commodity_type_info_id = t.id and oc.reputation = 3 )/
+            (select count(commodity_type_info_id) from shop_order_comment o where o.commodity_type_info_id = t.id )*100
+            )  = 0 then 0
+            else ROUND((select count(commodity_type_info_id) from shop_order_comment oc where oc.commodity_type_info_id = t.id and oc.reputation = 3 )/
+            (select count(commodity_type_info_id) from shop_order_comment o where o.commodity_type_info_id = t.id )*100
+            ) end  as grade,
+            t.account,
+            t.id,
+            l.id as userId,
+            s.product_vbep as productVbep,
+            s.product_volume as startNum,
+            case
+            when p.discount_price is null then p.time_price
+            when DATE_FORMAT(p.discount_date,'%Y-%m-%d %H:%i')>=DATE_FORMAT(now(),'%Y-%m-%d %H:%i' )
+              and p.discount_price is not null then p.discount_price else p.time_price
+            end as priceEnd
+
+
+        from shop_commodity_type_info t
+
+        left join shop_currency_commodity c  on t.currency_commodity_id  =  c.id
+
+        left join shop_commodity_supply_info s on s.commodity_type_info_id = t.id
+
+        left join shop_commodity_price_info p on p.commodity_type_info_id = t.id
+
+        left join shop_product_commitment_info i on i.commodity_type_info_id = t.id
+
+        left join shop_commodity_info d on d.commodity_type_info_id = t.id
+
+        left join login_user l on l.login_account = t.account
+
+        where i.approve_status = '1' and d.storage_status = '3'
+
+        <if test="account!=null and account!=''">
+            and t.account = #{account}
+        </if>
+
+        <if test="isShopDisplay !=null and isShopDisplay!=''">
+            and  i.is_shop_display = #{isShopDisplay}
+        </if>
+
+        <if test="isHomeDisplay !=null and isHomeDisplay!=''">
+            and  i.is_home_display =#{isHomeDisplay}
+        </if>
+
+        <if test="isNavDisplay !=null and isNavDisplay!=''">
+            and  i.is_nav_display =#{isNavDisplay}
+        </if>
+
+        <if test="name !=null and name!=''">
+           and  d.commodity_name LIKE CONCAT('%',#{name},'%')
+        </if>
+        <if test="productCode !=null and productCode!=''">
+            and  t.product_class_id LIKE CONCAT(#{productCode},'%')
+        </if>
+
+        order by
+        <if test="timePriceFlag  == 0">
+            priceEnd asc
+        </if>
+        <if test="timePriceFlag  == 1">
+            priceEnd desc
+        </if>
+        <if test="gradeFlag  == 0">
+            grade asc
+        </if>
+        <if test="gradeFlag  == 1">
+            grade desc
+        </if>
+        <if test="default !=null and default !=''">
+            i.order_num,t.create_time desc
+        </if>
+
+    </select>
+
+    <select id="findCommodityTypeInfo" parameterType="map" resultType="map">
+        select
+
+                t.currency_commodity_id,
+                c.currency_commodity_name as commonProductName,
+                t.commodity_image as commodityImage,
+				i.commodity_name as productName,
+				(select ROUND(AVG(o.star)/2,1) as star  from shop_order_comment o where t.id = o.commodity_type_info_id and  o.from_account = 0) as star,
+				(select count(o.commodity_type_info_id) from shop_order_comment o where o.commodity_type_info_id = t.id and o.from_account = 0) as commentSum,
+				p.discount_price as discountPrice,
+				p.time_price as timePrice,
+				p.batches_unit as unit,
+				DATE_FORMAT(p.discount_date,"%Y-%m-%d %T") AS discountDate,
+				s.product_vbep as productVbep,
+				s.product_volume as startNum,
+				d.delivery_mode as deliveryMode,
+				d.deliver_mode as deliverMode,
+				d.freight,
+				s.max_supply_becomes as maxSupplybecomes,
+				case when a.number is null then 0 else a.number end as number
+
+        from shop_commodity_type_info t
+
+        left join shop_currency_commodity c  on t.currency_commodity_id  =  c.id
+
+		left join shop_commodity_info i on t.id = i.commodity_type_info_id
+
+		left join shop_commodity_price_info p on t.id = p.commodity_type_info_id
+
+		left join shop_commodity_supply_info s on t.id = s.commodity_type_info_id
+
+		left join shop_product_delivery_info d on t.id = d.commodity_type_info_id
+
+		left join shop_product_commitment_info ci on t.id = ci.commodity_type_info_id
+
+        left join (select sum(op.number) AS number,op.commodity_type_info_id from shop_order o left join shop_order_product op on o.order_code = op.order_code_id
+
+        where <![CDATA[ o.status >= 1 ]]>  and <![CDATA[ o.status < 14 ]]> and o.status != 11 and o.status != 12 and op.commodity_type_info_id = #{id}
+
+        ) a on t.id = a.commodity_type_info_id
+
+        where ci.approve_status = '1' and t.id = #{id}
+
+    </select>
+
+    <!--查询商品简介-->
+    <select id="findCommodityAbstractDetail" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+                t.commodity_abstract as commodityAbstaract,
+                t.commodity_image as commodityImage
+
+        from shop_commodity_type_info t
+
+        where
+        t.account = #{account} AND  t.id = #{id}
+    </select>
+
+    <!--查询商品分类-->
+    <select id="findCommodityTypeInfoDetail" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+
+                t.currency_commodity_id,
+                c.currency_commodity_name as commonProductName,
+                t.sale_market_id as salesMarket,
+                t.profession_class_id,
+                d.label as relatedIndustry,
+                t.product_class_id as productType,
+                p.classification_name as productTypeName,
+                t.is_species_relation  as isRelatedToSpecies,
+                t.species_relation_id as relatedSpecies,
+                t.is_main_product as isMainProduct,
+                t.variety_id as varietyId,
+                t.growth_environment as liveEnvironment,
+                t.species_protect_level as protectionLevel,
+                t.is_raw_material as isFood,
+                t.nutrient as heat,
+                t.suitable_population as suitPeople,
+                t.traceability_type as retrospectType
+
+        from shop_commodity_type_info t
+
+        left join shop_currency_commodity c  on t.currency_commodity_id  =  c.id
+
+        left join (SELECT t1.dict_value AS dict_value,t1.dict_name AS label FROM system_dict t1 LEFT JOIN system_dict_type t2 ON t1.dict_type = t2.type_id
+                WHERE t2.type_name = '行业分类') d on t.profession_class_id = d.dict_value
+
+        left join product_classification p on t.product_class_id = p.classification_code
+
+        where t.account = #{account} AND  t.id = #{id}
+    </select>
+
+    <!--查询产地信息-->
+    <select id="findCommoditySupplyInfoDetail" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+                s.production_place as productAddress,
+                s.production_address as address,
+                s.production_location as productPosition
+        from shop_production_place_info s
+
+        where s.account = #{account} AND s.commodity_type_info_id = #{id}
+    </select>
+
+    <!--查询产品信息-->
+    <select id="findCommodityInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, commodity_name as productName, product_brand as productBrand, product_batch_number as ProductNumber, product_source as productSource,
+        provenance_features as provenanceCharacteristics, is_fresh as isFresh, create_time
+        from shop_commodity_info
+        where account = #{account} AND  commodity_type_info_id = #{id}
+    </select>
+
+    <!--查询商品生产信息-->
+    <select id="findProductionInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, is_material as whether, material as rawMaterial, product_way as productionMethods, rough_processing_mode as roughProcessing,
+        is_transgene as transgenic, is_irradiation as isFris_irradiationesh, create_time
+        from shop_commodity_production
+        where account = #{account} AND commodity_type_info_id = #{id}
+    </select>
+
+    <!--查询商品产地信息-->
+    <select id="findPlaceInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, production_place as productOrigin, production_address as productOriginAddress, production_location as location, create_time
+        from shop_production_place_info
+        where account = #{account} AND commodity_type_info_id = #{id}
+    </select>
+
+    <!--查询商品荣誉信息-->
+    <select id="findQualificationInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, qualification, licence as license, variety_authorize_num as validationNumber,
+        quarantine_qualified as certification, quarantine_certificate as certificate, create_time
+        from shop_commodity_qualification
+        where account = #{account} AND  commodity_type_info_id = #{id}
+    </select>
+
+    <!--查询自定义表单之商品质量信息-->
+    <select id="findHonorInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id, qualification, certificate,create_time
+        from shop_commodity_honor
+        where account = #{account} AND commodity_type_info_id = #{id}
+    </select>
+
+    <!--查询自定义表单之商品安全标准-->
+    <select id="findCustomContentInfo" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+          id, custom_content, create_time
+        from shop_commodity_quality_safety
+        where account = #{account} AND commodity_type_info_id = #{id} AND type = #{type}
+    </select>
+
+    <select id="findCommentCount" parameterType="java.util.Map" resultType="java.util.Map">
+
+        select
+
+        count(o.commodity_type_info_id) as commentNum
+
+        from shop_order_comment o
+
+        left join shop_product_commitment_info p on o.commodity_type_info_id = p.commodity_type_info_id
+
+        where  o.commodity_type_info_id =#{commodityId} and o.`from_account`=#{fromAccount}
+        <if test="reputation!=null and reputation!=''">
+            and o.reputation =#{reputation}
+        </if>
+
+    </select>
+
+    <select id="findCommentList" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+            l.avatar,
+            ROUND(o.star/2,1) as rate,
+            o.reputation,
+            o.`describe_info` as content,
+            o.update_time as time,
+            o.order_code_id,
+            l.name
+        from shop_order_comment o left join shop_product_commitment_info p
+
+        on o.commodity_type_info_id = p.commodity_type_info_id
+
+        left join (select
+
+        case when l.avatar is null then '' else l.avatar end as avatar,
+        l.login_account as account,
+        case when m.memberName is null then '' else m.memberName end as name
+
+        from
+
+        login_user l left join (select m.location as city,m.user_id as account from  reversion_member_location_info m left join
+
+        (select u.template_id as templateId,u.account
+
+        from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid where m.template_id is not null and s.templateId is not null)
+        c on l.login_account  = c.account
+
+        left join (
+        select m.member_name as memberName,m.user_id as account,s.templateId,m.template_id,m.create_time,m.member_class as memberClass from  reversion_member_aptitude_real_info m left join
+
+        (select u.template_id as templateId,u.account
+
+        from reversion_user_template_manage u  where u.status = 1) s on m.user_id = s.account and m.`template_id`=s.templateid  where m.template_id is not null and s.templateId is not null
+
+        group by m.user_id
+
+        order by m.create_time asc
+
+        ) m on l.login_account = m.account
+
+        ) l on o.account = l.account
+
+        where   o.commodity_type_info_id =#{commodityId}
+         <if test="fromAccount !='' and fromAccount !=null">
+             and o.`from_account`=#{fromAccount}
+             <if test="fromAccount == 0">
+                 <if test="reputation!=null and reputation!=''">
+                     and o.reputation =#{reputation}
+                 </if>
+             </if>
+             <if test="fromAccount == 1">
+                 <if test="order_code_id!=null and order_code_id!=''">
+                     and o.order_code_id =#{order_code_id}
+                     group by o.order_code_id
+                 </if>
+             </if>
+         </if>
+
+        order by o.update_time desc
+
+    </select>
+
+    <!--月交易记录-->
+    <select id="findMonthList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            count(op.commodity_type_info_id) * op.number AS number,
+            op.commodity_type_info_id,
+            op.product_output_unit,
+            o.update_time,
+            case when (select ROUND(c.star/2,1) from shop_order_comment c where
+
+            o.order_code = c.order_code_id and c.from_account = 0) is null then 0 else (select ROUND(c.star/2,1) from shop_order_comment c where
+
+            o.order_code = c.order_code_id and c.from_account = 0) end as rate,
+
+            l.display_name as name
+        FROM
+        shop_order o
+
+        LEFT JOIN shop_order_product op ON o.order_code = op.order_code_id
+
+        left join (select * from shop_order_comment where from_account = 0) c  on o.order_code = c.order_code_id
+
+
+        left join login_user l on o.account = l.login_account
+
+        WHERE
+
+        <![CDATA[ o.status > 4 ]]>  and <![CDATA[ o.status < 10 ]]> and op.commodity_type_info_id=#{commodityId}
+
+        and DATE_FORMAT( o.create_time, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )
+
+        group by o.order_code
+
+        order by o.update_time desc
+    </select>
+
+    <select id="findLoginUser" parameterType="java.util.Map" resultType="java.util.Map">
+       SELECT
+            p.account,
+            p.name_model as name,
+            p.phone_model as phone,
+            n.qq_number_model as qq,
+            n.email_model as email
+        FROM
+            privacy_info  p
+        left join network_info n on p.account = n.account
+
+        where p.account = #{account}
+    </select>
+    
+    <select id="findAvatar" parameterType="java.util.Map" resultType="java.util.Map">
+        select l.avatar,l.id as userId,l.display_name as name,l.user_type as userType from login_user l where l.login_account= #{account}
+    </select>
+
+    <select id="findProxyMode" parameterType="java.util.Map" resultType="java.util.Map">
+        select g.phone
+         <if test="table_name == 'corp_info'">
+             ,g.email,g.mobile
+         </if>
+        from ${table_name} g  where g.login_account = #{account}
+    </select>
+
+    <update id="updateStorage" parameterType="java.util.Map">
+        UPDATE shop_commodity_info SET storage_status = #{storageStatus}, update_time = NOW() WHERE  commodity_type_info_id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.CardMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.Card">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="card_name" property="cardName" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="synopsis" property="synopsis" jdbcType="VARCHAR" />
+		<result column="createTime" property="createTime" jdbcType="TIMESTAMP" />		
+		<result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="user_account" property="userAccount" jdbcType="VARCHAR" />
+		<result column="picture" property="picture" jdbcType="VARCHAR" />
+		<result column="QRcode" property="QRcode" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, card_name,name, type, synopsis, createTime, updateTime, user_account,picture,QRcode
+	</sql>
+
+	<select id="selectQuery" resultMap="BaseResultMap" parameterType="com.ovit.nswy.member.model.Card">
+		select * from card where user_account = #{userAccount}
+		<if test='type!= null and type!=""'>
+			and type = #{type}
+		</if>
+		<if test='name!= null and name!=""'>
+			and name like concat(concat('%',#{name}),'%')
+		</if>
+		<if test='cardName!= null and cardName!=""'>
+			and card_name like concat(concat('%',#{cardName}),'%')
+		</if>
+	</select>
+	
+	<select id="fingById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from card where id=#{id,jdbcType=INTEGER}
+	</select>
+	
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.Card">
+		insert into card (card_name, name,type, synopsis, createTime,updateTime,user_account,picture,QRcode)
+		values (#{cardName,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},
+		#{type,jdbcType=VARCHAR},#{synopsis,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},
+		#{userAccount,jdbcType=VARCHAR},#{picture,jdbcType=VARCHAR},
+		#{QRcode,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="remove" parameterType="java.lang.Integer" >
+	    delete from card where id = #{id,jdbcType=INTEGER}
+  	</delete>
+</mapper>

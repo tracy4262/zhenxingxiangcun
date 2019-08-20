@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ProxySettingMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.ProxySetting">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="my_proxy" property="myProxy" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="corp_name" property="corpName" jdbcType="VARCHAR" />
+		<result column="legal_man" property="legalMan" jdbcType="VARCHAR" />
+		<result column="approve_status" property="approveStatus"
+			jdbcType="INTEGER" />
+		<result column="approve_time" property="approveTime" jdbcType="TIMESTAMP" />
+		<result column="approve_account" property="approveAccount"
+			jdbcType="VARCHAR" />
+		<result column="attachment" property="attachment" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, my_proxy, create_time, corp_name, legal_man, approve_status,
+		approve_time,
+		approve_account, attachment
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from proxy_setting
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from proxy_setting
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.ProxySetting">
+		insert into proxy_setting (id, account, my_proxy,
+		create_time, corp_name, legal_man,
+		approve_status, approve_time, approve_account,
+		attachment)
+		values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR},
+		#{myProxy,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, #{corpName,jdbcType=VARCHAR}, #{legalMan,jdbcType=VARCHAR},
+		#{approveStatus,jdbcType=INTEGER}, #{approveTime,jdbcType=TIMESTAMP},
+		#{approveAccount,jdbcType=VARCHAR},
+		#{attachment,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.ovit.nswy.member.model.ProxySetting">
+		insert into proxy_setting
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="account != null">
+				account,
+			</if>
+			<if test="myProxy != null">
+				my_proxy,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="corpName != null">
+				corp_name,
+			</if>
+			<if test="legalMan != null">
+				legal_man,
+			</if>
+			<if test="approveStatus != null">
+				approve_status,
+			</if>
+			<if test="approveTime != null">
+				approve_time,
+			</if>
+			<if test="approveAccount != null">
+				approve_account,
+			</if>
+			<if test="attachment != null">
+				attachment,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="account != null">
+				#{account,jdbcType=VARCHAR},
+			</if>
+			<if test="myProxy != null">
+				#{myProxy,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="corpName != null">
+				#{corpName,jdbcType=VARCHAR},
+			</if>
+			<if test="legalMan != null">
+				#{legalMan,jdbcType=VARCHAR},
+			</if>
+			<if test="approveStatus != null">
+				#{approveStatus,jdbcType=INTEGER},
+			</if>
+			<if test="approveTime != null">
+				#{approveTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="approveAccount != null">
+				#{approveAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="attachment != null">
+				#{attachment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ovit.nswy.member.model.ProxySetting">
+		update proxy_setting
+		<set>
+			<if test="account != null">
+				account = #{account,jdbcType=VARCHAR},
+			</if>
+			<if test="myProxy != null">
+				my_proxy = #{myProxy,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="corpName != null">
+				corp_name = #{corpName,jdbcType=VARCHAR},
+			</if>
+			<if test="legalMan != null">
+				legal_man = #{legalMan,jdbcType=VARCHAR},
+			</if>
+			<if test="approveStatus != null">
+				approve_status = #{approveStatus,jdbcType=INTEGER},
+			</if>
+			<if test="approveTime != null">
+				approve_time = #{approveTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="approveAccount != null">
+				approve_account = #{approveAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="attachment != null">
+				attachment = #{attachment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.ProxySetting">
+		update proxy_setting
+		set account = #{account,jdbcType=VARCHAR},
+		my_proxy = #{myProxy,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		corp_name = #{corpName,jdbcType=VARCHAR},
+		legal_man = #{legalMan,jdbcType=VARCHAR},
+		approve_status = #{approveStatus,jdbcType=INTEGER},
+		approve_time = #{approveTime,jdbcType=TIMESTAMP},
+		approve_account = #{approveAccount,jdbcType=VARCHAR},
+		attachment = #{attachment,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

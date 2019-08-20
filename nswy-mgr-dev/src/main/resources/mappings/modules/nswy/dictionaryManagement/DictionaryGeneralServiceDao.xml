@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryGeneralServiceDao">
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryGeneralService"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryGeneralService">
+        select
+        c.id as id,
+        c.currency_commodity_pinyin as pinYin,
+        c.commodity_alias as alias,
+        c.currency_commodity_name as name,
+        c.industry_type_id as industryTypeId,
+        c.product_type_id as productTypeId,
+        c.related_species_id as relatedSpeciesId,
+        case when c.level is null then 1 else c.level end as level,
+        case when c.parent_id is null then 0 else c.parent_id end as pid,
+        c.remark as remark,
+        c.service_class_id as serviceTypeId,
+        c.service_id as serviceId,
+        c.product_id as productId,
+        c.service_people_name as servicePeopleName
+        from shop_currency_commodity c
+
+        where 1=1 and c.type = 2
+        <if test="name!=null and name!=''">
+            and c.currency_commodity_name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and c.id = #{id}
+        </if>
+        order by create_time desc
+    </select>
+
+    <select id="findIndustry" parameterType="map" resultType="map">
+        select
+            dict_value as industryTypeId,
+            dict_name as industryTypeName
+        from system_dict
+        where dict_type = 'ba4d3d9c-cc38-4ddb-a7f2-25cd1323c2f7'
+
+        order by create_time desc
+    </select>
+
+    <select id="findServiceType" parameterType="map" resultType="map">
+        select
+            id as serviceTypeId,
+            service_class_name as serviceTypeName
+        from service_type
+
+    </select>
+
+    <select id="findService" parameterType="map" resultType="map">
+        select
+            id as serviceId,
+            currency_commodity_name as serviceName
+        from shop_currency_commodity where 1=1 and type = 2
+
+    </select>
+
+    <select id="findProduct" parameterType="map" resultType="map">
+        select
+            id as productId,
+            currency_commodity_name as productName
+        from shop_currency_commodity where 1=1 and type != 2
+
+    </select>
+
+    <select id="findSpecies" parameterType="map" resultType="map">
+        select
+          FId as relatedSpeciesId,
+          FName as relatedSpeciesName
+        from species
+
+    </select>
+
+    <insert id="saveGeneralService" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryGeneralService">
+        insert into shop_currency_commodity(
+
+            currency_commodity_name,
+            currency_commodity_pinyin,
+            commodity_alias,
+            industry_type_id,
+            related_species_id,
+            account,
+            aduit_status,
+            type,
+            remark,
+            parent_id,
+            level,
+            service_id,
+            service_class_id,
+            product_id,
+            service_people_name,
+            create_time
+        )values (
+                    #{name},
+                    #{pinyin},
+                    #{alias},
+                    #{industryTypeId},
+                    #{relatedSpeciesId},
+                    #{account},
+                    #{status},
+                    #{type},
+                    #{remark},
+                    #{pid},
+                    #{level},
+                    #{serviceId},
+                    #{serviceTypeId},
+                    #{productId},
+                    #{servicePeopleName},
+                    now()
+                );
+    </insert>
+
+    <update id="updateGeneralService" parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryGeneralService">
+        update shop_currency_commodity
+        set
+            currency_commodity_name = #{name},
+            currency_commodity_pinyin = #{pinyin},
+            industry_type_id = #{industryTypeId},
+            related_species_id = #{relatedSpeciesId},
+            commodity_alias = #{alias},
+            remark = #{remark},
+            service_id = #{serviceId},
+            service_class_id = #{serviceTypeId},
+            product_id = #{productId},
+            service_people_name = #{servicePeopleName}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGeneralService" parameterType="java.lang.String">
+        delete from shop_currency_commodity where id= #{id}
+    </delete>
+
+</mapper>

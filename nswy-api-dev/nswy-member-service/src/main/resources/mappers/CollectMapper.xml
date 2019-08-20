@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.member.mapper.CollectMapper">
+	<select id="queryList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			*
+		FROM
+			collect
+		WHERE
+			belong = #{login_account}
+		AND
+			pid = 0
+	</select>
+
+	<select id="queryNext" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			*
+		FROM
+			collect
+		WHERE
+			pid = #{pid}
+	</select>
+
+	<update id="rename" parameterType="java.util.Map">
+		UPDATE
+			collect
+		SET
+			group_name = #{group_name}
+		WHERE
+			id = #{id}
+	</update>
+
+	<update id="renameRemark" parameterType="java.util.Map">
+		UPDATE
+			collect
+		SET
+			remark = #{remark}
+		WHERE
+			id = #{id}
+	</update>
+
+	<delete id="del" parameterType="java.util.Map">
+		DELETE FROM collect WHERE id = #{id} ;
+		DELETE FROM myfavorite WHERE collectId=#{id} AND account=#{account};
+	</delete>
+
+	<select id="being" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			collect
+		WHERE
+			pid = #{id}
+	</select>
+
+	<insert id="add" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+			collect
+		(
+			group_name,
+			remark,
+			belong,
+			pid
+		)
+		VALUES
+		(
+			#{group_name},
+			#{remark},
+			#{login_account},
+			#{pid}
+		)
+	</insert>
+	<select id="updata"  parameterType="java.util.Map">
+		update collect set group_name = #{group_name} where id = #{id}
+	</select>
+	<select id="queryListByPidAndAccount" resultType="java.util.Map" parameterType="java.lang.String">
+		SELECT * FROM collect where belong =#{account} AND pid = 0
+	</select>
+	<select id="queryChildNode" resultType="java.util.Map" parameterType="java.lang.Integer">
+		SELECT * FROM collect where pid = #{id}
+	</select>
+	<select id="selectByAccountAndPidAndTitle" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT * FROM collect where pid = #{pid} and group_name = #{group_name} and belong = #{login_account}
+	</select>
+	<select id="findByName" resultType="java.util.Map" parameterType="java.util.Map">
+SELECT * FROM collect where group_name = #{group_name} and belong = #{login_account}
+	</select>
+</mapper>

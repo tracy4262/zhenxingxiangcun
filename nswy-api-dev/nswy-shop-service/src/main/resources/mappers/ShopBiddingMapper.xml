@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.shop.pushTemplate.mapper.ShopBiddingMapper">
+
+    <insert id="submitMargin" parameterType="map">
+        INSERT INTO shop_bidding_list(
+        buyer_account,
+        seller_account,
+        `order`,
+        commodity_id,
+        product_name,
+        create_time,
+        address_info,
+        margin,
+        status,
+        expire_time,
+        start_time,
+        end_time,
+        image,
+        unit
+        ) VALUES (
+        #{buyerAccount},
+        #{sellerAccount},
+        #{order},
+        #{commodityId},
+        #{productName},
+        now(),
+        #{addressInfo},
+        #{margin},
+        #{status},
+        #{expireTime},
+        #{startTime},
+        #{endTime},
+        #{image},
+        #{unit}
+        )
+    </insert>
+
+    <update id="updateBidding" parameterType="map">
+        UPDATE shop_bidding_list
+        <set>
+            <if test="price !=null and price !=''">
+                price = #{price},
+            </if>
+            <if test="number !=null and number !=''">
+                `number` = #{number},
+            </if>
+            <if test="count !=null and count !=''">
+                `count` = #{count},
+            </if>
+            <if test="status !=null and status !=''">
+                status = #{status},
+            </if>
+            <if test="payTime !=null and payTime !=''">
+                pay_time = now(),
+            </if>
+            <if test="number !=null and number !=''">
+                bid_time = bid_time + 1,
+            </if>
+            <if test="number !=null and number !=''">
+                snatch_time = now(),
+            </if>
+        </set>
+        WHERE is_expire = 0
+        <if test="buyerAccount !=null and buyerAccount !=''">
+            AND buyer_account = #{buyerAccount}
+        </if>
+        <if test="commodityId !=null and commodityId !=''">
+            AND commodity_id = #{commodityId}
+        </if>
+    </update>
+
+    <select id="getBiddingStatus" parameterType="map" resultType="int">
+        select status as biddingStatus from shop_bidding_list
+        where buyer_account = #{account} and commodity_id = #{commodityId} and is_expire = 0
+    </select>
+
+    <select id="orderList" resultType="map">
+        select id, expire_time as expireTime from shop_bidding_list
+        where status = 1 and is_expire = 0
+    </select>
+
+    <select id="expireList" resultType="map">
+        select id from shop_bidding_list
+        where status = 1 and end_time &lt;= now()
+    </select>
+
+    <update id="updateBiddingOrder" parameterType="int">
+        UPDATE shop_bidding_list
+        SET is_expire = 1
+        WHERE id = #{id}
+    </update>
+
+    <select id="bidRecord" resultType="map" parameterType="map">
+        select min(CONVERT(price,DECIMAL)) as minPrice, avg(price) as avgPrice, max(count) as `count`, sum(number) as sum
+        from shop_bidding_list
+        where `status` in(3, 4, 5, 6, 7, 8)
+        and commodity_id = #{commodityId}
+    </select>
+
+    <select id="getParticipantCount" resultType="int" parameterType="map">
+        select count(*) as person from
+        (select count(buyer_account)
+        from shop_bidding_list
+        where `status` in(3, 4, 5, 6, 7, 8)
+        and commodity_id = #{commodityId}
+        group by buyer_account) a
+    </select>
+
+    <select id="getBidInfo" parameterType="map" resultType="map">
+        select price, `number` from shop_bidding_list
+        where buyer_account = #{buyerAccount} and commodity_id = #{commodityId} and is_expire = 0
+    </select>
+
+    <select id="getRemainderInfo" parameterType="map" resultType="map">
+        select round(((price *`number`) - margin), 2) as remainder, address_info as addressInfo,
+        price, `number`, `order` as orderCode
+        FROM shop_bidding_list
+        WHERE buyer_account = #{buyerAccount} and commodity_id = #{commodityId} and is_expire = 0
+    </select>
+
+    <select id="getMyMargin" parameterType="map" resultType="map">
+        select
+            seller_account as sellerAccount,
+            `order`,
+            product_name as productName,
+            margin,
+            case when DATE_FORMAT(pay_time,'%Y-%m-%d %H:%i' ) is null then '' else pay_time end  as payTime,
+            status,
+            commodity_id as commodityId,
+            DATE_FORMAT(expire_time,'%Y-%m-%d %H:%i' ) as expireTime
+
+        FROM shop_bidding_list
+        WHERE 1=1
+        <if test="buyerAccount !=null and buyerAccount !=''">
+            and buyer_account = #{buyerAccount}
+        </if>
+        <if test="status !=null and status !=''">
+            and status = #{status}
+        </if>
+
+
+    </select>
+
+    <select id="memberInfo" resultType="map" parameterType="map">
+        select min(create_time), member_name as memberName from reversion_member_aptitude_real_info
+        where user_id = #{sellerAccount} and template_id = #{templateId}
+
+    </select>
+
+    <select id="findUseTemplate" parameterType="java.lang.String" resultType="map">
+        select
+            template_id as templateId
+        from
+            reversion_user_template_manage
+        where account = #{sellerAccount} and status = '1'
+    </select>
+
+    <select id="auctioning" parameterType="map" resultType="map">
+        select id, ifnull(price, '') as price, ifnull(`number`, '') as number, `order`, DATE_FORMAT(start_time, "%Y-%m-%d %T") as startTime,
+        bid_time as bidTime, ifnull(DATE_FORMAT(snatch_time, "%Y-%m-%d %T"), '') as payTime, image,
+        product_name as productName, seller_account as sellerAccount, unit, commodity_id as commodityId, status
+        from shop_bidding_list
+        where buyer_account = #{buyerAccount} and end_time &gt; now()
+        and status in (1, 2, 3) and is_expire = 0
+    </select>
+
+    <select id="hasBid" parameterType="map" resultType="map">
+        select id, ifnull(price, '') as price, ifnull(`number`, '') as number, `order`, DATE_FORMAT(start_time, "%Y-%m-%d %T") as startTime,
+        bid_time as bidTime, ifnull(DATE_FORMAT(snatch_time, "%Y-%m-%d %T"), '') as payTime, image,
+        product_name as productName, seller_account as sellerAccount, unit, commodity_id as commodityId, status
+        from shop_bidding_list
+        where buyer_account = #{buyerAccount} and status in (4, 7, 8)
+        order by snatch_time desc
+
+    </select>
+
+    <select id="missBid" parameterType="map" resultType="map">
+        select id, ifnull(price, '') as price, ifnull(`number`, '') as number, `order`, DATE_FORMAT(start_time, "%Y-%m-%d %T") as startTime,
+        bid_time as bidTime, ifnull(DATE_FORMAT(snatch_time, "%Y-%m-%d %T"), '') as payTime, image,
+        product_name as productName, seller_account as sellerAccount, unit, commodity_id as commodityId, status
+        from shop_bidding_list
+        where buyer_account = #{buyerAccount} and status in (5, 6)
+        order by snatch_time desc
+    </select>
+
+    <select id="upcomingAuctionDetail" resultType="map" parameterType="map">
+        select a.id, a.buyer_account as buyerAccount, a.order, a.commodity_id as commodityId, c.member_name as memberName,
+        a.status, DATE_FORMAT(a.create_time, "%Y-%m-%d %T") as createTime, a.is_expire as isExpire, ifnull(DATE_FORMAT(expire_time, "%Y-%m-%d %T"), '') as expireTime
+        from shop_bidding_list a left join reversion_user_template_manage b
+        on (a.buyer_account = b.account and b.status = '1') left join
+        (select min(create_time), member_name, user_id, template_id
+        from reversion_member_aptitude_real_info group by user_id, template_id) c
+        on (b.account = c.user_id and b.template_id = c.template_id)
+        where a.commodity_id = #{commodityId}
+        <if test="memberName !=null and memberName !=''">
+            and c.member_name like concat(concat('%',#{memberName},'%'))
+        </if>
+        <if test="status !=null and status !=''">
+            and a.status = #{status}
+        </if>
+    </select>
+
+    <select id="hasBidCount" parameterType="string" resultType="int">
+        select count(*) as bidCount from shop_bidding_list
+        where commodity_id = #{commodityId} and status = 2
+    </select>
+
+    <select id="auctioningDetail" resultType="map" parameterType="map">
+        select a.id, a.buyer_account as buyerAccount, a.order, a.commodity_id as commodityId, c.member_name as memberName,
+        a.status, ifnull(DATE_FORMAT(snatch_time, "%Y-%m-%d %T"), '') as payTime, ifnull(a.price, '') as price,
+        ifnull(a.`number`, '') as `number`, a.`count` as `count`, a.is_expire as isExpire, ifnull(DATE_FORMAT(expire_time, "%Y-%m-%d %T"), '') as expireTime
+        from shop_bidding_list a left join reversion_user_template_manage b
+        on (a.buyer_account = b.account and b.status = '1') left join
+        (select min(create_time), member_name, user_id, template_id
+        from reversion_member_aptitude_real_info group by user_id, template_id) c
+        on (b.account = c.user_id and b.template_id = c.template_id)
+        where a.commodity_id = #{commodityId}
+        <if test="memberName !=null and memberName !=''">
+            and c.member_name like concat(concat('%',#{memberName},'%'))
+        </if>
+        <if test="status !=null and status !=''">
+            and a.status = #{status}
+        </if>
+    </select>
+
+    <select id="auctionRecord" resultType="map" parameterType="map">
+        select min(CONVERT(price,DECIMAL)) as minPrice, max(CONVERT(price,DECIMAL)) as maxPrice, max(count) as `count`, sum(number) as sum
+        from shop_bidding_list
+        where `status` != 1 and commodity_id = #{commodityId}
+    </select>
+
+    <select id="participantCount" resultType="int" parameterType="map">
+        select count(*) as person from
+        (select count(buyer_account)
+        from shop_bidding_list
+        where `status` != 1
+        and commodity_id = #{commodityId}
+        group by buyer_account) a
+    </select>
+
+    <update id="cancelOrder" parameterType="int">
+        UPDATE shop_bidding_list
+        SET is_expire = 1
+        WHERE id = #{id}
+    </update>
+
+    <select id="orderDetail" parameterType="map" resultType="map">
+        select round(((price *`number`) - margin), 2) as remainder, address_info as addressInfo, price, `number`, margin,
+        DATE_FORMAT(create_time, "%Y-%m-%d %T") as createTime, `order`, product_name as productName, ifnull(DATE_FORMAT(pay_time, "%Y-%m-%d %T"), '') as payTime,
+        ifnull(DATE_FORMAT(snatch_time, "%Y-%m-%d %T"), '') as snatchTime, image, unit
+        from shop_bidding_list
+        where id = #{id}
+    </select>
+
+    <update id="batchHandle" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="item">
+            UPDATE shop_bidding_list SET
+            status = #{item.status}
+            WHERE id = #{item.id}
+        </foreach>
+    </update>
+
+    <select id="bidNum" resultType="string" parameterType="map">
+        select sum(number) as bidNum
+        from shop_bidding_list
+        where `status` in (4, 7, 8) and commodity_id = #{commodityId}
+    </select>
+
+    <select id="findSalesNumber" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        case when sum(number) is null then 0 else sum(number) end as number from shop_order_product where order_code_id in (
+            select order_code from shop_order where order_code in (
+                select order_code_id from shop_order_product where commodity_type_info_id = #{commodityId}) and status between 3 and 7)
+         and commodity_type_info_id = #{commodityId}
+    </select>
+
+    <select id="findRate" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select ROUND(sum(star)/2,1) as rate from shop_order_comment
+        where commodity_type_info_id = #{pushShopCommodityId}
+    </select>
+
+    <select id="findBuyer" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count( s.account)
+        from shop_order s left join shop_order_product p on s.order_code = p.order_code_id
+        where p.commodity_type_info_id = #{commodityId} and s.status between 3 and 7
+    </select>
+
+    
+</mapper>
+

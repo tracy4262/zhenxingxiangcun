@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.NetWorkInfoMapper">
+
+
+    <select id="getNetworkInfoByAccount" resultType="java.util.Map" parameterType="java.util.Map" >
+        select
+        n.id,
+        n.account,
+        n.netWorkInfo_name,
+        n.authority,
+        n.nswy_id,
+        n.nswy_id_model,
+        n.qq_number,
+        n.qq_number_model,
+        n.weChat,
+        n.weChat_model,
+        n.email,
+        n.email_model,
+        n.apply_domain,
+        n.apply_domain_model,
+        n.year_id,
+        n.template_id as templateId
+
+        from network_info n
+
+        where n.account = #{user_id}
+
+        <if test="year_id !='' and year_id !=null">
+            and n.year_id = #{year_id}
+        </if>
+
+        <if test="templateId !='' and templateId !=null">
+            and n.template_id = #{templateId}
+        </if>
+    </select>
+
+    <select id="findNetworkInfo" resultType="java.util.Map" parameterType="java.util.Map" >
+        select
+        n.id,
+        n.account,
+        n.netWorkInfo_name,
+        n.authority,
+        n.nswy_id,
+        n.nswy_id_model,
+        n.qq_number,
+        n.qq_number_model,
+        n.weChat,
+        n.weChat_model,
+        n.email,
+        n.email_model,
+        n.apply_domain,
+        n.apply_domain_model,
+        n.year_id,
+        n.template_id as templateId
+
+        from network_info n
+
+        where n.account = #{user_id}
+
+    </select>
+
+
+    <insert id="insertNetworkInfo" parameterType="java.util.Map" >
+        replace into network_info(
+            id,
+            account,
+            netWorkInfo_name,
+            authority,
+            nswy_id,
+            nswy_id_model,
+            qq_number,
+            qq_number_model,
+            weChat,
+            weChat_model,
+            email,
+            email_model,
+            apply_domain,
+            apply_domain_model,
+            year_id,
+            template_id
+            )
+        values (
+            #{id},
+            #{user_id},
+            #{netWorkInfo_name},
+            #{status},
+            #{ID.name},
+            #{ID.model},
+            #{QQ.name},
+            #{QQ.model},
+            #{weChat.name},
+            #{weChat.model},
+            #{Email.name},
+            #{Email.model},
+            #{domainName.name},
+            #{domainName.model},
+            #{year_id},
+            #{templateId}
+        )
+    </insert>
+
+    <update id="updateReal" parameterType="map">
+        update reversion_member_virtual_info set qq_number = #{QQ.model},email = #{Email.model} where user_id = #{user_id}
+    </update>
+
+    <update id="updateLoginUserName" parameterType="map">
+        update certification  set realname = #{realname.model} where user_account = #{user_id}
+    </update>
+
+    <update id="updateNetworkInfoName" parameterType="map">
+        update network_info set netWorkInfo_name = #{propertyName} where account = #{account} and year_id = #{yearId}
+    </update>
+
+
+</mapper>

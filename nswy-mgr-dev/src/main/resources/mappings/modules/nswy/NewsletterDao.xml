@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.NewsletterDao">
+
+	<select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.NewsletterInfo" resultType="com.ovit.manager.modules.nswy.entity.NewsletterInfo">
+		SELECT * FROM (
+            SELECT
+                t1.id,
+                t1.title,
+                t1.abstracts,
+                t1.is_nav_display,
+                t1.create_time,
+                t1.order_num,
+                "知识" AS type
+            FROM
+                knowledge t1
+            WHERE
+                t1.column_type = "短信"
+            UNION ALL
+            SELECT
+                t2.id,
+                t2.title,
+                t2.abstracts,
+                t2.is_nav_display,
+                t2.create_time,
+                t2.order_num,
+                "资讯" AS type
+            FROM
+                information t2
+            WHERE
+                t2.column_type = "短信"
+            UNION ALL
+            SELECT
+            t3.id,
+                t3.title,
+                t3.abstracts,
+                t3.is_nav_display,
+                t3.create_time,
+                t3.order_num,
+                "政策" AS type
+            FROM
+                policy t3
+             WHERE
+                t3.column_type = "短信"
+        )t11
+        <where>
+            <if test="title != null and title != ''">
+                t11.title LIKE CONCAT('%',#{title},'%')
+            </if>
+        </where>
+        ORDER BY  t11.create_time DESC
+	</select>
+
+    <delete id="deleteNewsletter" parameterType="java.lang.Integer">
+        DELETE FROM ${TABLE_NAME} WHERE id = #{id}
+    </delete>
+
+    <update id="newsletterUpdateNavDisplay" parameterType="map">
+        UPDATE ${TABLE_NAME} SET is_nav_display = #{status} WHERE id = #{id}
+    </update>
+    <update id="newsletterSetOrderNum" parameterType="map">
+        UPDATE ${TABLE_NAME} SET order_num = #{orderNum} WHERE id = #{id}
+    </update>
+</mapper>

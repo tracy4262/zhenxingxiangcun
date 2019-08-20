@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.NswyPolicyExamineDao">
+
+	<select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.PolicyInfo" resultType="com.ovit.manager.modules.nswy.entity.PolicyInfo">
+        SELECT
+            p.id,
+            p.information_detail_id,
+            p.business_information,
+            p.all_range,
+            p.business_nature,
+            p.all_business,
+            p.title,
+            p.image_add,
+            DATE_FORMAT(p.create_time,"%Y-%m-%d %T") AS createTime,
+            p.comment_num,
+            p.label,
+            p.article_id,
+            p.industrial_id,
+            CASE p.doc_type
+            WHEN '030201' THEN '政策法规'
+            WHEN '030202' THEN '政策解读'
+            WHEN '030203' THEN '通知公告'
+            WHEN '030204' THEN '村务公开'
+            WHEN '030205' THEN '党务公开'
+            WHEN '030206' THEN '公告公示'
+            WHEN '030207' THEN '政务法规'
+            WHEN '030208' THEN '政务公开'
+            WHEN '030209' THEN '党务动态'
+            WHEN '030210' THEN '政务动态'
+            END AS docType,
+            p.abstracts,
+            p.classified_id,
+            p.is_to_page,
+            p.species_id,
+            p.species_name,
+            p.expert,
+            p.company,
+            p.issued_NO,
+            p.product,
+            p.service,
+            p.friend_reminding,
+            p.reminding_content,
+            p.is_sms,
+            p.is_publish,
+            p.componsation,
+            p.column_type,
+            p.publish_time,
+            p.account,
+            CASE p.approve_status
+            WHEN '0' THEN '待审核'
+            WHEN '1' THEN '删除'
+            WHEN '2' THEN '审核通过'
+            WHEN '3' THEN '拒绝'
+            END AS approveStatus,
+            p.is_nav_display,
+            p.order_num,
+            d.editer
+        FROM
+        policy p left join policy_detail d on p.information_detail_id = d.id
+        where 1=1
+        <if test="title != null and title != ''">
+            and p.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="approveStatus != null and approveStatus != ''">
+            and p.approve_status = #{approveStatus}
+        </if>
+        ORDER BY p.create_time DESC
+	</select>
+
+    <delete id="deletePolicy" parameterType="java.lang.Integer" >
+        DELETE
+            t1,t2,t3,t4,t5
+        FROM
+            policy t1
+        LEFT JOIN policy_detail t2 ON t1.information_detail_id = t2.id
+        LEFT JOIN policy_comment t3 ON t2.id = t3.information_detail_id
+        LEFT JOIN thumb_comment t4 ON t3.id = t4.comment_id
+        LEFT JOIN thumb_detail t5 ON t5.detail_id = t1.information_detail_id
+        WHERE t1.id = #{policyInfoId,jdbcType=INTEGER}
+    </delete>
+
+    <update id="policyAdopt" parameterType="map">
+        UPDATE policy SET approve_status = 2 WHERE id = #{policyInfoId}
+    </update>
+
+    <update id="policyRefuse" parameterType="map">
+        UPDATE policy SET approve_status = 3 WHERE id = #{policyInfoId}
+    </update>
+
+    <update id="policyUpdateHome" parameterType="map" >
+        UPDATE policy SET is_to_page = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="policyUpdateNavDisplay" parameterType="map">
+        UPDATE policy SET is_nav_display = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="policySetOrderNum" parameterType="map">
+        UPDATE policy SET order_num = #{orderNum} WHERE id = #{id}
+    </update>
+</mapper>

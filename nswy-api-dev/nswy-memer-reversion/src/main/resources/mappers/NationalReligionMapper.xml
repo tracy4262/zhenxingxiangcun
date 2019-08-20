@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.perfectInfo.mapper.NationalReligionMapper">
+
+    <select id="find" parameterType="map" resultType="map">
+        select id, year_file_id as yearId, number, name, card, phone, faction, position, type, staff_id as staffId,template_id as templateId
+        from reversion_national_religion
+        where account = #{account} and year_file_id = #{yearId} and template_id = #{templateId}
+    </select>
+
+    <select id="findFaction" parameterType="map" resultType="map">
+        select faction as name, count(faction) as number
+        from reversion_national_religion
+        where account = #{account} and year_file_id = #{yearId}
+        group by faction
+
+
+
+
+
+
+    </select>
+
+    <delete id="delete" parameterType="map">
+        delete from reversion_national_religion where account = #{account} and year_file_id = #{yearId}
+    </delete>
+
+    <select id="findStaffInfo" parameterType="map" resultType="map">
+        select id, user_id as account, year_id as yearId, number, name, card, phone, faith, position,template_id as templateId
+        from reversion_employee_roster
+        where user_id = #{account} and year_id = #{yearId} and template_id = #{templateId} and faith is not null and faith != '' and faith != '无'
+    </select>
+
+    <select id="findOffStaff" parameterType="map" resultType="map">
+        select id, user_id as account, year_id as yearId, number, name, card, phone, faith, position,template_id as templateId
+        from reversion_list_of_extra_staff
+        where user_id = #{account} and year_id = #{yearId} and template_id = #{templateId} and faith is not null and faith != '' and faith != '无'
+    </select>
+
+
+    <insert id="save" parameterType="map">
+        insert into reversion_national_religion (
+        account,
+        year_file_id,
+        number,
+        name,
+        card,
+        phone,
+        faction,
+        position,
+        type,
+        staff_id,
+        template_id
+        )values
+        <if test="list.size() > 0">
+            <foreach collection="list" item="item" index="index" separator=",">
+                (#{item.account}, #{item.yearId}, #{item.number}, #{item.name}, #{item.card},
+                #{item.phone}, #{item.faith}, #{item.position}, #{item.type}, #{item.id},#{item.templateId})
+            </foreach>
+        </if>
+    </insert>
+    
+    <update id="update" parameterType="map">
+        UPDATE reversion_national_religion
+        SET position = #{position}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStaff" parameterType="map">
+        UPDATE reversion_employee_roster
+        SET position = #{position}
+        WHERE user_id = #{account} and year_id = #{yearId} and id = #{staffId} and template_id = #{templateId}
+    </update>
+
+    <update id="updateOffStaff" parameterType="map">
+        UPDATE reversion_list_of_extra_staff
+        SET position = #{position}
+        WHERE user_id = #{account} and year_id = #{yearId} and id = #{staffId} and template_id = #{templateId}
+    </update>
+
+</mapper>

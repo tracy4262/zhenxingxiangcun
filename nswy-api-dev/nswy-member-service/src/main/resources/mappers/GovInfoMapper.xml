@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovit.nswy.member.mapper.GovInfoMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.GovInfo">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="gov_name" jdbcType="VARCHAR" property="govName" />
+		<result column="login_account" jdbcType="VARCHAR" property="loginAccount" />
+		<result column="organization_code" jdbcType="VARCHAR" property="organizationCode" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="gov_type" jdbcType="VARCHAR" property="govType" />
+		<result column="gov_level" jdbcType="VARCHAR" property="govLevel" />
+		<result column="location" jdbcType="VARCHAR" property="location" />
+		<result column="logo_picture_list" jdbcType="VARCHAR" property="logoPictureList" />
+		<result column="qualification_certificate_picture_list" jdbcType="VARCHAR" property="qualification_certificate_picture_list" />
+		<result column="unit_person_picture_list" jdbcType="VARCHAR" property="unitPersonPictureList" />
+		<result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+		<result column="coordinate" jdbcType="VARCHAR" property="coordinate"/>
+		<result column="address" jdbcType="VARCHAR" property="address"/>
+		<result column="country_type" jdbcType="VARCHAR" property="countryType"/>
+		<result column="phone" jdbcType="VARCHAR" property="phone"/>
+		<result column="gov_profile" jdbcType="VARCHAR" property="govProfile"/>
+		<result column="agencyer" jdbcType="VARCHAR" property="agencyer"/>
+		<result column="addr_detail" jdbcType="VARCHAR" property="addrDetail"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,
+		gov_name,
+		login_account,
+		organization_code,
+		create_time,
+		gov_type,
+		gov_level,
+		location,
+		logo_picture_list,
+		qualification_certificate_picture_list,
+		unit_person_picture_list,
+		coordinate,
+		address,
+		country_type,
+		phone,
+		gov_profile,
+		agencyer,
+		addr_detail
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from gov_info
+		where id = #{id} AND approve_status = 1
+	</select>
+    <select id="selectByName" parameterType="map" resultType="map">
+        select t1.id,t1.gov_name AS govName , t1.logo_picture_list AS logoPictureList , t1.login_account AS loginAccount,t1.country_type as userType
+        from gov_info t1 LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+		left join proxy_gov_info t on t1.id = t.info_id
+        where t.approve_status = 1  AND t2.is_home_display = 1
+
+        <if test="title != null and title != ''">
+            AND t1.gov_name like CONCAT('%',#{title},'%')
+        </if>
+        <if test="addr != null and addr !=''">
+            AND t1.location like CONCAT('%',#{addr},'%')
+        </if>
+        <if test="level != null and level != ''">
+            AND t1.gov_level = #{level}
+        </if>
+        ORDER by t1.create_time desc
+    </select>
+	<select id="findAll" resultMap="BaseResultMap">
+		select
+			t1.id,
+			t1.gov_name,
+			t1.login_account,
+			t1.organization_code,
+			t1.create_time,
+			t1.gov_type,
+			t1.gov_level,
+			t1.location,
+			t1.logo_picture_list,
+			t1.unit_person_picture_list,
+			t1.approve_status,
+			t1.coordinate,
+			t1.addr_detail
+		from gov_info t1 LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+		WHERE t2.is_home_display = 1 AND t1.approve_status = 1
+	</select>
+
+    <select id="findByAccount" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from gov_info  WHERE login_account = #{loginAccount} AND approve_status = 1
+    </select>
+
+	<select id="getApproveStatus" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT approve_status
+		FROM gov_info
+		WHERE login_account = #{loginAccount}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		DELETE FROM gov_info WHERE id = #{id}
+	</delete>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO gov_info (
+			<include refid="Base_Column_List" />
+		)
+		values (
+			#{id},
+			#{gov_name},
+			#{login_account},
+			#{organization_code},
+			now(),
+			#{gov_type},
+			#{gov_level},
+			#{location},
+			#{logo_picture_list},
+			#{qualification_certificate_picture_list},
+			#{unit_person_picture_list},
+			#{coordinate},
+			#{address},
+			#{country_type},
+			#{phone},
+			#{gov_profile},
+			#{agencyer},
+			#{addrDetail}
+		)
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.GovInfo">
+		update gov_info
+		set gov_name = #{govName},
+		login_account = #{loginAccount},
+		organization_code = #{organizationCode},
+		create_time =now(),
+		where id = #{id}
+	</update>
+
+	<select id="queryGovNotProxy" parameterType="map" resultType="map">
+		SELECT
+            t1.id,
+            t1.logo_picture_list AS logoUrl,
+            t1.gov_name AS orgName,
+            t1.login_account AS loginAccount,
+            DATE_FORMAT(t1.create_time,"%Y-%m-%d") AS createTime,
+			t1.country_type as countryType
+		FROM
+            gov_info t1
+		WHERE
+			t1.login_account NOT IN (
+				SELECT login_account FROM proxy_gov_info WHERE approve_status != 2
+			)
+		AND t1.approve_status = 1
+		<if test="govName != null and govName != ''">
+			AND t1.gov_name LIKE CONCAT('%',#{govName},'%')
+		</if>
+		<if test="location != null and location != ''">
+			AND t1.location LIKE CONCAT('%',#{location},'%')
+		</if>
+        ORDER BY t1.create_time DESC
+	</select>
+</mapper>

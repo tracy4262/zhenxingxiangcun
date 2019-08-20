@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.CoterieArticleMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.CoterieArticle">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="coterie_id" property="coterieId" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="creater_account" property="createrAccount"
+			jdbcType="VARCHAR" />
+		<result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+		<result column="avartar" property="avartar" jdbcType="VARCHAR" />
+		<result column="comment_num" property="commentNum" jdbcType="INTEGER" />
+		<result column="tour_num" property="tourNum" jdbcType="INTEGER" />
+		<result column="like_num" property="likeNum" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.ovit.nswy.member.model.CoterieArticle"
+		extends="BaseResultMap">
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, coterie_id, title, creater_account, creator_name, avartar,
+		comment_num, tour_num,
+		like_num, create_time
+	</sql>
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from coterie_article
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="findAll" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from coterie_article
+	</select>
+	<select id="findDesc" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from coterie_article ORDER BY create_time DESC LIMIT 9;
+	</select>
+	<select id="findById" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select *
+		from coterie_article where coterie_id=#{coterie_id,jdbcType=INTEGER} ORDER
+		BY create_time DESC
+	</select>
+	<select id="list" resultType="java.util.Map">
+
+		SELECT
+		t.*,
+		IFNULL(SUM(s.comment_num), 0) AS COMMENT,
+		COUNT(s.id) AS topic,
+		IFNULL(x.amt, 0) AS today
+		FROM
+		nswy.coterie t
+		LEFT JOIN nswy.coterie_article s
+		ON t.id = s.coterie_id
+		LEFT JOIN
+		(SELECT
+		t.coterie_id,
+		COUNT(c.id) AS amt
+		FROM
+		coterie_article t
+		INNER JOIN coterie_article_comment c
+		ON c.article_id = t.id
+		AND DATE_FORMAT(c.create_time, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d')
+		GROUP BY c.article_id,
+		t.coterie_id) x
+		ON t.id = x.coterie_id
+		GROUP BY t.id ;
+	</select>
+
+	<select id="rank" resultType="java.util.Map">
+		SELECT t.*,IFNULL(SUM(s.tour_num),0) AS tour FROM nswy.coterie t LEFT JOIN
+		nswy.coterie_article s
+
+		ON t.id=s.coterie_id AND DATE(s.create_time)=DATE(CURRENT_TIMESTAMP())
+		GROUP BY t.category ORDER BY tour DESC ;
+	</select>
+	<select id="findHot" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from coterie_article where
+		(YEARWEEK(DATE_FORMAT(coterie_article.create_time,
+		'%Y-%m-%d'),0)= YEARWEEK(NOW(), 0)) ORDER BY coterie_article.`tour_num` DESC LIMIT 9;
+	</select>
+	<select id="findDay" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from coterie_article where DATE(create_time)=DATE(NOW())
+		ORDER BY tour_num DESC LIMIT 9;
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from coterie_article
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.CoterieArticle">
+		insert into coterie_article (id, coterie_id, title,
+		creater_account, creator_name, avartar,
+		comment_num, tour_num, like_num,
+		create_time, content)
+		values (#{id,jdbcType=INTEGER}, #{coterieId,jdbcType=INTEGER},
+		#{title,jdbcType=VARCHAR},
+		#{createrAccount,jdbcType=VARCHAR}, #{creatorName,jdbcType=VARCHAR}, #{avartar,jdbcType=VARCHAR},
+		#{commentNum,jdbcType=INTEGER}, #{tourNum,jdbcType=INTEGER},
+		#{likeNum,jdbcType=INTEGER},
+		now(), #{content,jdbcType=LONGVARCHAR})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.CoterieArticle">
+		update coterie_article
+		set coterie_id = #{coterieId,jdbcType=INTEGER},
+		title = #{title,jdbcType=VARCHAR},
+		creater_account = #{createrAccount,jdbcType=VARCHAR},
+		creator_name = #{creatorName,jdbcType=VARCHAR},
+		avartar = #{avartar,jdbcType=VARCHAR},
+		comment_num = #{commentNum,jdbcType=INTEGER},
+		tour_num = #{tourNum,jdbcType=INTEGER},
+		like_num = #{likeNum,jdbcType=INTEGER},
+		create_time =now()
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.BankAccountMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.BankAccount">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="bankaccount" property="bankaccount" jdbcType="VARCHAR" />
+		<result column="realname" property="realname" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="idcard" property="idcard" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,account,bankaccount,realname,password,phone,idcard, create_time
+	</sql>
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from bank_account
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByAccount" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from bank_account
+		where account = #{account,jdbcType=VARCHAR}
+	</select>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.BankAccount">
+		replace into bank_account (id,account,bankaccount,
+		realname,password,phone,idcard, create_time)
+		values (#{id,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR},
+		#{bankaccount,jdbcType=VARCHAR},
+		#{realname,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+		#{idcard,jdbcType=VARCHAR},now()
+		)
+	</insert>
+
+	<update id="updateByAccount" parameterType="com.ovit.nswy.member.model.BankAccount">
+		UPDATE bank_account
+		SET bankaccount = #{bankaccount},
+			realname = #{realname},
+			password = #{password},
+			phone = #{phone},
+			idcard = #{idcard}
+		WHERE account = #{account}
+	</update>
+</mapper>

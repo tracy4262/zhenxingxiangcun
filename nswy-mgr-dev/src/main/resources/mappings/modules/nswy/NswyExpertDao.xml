@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.NswyExpertDao">
+	<resultMap id="BaseResultMap"
+			   type="com.ovit.manager.modules.nswy.entity.NswyExpert">
+		<id column="id" property="expertId" jdbcType="INTEGER" />
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="expert_name" property="expertName" jdbcType="VARCHAR" />
+		<result column="account" property="loginAccount" jdbcType="VARCHAR" />
+		<result column="expert_type" property="expertType" jdbcType="VARCHAR" />
+		<result column="adept_field" property="adeptField" jdbcType="VARCHAR" />
+		<result column="adept_species" property="adeptSpecies" jdbcType="VARCHAR" />
+		<result column="related_species" property="relatedSpecies" jdbcType="VARCHAR" />
+		<result column="related_industry" property="relatedIndustry" jdbcType="VARCHAR" />
+		<result column="related_product" property="relatedProduct" jdbcType="VARCHAR" />
+		<result column="related_service" property="relatedService" jdbcType="VARCHAR" />
+		<result column="approve_status" property="approveStatus" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="coordinate" property="coordinate" jdbcType="VARCHAR" />
+		<result column="user_type" property="userType" jdbcType="INTEGER" />
+		<result column="adept_field" property="adeptField" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+		id, expert_name, account, expert_type, adept_field, adept_species, related_species,
+		related_industry, related_product, related_service, approve_status, update_time,
+		create_time, coordinate
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+		select
+		<include refid="Base_Column_List" />
+		from reversion_expert_auth
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 搜索 查询专家表，并在后台通过PAGE实现分页 -->
+	<select id="findList" resultMap="BaseResultMap"
+			parameterType="com.ovit.manager.modules.nswy.entity.NswyExpert">
+		select a.id , a.expert_name,a.account,a.expert_type,
+		a.adept_species, a.approve_status,a.adept_field,a.personal_photo as personalPhoto,
+		a.qualification_certificate as qualificationCertificate,a.title
+		from reversion_expert_auth a
+
+		where 1=1
+		<if test="expertId != null and expertId != ''">
+			AND a.id = #{expertId,jdbcType=INTEGER}
+		</if>
+		<if test="expertName != null and expertName != ''">
+			AND a.expert_name like concat(concat('%',#{expertName}),'%')
+		</if>
+
+		<if test="expertType != null and expertType !=''">
+			AND a.expert_type like concat(concat('%',#{expertType}),'%')
+		</if>
+		<if test="approveStatus != null">
+			AND a.approve_status = #{approveStatus,jdbcType=INTEGER}
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+
+	<select id="get" resultMap="BaseResultMap"
+			parameterType="com.ovit.manager.modules.nswy.entity.NswyExpert">
+		select a.id , a.expert_name,a.account,a.expert_type,
+		a.adept_species, a.approve_status,a.adept_field,a.personal_photo as personalPhoto,
+		a.qualification_certificate as qualificationCertificate,a.title
+		from reversion_expert_auth a
+
+		where 1=1
+		<if test="expertName != null">
+			AND a.expert_name like concat(concat('%',#{expertName}),'%')
+		</if>
+		<if test="expertType != null">
+			AND a.expert_type like concat(concat('%',#{expertType}),'%')
+		</if>
+		<if test="approveStatus != null">
+			AND a.approve_status = #{approveStatus,jdbcType=INTEGER}
+		</if>
+		<if test="expertId != null">
+			AND a.id = #{expertId,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="getApproveStatus" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select approve_status
+		FROM reversion_expert_auth
+		WHERE account = #{loginAccount, jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateApproveStatus"  >
+		update reversion_expert_auth
+		set approve_status = #{approveStatus,jdbcType=INTEGER}
+		where id = #{expertId,jdbcType=INTEGER}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+		delete from reversion_expert_auth
+		where id = #{expertId,jdbcType=INTEGER}
+	</delete>
+
+
+</mapper>

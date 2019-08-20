@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.EmployOprMapper">
+    <insert id="saveEmployOprInfo" parameterType="map">
+        INSERT INTO employ_opr_record (
+            opr_id,employ_id,sender_account,receiver_account,opr_record,create_time
+        )VALUES (
+            UUID(),#{id},#{senderAccount},#{receiverAccount},#{oprRecord},NOW()
+        )
+    </insert>
+</mapper>

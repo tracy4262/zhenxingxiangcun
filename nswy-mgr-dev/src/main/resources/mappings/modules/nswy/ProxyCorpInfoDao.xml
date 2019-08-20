@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.ProxyCorpInfoDao" >
+  <resultMap id="BaseResultMap" type="com.ovit.manager.modules.nswy.entity.ProxyCropInfo" >
+    <id column="id" jdbcType="INTEGER" property="proxyCorpInfoId" />
+    <result column="login_account" jdbcType="VARCHAR" property="loginAccount" />
+    <result column="corp_name" jdbcType="VARCHAR" property="corpName" />
+    <result column="business_scope" jdbcType="VARCHAR" property="businessScope" />
+    <result column="credit_code" jdbcType="VARCHAR" property="creditCode" />
+    <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
+    <result column="identification_card" jdbcType="VARCHAR" property="identificationCard" />
+    <result column="identification_card_url" jdbcType="VARCHAR" property="identificationCardUrl" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+    <result column="registered_capital" jdbcType="DOUBLE" property="registeredCapital" />
+    <result column="establish_date" jdbcType="VARCHAR" property="establishDate" />
+    <result column="busniss_term" jdbcType="VARCHAR" property="busnissTerm" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="company_type" jdbcType="VARCHAR" property="companyType" />
+    <result column="business_license_url" jdbcType="VARCHAR" property="businessLicenseUrl" />
+    <result column="company_address" jdbcType="VARCHAR" property="companyAddress" />
+    <result column="info_id" jdbcType="VARCHAR" property="infoId" />
+    <result column="corp_type" jdbcType="VARCHAR" property="corpType" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+     c.id as proxyCorpInfoId, c.login_account as loginAccount, c.corp_name as corpName, c.business_scope as businessScope, c.credit_code as creditCode,
+    c.legal_person as legalPerson, c.identification_card as identificationCard,c.identification_card_url as identificationCardUrl, c.create_time as createTime, c.approve_status as approveStatus,
+    c.registered_capital as registeredCapital, c.establish_date as establishDate, c.busniss_term as busnissTerm,
+    c.location as location, c.company_type as companyType,
+    c.business_license_url as businessLicenseUrl,c.company_address as companyAddress,c.info_id as infoId,c.corp_type as corpType,c.remark,c.addr_detail as addrDetail
+  </sql>
+
+  <sql id="Base_Column_Lists">
+    b.corp_name as corpName1, b.business_scope as businessScope1, b.credit_code as creditCode1,
+    b.legal_person as legalPerson1, b.identification_card as identificationCard1,b.identification_card_url as identificationCardUrl1, b.create_time as createTime1, b.approve_status as approveStatus1,
+    b.registered_capital as registeredCapital1, b.establish_date as establishDate1, b.busniss_term as busnissTerm1,
+    b.location as location1, b.company_type as companyType1,
+    b.business_license_url as businessLicenseUrl1,b.company_address as companyAddress1,b.addr_detail as addrDetail1
+
+  </sql>
+
+
+  <select id="findList" parameterType="java.util.Map" resultType="java.util.Map">
+    SELECT
+    <include refid="Base_Column_List" />,l.display_name as agencyName
+    from proxy_corp_info c left join login_user l on c.login_account = l.login_account
+    where 1=1
+    <if test="corpName!='' and corpName!=null">
+
+      and c.corp_name LIKE CONCAT('%',#{corpName},'%')
+
+    </if>
+
+    <if test="approveStatus!='' and approveStatus!=null">
+
+      and c.approve_status =#{approveStatus}
+
+    </if>
+    order by c.create_time desc
+  </select>
+
+
+
+
+  <select id="selectByPrimaryKey" parameterType="com.ovit.manager.modules.nswy.entity.ProxyCropInfo" resultType="com.ovit.manager.modules.nswy.entity.ProxyCropInfo">
+
+    SELECT
+    <include refid="Base_Column_List" />,<include refid="Base_Column_Lists" />
+    from proxy_corp_info c left join login_user l on c.login_account = l.login_account
+    left join corp_info b on c.info_id=b.id
+    where c.id = #{proxyCorpInfoId,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="com.ovit.manager.modules.nswy.entity.ProxyCropInfo" >
+    delete from proxy_corp_info
+    where id = #{proxyCorpInfoId,jdbcType=INTEGER}
+  </delete>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ovit.manager.modules.nswy.entity.ProxyCropInfo" >
+    update proxy_corp_info
+    set approve_status = #{approveStatus}
+    <if test="remark!=null and remark !=''">
+      , remark = #{remark}
+    </if>
+    where id = #{proxyCorpInfoId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateCorpInfo" parameterType="com.ovit.manager.modules.nswy.entity.ProxyCropInfo" >
+    update corp_info
+    set approve_status = 1
+    where id = #{infoId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateLoginUser" parameterType="com.ovit.manager.modules.nswy.entity.ProxyCropInfo">
+    update login_user set is_real_identity = 'Y' where login_account = (select login_account from corp_info where id = #{infoId,jdbcType=INTEGER} )
+  </update>
+
+
+
+</mapper>

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.EmployMapper">
+
+    <!--查询所有聘请的专家  -->
+    <select id="selectAll" parameterType="map" resultType="map">
+        SELECT
+            t1.id AS id,
+            CASE t1.employ_status
+                WHEN '0' THEN '待处理'
+                WHEN '1' THEN '接受'
+                WHEN '2' THEN '拒绝'
+                WHEN '4' THEN '申请辞职中'
+                WHEN '3' THEN '解聘'
+            END AS employStatus,
+            t3.display_name AS expertName,
+            t2.adept_field AS adeptField,
+            t2.adept_species AS adeptSpecies,
+            t2.related_industry AS relatedIndustry,
+            t2.related_species AS relatedSpecies
+        FROM
+            expert_employ t1
+        LEFT JOIN
+            expert_info t2
+        ON
+            t1.receiver_account = t2.login_account
+        LEFT JOIN
+            login_user t3
+        ON
+            t1.receiver_account = t3.login_account
+        WHERE
+            t1.sender_account = #{loginAccount}
+
+        <if test='keyWord != null and keyWord !=""'>
+            AND t3.display_name LIKE CONCAT('%',#{keyWord},'%')
+        </if>
+
+        <if test="relatedIndustryArray != null and relatedIndustryArray != ''">
+            <foreach collection="relatedIndustryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t2.related_industry LIKE CONCAT("%",#{item},"%")
+            </foreach>
+        </if>
+
+        <if test="relatedSpeciesArray != null and relatedSpeciesArray != ''">
+            <foreach collection="relatedSpeciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t2.related_species LIKE CONCAT("%",#{item},"%")
+            </foreach>
+        </if>
+        ORDER BY t1.create_time DESC
+    </select>
+
+    <!--查询所有未聘请的专家  -->
+    <select id="expertAllTable" parameterType="map" resultType="map">
+        SELECT
+            t1.id AS id,
+            t1.login_account AS loginAccount,
+            IFNULL(t1.avatar,"") AS avatar,
+            IFNULL(t1.display_name,"") AS expertName,
+            IFNULL(t3.addr,"") AS addr,
+            CASE t3.sex
+                WHEN '1' THEN '男'
+                WHEN '0' THEN '女'
+            ELSE ""
+            END AS sex
+        FROM
+            login_user t1
+        LEFT JOIN
+            expert_info t2
+        ON
+            t1.login_account = t2.login_account
+        LEFT JOIN
+            user_info t3
+        ON
+            t1.login_account = t3.account
+        WHERE
+            t1.user_type = 4
+        AND
+            t1.login_account != #{loginAccount}
+        AND t2.approve_status = 1
+        AND
+            t1.login_account NOT IN (
+                SELECT
+                    t3.receiver_account
+                FROM
+                    expert_employ t3
+                WHERE
+                    t3.sender_account = #{loginAccount}
+                AND(
+                    t3.employ_status = "1" OR t3.employ_status = "4"
+                )
+            )
+        <if test="relatedIndustryArray != null and relatedIndustryArray != ''">
+            <foreach collection="relatedIndustryArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t2.related_industry LIKE CONCAT("%",#{item},"%")
+            </foreach>
+        </if>
+
+        <if test="relatedSpeciesArray != null and relatedSpeciesArray != ''">
+            <foreach collection="relatedSpeciesArray" item="item" index="index" open="AND(" close=")" separator="OR">
+                t2.related_species LIKE CONCAT("%",#{item},"%")
+            </foreach>
+        </if>
+
+        <if test="location != null and location != ''">
+           AND t3.addr LIKE CONCAT('%',#{location},'%')
+        </if>
+
+        <if test='keyWord != null and keyWord !=""'>
+            AND t1.display_name LIKE concat('%',#{keyWord},'%')
+        </if>
+
+        ORDER BY t1.id DESC
+    </select>
+
+    <select id="queryCorpUserNotice" parameterType="map" resultType="map">
+        SELECT
+            t1.id AS id,
+            CASE t1.employ_status
+              WHEN '0' THEN '待处理'
+              WHEN '4' THEN '申请辞职中'
+            END AS employStatus,
+            t1.create_time AS createTime,
+            t1.sender_account AS senderAccount,
+            t1.receiver_account AS receiveraccount,
+            t2.corp_name  AS applicantName
+        FROM
+            expert_employ t1
+        LEFT JOIN corp_info t2 ON t1.sender_account = t2.login_account
+        WHERE
+            t1.employ_status = 4  AND t1.sender_account = #{loginAccount}
+        ORDER BY t1.create_time DESC
+    </select>
+    <select id="queryGovUserNotice" parameterType="map" resultType="map">
+        SELECT
+            t1.id AS id,
+            CASE t1.employ_status
+              WHEN '0' THEN '待处理'
+              WHEN '4' THEN '申请辞职中'
+            END AS employStatus,
+            t1.create_time AS createTime,
+            t1.sender_account AS senderAccount,
+            t1.receiver_account AS receiveraccount,
+            t2.gov_name  AS applicantName
+        FROM
+            expert_employ t1
+        LEFT JOIN gov_info t2 ON t1.sender_account = t2.login_account
+        WHERE
+            t1.employ_status = 4  AND t1.sender_account = #{loginAccount}
+        ORDER BY t1.create_time DESC
+    </select>
+    <select id="queryExpertUserNotice" parameterType="map" resultType="map">
+        SELECT
+            id,
+            employStatus,
+            createTime,
+            senderAccount,
+            receiveraccount,
+            applicantName
+        FROM (
+            SELECT
+                t1.id AS id,
+                CASE t1.employ_status
+                  WHEN '0' THEN '待处理'
+                  WHEN '4' THEN '申请辞职中'
+                END AS employStatus,
+                t1.create_time AS createTime,
+                t1.sender_account AS senderAccount,
+                t1.receiver_account AS receiveraccount,
+                t2.display_name  AS applicantName
+            FROM
+                expert_employ t1
+            LEFT JOIN
+                login_user t2
+            ON
+                t1.receiver_account = t2.login_account
+            WHERE
+                t1.employ_status = 4
+            AND
+                t1.sender_account = #{loginAccount}
+            UNION ALL
+            SELECT
+                t1.id AS id,
+                CASE t1.employ_status
+                    WHEN '0' THEN '待处理'
+                    WHEN '4' THEN '申请辞职中'
+                END AS employStatus,
+                t1.create_time AS createTime,
+                t1.sender_account AS senderAccount,
+                t1.receiver_account AS receiveraccount,
+                IFNULL(IFNULL(t4.gov_name,t3.corp_name),t2.display_name)   AS applicantName
+            FROM
+                expert_employ t1
+            LEFT JOIN login_user t2 ON t1.sender_account = t2.login_account
+            LEFT JOIN corp_info t3 ON t1.sender_account = t3.login_account
+            LEFT JOIN gov_info t4 ON  t1.sender_account = t4.login_account
+            WHERE
+                t1.employ_status = 0
+            AND
+                t1.receiver_account = #{loginAccount}
+            ) t11
+            ORDER BY t11.createTime DESC
+    </select>
+    <select id="queryCommonUserNotice" parameterType="map" resultType="map">
+        SELECT
+            t1.id AS id,
+            CASE t1.employ_status
+                WHEN '0' THEN '待处理'
+                WHEN '4' THEN '申请辞职中'
+            END AS employStatus,
+            t1.create_time AS createTime,
+            t1.sender_account AS senderAccount,
+            t1.receiver_account AS receiveraccount,
+            t2.display_name  AS applicantName
+        FROM
+            expert_employ t1
+        LEFT JOIN
+            login_user t2
+        ON
+            t1.sender_account = t2.login_account
+        WHERE
+            t1.employ_status = 4
+        AND
+            t1.sender_account = #{loginAccount}
+        ORDER BY t1.create_time DESC
+    </select>
+    <!--查询所有已经接收聘请的专家  -->
+    <select id="selectExpert" parameterType="com.ovit.nswy.member.model.request.ExpertQuery" resultType="map">
+        select b.*,a.* from expert_info b ,(
+        select * from expert_employ where employ_status = "1" and sender_account = #{account,jdbcType=VARCHAR}
+        ) a
+        where 1= 1
+        and b.login_account = a.receiver_account
+        and b.expert_name LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
+        <if test="relatedIndustry != null and relatedIndustry != '' ">
+            and b.related_industry=#{relatedIndustry,jdbcType=VARCHAR}
+        </if>
+        <if test="relatedProduct != null and relatedProduct != '' ">
+            and b.related_product=#{relatedProduct,jdbcType=VARCHAR}
+        </if>
+        <if test="relatedService != null and relatedService != '' ">
+            and b.related_service=#{relatedService,jdbcType=VARCHAR}
+        </if>
+        <if test="relatedSpecies != null and relatedSpecies != '' ">
+            and b.related_species=#{relatedSpecies,jdbcType=VARCHAR}
+        </if>
+        <if test="location != null and location != '' ">
+            and b.location = #{location,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <!--查询被聘请的公司  -->
+    <select id="selectAllCompany" parameterType="map" resultType="map">
+		SELECT
+		    t1.id AS id,
+		    IFNULL(IFNULL(t4.gov_name,t2.corp_name),t3.display_name) AS corpName,
+		    t1.create_time AS createTime,
+		    CASE t1.employ_status
+                WHEN '0' THEN '待处理'
+                WHEN '1' THEN '接受'
+                WHEN '2' THEN '拒绝'
+                WHEN '4' THEN '申请辞职中'
+            END AS employStatus
+        FROM
+            expert_employ t1
+        LEFT JOIN corp_info t2 ON t1.sender_account = t2.login_account
+        LEFT JOIN login_user t3 ON t3.login_account = t1.sender_account
+        LEFT JOIN gov_info t4 ON t1.sender_account = t4.login_account
+        WHERE
+            t1.receiver_account = #{loginAccount}
+        AND (t1.employ_status = 1 OR t1.employ_status = 4)
+        ORDER BY t1.create_time DESC,t1.id
+	</select>
+
+    <select id="findByid" parameterType="java.lang.Integer" resultType="map">
+		SELECT login_account AS loginAccount FROM login_user WHERE id = #{id}
+	</select>
+
+    <select id="queryIsExist" parameterType="map" resultType="map">
+        SELECT
+            id,
+            receiver_account AS receiverAccount,
+            sender_account AS senderAccount
+        FROM
+            expert_employ
+        WHERE
+            receiver_account = #{receiverAccount}
+        AND
+            sender_account = #{senderAccount}
+        AND employ_status != 3 AND employ_status != 2
+    </select>
+    <select id="queryById" parameterType="map" resultType="map">
+        SELECT
+            id,
+            receiver_account AS receiverAccount,
+            sender_account AS senderAccount
+        FROM
+            expert_employ
+        WHERE
+            id = #{id}
+    </select>
+    <!--发送邀请-->
+    <insert id="addExpert" parameterType="map" useGeneratedKeys="true" keyProperty="">
+
+        INSERT INTO expert_employ (
+            receiver_account,
+            sender_account,
+            employ_status,
+            create_time)
+        VALUES (
+            #{receiverAccount},
+            #{senderAccount},
+            #{employStatus},
+            #{createTime}
+        )
+	</insert>
+
+    <update id="updateExpert" parameterType="map">
+        UPDATE
+                expert_employ
+            SET
+                create_time = #{createTime},
+                employ_status = #{employStatus}
+            WHERE
+                receiver_account = #{receiverAccount}
+            AND
+                sender_account = #{senderAccount}
+    </update>
+    <!--接收聘请-->
+    <update id="acceptInvitation" parameterType="map">
+		UPDATE
+		    expert_employ
+		SET 
+		    employ_status = 1,
+		    deal_time = #{dealTime}
+		WHERE
+		    id = #{id}
+	</update>
+    <!--拒绝-->
+    <update id="declineInvitation" parameterType="map">
+		UPDATE
+		    expert_employ
+		SET 
+		    employ_status = 2,
+		    deal_time = #{dealTime}
+		WHERE
+		    id = #{id}
+	</update>
+
+    <!--解聘-->
+    <delete id="removeEmploy" parameterType="java.lang.Integer">
+	    UPDATE
+		    expert_employ
+		SET
+		    employ_status = 3,
+		    deal_time = NOW()
+		WHERE
+		    id = #{id}
+  	</delete>
+
+    <!--辞职申请 -->
+    <update id="resignation" parameterType="map">
+       UPDATE
+            expert_employ
+       SET
+            employ_status = #{employStatus}
+       WHERE
+            id = #{id}
+    </update>
+</mapper>

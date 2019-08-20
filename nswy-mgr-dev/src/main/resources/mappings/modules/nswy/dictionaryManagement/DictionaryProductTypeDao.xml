@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.dictionaryManagement.DictionaryProductTypeDao">
+
+    <select id="findList"
+            parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryProductType"
+            resultType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryProductType">
+        select
+        p.id,
+        p.classification_name as name,
+        case when p.parent_id is null then 0 else p.parent_id end as pid,
+        p.level,
+        p.classification_code as value,
+        p.remark
+
+        from mall_classification p left  join mall_classification i on p.parent_id = i.id
+        where 1=1
+        <if test="name!=null and name!=''">
+            and p.classification_name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="id!=null and id!=''">
+            and p.id = #{id}
+        </if>
+        order by p.classification_code
+    </select>
+
+    <insert id="saveProductType"
+            parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryProductType">
+        insert into mall_classification(id,
+                                        classification_name,
+                                        parent_id,
+                                        level,
+                                        classification_code,
+                                        remark)
+        values (#{id},
+                #{name},
+                #{pid},
+                #{level},
+                #{value},
+                #{remark});
+    </insert>
+
+    <update id="updateProductType"
+            parameterType="com.ovit.manager.modules.nswy.entity.dictionaryManagement.DictionaryProductType">
+        update mall_classification
+        set
+            classification_name = #{name},
+            classification_code = #{value},
+            remark              = #{remark}
+
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductType" parameterType="java.lang.String">
+        delete
+        from mall_classification
+        where id = #{id}
+    </delete>
+
+</mapper>

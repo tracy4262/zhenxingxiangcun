@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.DictionaryManageDao" >
+
+    <select id="findList" parameterType="com.ovit.manager.modules.nswy.entity.DictionaryManageInfo" resultType="com.ovit.manager.modules.nswy.entity.DictionaryManageInfo">
+        select
+            id as dictId,
+            dict_name as dictName,
+            remark,
+            url
+
+         from sys_dictionary_manage
+         where 1=1
+        <if test="dictId != null and dictId != ''">
+            and id = #{dictId}
+        </if>
+         <if test="dictName != null and dictName != ''">
+            and dict_name LIKE CONCAT('%',#{dictName},'%')
+         </if>
+         order by create_time desc
+    </select>
+
+    <update id="updateDictionaryManage" parameterType="com.ovit.manager.modules.nswy.entity.DictionaryManageInfo">
+        update sys_dictionary_manage
+        set
+          dict_name = #{dictName},
+          remark = #{remark},
+          url = #{url}
+
+        where id = #{dictId}
+    </update>
+
+    <delete id="deleteDictionaryManage" parameterType="java.lang.String">
+        delete from sys_dictionary_manage where id= #{dictId}
+    </delete>
+
+</mapper>

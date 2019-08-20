@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.ColumnSettingsMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.ColumnSettings">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_account" property="userAccount" jdbcType="VARCHAR" />
+		<result column="column_name" property="columnName" jdbcType="VARCHAR" />
+		<result column="security" property="security" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="TIMESTAMP" />
+		<result column="label" property="label" jdbcType="VARCHAR" />
+		<result column="column_value" property="columnValue" jdbcType="VARCHAR" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, user_account, column_name, security, status,
+		last_update_time,label,column_value
+	</sql>
+	<select id="findColumnSet" resultMap="BaseResultMap"  parameterType="com.ovit.nswy.member.model.ColumnSettings">
+		select
+		<include refid="Base_Column_List" />
+		from column_settings
+		where 1=1
+		<if test="userAccount!=null">
+			and user_account = #{userAccount,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="findColumns" resultMap="BaseResultMap"
+		parameterType="com.ovit.nswy.member.model.ColumnSettings">
+		select
+		<include refid="Base_Column_List" />
+		from column_settings
+		where 1=1
+		<if test="userAccount!=null">
+			and user_account = #{userAccount,jdbcType=VARCHAR}
+		</if>
+		<if test="columnName!=null">
+			and column_name= #{columnName,jdbcType=VARCHAR}
+		</if>
+	</select>
+    <update id="updateLabel" parameterType="com.ovit.nswy.member.model.ColumnSettings">
+        UPDATE column_settings
+        set label=#{label,jdbcType=VARCHAR} ,
+            last_update_time = now()
+        where user_account = #{userAccount,jdbcType=VARCHAR}
+    </update>
+
+	<select id="findColumnSetting" resultMap="BaseResultMap" parameterType="com.ovit.nswy.member.model.ColumnSettings">
+		SELECT  column_value FROM column_settings
+		where user_account = #{userAccount,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="insert" parameterType="java.util.List">
+  	<![CDATA[
+		insert into column_settings (id, user_account, `column_name`, security, status, last_update_time,label)
+        values
+		]]>
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.id},#{item.userAccount},#{item.columnName},#{item.security},#{item.status},now(),#{item.label})
+		</foreach>
+	</insert>
+
+	<insert id="insertByNewVersion" parameterType="com.ovit.nswy.member.model.ColumnSettings">
+		<![CDATA[
+		insert into column_settings (user_account, column_value, label)
+        values
+		]]>
+			(#{userAccount},#{columnValue},#{label})
+	</insert>
+
+    <!--<update id="updateByColumn" parameterType="java.util.List">
+        <foreach collection="list" item="item"  separator=";">
+            update column_settings set last_update_time=now(),
+            status= #{item.status},
+            security=#{item.security}
+            where `column_name` =#{item.columnName}
+            and user_account=#{item.userAccount}
+        </foreach>
+    </update>-->
+
+
+    <update id="updateByColumn" parameterType="java.util.List">
+        update column_settings
+        set last_update_time=now(),
+        status=
+        <foreach collection="list" item="item" open="case column_name" separator=" " close="end">
+            when #{item.columnName} then #{item.status}
+        </foreach>
+        ,security=
+        <foreach collection="list" item="item" open="case column_name" separator=" " close="end">
+            when #{item.columnName} then #{item.security}
+        </foreach>
+        <trim prefix=",label= case column_name" suffix="end">
+        <foreach collection="list" item="item" >
+            <if test="item.label != null">
+              when #{item.columnName} then #{item.label}
+            </if>
+        </foreach>
+        </trim>
+        where column_name in
+            <foreach collection="list" item="item" open="(" separator="," close=")">
+                   #{item.columnName}
+            </foreach>
+       and user_account in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.userAccount}
+        </foreach>
+    </update>
+
+
+	<delete id="deleteByAccount" parameterType="java.lang.String">
+		delete from column_settings where user_account=#{account,jdbcType=VARCHAR}
+	</delete>
+
+	<delete id="deleteByColumn" parameterType="com.ovit.nswy.member.model.ColumnSettings">
+		delete from column_settings where 1=1
+		<if test="columnName!=null">
+			and column_name= #{columnName,jdbcType=VARCHAR}
+		</if>
+		and user_account=#{userAccount,jdbcType=VARCHAR}
+	</delete>
+
+    <select id="findByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from column_settings where user_account=#{account,jdbcType=VARCHAR}
+    </select>
+
+	<insert id="saveContact" parameterType="map">
+		<![CDATA[
+		replace into member_contact(
+		id,
+		account,
+		concat,
+		phone,
+		postCode,
+		location,
+		address,
+		coordinate,
+		latitude,
+		longitude,
+		remark,
+		tag,
+		safeFormData
+		)
+        values
+		]]>
+		(
+		#{id},
+		#{account},
+		#{concat},
+		#{phone},
+		#{postCode},
+		#{location},
+		#{address},
+		#{coordinate},
+		#{latitude},
+		#{longitude},
+		#{remark},
+		#{tag},
+		#{safeFormData}
+		)
+	</insert>
+
+	<select id="findContact" parameterType="map" resultType="map">
+		select id, account, concat, phone, postCode, location, address,
+		coordinate, latitude, longitude, remark, tag, safeFormData
+		from member_contact where account = #{account}
+	</select>
+
+	<delete id="deleteContact" parameterType="map">
+		delete from member_contact where id = #{id}
+	</delete>
+
+</mapper>

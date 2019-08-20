@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    default:
+      name: nswy
+      url: jdbc:mysql://127.0.0.1:3306/nswy?useUnicode=true&characterEncoding=UTF-8
+      username: nswy
+      password: 1234
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      filters: stat
+      maxActive: 20
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+
+  redis:
+    host: 47.92.108.227
+    password: 123456
+    port: 6379
+    database: 0
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 20000
+      min-idle: 0
+  timeout: 10000
+
+  elasticsearch:
+    esHost: 106.14.65.102
+    esPort:  9300
+    esClusterName: elasticsearch
+
+feign:
+  client:
+    url: http://127.0.0.1:11100
+
+springfox:
+  name: 武汉光谷信息技术股份有限公司
+  title: 物种百科在线文档
+  description: 物种百科相关接口文档

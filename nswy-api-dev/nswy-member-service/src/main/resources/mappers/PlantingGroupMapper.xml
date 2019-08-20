@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.PlantingGroupMapper">
+
+	<select id="queryMaxLevel" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			MAX(group_level) AS level
+		FROM
+			planting_group
+		WHERE
+			founder_account = #{login_account}
+	</select>
+
+	<insert id="add" parameterType="java.util.Map">
+		INSERT INTO
+			planting_group
+		(
+			group_name,
+			group_level,
+			founder_account
+		)
+		VALUES
+		(
+			#{group_name},
+			#{level},
+			#{login_account}
+		)
+	</insert>
+
+	<delete id="del" parameterType="int">
+		DELETE FROM planting_group WHERE id = #{id}
+	</delete>
+
+	<delete id="delUser" parameterType="int">
+		DELETE FROM user_group WHERE group_id = #{id}
+	</delete>
+
+	<update id="rename" parameterType="java.util.Map" >
+		UPDATE planting_group SET group_name = #{group_name} WHERE id = #{id}
+	</update>
+
+	<update id="updateLevel" parameterType="java.util.Map">
+		UPDATE planting_group SET group_level = #{group_level} WHERE id = #{id}
+	</update>
+
+	<select id="getList" resultType="java.util.Map" parameterType="java.util.Map">
+		select * from planting_group WHERE founder_account = #{login_account} order by group_level
+	</select>
+</mapper>

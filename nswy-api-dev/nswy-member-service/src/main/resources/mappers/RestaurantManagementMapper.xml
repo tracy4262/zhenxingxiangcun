@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.RestaurantManagementMapper">
+
+	<select id="findRestaurant" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+				f.id,
+				f.account,
+				f.food_class_name as foodClassName,
+				f.create_time,
+				f.update_time
+		FROM food_class_management f
+
+		where 1=1
+		<if test="account !='' and account!=null">
+			and f.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and f.id = #{id}
+		</if>
+
+		<if test="foodClassName !='' and foodClassName!=null">
+			and f.food_class_name = #{foodClassName}
+		</if>
+
+
+		order by f.update_time desc
+
+	</select>
+
+	<select id="findRestaurantCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+		 count(*)
+		FROM food_class_management f
+
+		where 1=1
+
+		<if test="foodClassName !='' and foodClassName!=null">
+			and f.food_class_name = #{foodClassName}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and f.id != #{id}
+		</if>
+
+	</select>
+
+	<select id="findRestaurantNameCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM food_class_management f
+
+		where 1=1
+		<if test="account !='' and account!=null">
+			and f.account = #{account}
+		</if>
+
+		<if test="foodClassName !='' and foodClassName!=null">
+			and f.food_class_name = #{foodClassName}
+		</if>
+
+
+	</select>
+
+
+	<insert id="insertRestaurant" parameterType="java.util.Map">
+		insert into food_class_management(
+			account,
+			food_class_name,
+			create_time
+		) value (
+		#{account},
+		#{foodClassName},
+		now()
+		)
+	</insert>
+
+	<update id="updateRestaurant" parameterType="java.util.Map">
+		update food_class_management set food_class_name = #{foodClassName},
+
+			account = #{account}
+
+		where id = #{id}
+	</update>
+
+	<delete id="deleteRestaurant" parameterType="java.util.Map">
+		delete from food_class_management where id = #{id}
+	</delete>
+
+
+	<select id="findFoodManagementList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		f.id,
+		f.account,
+		f.food_class_id as foodClassId,
+		f.food_name as foodName,
+		f.food_price as foodPrice,
+		f.discount_price as discountPrice,
+		f.discount_proportion as discountProportion,
+		f.food_image as foodImage,
+		case f.status when '0' then '已停售'
+		else '热卖中' end as status,
+		f.create_time,
+		f.update_time,
+		c.food_class_name as foodClassName,
+		case when  p.id is not null then p.id else 0 end as flag,
+		p.type
+		FROM food_management f
+
+		left join food_class_management c on f.food_class_id = c.id left join product_management p on f.id = p.management_id
+
+		where 1=1
+
+		<if test="account !='' and account!=null">
+			and f.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and f.id = #{id}
+		</if>
+
+		<if test="foodName !='' and foodName!=null">
+			and f.food_name LIKE CONCAT("%",#{foodName},"%")
+		</if>
+
+		<if test="status !='' and status!=null">
+			and f.status = #{status}
+		</if>
+
+		<if test="foodClassId !='' and foodClassId!=null">
+			and c.id = #{foodClassId}
+		</if>
+
+		group by f.food_name
+
+		order by f.update_time desc
+
+	</select>
+
+	<select id="findFood" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+				f.id,
+				f.account,
+				f.food_class_id as foodClassId,
+				f.food_name as foodName,
+				f.food_price as foodPrice,
+				f.discount_price as discountPrice,
+				f.discount_proportion as discountProportion,
+				f.food_image as foodImage,
+				case f.status when '0' then '已停售'
+				else '热卖中' end as status,
+				f.create_time,
+				f.update_time,
+				c.food_class_name as foodClassName
+		FROM food_management f
+
+		left join food_class_management c on f.food_class_id = c.id
+
+		where 1=1
+
+		<if test="account !='' and account!=null">
+			and f.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and f.id = #{id}
+		</if>
+
+		<if test="foodName !='' and foodName!=null">
+			and f.food_name LIKE CONCAT("%",#{foodName},"%")
+		</if>
+
+		<if test="status !='' and status!=null">
+			and f.status = #{status}
+		</if>
+
+		<if test="foodClassId !='' and foodClassId!=null">
+			and c.id = #{foodClassId}
+		</if>
+
+		order by f.update_time desc
+
+	</select>
+
+	<select id="findFoodCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM food_management f
+
+		where 1=1
+
+		<if test="account !='' and account!=null">
+			and f.account = #{account}
+		</if>
+
+		<if test="foodName !='' and foodName!=null">
+			and f.food_name = #{foodName}
+		</if>
+
+		<if test="type == 0 ">
+			<if test="id !='' and id!=null">
+				and f.id != #{id}
+			</if>
+		</if>
+
+
+	</select>
+
+
+	<insert id="insertFood" parameterType="java.util.Map">
+		insert into food_management(
+				account,
+				food_class_id,
+				food_name,
+				food_price,
+				discount_price,
+				discount_proportion,
+				food_image,
+				status,
+				create_time
+		) value (
+			#{account},
+			#{foodClassId},
+			#{foodName},
+			#{foodPrice},
+			#{discountPrice},
+			#{discountProportion},
+			#{foodImage},
+			#{status},
+			now()
+		)
+	</insert>
+
+	<update id="updateFood" parameterType="java.util.Map">
+		update food_management
+		<set>
+			<if test="foodClassId!=null">
+				food_class_id =#{foodClassId},
+			</if>
+			<if test="foodName!=null">
+				food_name =#{foodName},
+			</if>
+			<if test="foodPrice!=null">
+				food_price =#{foodPrice},
+			</if>
+			<if test="discountPrice!=null">
+				discount_price =#{discountPrice},
+			</if>
+			<if test="discountProportion!=null">
+				discount_proportion =#{discountProportion},
+			</if>
+			<if test="foodImage!=null">
+				food_image =#{foodImage},
+			</if>
+			<if test="status!=null">
+				status =#{status},
+			</if>
+			account = #{account}
+		</set>
+
+
+
+		where id = #{id}
+	</update>
+
+	<delete id="deleteFood" parameterType="java.util.Map">
+		delete from food_management where id = #{id}
+	</delete>
+
+	<select id="findRoomManagementList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		r.id,
+		r.account,
+		r.room_name as roomName,
+		r.min_price as minPrice,
+		r.room_describe as roomDescribe,
+		r.room_image as roomImage,
+		case r.status when '0' then '空闲中'
+		else '使用中' end as status,
+		r.create_time,
+		r.update_time,
+		case when  s.id is not null then s.id else 0 end as flag
+
+		FROM room_management r  left join room_service_management s on r.id = s.`management_id`
+
+		where 1=1
+
+		<if test="account !='' and account!=null">
+			and r.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and r.id = #{id}
+		</if>
+
+		<if test="roomName !='' and roomName!=null">
+			and r.room_name LIKE CONCAT("%",#{roomName},"%")
+		</if>
+
+		<if test="status !='' and status!=null">
+			and r.status =  #{status}
+		</if>
+
+		group by r.room_name
+
+		order by r.update_time desc
+
+	</select>
+
+	<select id="findRoom" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		r.id,
+		r.account,
+		r.room_name as roomName,
+		r.min_price as minPrice,
+		r.room_describe as roomDescribe,
+		r.room_image as roomImage,
+		case r.status when '0' then '空闲中'
+		else '使用中' end as status,
+		r.create_time,
+		r.update_time
+		FROM room_management r
+
+		where 1=1
+
+		<if test="account !='' and account!=null">
+			and r.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and r.id = #{id}
+		</if>
+
+		<if test="roomName !='' and roomName!=null">
+			and r.room_name LIKE CONCAT("%",#{roomName},"%")
+		</if>
+
+		<if test="status !='' and status!=null">
+			and r.status =  #{status}
+		</if>
+
+		order by r.update_time desc
+
+	</select>
+
+
+	<select id="findRoomCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM room_management r
+
+		where 1=1
+
+		<if test="account !='' and account!=null">
+			and r.account = #{account}
+		</if>
+
+
+		<if test="roomName !='' and roomName!=null">
+			and r.room_name= #{roomName}
+		</if>
+
+		<if test="type == 0">
+			<if test="id !='' and id!=null">
+				and r.id != #{id}
+			</if>
+		</if>
+
+	</select>
+
+
+	<insert id="insertRoom" parameterType="java.util.Map">
+		insert into room_management(
+				account,
+				room_name,
+				min_price,
+				room_describe,
+				room_image,
+				status,
+				create_time
+		) value (
+			#{account},
+			#{roomName},
+			#{minPrice},
+			#{roomDescribe},
+			#{roomImage},
+			#{status},
+			now()
+		)
+	</insert>
+
+	<update id="updateRoom" parameterType="java.util.Map">
+		update room_management
+		<set>
+			<if test="roomName!=null">
+				room_name =#{roomName},
+			</if>
+			<if test="minPrice!=null">
+				min_price =#{minPrice},
+			</if>
+			<if test="roomDescribe!=null">
+				room_describe =#{roomDescribe},
+			</if>
+			<if test="roomImage!=null">
+				room_image =#{roomImage},
+			</if>
+			<if test="status!=null">
+				status =#{status},
+			</if>
+			account = #{account}
+		</set>
+
+
+
+		where id = #{id}
+	</update>
+
+	<delete id="deleteRoom" parameterType="java.util.Map">
+		delete from room_management where id = #{id}
+	</delete>
+
+	<select id="findTable" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			t.id,
+			t.account,
+			t.location,
+			t.have_meals_num as haveMealsNum,
+			t.number,
+			case t.status when '0' then '空闲中'
+			else '使用中' end as status,
+			t.create_time,
+			t.update_time,
+			case when r.room_name is not null then r.room_name else '大厅' end as roomName
+
+		FROM table_management t left join room_management r on t.location = r.id
+
+		where 1=1
+
+		<if test="account !='' and account!=null">
+			and t.account = #{account}
+		</if>
+
+		<if test="id !='' and id!=null">
+			and t.id = #{id}
+		</if>
+
+		<if test="number !='' and number!=null">
+			and t.number =#{number}
+		</if>
+
+		<if test="status !='' and status!=null">
+			and t.status =#{status}
+		</if>
+
+		order by t.update_time desc
+
+	</select>
+
+	<select id="findTableCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+
+			count(*)
+
+		FROM table_management t
+
+		where 1=1
+
+		<if test="account !='' and account!=null">
+			and t.account = #{account}
+		</if>
+
+		<if test="number !='' and number!=null">
+			and t.number =#{number}
+		</if>
+
+	</select>
+
+	<insert id="insertTable" parameterType="java.util.Map">
+		insert into table_management(
+				account,
+				location,
+				have_meals_num,
+				number,
+				status,
+				create_time
+		) value (
+			#{account},
+			#{location},
+			#{haveMealsNum},
+			#{number},
+			#{status},
+			now()
+		)
+	</insert>
+
+	<update id="updateTable" parameterType="java.util.Map">
+		update table_management
+		<set>
+			<if test="location!=null">
+				location =#{location},
+			</if>
+			<if test="haveMealsNum!=null">
+				have_meals_num =#{haveMealsNum},
+			</if>
+			<if test="number!=null">
+				number =#{number},
+			</if>
+			<if test="status!=null">
+				status =#{status},
+			</if>
+			account = #{account}
+		</set>
+
+
+
+		where id = #{id}
+	</update>
+
+	<delete id="deleteTable" parameterType="java.util.Map">
+		delete from table_management where id = #{id}
+	</delete>
+
+
+</mapper>

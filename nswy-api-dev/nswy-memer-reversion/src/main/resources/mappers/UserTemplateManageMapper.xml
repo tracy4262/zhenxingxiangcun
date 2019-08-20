@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.userManage.mapper.UserTemplateManageMapper">
+
+    <select id="find" parameterType="map" resultType="map">
+        select
+            id,
+            account,
+            user_type as userType,
+            template_id as templateId,
+            carete_time
+        from
+
+        reversion_user_template_manage
+
+        where account = #{account} and status = '1'
+
+    </select>
+
+    <select id="findTemplate" parameterType="map" resultType="map">
+        select
+            id,
+            account,
+            user_type as userType,
+            template_id as templateId,
+            carete_time
+        from
+
+        reversion_user_template_manage
+
+        where account = #{account} and template_id = #{templateId}
+
+    </select>
+
+
+    <insert id="saveOrUpdate" parameterType="map">
+        insert into reversion_user_template_manage(
+            id,
+            account,
+            user_type,
+            template_id,
+            carete_time
+        )values (
+            #{id},
+            #{account},
+            #{userType},
+            #{templateId},
+            now()
+        );
+    </insert>
+
+    <update id="updateTemplate" parameterType="map">
+        update reversion_user_template_manage set status = 0 where account = #{account}
+    </update>
+
+    <update id="updateTemplateStatus" parameterType="map">
+        update reversion_user_template_manage set status = '1' where account = #{account} and template_id = #{templateId}
+    </update>
+
+</mapper>

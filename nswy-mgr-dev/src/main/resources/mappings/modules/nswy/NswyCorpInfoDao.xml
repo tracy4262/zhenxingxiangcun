@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.manager.modules.nswy.dao.NswyCorpInfoDao">
+	<resultMap id="BaseResultMap"
+		type="com.ovit.manager.modules.nswy.entity.NswyCorpInfo">
+		<id column="id" property="corpInfoId" jdbcType="INTEGER" />
+		<result column="login_account" property="loginAccount" jdbcType="VARCHAR" />
+		<result column="corp_name" property="corpName" jdbcType="VARCHAR" />
+		<result column="business_scope" property="businessScope" jdbcType="VARCHAR" />
+		<result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
+		<result column="legal_person" property="legalPerson" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="identification_card" property="identificationCard" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="identification_card_url" property="identificationCardUrl" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="approve_status" property="approveStatus" jdbcType="INTEGER" />
+		<result column="legal_person_introduce" property="legalPersonIntroduce" jdbcType="VARCHAR" />
+		<result column="legal_person_url" property="legalPersonUrl" jdbcType="VARCHAR" />
+		<result column="registered_capital" property="registeredCapital" jdbcType="DOUBLE" />
+		<result column="establish_date" property="establishDate" jdbcType="VARCHAR" />
+		<result column="busniss_term" property="busnissTerm" jdbcType="VARCHAR" />
+		<result column="industry_type" property="industryType" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="company_type" property="companyType" jdbcType="VARCHAR" />
+		<result column="logo_url" property="logoUrl" jdbcType="VARCHAR" />
+		<result column="business_license_url" property="businessLicenseUrl" jdbcType="VARCHAR" />
+		<result column="coordinate" property="coordinate" jdbcType="VARCHAR" />
+		<result column="related_species" property="relatedSpecies" jdbcType="LONGVARCHAR" />
+		<result column="related_product" property="relatedProduct" jdbcType="LONGVARCHAR" />
+		<result column="related_service" property="relatedService" jdbcType="LONGVARCHAR" />
+		<result column="company_profile" property="companyProfile" jdbcType="LONGVARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="addr_detail" property="addrDetail" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		   a.id, a.login_account, a.corp_name, a.business_scope, a.credit_code, a.legal_person, a.mobile,
+    a.phone, a.identification_card, a.email, a.identification_card_url, a.create_time, a.approve_status,
+    a.legal_person_introduce, a.legal_person_url, a.registered_capital, a.establish_date, a.busniss_term,
+    a.industry_type, a.location, a.company_type, a.logo_url, a.business_license_url, a.coordinate,
+    a.related_species, a.related_product, a.related_service, a.company_profile,a.remark,a.addr_detail,a.is_to_page,
+    a.is_nav_display,a.order_num
+	</sql>
+
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />,
+		luser.is_home_display AS isHomeDisplay
+		FROM corp_info as a
+		inner join login_user as luser ON luser.login_account=a.login_account
+		where 1=1
+		<if test="approveStatus != null">
+			<if test="approveStatus != 3">
+				and a.approve_status = #{approveStatus,jdbcType=INTEGER}
+			</if>
+		</if>
+		<if test="corpName != null">
+			and a.corp_name like concat(concat('%',#{corpName}),'%')
+		</if>
+		ORDER BY a.create_time DESC
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from corp_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		DELETE  t1 FROM corp_info t1 LEFT JOIN login_user t2 ON t1.login_account = t2.login_account
+		where t1.id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.ovit.manager.modules.nswy.entity.NswyCorpInfo">
+		insert into corp_info (id, login_account, corp_name,
+		avatar, corp_code, qr_code_url,
+		business_scope, credit_code, legal_person,
+		business_license, mobile, phone,
+		identification_card, email, operator,
+		identification_card_url, identification_card_negtive_url,
+		create_time,approve_status)
+		values (#{id,jdbcType=INTEGER}, #{loginAccount,jdbcType=VARCHAR},
+		#{corpName,jdbcType=VARCHAR},
+		#{avatar,jdbcType=VARCHAR}, #{corpCode,jdbcType=VARCHAR}, #{qrCodeUrl,jdbcType=VARCHAR},
+		#{businessScope,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR},
+		#{legalPerson,jdbcType=VARCHAR},
+		#{businessLicense,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+		#{identificationCard,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+		#{operator,jdbcType=VARCHAR},
+		#{identificationCardUrl,jdbcType=VARCHAR},
+		#{identificationCardNegtiveUrl,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{approveStatus,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.ovit.manager.modules.nswy.entity.NswyCorpInfo">
+		insert into corp_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="loginAccount != null">
+				login_account,
+			</if>
+			<if test="corpName != null">
+				corp_name,
+			</if>
+			<if test="avatar != null">
+				avatar,
+			</if>
+			<if test="corpCode != null">
+				corp_code,
+			</if>
+			<if test="qrCodeUrl != null">
+				qr_code_url,
+			</if>
+			<if test="businessScope != null">
+				business_scope,
+			</if>
+			<if test="creditCode != null">
+				credit_code,
+			</if>
+			<if test="legalPerson != null">
+				legal_person,
+			</if>
+			<if test="businessLicense != null">
+				business_license,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="identificationCard != null">
+				identification_card,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="identificationCardUrl != null">
+				identification_card_url,
+			</if>
+			<if test="identificationCardNegtiveUrl != null">
+				identification_card_negtive_url,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="approveStatus != null">
+				approve_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="loginAccount != null">
+				#{loginAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="corpName != null">
+				#{corpName,jdbcType=VARCHAR},
+			</if>
+			<if test="avatar != null">
+				#{avatar,jdbcType=VARCHAR},
+			</if>
+			<if test="corpCode != null">
+				#{corpCode,jdbcType=VARCHAR},
+			</if>
+			<if test="qrCodeUrl != null">
+				#{qrCodeUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="businessScope != null">
+				#{businessScope,jdbcType=VARCHAR},
+			</if>
+			<if test="creditCode != null">
+				#{creditCode,jdbcType=VARCHAR},
+			</if>
+			<if test="legalPerson != null">
+				#{legalPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="businessLicense != null">
+				#{businessLicense,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="identificationCard != null">
+				#{identificationCard,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="identificationCardUrl != null">
+				#{identificationCardUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="identificationCardNegtiveUrl != null">
+				#{identificationCardNegtiveUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="approveStatus != null">
+				#{approveStatus,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ovit.manager.modules.nswy.entity.NswyCorpInfo" >
+		update corp_info
+		<set >
+			<if test="loginAccount != null" >
+				login_account = #{loginAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="corpName != null" >
+				corp_name = #{corpName,jdbcType=VARCHAR},
+			</if>
+			<if test="businessScope != null" >
+				business_scope = #{businessScope,jdbcType=VARCHAR},
+			</if>
+			<if test="creditCode != null" >
+				credit_code = #{creditCode,jdbcType=VARCHAR},
+			</if>
+			<if test="legalPerson != null" >
+				legal_person = #{legalPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null" >
+				mobile = #{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null" >
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="identificationCard != null" >
+				identification_card = #{identificationCard,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null" >
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="identificationCardUrl != null" >
+				identification_card_url = #{identificationCardUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="approveStatus != null" >
+				approve_status = #{approveStatus,jdbcType=INTEGER},
+			</if>
+			<if test="legalPersonIntroduce != null" >
+				legal_person_introduce = #{legalPersonIntroduce,jdbcType=VARCHAR},
+			</if>
+			<if test="legalPersonUrl != null" >
+				legal_person_url = #{legalPersonUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="registeredCapital != null" >
+				registered_capital = #{registeredCapital,jdbcType=DOUBLE},
+			</if>
+			<if test="establishDate != null" >
+				establish_date = #{establishDate,jdbcType=VARCHAR},
+			</if>
+			<if test="busnissTerm != null" >
+				busniss_term = #{busnissTerm,jdbcType=VARCHAR},
+			</if>
+			<if test="industryType != null" >
+				industry_type = #{industryType,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null" >
+				location = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="companyType != null" >
+				company_type = #{companyType,jdbcType=VARCHAR},
+			</if>
+			<if test="logoUrl != null" >
+				logo_url = #{logoUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="businessLicenseUrl != null" >
+				business_license_url = #{businessLicenseUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="coordinate != null" >
+				coordinate = #{coordinate,jdbcType=VARCHAR},
+			</if>
+			<if test="relatedSpecies != null" >
+				related_species = #{relatedSpecies,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="relatedProduct != null" >
+				related_product = #{relatedProduct,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="relatedService != null" >
+				related_service = #{relatedService,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="companyProfile != null" >
+				company_profile = #{companyProfile,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="remark != null" >
+				remark = #{remark,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where id = #{corpInfoId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.ovit.manager.modules.nswy.entity.NswyCorpInfo">
+		update corp_info
+		set login_account = #{loginAccount,jdbcType=VARCHAR},
+		corp_name = #{corpName,jdbcType=VARCHAR},
+		avatar = #{avatar,jdbcType=VARCHAR},
+		corp_code = #{corpCode,jdbcType=VARCHAR},
+		qr_code_url = #{qrCodeUrl,jdbcType=VARCHAR},
+		business_scope = #{businessScope,jdbcType=VARCHAR},
+		credit_code = #{creditCode,jdbcType=VARCHAR},
+		legal_person = #{legalPerson,jdbcType=VARCHAR},
+		business_license = #{businessLicense,jdbcType=VARCHAR},
+		mobile = #{mobile,jdbcType=VARCHAR},
+		phone = #{phone,jdbcType=VARCHAR},
+		identification_card = #{identificationCard,jdbcType=VARCHAR},
+		email = #{email,jdbcType=VARCHAR},
+		operator = #{operator,jdbcType=VARCHAR},
+		identification_card_url = #{identificationCardUrl,jdbcType=VARCHAR},
+		identification_card_negtive_url =
+		#{identificationCardNegtiveUrl,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		approve_status = #{approveStatus,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateUserType" parameterType="java.lang.String">
+		UPDATE
+			login_user
+		SET
+			user_type = 1
+		WHERE
+			login_account = #{login_account}
+	</update>
+
+	<update id="updateHomeDisplay" parameterType="map">
+		UPDATE login_user SET is_home_display = #{status} WHERE login_account = #{loginAccount}
+	</update>
+
+
+</mapper>

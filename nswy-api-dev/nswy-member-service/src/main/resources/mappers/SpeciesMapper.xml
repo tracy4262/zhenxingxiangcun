@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ovit.nswy.member.mapper.SpeciesMapper">
+	<resultMap id="BaseResultMap" type="com.ovit.nswy.member.model.Species">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="species_name" property="speciesName" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="field_name" property="fieldName" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, account, species_name, type, create_time ,field_name
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from favorite_species
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="findFollowedSpecies" resultMap="BaseResultMap"
+			parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from favorite_species
+		where account = #{account,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from favorite_species
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ovit.nswy.member.model.FavoriteSpecies">
+  	insert into favorite_species (account, species_name,field_name) values (#{account},#{ speciesName},#{fieldName})
+
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.ovit.nswy.member.model.Species">
+		update favorite_species
+		set account = #{account,jdbcType=VARCHAR},
+		species_name = #{speciesName,jdbcType=VARCHAR},
+		`type` = #{type,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<delete id ="empty" parameterType="java.lang.String">
+		delete from favorite_species where account = #{account}
+	</delete>
+
+    <select id="findByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT fs.species_name FROM favorite_species fs , favorite_infomation fi WHERE  fs.account=fi.account AND fi.account=#{loginAccount,jdbcType=VARCHAR};
+    </select>
+
+	<select id="findSpecByAccount" parameterType="map" resultType="com.ovit.nswy.member.model.FavoriteSpecies">
+		SELECT * FROM favorite_species WHERE 1=1
+		<if test="account != null and account != ''">
+			AND account = #{account}
+		</if>
+		<if test="templateId != null and templateId != ''">
+			AND template_id = #{templateId}
+		</if>
+	</select>
+
+	<select id="relevantProduct" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT account, name, image FROM product_service_info WHERE related_species LIKE CONCAT("%",#{speciesName},"%") group by name
+	</select>
+
+	<select id="relevantExpert" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT a.login_account AS account, a.expert_type, a.adept_field, a.adept_species, a.personal_photo, b.display_name
+		FROM expert_info a LEFT JOIN login_user b ON a.login_account = b.login_account
+		WHERE adept_species LIKE CONCAT("%",#{speciesName},"%")
+	</select>
+
+	<select id="relevantCorp" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT login_account as account , corp_name as name, company_type, logo_url FROM corp_info WHERE login_account = #{account}
+	</select>
+
+	<select id="findExpert" resultType="java.util.Map" parameterType="java.lang.String">
+		select a.account, a.expert_name as display_name, a.adept_field, a.adept_species, a.expert_type, a.personal_photo
+		from reversion_expert_auth a
+		where a.approve_status = 1 and a.adept_species like concat(concat('%',#{speciesName},'%'))
+		group by a.account
+	</select>
+
+</mapper>
