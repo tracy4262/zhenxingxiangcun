@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 <meta name="author" content="My97" /> 
-<meta name="keywords" content="хуфз©ь╪Ч datepicker calendar хуюЗ©ь╪Ч javascript jsхуюЗ©ь╪Ч ╢Ьй╠╪Д вт╤╗рЕ╦Яй╫ тбюЗ©ь╪Ч хуфзй╠╪Д хуфзя║тЯ" /><title>My97хуфз©ь╪Ч ╧╕дэящй╬ My97 Datepicker Demo</title>
+<meta name="keywords" content="О©╫О©╫О©╫з©ь╪О©╫ datepicker calendar О©╫О©╫О©╫О©╫О©╫ь╪О©╫ javascript jsО©╫О©╫О©╫О©╫О©╫ь╪О©╫ О©╫О©╫й╠О©╫О©╫ О©╫т╤О©╫О©╫О©╫О©╫й╫ О©╫О©╫О©╫О©╫О©╫ь╪О©╫ О©╫О©╫О©╫О©╫й╠О©╫О©╫ О©╫О©╫О©╫О©╫я║О©╫О©╫" /><title>My97О©╫О©╫О©╫з©ь╪О©╫ О©╫О©╫О©╫О©╫О©╫О©╫й╬ My97 Datepicker Demo</title>
 <link href="../../css/base.css" rel="stylesheet" type="text/css" />
 <link href="demo.css" rel="stylesheet" type="text/css" />
 </head>
@@ -13,30 +13,30 @@
 <script language="JavaScript" type="text/javascript" src="../../../WdatePicker.js"></script>
 <div class="dCenter dBody">	
   <div id="content">
-    <h2>р╩. ╪Р╫И<a name="m1" id="m1"></a></h2>
-    <h3>1. ╪Р╫И<a name="m11" id="m11"></a></h3>
-    <p>д©г╟╣д╟Ф╠╬йг:4.8</p>
-    <h3>2. в╒рБйбоН<a name="m12" id="m12"></a></h3>
+    <h2>р╩. О©╫О©╫О©╫<a name="m1" id="m1"></a></h2>
+    <h3>1. О©╫О©╫О©╫<a name="m11" id="m11"></a></h3>
+    <p>д©г╟О©╫д╟Ф╠╬О©╫О©╫:4.8</p>
+    <h3>2. в╒О©╫О©╫О©╫О©╫О©╫О©╫<a name="m12" id="m12"></a></h3>
     <ul>
-      <li>My97DatePickerд©б╪йгр╩╦ЖуШлЕ,<span class="STYLE1">╡╩©ифф╩╣юОцФ╣дд©б╪╫А╧╧</span>,р╡╡╩©и╤тюОцФ╣днд╪Ч╦дцШ,©ирт╦дд©б╪цШ</li>
-      <li>My97DatePicker.htmйг╠ьпКнд╪Ч,<span class="STYLE1">╡╩©ии╬ЁЩ(4.8рт╨С╡╩╢Фтз╢кнд╪Ч)</span></li>
-      <li>╦Вд©б╪╪╟нд╪Ч╣дсцм╬: <br />
-        <span class="STYLE2">WdatePicker.js</span> еДжцнд╪Ч,<span class="STYLE1">тз╣Всц╣д╣ь╥╫╫ЖпХй╧сц╦цнд╪Ч</span>,©и╤Ю╦Ж╧╡╢Ф,ртxx_WdatePicker.js╥╫й╫цЭцШ<br />
-        <span class="STYLE2">config.js</span> сОят╨мф╓╥ТеДжцнд╪Ч,<span class="STYLE1">нчпХрЩхК(4.8рт╨С╨о╡╒хКWdatePicker.js)</span><br />
-        <span class="STYLE2">calendar.js</span> хуфз©БжВнд╪Ч,<span class="STYLE1">нчпХрЩхК</span><br />
-        <span class="STYLE2">My97DatePicker.htm</span> аый╠рЁцФнд╪Ч,╡╩©ии╬ЁЩ<span class="STYLE1">(4.8рт╨С╡╩╢Фтз╢кнд╪Ч)</span><br />
-        <span class="STYLE2">д©б╪lang</span> ╢Ф╥есОятнд╪Ч,дЦ©ирт╦Ы╬щпХр╙гЕюМ╩РлМ╪ссОятнд╪Ч<br />
-        <span class="STYLE2">д©б╪skin </span>╢Ф╥еф╓╥Т╣доЮ╧ьнд╪Ч,дЦ©ирт╦Ы╬щпХр╙гЕюМ╩РлМ╪сф╓╥Тнд╪Ч╟Э</li>
-      <li>╣╠WdatePicker.jsюО╣дйТпт:$wdate=trueй╠,тзinputюО╪сиоclass=&quot;Wdate&quot;╬м╩Атзя║тЯ©Рср╠ъЁЖожхуфзм╪╠Й,хГ╧ШдЗ╡╩о╡╩╤уБ╦ЖяЫй╫,©ирт╟яclass=&quot;Wdate&quot;х╔╣Т,аМмБр╡©иртм╗╧Щпч╦дskinд©б╪об╣дWdatePicker.cssнд╪Чю╢пч╦дяЫй╫</li>
+      <li>My97DatePickerд©б╪О©╫О©╫р╩О©╫О©╫О©╫О©╫О©╫О©╫,<span class="STYLE1">О©╫О©╫О©╫О©╫О©╫ф╩О©╫О©╫О©╫О©╫О©╫О©╫д©б╪О©╫А╧╧</span>,р╡О©╫О©╫О©╫и╤О©╫О©╫О©╫О©╫О©╫О©╫О©╫д╪О©╫О©╫О©╫О©╫О©╫,О©╫О©╫О©╫т╦О©╫д©б╪О©╫О©╫</li>
+      <li>My97DatePicker.htmО©╫г╠О©╫О©╫О©╫О©╫д╪О©╫,<span class="STYLE1">О©╫О©╫О©╫О©╫и╬О©╫О©╫(4.8О©╫т╨С╡╩╢О©╫О©╫з╢О©╫О©╫д╪О©╫)</span></li>
+      <li>О©╫О©╫д©б╪О©╫О©╫О©╫д╪О©╫О©╫О©╫О©╫О©╫м╬: <br />
+        <span class="STYLE2">WdatePicker.js</span> О©╫О©╫О©╫О©╫О©╫д╪О©╫,<span class="STYLE1">О©╫з╣О©╫О©╫ц╣д╣ь╥О©╫О©╫О©╫О©╫О©╫й╧О©╫ц╦О©╫О©╫д╪О©╫</span>,О©╫и╤О©╫О©╫О©╫О©╫О©╫О©╫,О©╫О©╫xx_WdatePicker.jsО©╫О©╫й╫О©╫О©╫О©╫О©╫<br />
+        <span class="STYLE2">configuration.js</span> О©╫О©╫О©╫т╨О©╫ф╓О©╫О©╫О©╫О©╫О©╫О©╫О©╫д╪О©╫,<span class="STYLE1">О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫(4.8О©╫т╨О©╫о╡О©╫О©╫О©╫WdatePicker.js)</span><br />
+        <span class="STYLE2">calendar.js</span> О©╫О©╫О©╫з©О©╫О©╫О©╫О©╫д╪О©╫,<span class="STYLE1">О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫</span><br />
+        <span class="STYLE2">My97DatePicker.htm</span> О©╫О©╫й╠рЁО©╫О©╫О©╫д╪О©╫,О©╫О©╫О©╫О©╫и╬О©╫О©╫<span class="STYLE1">(4.8О©╫т╨С╡╩╢О©╫О©╫з╢О©╫О©╫д╪О©╫)</span><br />
+        <span class="STYLE2">д©б╪lang</span> О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫д╪О©╫,О©╫О©╫О©╫О©╫т╦О©╫О©╫О©╫О©╫О©╫р╙О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫д╪О©╫<br />
+        <span class="STYLE2">д©б╪skin </span>О©╫О©╫О©╫ф╓О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫д╪О©╫,О©╫О©╫О©╫О©╫т╦О©╫О©╫О©╫О©╫О©╫р╙О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ф╓О©╫О©╫О©╫д╪О©╫О©╫О©╫</li>
+      <li>О©╫О©╫WdatePicker.jsО©╫О©╫О©╫О©╫О©╫О©╫О©╫:$wdate=trueй╠,О©╫О©╫inputО©╫О©╫О©╫О©╫О©╫class=&quot;Wdate&quot;О©╫м╩О©╫О©╫О©╫я║О©╫О©╫О©╫О©╫р╠ъЁО©╫О©╫О©╫О©╫О©╫О©╫О©╫м╪О©╫О©╫,О©╫О©╫О©╫О©╫О©╫О©╫О©╫о╡О©╫О©╫О©╫О©╫О©╫О©╫О©╫й╫,О©╫О©╫О©╫т╟О©╫class=&quot;Wdate&quot;х╔О©╫О©╫,О©╫О©╫О©╫О©╫р╡О©╫О©╫О©╫О©╫м╗О©╫О©╫О©╫ч╦О©╫skinд©б╪О©╫б╣О©╫WdatePicker.cssО©╫д╪О©╫О©╫О©╫О©╫ч╦О©╫О©╫О©╫й╫</li>
     </ul>
-    <h3>3. ж╖Ёж╣дД╞ююфВ<a name="m13" id="m13"></a></h3>
+    <h3>3. ж╖О©╫ж╣О©╫О©╫О©╫О©╫О©╫О©╫<a name="m13" id="m13"></a></h3>
     <p>IE 6.0+ , Firefox 2.0+ , Chrome, Opera 9.5+ , Safari 3.0+<br />
     </p>
     <p>&nbsp; </p>
-    <p>в╒рБ:IE 8.0йгмЙцюж╖Ёж╣д,хГ╧ШдЦтзIE8иой╧сцсЖ╣╫нйлБ,гКсКнрх║╣ца╙о╣,<span class="STYLE1">нЯ╠ь╦╫иодэтыождЦ╣днйлБ╣д<strong>╢©HTML</strong>╢ЗбК╟Э</span></p>   
-	<h2><a href="2.1.asp"><strong>╤Ч. ╧╕дэ╪╟й╬юЩ</strong></a><a name="m2" id="m2"></a></h2>
-    <h2><a href="3.asp">хЩ. еДжцк╣цВ</a><a name="m3" id="m3"></a></h2>
-    <h2><a href="999.asp">кд. хГ╨нй╧сц</a><a name="m4" id="m4"></a></h2>
+    <p>в╒О©╫О©╫:IE 8.0О©╫О©╫О©╫О©╫О©╫О©╫ж╖О©╫ж╣О©╫,О©╫О©╫О©╫О©╫О©╫О©╫О©╫IE8О©╫О©╫й╧О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫,О©╫О©╫О©╫О©╫О©╫О©╫х║О©╫О©╫О©╫О©╫о╣,<span class="STYLE1">О©╫О©╫ь╦О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫<strong>О©╫О©╫HTML</strong>О©╫О©╫О©╫О©╫О©╫</span></p>   
+	<h2><a href="2.1.asp"><strong>О©╫О©╫. О©╫О©╫О©╫э╪О©╫й╬О©╫О©╫</strong></a><a name="m2" id="m2"></a></h2>
+    <h2><a href="3.asp">О©╫О©╫. О©╫О©╫О©╫О©╫к╣О©╫О©╫</a><a name="m3" id="m3"></a></h2>
+    <h2><a href="999.asp">О©╫О©╫. О©╫О©╫О©╫й╧О©╫О©╫</a><a name="m4" id="m4"></a></h2>
     <br />
 <br /> 
   </div>
@@ -45,7 +45,7 @@
 <div class="dCenter dBody" style="padding-left:72px">
 <script type="text/javascript"><!--
 google_ad_client = "ca-pub-6343250634002651";
-/* ╣в╡© */
+/* О©╫в╡О©╫ */
 google_ad_slot = "0599809152";
 google_ad_width = 728;
 google_ad_height = 90;
@@ -58,7 +58,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <div id="footer" class="dCenter">&copy; 2010 <a href="mailto:smallcarrot@163.com">My97</a> All Rights Reserved.&nbsp;&nbsp;&nbsp;&nbsp;<script type="text/javascript">
 var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
 document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F489957c212e14340592fb2e4921b2f1d' type='text/javascript'%3E%3C/script%3E"));
-</script>&nbsp;&nbsp;&nbsp;&nbsp;уЦICP╠╦11060275╨е
+</script>&nbsp;&nbsp;&nbsp;&nbsp;О©╫О©╫ICPО©╫О©╫11060275О©╫О©╫
 </div>
 </body>
 </html>

@@ -103,7 +103,7 @@ packages :
 					'_source/core/dom/nodelist.js',
 					'_source/core/dom/element.js',
 					'_source/core/command.js',
-					'_source/core/config.js',
+					'_source/core/configuration.js',
 					'_source/core/focusmanager.js',
 					'_source/core/lang.js',
 					'_source/core/scriptloader.js',
