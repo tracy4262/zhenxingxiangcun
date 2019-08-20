@@ -57,3 +57,6 @@ logging:
 endpoints:
   shutdown:
     enabled: true
+
+app:
+  home:
