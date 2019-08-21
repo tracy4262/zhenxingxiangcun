@@ -1,6 +1,6 @@
 <template>
 <div>
-	<div class="pt20 pl5 pr5 information-new-detail" v-for="(item, index) in dataList" v-if="dataList.length">
+	<div class="pt20 pl5 pr5 information-new-detail" v-for="(item, index) in dataList" :key="index" v-if="dataList.length">
     <h3 class="ell pb10">  
       <a @click="detail(item)">{{item.title}}</a> 
     </h3>

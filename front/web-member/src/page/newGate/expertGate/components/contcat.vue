@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="expert-contcats">
-      <div class="concat-list" v-for="(item, index) in data">
+      <div class="concat-list" v-for="(item, index) in data" :key="index">
         <Row>
           <Col span="12" v-if="item.safeFormData[0].memberMameStatus">
             <div class="vui-flex li">
@@ -99,7 +99,7 @@
                     <Col span="3">个人照片：</Col>
                     <Col span="21">
                       <Row>
-                        <Col span="4" class="pb15" v-for="(e, i) in item.safeFormData[0].image">
+                        <Col span="4" class="pb15" v-for="(e, i) in item.safeFormData[0].image" :key="i">
                           <img :src="e" alt="" width="100%" height="90px">
                         </Col>
                       </Row>

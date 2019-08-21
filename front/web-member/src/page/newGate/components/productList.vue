@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul class="service-list">
-      <li v-for="(item, index) in dataList" :class="column === 5 ? 'li-5' : 'li-4'">
+      <li v-for="(item, index) in dataList" :key="index" :class="column === 5 ? 'li-5' : 'li-4'">
        <productList :item="item"></productList>
       </li>
     </ul>

@@ -26,7 +26,7 @@
                     </Row>
                     <Row class="mt20" type="flex" align="middle"  v-if="data.locationService">
                         <img src="../../../../../static/img/location-service.png" style="width: 20px;" class="mr10">
-                        定点服务&nbsp;&nbsp;&nbsp;&nbsp;服务网点：<span v-for="(item, index) in data.locationServiceData.networkStationInfo">{{ item.name }}；</span>
+                        定点服务&nbsp;&nbsp;&nbsp;&nbsp;服务网点：<span v-for="(item, index) in data.locationServiceData.networkStationInfo" :key="index">{{ item.name }}；</span>
                         服务时间段：{{ data.locationServiceData.timeStatus === '设定服务时间' ? data.locationServiceData.time : data.locationServiceData.timeStatus === '双方约定' ? '双方约定' : '不限'}}；
                     </Row>
                     <Row class="mt20" type="flex" align="middle"  v-if="data.telephoneService">
@@ -43,7 +43,7 @@
                         <Col span="8">
                             <Row class="mt20"><b>聘请费用：</b></Row>
                             <div v-if="data.serviceType === '提供付费咨询'">
-                                <Row class="mt20" v-for="(item, index) in data.chargeType">{{ item.employTime }}收费：{{ item.employMoney }}元/{{ item.employTime.substring(1) }}</Row>
+                                <Row class="mt20" v-for="(item, index) in data.chargeType" :key="index">{{ item.employTime }}收费：{{ item.employMoney }}元/{{ item.employTime.substring(1) }}</Row>
                             </div>
                             <div class="mt20"  v-else>
                                 提供免费咨询
@@ -57,7 +57,7 @@
                                 <Row type="flex" align="middle" class="mt20">
                                     <Col span="12">
                                         <RadioGroup v-model="order.employTime">
-                                            <Radio disabled v-for="(item, index) in data.chargeType" :label="item.employTime"></Radio>
+                                            <Radio disabled v-for="(item, index) in data.chargeType" :key="index" :label="item.employTime"></Radio>
                                         </RadioGroup>
                                     </Col>
                                     <Col span="6">

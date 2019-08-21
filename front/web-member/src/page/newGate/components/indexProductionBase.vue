@@ -15,7 +15,7 @@
             <Col span="24">
                 <swiper :options="swiperOption" ref="mySwiper" class="pb10">
                     <div class="swiper-button-prev" slot="button-prev"></div>
-                    <swiper-slide :key="index" v-for="(item, index) in dataList" @click.native="detail(item)">
+                    <swiper-slide v-for="(item, index) in dataList" :key="index" @click.native="detail(item)">
                         <Row style="background-color: #F7F7F7; height: 300px;" type="flex" justify="center" align="middle">
                             <Col span="10">
                                 <img v-if="item.imageUrl" :src="item.imageUrl" style="width: 100%; height: 260px;" />

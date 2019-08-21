@@ -9,7 +9,7 @@
       title="发布会员介绍">
         <div>
           <RadioGroup v-model="mydynamic1.leixin" type="button" class="mb20">
-            <Radio :disabled="mydynamic1.leixin !== item.label  && currentStep > 1" :label="item.label" v-for="(item, index) in RadioGroups"></Radio>
+            <Radio :disabled="mydynamic1.leixin !== item.label  && currentStep > 1" :label="item.label" v-for="(item, index) in RadioGroups" :key="index"></Radio>
           </RadioGroup>
           <div class="pb20" v-if="mydynamic1.leixin == '图书'">
             <vui-steps :data="stepDataSec" :active="currentStep-1" ></vui-steps>

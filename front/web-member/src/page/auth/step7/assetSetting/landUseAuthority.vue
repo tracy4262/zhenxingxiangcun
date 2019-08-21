@@ -8,7 +8,7 @@
             class="pd20 mt40" 
             :model="item"  
             :rules="ruleInline" 
-            v-for="(item, index) in data" 
+            v-for="(item, index) in data" :key="item"
             @click.native="handleGetIndex(index)"
             :ref="`data${index}`">
           <Row :gutter="16">

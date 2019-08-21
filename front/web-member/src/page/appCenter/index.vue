@@ -79,7 +79,7 @@
                 <Card :bordered="false"  v-if="active === 4">
                   <Tabs :value="activeHieght" @on-click="heightTab">
                       <TabPane label="全部" name="all" ></TabPane>
-                      <TabPane v-for="(item, index) in highType" :label="item.userTypeName" :name="item.userType"></TabPane>
+                      <TabPane v-for="(item, index) in highType" :key="item.userTypeName" :label="item.userTypeName" :name="item.userType"></TabPane>
                   </Tabs>
                   <!-- 高级应用 -->
                   <app-list :data="highAppData" :templateId="templateId" @on-change="onChange"></app-list>
@@ -87,7 +87,7 @@
                 <Card :bordered="false"  v-if="active === 5">
                   <Tabs :value="activeService" @on-click="serviceTab">
                       <TabPane label="全部" name="all" ></TabPane>
-                      <TabPane v-for="(item, index) in serviceType" :label="item.serviceTypeName" :name="item.serviceType"></TabPane>
+                      <TabPane v-for="(item, index) in serviceType" :key="item.serviceTypeName" :label="item.serviceTypeName" :name="item.serviceType"></TabPane>
                   </Tabs>
                   <!-- 服务应用 -->
                   <app-list :data="serviceData" :templateId="templateId" @on-change="onChange"></app-list>

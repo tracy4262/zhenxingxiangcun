@@ -5,7 +5,7 @@
         <Row>
             <Col span="7">
                 <Carousel v-model="value" loop dots="outside">
-                    <CarouselItem v-for="(item, index) in rotationPictureList" class="carouse-height bc">
+                    <CarouselItem v-for="(item, index) in rotationPictureList" :key="index" class="carouse-height bc">
                         <div class="tc" @click="detail(item)" style="cursor: pointer;">
                             <img :src="item.image" style="width: 100%; height: 240px;" />
                             <div class="mt10 mb10 ell" :title="item.title">{{ item.title }}</div>
@@ -82,7 +82,7 @@
               </Row>
           </div>
           <Row :gutter="8" class="pd10 pb15" style="height: 280px; overflow-y:auto;">
-              <Col span="8" v-for="(item, index) in expertTeam" class="tc pb10" @click.native="expertDetail(item)" style="cursor: pointer;">
+              <Col span="8" v-for="(item, index) in expertTeam" :key="index" class="tc pb10" @click.native="expertDetail(item)" style="cursor: pointer;">
                   <img :src="item.personalPhoto" style="width: 100%; height: 70px;">
                   <p style="font-size: 14px; color: #4A4A4A; line-height: 20px;" class="mt5 ell" :title="item.expertName">{{ item.expertName }}</p>
                   <p style="color: #9B9B9B; line-height: 17px;" class="ell mt5" :title="item.title">{{ item.title }}</p>
@@ -97,7 +97,7 @@
               </Row>
           </div>
           <div class="management-team pb20 pd10">
-            <p v-for="(item, index) in teamData">
+            <p v-for="(item, index) in teamData" :key="index">
               {{item.department}}
               {{item.job}}<span v-if="item.job">：</span>
               {{item.name}}

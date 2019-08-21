@@ -70,7 +70,7 @@
               </FormItem>
             </Form>
             <div v-if="infoList.length > 0" class="mt20">
-              <Form v-for="(info, index) in infoList" :ref="`info${index}`" :model="info" label-position="right" :label-width="100" :rules="ruleInline">
+              <Form v-for="(info, index) in infoList" :key="item" :ref="`info${index}`" :model="info" label-position="right" :label-width="100" :rules="ruleInline">
                 <Row>
                   <Col span="6">
                     <FormItem :label="`第${index+1}份拆分比例`" prop="percent">
@@ -102,7 +102,7 @@
               </FormItem>
             </Form>
             <div v-if="infoList2.length > 0" class="mt20">
-              <Form v-for="(info, index) in infoList2" :ref="`info2${index}`" :model="info" label-position="right" :label-width="100" :rules="ruleInline2">
+              <Form v-for="(info, index) in infoList2" :key="info" :ref="`info2${index}`" :model="info" label-position="right" :label-width="100" :rules="ruleInline2">
                 <Row>
                   <Col span="6">
                     <FormItem label="数量" prop="number">

@@ -15,7 +15,7 @@
                 </Row>
                 <div v-if="data.timeCharging" class="pt20">
                     <Row type="flex" align="middle" :gutter="16">
-                        <Col span="8" v-for="(item, index) in data.fishTimeCharge" >
+                        <Col span="8" v-for="(item, index) in data.fishTimeCharge" :key="index">
                             <Card class="fishing-form-card">
                                 <p class="tr fishing-form-p" v-if="data.fishTimeCharge.length > 1" style="z-index: 99999;">
                                     <Icon type="md-close" @click.native="delTimeChargings(index)"/>

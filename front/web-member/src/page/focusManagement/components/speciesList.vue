@@ -1,7 +1,7 @@
 <template>
   <div>
     <Row>
-      <Col span="3" v-for="(item, index) in data" class="tc pb30">
+      <Col span="3" v-for="(item, index) in data" :key="index" class="tc pb30">
         <div class="species-list species-list-preview" v-if="!edit" @click="cancelFocus(item, index)">
           <Avatar class="name" v-if="item.label.length > 4" :title="item.label">{{item.label.substring(0, 5)}}...</Avatar>
           <Avatar class="name" v-else>{{item.label}}</Avatar>

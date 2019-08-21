@@ -1,7 +1,7 @@
 <template>
   <div>
     <Row :gutter="16">
-      <Col span="6" v-for="(item, index) in data" class="tc pb30">
+      <Col span="6" v-for="(item, index) in data" :key="index" class="tc pb30">
         <div class="member-list" :class="{'member-list-edit': edit, 'member-list-check': item.check && edit}">
           <!-- 1 关注我的 关注我的状态是 0 的时候可以操作批量关注 -->
           <div class="check-box" :class="item.check ? 'isCheck' : ''" v-if="edit && focusType != '1'" @click="handleCheck(item, index)">

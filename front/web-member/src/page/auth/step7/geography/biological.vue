@@ -29,7 +29,7 @@
                   @on-click="inputClear('animal')" @on-change="changePreview"/>
               </Col>
             </Row>
-            <Row  :gutter="16" class="pb20" v-for="(item, index) in animalList">
+            <Row  :gutter="16" class="pb20" v-for="(item, index) in animalList" :key="item">
               <Col span="9" v-if="index > 1"> 
                 <p v-if="!item.edit" @dblclick="animalEdit(item, index, `animal${index}`)">{{item.animalType}} &nbsp;</p>
                 <Input v-else @on-blur="animalOnBlur(item, index, `animal${index}`)" v-model="item.animalType" :ref="`animal${index}`" @on-change="changePreview" :maxlength="20"></Input>
@@ -60,7 +60,7 @@
                     @on-click="inputClear('plant')" @on-change="changePreview"/>
               </Col>
             </Row>
-            <Row  :gutter="16" class="pb20" v-for="(item, index) in plantList">
+            <Row  :gutter="16" class="pb20" v-for="(item, index) in plantList" :key="item">
               <Col span="9" v-if="index > 1"> 
                 <p v-if="!item.edit" @dblclick="plantEdit(item, index, `plant${index}`)">{{item.plantType}} &nbsp;</p>
                 <Input v-if="item.edit" v-model="item.plantType" @on-blur="plantOnBlur(item, index, `plant${index}`)" :ref="`plant${index}`" @on-change="changePreview" :maxlength="20"></Input>

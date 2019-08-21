@@ -75,7 +75,7 @@
             <Col span="24">
               <FormItem label="保护证书" v-if="info.protectionLevel && info.protectionLevel != '非保护'">
                 <Row>
-                    <Col span="6" v-for="(e, i) in info.protection">
+                    <Col span="6" v-for="(e, i) in info.protection" :key="i">
                       <div class="pd10">
                           <img :src="e" alt="" width="100%" height="150px">
                       </div>
@@ -107,7 +107,7 @@
            </Col>
            <Col span="12">
             <FormItem label="适宜人群">
-              <span v-for="(item, index) in info.suitPeople"> {{item}}</span>
+              <span v-for="(item, index) in info.suitPeople" :key="index"> {{item}}</span>
             </FormItem>
            </Col>
          </Row>
@@ -129,7 +129,7 @@
            <Col span="24">
              <FormItem label="上传商品预览图片">
                 <Row>
-                    <Col span="6" v-for="(e, i) in info.notarizationCertificate">
+                    <Col span="6" v-for="(e, i) in info.notarizationCertificate" :key="i">
                       <div class="pd10">
                           <img :src="e" alt="" width="100%" height="150px">
                       </div>

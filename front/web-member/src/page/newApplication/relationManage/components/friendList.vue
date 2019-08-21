@@ -7,7 +7,7 @@
           <p class="pt10">添加好友</p>
         </div>
       </Col>
-      <Col span="6" v-for="(item, index) in data" class="tc pb30">
+      <Col span="6" v-for="(item, index) in data" :key="index" class="tc pb30">
         <div class="member-list">
           <Row tyle="flex" align="middle" class="pt20">
             <!-- focusType 1 控件部分的关注列表显示 2 显示部分-->

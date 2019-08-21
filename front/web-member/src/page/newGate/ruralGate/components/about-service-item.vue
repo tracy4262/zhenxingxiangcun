@@ -10,7 +10,7 @@
             </Row>
         </div>
         <Row :gutter="8" class="pt15">
-            <Col span="8" v-for="(item, index) in data" class="tc"  @click.native="detail(item)">
+            <Col span="8" v-for="(item, index) in data" class="tc" :key="index"  @click.native="detail(item)">
              <!-- 咨询服务 -->
             <div v-if="item.type === '5'">
                 <img v-if="item.personalPicture" :src="item.personalPicture" style="width: 100%; height: 70px; cursor: pointer;">

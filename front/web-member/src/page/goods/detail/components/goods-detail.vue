@@ -57,7 +57,7 @@
                   <Form-item prop="markCertificate" label="标识证书">
                       <!-- 绿色/有机/无公害/地标 -->
                       <!-- {{info.product.markCertificate}} -->
-                      <span v-for="(item, index) in info.product.markCertificate" v-if="info.product.markCertificate && info.product.markCertificate.length">
+                      <span v-for="(item, index) in info.product.markCertificate" :key="index" v-if="info.product.markCertificate && info.product.markCertificate.length">
                           {{item}}
                         <span v-if="index < info.product.markCertificate.elngth-1">，</span>
                         <span v-else>。</span>
@@ -71,10 +71,10 @@
               </Col>
           </Row>
           <Row :gutter="32" v-if="categoryId == 'CP01' || categoryId == 'CP04' || categoryId == 'CP05'|| categoryId == 'CP06' || categoryId == 'CP07' || categoryId == 'CP08'">
-              <Col span="24" v-for="(item, index) in info.product.markCertificate" v-if="info.product.markCertificate && info.product.markCertificate.length">
+              <Col span="24" v-for="(item, index) in info.product.markCertificate" :key="index" v-if="info.product.markCertificate && info.product.markCertificate.length">
                   <Form-item prop="markGreen" label="绿色标识证书" v-if="item == '绿色'">
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.product.markGreen">
+                          <Col span="6" v-for="(e, i) in info.product.markGreen" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -83,7 +83,7 @@
                   </Form-item>
                   <Form-item prop="markOrganic" label="有机标识证书"  v-if="item == '有机'">
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.product.markOrganic">
+                          <Col span="6" v-for="(e, i) in info.product.markOrganic" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -92,7 +92,7 @@
                   </Form-item>
                   <Form-item prop="harmless" label="无公害标识证书" v-if="item == '无公害'">
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.product.harmless">
+                          <Col span="6" v-for="(e, i) in info.product.harmless" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -101,7 +101,7 @@
                   </Form-item>
                   <Form-item prop="landmark" label="地标标识证书" v-if="item == '地标'">
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.product.landmark">
+                          <Col span="6" v-for="(e, i) in info.product.landmark" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -274,7 +274,7 @@
                 <Col span="24" v-if="info.quality.is_test_report === '是'">
                     <Form-item prop="detection_image" label="检测报告">
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.quality.detectionimage">
+                          <Col span="6" v-for="(e, i) in info.quality.detectionimage" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -350,7 +350,7 @@
                 <Col span="24" v-if="info.safety.is_test_report === '是'">
                     <Form-item prop="detection_image" label="检测报告">
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.safety.detectionimage">
+                          <Col span="6" v-for="(e, i) in info.safety.detectionimage" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -376,7 +376,7 @@
                     <Form-item prop="salesLicense" label="生产许可证或销售许可证">
                       <p class="pt10 pb10">{{info.safety.salesLicense}}</p>
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.safety.salesLicenseList">
+                          <Col span="6" v-for="(e, i) in info.safety.salesLicenseList" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -388,7 +388,7 @@
                     <Form-item prop="varietyNumber" label="品种审定编号">
                       <p class="pt10 pb10">{{info.safety.varietyNumber}}</p>
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.safety.varietyNumberList">
+                          <Col span="6" v-for="(e, i) in info.safety.varietyNumberList" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -400,7 +400,7 @@
                     <Form-item prop="originQuarantineCertificate" label="产地检疫合格证">
                       <p class="pt10 pb10">{{info.safety.originQuarantineCertificate}}</p>
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.safety.originQuarantineCertificateList">
+                          <Col span="6" v-for="(e, i) in info.safety.originQuarantineCertificateList" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -412,7 +412,7 @@
                     <Form-item prop="quarantineCertificate" label="检疫证书">
                       <p class="pt10 pb10">{{info.safety.quarantineCertificate}}</p>
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.safety.quarantineCertificateList">
+                          <Col span="6" v-for="(e, i) in info.safety.quarantineCertificateList" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -426,7 +426,7 @@
                     <Form-item prop="report_name" label="进出口贸易许可证">
                       <p class="pt10 pb10">{{info.safety.importTradeLicense}}</p>
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.safety.importTradeLicenseList">
+                          <Col span="6" v-for="(e, i) in info.safety.importTradeLicenseList" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -438,7 +438,7 @@
                     <Form-item prop="report_name" label="进口审批文号">
                       <p class="pt10 pb10">{{info.safety.importNumber}}</p>
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.safety.importNumberList">
+                          <Col span="6" v-for="(e, i) in info.safety.importNumberList" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -450,7 +450,7 @@
                     <Form-item prop="quarantineNumber" label="检疫审批单编号">
                       <p class="pt10 pb10">{{info.safety.quarantineNumber}}</p>
                       <Row>
-                          <Col span="6" v-for="(e, i) in info.safety.quarantineNumberList">
+                          <Col span="6" v-for="(e, i) in info.safety.quarantineNumberList" :key="i">
                             <div class="pd10">
                                 <img :src="e" alt="" width="100%" height="150px">
                             </div>
@@ -493,7 +493,7 @@
     </div>
     <Title :title="'发货信息'"></Title>
     <div class="pd20">
-         <Form label-position="left" v-for="(item, index) in info.delivery" :label-width="120">
+         <Form label-position="left" v-for="(item, index) in info.delivery" :label-width="120" :key="index">
             <Row :gutter="32">
                 <Col span="12">
                     <Form-item prop="deliveryMethods" label="送货方式">
@@ -542,7 +542,7 @@
                                     </Col>
                                     <Col span="12">
                                         <Form-item prop="networkType" label="网点类型">
-                                            <span v-for="(e, i) in item.networkType">
+                                            <span v-for="(e, i) in item.networkType" :key="i">
                                             {{e}}
                                             <span v-if="i < (item.networkType.length -1)">，</span>
                                             <span v-else>。</span>

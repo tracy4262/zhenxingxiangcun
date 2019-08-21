@@ -4,7 +4,7 @@
       <Col span="4" class="tc">
         <Icon type="md-bus" class="t-green pl5" size="22" style="vertical-align: top;"/> 公交路线指引
       </Col>
-      <Col span="20" :offset="index > 0 ? '4' : '0'" class="tl" v-for="(item, index) in data.busLead">
+      <Col span="20" :offset="index > 0 ? '4' : '0'" class="tl" v-for="(item, index) in data.busLead" :key="item">
         <p style="word-wrap:break-word;">{{item.name}}</p>
       </Col>
     </Row>
@@ -12,12 +12,12 @@
       <Col span="4" class="tc">
         <Icon type="ios-car" class="t-green pl5" size="22" style="vertical-align: top;"/> 自驾路线指引
       </Col>
-      <Col span="20" :offset="index > 0 ? '4' : '0'" class="tl" v-for="(item, index) in data.traffic_lead">
+      <Col span="20" :offset="index > 0 ? '4' : '0'" class="tl" v-for="(item, index) in data.traffic_lead" :key="item">
         <p style="word-wrap:break-word;">{{item.name}}</p>
       </Col>
     </Row>
     <div v-if="data.contact.length">
-      <Row class="traffic-table-bus pd20" v-for="(item, index) in data.contact">
+      <Row class="traffic-table-bus pd20" v-for="(item, index) in data.contact" :key="item">
         <Col span="24"class="pt30">
             <a target="_blank" :href="`http://api.map.baidu.com/marker?location=${item.latitude},${item.longitude}&title=我的位置&content=${item.longitude,item.latitude}&output=html`">
                 <img :src="`//api.map.baidu.com/staticimage?height=200&center=${item.longitude},${item.latitude}&zoom=15&scale=2&markers=${item.longitude},${item.latitude}`" alt="" width="100%">

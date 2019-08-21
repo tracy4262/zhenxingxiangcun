@@ -288,7 +288,7 @@
         class-name="vertical-center-modal"
         >
         <Row :gutter="16">
-          <Col span="6" v-for="(item, index) in allphotos" class="pb10" v-if="moveItem.mediaId != item.mediaId">
+          <Col span="6" v-for="(item, index) in allphotos" :key="index" class="pb10" v-if="moveItem.mediaId != item.mediaId">
             <div style="position: relative;" @click="handleChecked(index)" :class="item.checked ? 'movechecked' : ''">
               <img :src="item.imageUrl" alt="" width="100%" height="72px">
               <p class="ell pd5">{{item.mediaName}}</p>

@@ -6664,7 +6664,6 @@
   -webkit-line-clamp: 7;
   /*! autoprefixer: ignore next */
   -webkit-box-orient: vertical;
-  /* autoprefixer: on */
 }
 .ell-6 {
   overflow: hidden;
@@ -6674,7 +6673,6 @@
   -webkit-line-clamp: 6;
   /*! autoprefixer: ignore next */
   -webkit-box-orient: vertical;
-  /* autoprefixer: on */
 }
 .ell-5 {
   overflow: hidden;
@@ -6684,7 +6682,6 @@
   -webkit-line-clamp: 5;
   /*! autoprefixer: ignore next */
   -webkit-box-orient: vertical;
-  /* autoprefixer: on */
 }
 .ell-4 {
   overflow: hidden;
@@ -6694,7 +6691,6 @@
   -webkit-line-clamp: 4;
   /*! autoprefixer: ignore next */
   -webkit-box-orient: vertical;
-  /* autoprefixer: on */
 }
 .ell-3 {
   overflow: hidden;
@@ -6704,7 +6700,6 @@
   -webkit-line-clamp: 3;
   /*! autoprefixer: ignore next */
   -webkit-box-orient: vertical;
-  /* autoprefixer: on */
 }
 .ell-2 {
   overflow: hidden;
@@ -6714,7 +6709,6 @@
   -webkit-line-clamp: 2;
   /*! autoprefixer: ignore next */
   -webkit-box-orient: vertical;
-  /* autoprefixer: on */
 }
 .ell-1 {
   overflow: hidden;
@@ -6724,5 +6718,4 @@
   -webkit-line-clamp: 1;
   /*! autoprefixer: ignore next */
   -webkit-box-orient: vertical;
-  /* autoprefixer: on */
 }

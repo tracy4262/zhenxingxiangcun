@@ -4,13 +4,13 @@
       <img src="../../../img/new-gate-icon.png" class="mr10 mt10" height="32px">
       <div class="vui-flex-item tabs">
         <Tabs :value="activeIndex" @on-click="tabClick">
-          <TabPane v-for="(item, index) in tabList" :label="item.name" :name="`${index}`"  :key="index"></TabPane>
+          <TabPane v-for="(item, index) in tabList" :label="item.name" :name="`${index}`" :key="index"></TabPane>
         </Tabs>
       </div>
       <span class="more" @click="handleMore">查看更多</span>
     </div>
     <Row :gutter="16" class="knowledge-list" >
-      <Col span="12" v-for="(item, index) in knowledgeFilterList" class="pb20">
+      <Col span="12" v-for="(item, index) in knowledgeFilterList" :key="index" class="pb20">
           <Card @click.native="detail(item)">
             <div>
               <Row>

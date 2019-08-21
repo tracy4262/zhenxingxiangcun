@@ -1,7 +1,7 @@
 <template>
 	<div class="new-last information-new-list">
         <ul id="box">
-            <li v-for="item in dataList" >
+            <li v-for="item in dataList" :key="item.title">
                 <Row >
                     <Col span="24">
                         <router-link :to="item.isSrc">

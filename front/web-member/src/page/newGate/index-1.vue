@@ -35,14 +35,14 @@
         <!-- <b style="color: #015198; font-size: 22px;font-family: PingFangSC-Semibold;">{{ knowledgeTitle }}</b> -->
         <div class="vui-flex-item tl" style="line-height: 32px;">
           <Row type="flex" justify="start">
-            <Col span="3" v-for="(item, index) in knowledgeTabList">
+            <Col span="3" v-for="(item, index) in knowledgeTabList" :key="index">
               <Button :type="activeIndex === index ? 'primary' : 'text'" @click="knowChange(index, item)">{{ item.name }}</Button>
             </Col>
           </Row>
         </div>
       </div>
       <Row :gutter="16" class="knowledge-list" >
-        <Col span="12" v-for="(item, index) in knowledgeFilterList" class="pb20">
+        <Col span="12" v-for="(item, index) in knowledgeFilterList" :key="index" class="pb20">
             <Card @click.native="detail(item)">
               <div>
                 <Row>

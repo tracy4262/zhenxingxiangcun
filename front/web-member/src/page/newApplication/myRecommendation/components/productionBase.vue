@@ -31,7 +31,7 @@
         <div class="mt20">
             <CheckboxGroup v-model="choosed">
                 <Row :gutter="24">
-                    <Col span="6" v-for="(item, index) in list" class="mb20">
+                    <Col span="6" v-for="(item, index) in list" :key="index" class="mb20">
                         <!-- 查找基地中，所有已推荐未推荐的都会查出来，所以已推荐的不能再次进行选择 -->
                         <Checkbox :label="item.id" v-if="!flag && item.isRecommend === '未推荐'" style="position: absolute; top: 10px; right: 10px; z-index: 1;"><span>&nbsp;</span></Checkbox>
                         <!-- 已推荐基地中所有的都是已推荐基地，所以不用做限制 -->

@@ -124,7 +124,7 @@
         <!-- 设施信息详情弹框 -->
         <Modal v-model="modal" title="查看详情" width="1000" :closable="false" @on-ok="ok" @on-cancel="cancel">
             <Row class="pd20">
-                <Card v-for="(item, index) in detailData" :style="index !== 0 ? 'margin-top: 20px' : ''">
+                <Card v-for="(item, index) in detailData" :key="index" :style="index !== 0 ? 'margin-top: 20px' : ''">
                     <Row>
                         <Col span="8">设施类别：{{ item.commonName }}</Col>
                         <Col span="8">设施名称：{{ item.name }}</Col>
@@ -144,7 +144,7 @@
                     </Row>
                     <Row class="mt10">
                         <div style="float: left;">上传图片：</div>
-                        <img v-for="it in item.pictureList" :src="it" style="width: 60px; height: 60px;" class="mr10" />
+                        <img v-for="it in item.pictureList" :key="it" :src="it" style="width: 60px; height: 60px;" class="mr10" />
                     </Row>
                     <Row class="mt10">
                         坐标：{{ item.longitude + ', ' + item.latitude }}
@@ -155,7 +155,7 @@
         </Modal>
         <Title title="联系方式" class="mt20"></Title>
         <Row class="pd20">
-            <Card v-for="(item, index) in contactInfo" class="mt20">
+            <Card v-for="(item, index) in contactInfo" :key="index" class="mt20">
                 <Row>
                     <Col span="8">会员名称全称：{{ item.member_name_status ? item.member_name : '暂未公开' }}</Col>
                     <Col span="8">会员名称简称：{{ item.member_abbreviation_status ? item.member_abbreviation : '暂未公开' }}</Col>

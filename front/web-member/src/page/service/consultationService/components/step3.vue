@@ -16,7 +16,7 @@
         </Form>
         <div v-if="data.serviceType === '提供付费咨询'">
             <Title class="mb20" title="收费方式"></Title>
-            <div v-for="(item, index) in data.chargeType">
+            <div v-for="(item, index) in data.chargeType" :key="index">
                 <Form :ref="`data${index}`" :model="item" :label-width="80" label-position="left" :rules="ruleInline">
                     <Row :gutter="36">
                         <Col span="9">

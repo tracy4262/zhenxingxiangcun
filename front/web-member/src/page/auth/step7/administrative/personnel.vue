@@ -1,7 +1,7 @@
 <template>
   <div class="pd20">
       <Title :title="title" edit :id="id" :yearId="yearId" :templateId="templateId" @left-refresh="leftRefresh"></Title>
-      <Form :label-width="80" label-position="left" v-for="(item, index) in data"  :ref="`data${index}`" :model="item" :rules="dataLine">
+      <Form :label-width="80" label-position="left" v-for="(item, index) in data" :key="item" :ref="`data${index}`" :model="item" :rules="dataLine">
         <div class="pd20 mt30" style="background:#f9f9f9;" >
             <Row  :gutter="24">
               <Col span="8">

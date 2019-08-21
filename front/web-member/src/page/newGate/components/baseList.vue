@@ -1,7 +1,7 @@
 <template>
   <div class="base-list">
     <Row :gutter="16">
-      <Col span="6" v-for="(map, index) in dataList" class="list">
+      <Col span="6" v-for="(map, index) in dataList" :key="index" class="list">
         <Card :padding="0" @click.native="detail(map)">
           <img v-if="map.imageUrl" :src="map.imageUrl" alt="" style="width: 100%; height:168px;">
           <img v-else src="../../../../static/img/goods-list-no-picture1.png" alt="" style="width: 100%; height:168px;">

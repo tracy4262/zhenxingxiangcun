@@ -1,7 +1,7 @@
 <template>
 <div>
   <ul class="vui-comment-list">
-    <li class="vui-comment-item" v-for="(item, index) in data.list">
+    <li class="vui-comment-item" v-for="(item, index) in data.list" :key="index">
       <Row>
         <Col span="21">
           <Avatar :src="item.author.avatar"></Avatar>

@@ -61,7 +61,7 @@
                   </div>
                   <div class="pd5" >
                     <Row class="mt20" :gutter="18" :style="{'height': dishListHeight}" style="overflow: auto;">
-                      <Col span="6" v-for="(item, index) in dishList" class="pb20">
+                      <Col span="6" v-for="(item, index) in dishList" class="pb20" :key="item">
                         <Card>
                           <div class="tc" style="">
                             <img :src="item.foodImage[0]" alt="" width="100%" height="112px">

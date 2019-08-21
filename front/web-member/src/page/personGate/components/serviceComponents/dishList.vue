@@ -3,7 +3,7 @@
       <Row class="mt20 pl20">
           <Col span="24" style="line-height: 30px;">
               <span>包房</span>
-              <span v-for="(item,index) in privateRoomDatas" :key="index" class="pl10 pr10">
+              <span v-for="(item,index) in privateRoomDatas" :key="item" class="pl10 pr10">
                   <span @click="choosePrivateRoom(item, index)" :class="{'farm-group-btn-active': index === activePrivateRoom, 'farm-group-btn': true}">
                       {{ item.roomName }}
                   </span>
@@ -13,7 +13,7 @@
       <Row class="mt20 pl20">
           <Col span="24" style="line-height: 30px;">
               <span>餐桌</span>
-              <span v-for="(item,index) in diningTableDatas" :key="index" class="pl10 pr10">
+              <span v-for="(item,index) in diningTableDatas" :key="item" class="pl10 pr10">
                   <span @click="chooseDiningTable(item, index)" :class="{'farm-group-btn-active': index === activeDiningTable, 'farm-group-btn': true}">
                       {{ item.number }}
                   </span>
@@ -23,7 +23,7 @@
       <Row class="mt20 pl20">
           <Col span="24" style="line-height: 30px;">
               <span>菜品分类</span>
-              <span v-for="(item,index) in dishDatas" :key="index" class="pl10 pr10">
+              <span v-for="(item,index) in dishDatas" :key="item" class="pl10 pr10">
                   <span @click="chooseDishData(item, index)" :class="{'farm-group-btn-active': index === activeDish, 'farm-group-btn': true}">
                       {{ item.foodClassName }}
                   </span>
@@ -31,7 +31,7 @@
           </Col>
       </Row>
       <Row class="mt20 pl20" :gutter="18">
-          <Col span="4" v-for="(item, index) in dishList" class="pb20">
+          <Col span="4" v-for="(item, index) in dishList" class="pb20" :key="item">
             <Card>
               <div class="tc" style="">
                 <img :src="item.foodImage[0]" alt="" width="100%" height="142px">

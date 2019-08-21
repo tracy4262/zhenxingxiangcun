@@ -11,7 +11,7 @@
       <Col span="5">
         <ul class="catalog-list" :style="{height: height}">
           <li
-            v-for="(item, index) in catalogData"
+            v-for="(item, index) in catalogData" :key="index"
             :class="{active: item.checked || active === index}"
             @click="handleClick(item, index)">
               {{item.catalog_name}}

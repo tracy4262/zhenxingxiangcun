@@ -1,6 +1,6 @@
 <template>
   <div>
-     <Row type="flex" align="middle" v-for="(item, index) in data" class="pb20"  v-if="data.length">
+     <Row type="flex" align="middle" v-for="(item, index) in data" :key="index" class="pb20"  v-if="data.length">
         <Col span="3">
         <div class="index tc" :class="index < 3 ? 'top-active' : ''">{{index+1}}</div>
         </Col>

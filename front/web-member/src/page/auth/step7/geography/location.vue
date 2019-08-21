@@ -74,7 +74,7 @@
           </Col>
         </Row>
         <Row :gutter="16" class="four-neighbors">
-          <Col span="24" class="pb20" v-for="(item, index) in memberNeighbor.memberNeighbor">
+          <Col span="24" class="pb20" v-for="(item, index) in memberNeighbor.memberNeighbor" :key="item">
             <span>
               <!-- <Button v-if="!item.edit" style="max-width:110px"><span class="ell">{{item.name}}</span></Button>
               <Input style="width:110px;" v-else :maxlength="20" v-model="item.name" :ref="`neighbors${index}`"></Input> -->
@@ -115,7 +115,7 @@
             </FormItem>
           </Col>
         </Row>
-        <Row  :gutter="24" class="pb20" v-for="(item, index) in memberLiveAddress.memberLiveAddress">
+        <Row  :gutter="24" class="pb20" v-for="(item, index) in memberLiveAddress.memberLiveAddress" :key="item">
           <Col span="1">
             {{index+1}}、
           </Col>

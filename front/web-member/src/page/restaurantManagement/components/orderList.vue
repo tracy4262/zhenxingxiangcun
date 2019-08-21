@@ -29,10 +29,10 @@
                       </Col>
                       <Col span="3">
                         <div class="pd10 tc" v-if="data.checkType === '0'">
-                            <span v-for="(item, index) in data.setMeal[0].tableData">{{item.roomName}}</span>
+                            <span v-for="(item, index) in data.setMeal[0].tableData" :key="index">{{item.roomName}}</span>
                         </div>
                         <div class="pd10 tc" v-if="data.checkType === '1'">
-                            <span v-for="(item, index) in data.setMeal[0].selectedRoom">{{item.name}}</span>
+                            <span v-for="(item, index) in data.setMeal[0].selectedRoom" :key="index">{{item.name}}</span>
                         </div>
                       </Col>
                       <!-- <Col span="2">

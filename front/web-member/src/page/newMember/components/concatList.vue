@@ -1,7 +1,7 @@
 <template>
   <div class="new-concat-list">
         <div>
-          <div class="pd20 mb20 pt30" v-for="(item, index) in data">
+          <div class="pd20 mb20 pt30" v-for="(item, index) in data" :key="index">
           <Form :label-width="80" label-position="left">
             <Row :gutter="32" class="pb20">
               <Title :title="item.safeFormData[0].contact_name" class="mb30">
@@ -152,7 +152,7 @@
               <Col span="20">
                 <FormItem label="个人照片" prop="image">
                   <Row v-if="item.safeFormData[0]" :gutter="16">
-                    <Col span="6" v-for="(e, i) in item.safeFormData[0].image" class="mb15">
+                    <Col span="6" v-for="(e, i) in item.safeFormData[0].image" :key="i" class="mb15">
                       <img :src="e" alt="" width="100%" height="90px">
                     </Col>
                   </Row>

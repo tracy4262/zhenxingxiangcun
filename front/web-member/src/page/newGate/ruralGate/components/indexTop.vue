@@ -11,7 +11,7 @@
             <!-- 轮播图 -->
             <Col span="9">
                 <Carousel v-model="value" loop dots="outside">
-                    <CarouselItem v-for="(item, index) in rotationPictureList" class="carouse-height bc">
+                    <CarouselItem v-for="(item, index) in rotationPictureList" :key="index" class="carouse-height bc">
                         <div class="tc" @click="detail(item)" style="cursor: pointer;">
                             <img :src="item.image" style="width: 100%; height: 300px;" />
                             <div class="mt10 mb10 ell" :title="item.title">{{ item.title }}</div>
@@ -22,13 +22,13 @@
             <!-- 所有除推荐产品，推荐服务，推荐基地，联系方式以外的标签页 -->
             <Col span="15" class="pl20">
                 <Tabs :value="allActiveIndex" @on-click="allTabClick">
-                    <TabPane :label="item.name" :name="`${index}`" v-for="(item,index) in allTabList"></TabPane>
+                    <TabPane :label="item.name" :name="`${index}`" v-for="(item,index) in allTabList" :key="index"></TabPane>
                 </Tabs>
                 <div v-if="attribution === 'introduction'" class="mt10">
                     <p style="color: #4A4A4A; font-size: 14px; line-height: 24px;">{{ introduction }}<a v-if="introduction !== '暂无相关内容！' " @click="goIntroduction">查看详情 >></a></p>
                 </div>
                 <ul v-else class="mt10">
-                    <li v-for="(item, index) in allList">
+                    <li v-for="(item, index) in allList" :key="index">
                         <Row type="flex" align="middle">
                             <Col span="1"><div class="circle ml5"></div></Col>
                             <Col span="22"><div :class="index === 0 || index === 4? 'dynamic-title-big ell' : 'dynamic-title ell'" :title="item.title" @click="detail(item)">{{ item.title }}</div></Col>
@@ -67,11 +67,11 @@
             <!-- 推荐基地，服务，产品 -->
             <Col span="15" class="pl20">
                 <Tabs :value="recommendationActiveIndex" @on-click="recommendationTabClick">
-                    <TabPane :label="item.name" :name="`${index}`" v-for="(item,index) in recommendationTabList"></TabPane>
+                    <TabPane :label="item.name" :name="`${index}`" v-for="(item,index) in recommendationTabList" :key="index"></TabPane>
                 </Tabs>
                 <a class="new-title-16 mr10" style="position: absolute; top: 10px; right: 0;" @click="goRecommendation">查看更多</a>
                 <Row :gutter="16">
-                    <Col span="8" v-for="(item, index) in recommendationList">
+                    <Col span="8" v-for="(item, index) in recommendationList" :key="index">
                         <product-item v-if="attribution2 === 'product'" :item="item"></product-item>
                         <service-item v-if="attribution2 === 'service'" :item="item"></service-item>
                         <production-base-item v-if="attribution2 === 'productionBase'" :item="item"></production-base-item>
@@ -98,7 +98,7 @@
                   <Title title="专家团队" class="ml10"></Title>
               </div>
               <Row :gutter="8" class="mt10" style="height: 120px; overflow-y:auto;">
-                  <Col span="8" v-for="(item, index) in expertTeam" class="tc" @click.native="expertDetail(item)" style="cursor: pointer;">
+                  <Col span="8" v-for="(item, index) in expertTeam" :key="index" class="tc" @click.native="expertDetail(item)" style="cursor: pointer;">
                       <img :src="item.personalPhoto" style="width: 100%; height: 70px;">
                       <p style="font-size: 14px; color: #4A4A4A; line-height: 20px;" class="mt5 ell" :title="item.expertName">{{ item.expertName }}</p>
                       <p style="color: #9B9B9B; line-height: 17px;" class="ell mt5" :title="item.title">{{ item.title }}</p>
@@ -116,7 +116,7 @@
                     <Title title="邻村风采" class="ml10"></Title>
                 </div>
                 <Row class="mt10 mb10">
-                    <Col span="12" v-for="(item, index) in neighborList" style="font-size: 16px; line-height: 36px; padding-left: 20px; cursor: pointer;" class="ell" :title="item.location" @click.native="goNeighbor(item)">{{ item.location }}</Col>
+                    <Col span="12" v-for="(item, index) in neighborList" :key="index" style="font-size: 16px; line-height: 36px; padding-left: 20px; cursor: pointer;" class="ell" :title="item.location" @click.native="goNeighbor(item)">{{ item.location }}</Col>
                     <h2 class="ml20" v-if="neighborList.length === 0">{{ text4 }}</h2>
                 </Row>
             </div>

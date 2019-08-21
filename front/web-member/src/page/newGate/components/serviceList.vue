@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul class="service-list">
-      <li v-for="(item, index) in dataList"  :class="column === 5 ? 'li-5' : 'li-4'">
+      <li v-for="(item, index) in dataList" :key="index" :class="column === 5 ? 'li-5' : 'li-4'">
         <serviceItem :item="item" @click.native="handleDetail(item)"></serviceItem>
         <!-- <img v-if="item.image_url && item.image_url.length" :src="item.image_url[0]" alt="" height="159px" width="100%">
         <img v-else src="../../../../static/img/goods-list-no-picture1.png" alt="" height="159px" width="100%">

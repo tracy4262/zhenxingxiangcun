@@ -4,7 +4,7 @@
             <!-- 轮播图 -->
             <Col span="7">
                 <Carousel v-model="value" loop dots="outside">
-                    <CarouselItem v-for="(item, index) in rotationPictureList" class="carouse-height bc">
+                    <CarouselItem v-for="(item, index) in rotationPictureList" :key="index" class="carouse-height bc">
                         <div class="tc" @click="detail(item)" style="cursor: pointer;">
                             <img :src="item.image" style="width: 100%; height: 300px;" />
                             <div class="mt10 mb10 ell" :title="item.title">{{ item.title }}</div>

@@ -9,7 +9,7 @@
         </Switch>
       </FormItem>
       <FormItem label="矿产类别"> 矿产名称 </FormItem>
-      <FormItem :label="item.minerals_class" v-for="(item, index) in data">
+      <FormItem :label="item.minerals_class" v-for="(item, index) in data" :key="item">
         <!-- 能源矿产 -->
         <Select v-model="item.minerals_name" multiple style="width:300px" @on-open-change="changePreview" v-if="index == 0">
             <Option v-for="list in energy" :value="list.minerals_name" :key="list.id">{{ list.minerals_name }}</Option>

@@ -4,14 +4,14 @@
     <img src="../../../img/product-icon.png" class="mr10 mt10" height="32px">
     <div class="vui-flex-item tabs">
       <Tabs :value="activeIndex" @on-click="tabClick">
-        <TabPane v-for="(item, index) in tabList" :label="item.name" :name="`${index}`"  :key="index"></TabPane>
+        <TabPane v-for="(item, index) in tabList" :label="item.name" :name="`${index}`" :key="index"></TabPane>
       </Tabs>
     </div>
     <span class="more" @click="handleMore">查看更多</span>
   </div>
   <swiper :options="swiperOption" ref="mySwiper" class="pb10">
     <div class="swiper-button-prev" slot="button-prev"></div>
-    <swiper-slide :key="index" v-for="(item, index) in columnList">
+    <swiper-slide v-for="(item, index) in columnList" :key="index">
       <!-- 产品 -->
       <div class="pd10" v-if="activeName == '产品'">
         <productList :item="item"></productList>

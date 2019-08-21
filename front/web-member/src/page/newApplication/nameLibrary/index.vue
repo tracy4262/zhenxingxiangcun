@@ -13,7 +13,7 @@
           <b style="font-size:20px">名称库管理</b>
           <application-brief appId="2259165989144d499fb6d003619ae3e7"></application-brief>
           <Tabs :value="tabActive" :animated="false" @on-click="handleTabsClick" class="mt20 page-ivu-tabs-bar">
-            <TabPane :label="item.label" :name="item.name" v-for="(item, index) in data"></TabPane>
+            <TabPane :label="item.label" :name="item.name" v-for="(item, index) in data" :key="index"></TabPane>
           </Tabs>
           <!-- <Row>
             <Col span="3" class="mt15" v-for="(item, index) in data" :key="index">

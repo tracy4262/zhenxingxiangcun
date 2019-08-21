@@ -14,7 +14,7 @@
                 <Col span="20">
                 <div class="pr50">
                      <ul class="clear pr50">
-                        <template v-for="(item,index) in data">
+                        <template v-for="(item,index) in data" :key="index">
                             <li>
                                 <Dropdown>
                                     <router-link :to="`/portals/${item.attributionId}?uid=${$route.query.uid}`" class="item" :class="{'on': item.checked}">

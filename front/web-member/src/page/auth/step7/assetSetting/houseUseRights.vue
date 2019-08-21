@@ -2,7 +2,7 @@
   <div class="pd20">
       <Title :title="title" edit :id="id" :yearId="yearId" :templateId="templateId" @left-refresh="leftRefresh" ></Title>
     <div class="pd20">
-        <Form :label-width="82" label-position="left" style="background:#f9f9f9;" class="pd20 mt40" :model="item"  :rules="ruleInline" v-for="(item, index) in data" :ref="`data${index}`">
+        <Form :label-width="82" label-position="left" style="background:#f9f9f9;" class="pd20 mt40" :model="item"  :rules="ruleInline" v-for="(item, index) in data" :key="item" :ref="`data${index}`">
           <Row :gutter="16">
               <Col span="8">
                   <Form-item label="权限">

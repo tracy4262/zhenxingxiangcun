@@ -8,13 +8,13 @@
         <Title :title="title.highName" class="mt50"></Title>
         <Tabs :value="activeHieght" @on-click="heightTab" class="mt50">
             <TabPane label="全部" name="all" ></TabPane>
-            <TabPane v-for="(item, index) in highType" :label="item.userTypeName" :name="item.userType"></TabPane>
+            <TabPane v-for="(item, index) in highType" :key="index" :label="item.userTypeName" :name="item.userType"></TabPane>
         </Tabs>
         <app-list ref="highApp" :appData="highAppData" @on-refresh="init" @on-change="onHighChange"/>
         <Title :title="title.serviceName" class="mt50"></Title>
         <Tabs :value="activeService" @on-click="serviceTab" class="mt50">
             <TabPane label="全部" name="all" ></TabPane>
-            <TabPane v-for="(item, index) in serviceType" :label="item.serviceTypeName" :name="item.serviceType"></TabPane>
+            <TabPane v-for="(item, index) in serviceType" :key="index" :label="item.serviceTypeName" :name="item.serviceType"></TabPane>
         </Tabs>
         <app-list ref="highApp" :appData="serviceAppData" @on-refresh="init" @on-change="onServiceChange"/>
         <div class="tc pd20">

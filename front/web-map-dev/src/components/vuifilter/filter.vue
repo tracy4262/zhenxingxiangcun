@@ -74,7 +74,7 @@
       <!-- 结果分类 -->
       <div class="vui-high-filter-product scroll" v-if="!classifyShow">
         <Row v-if="resultDatas.length">
-          <template v-for="(item, index) in resultDatas">
+          <template v-for="(item, index) in resultDatas" :key="index">
             <Col span="6" :key="index" :class="{'on':item.checked}" @click.native="handleSelResult(item,index)">
               <div class="vui-high-filter-product-item ell" :key="index">{{item.label}}</div>
             </Col>
@@ -95,7 +95,7 @@
             type="border"
             closable
             :key="index"
-            v-for="(item,index) in selResultData"
+            v-for="(item,index) in selResultData" :key="index"
             @on-close="onResultCancel"
             :name="item.label">{{ item.label }}</Tag>
           </Col>

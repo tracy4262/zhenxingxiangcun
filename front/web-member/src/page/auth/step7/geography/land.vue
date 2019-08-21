@@ -28,7 +28,7 @@
           平方公里
         </Col>
       </Row> -->
-      <Row  :gutter="40" v-for="(item, index) in data">
+      <Row  :gutter="40" v-for="(item, index) in data" :key="item">
         <Col span="5" v-if="index < 6">
           <p style="cursor: pointer;" class="ell">
             <span v-if="index != 0">其中：</span> {{item.land_area}}

@@ -14,7 +14,7 @@
           </Col>
        </Row>
        <Row :gutter="16" class="pt20">
-          <Col span="6" v-for="(item, index) in data" class="pb10 tc" @click.native="handlePublishService(item)">
+          <Col span="6" v-for="(item, index) in data" :key="index" class="pb10 tc" @click.native="handlePublishService(item)">
             <Card >
               <div><img :src="item.logo"  width="64px" height="50px"></div>
               <Tooltip placement="top" :content="item.appName" :delay="1000" class="mt20">

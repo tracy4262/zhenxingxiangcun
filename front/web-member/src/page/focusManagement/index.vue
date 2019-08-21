@@ -13,7 +13,7 @@
           <b style="font-size:20px">关注管理</b>
           <application-brief appId="c20bcf3d976447a8bf8d0d0120c16ca7"></application-brief>
           <Tabs :value="tabActive" :animated="false" @on-click="handleTabsClick" class="mt20 page-ivu-tabs-bar">
-            <TabPane :label="item.label" :name="item.name" v-for="(item, index) in data"></TabPane>
+            <TabPane :label="item.label" :name="item.name" v-for="(item, index) in data" :key="index"></TabPane>
           </Tabs>
         </div>
         <div style="background: #F5F5F5;" >

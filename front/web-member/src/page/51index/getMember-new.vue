@@ -3,7 +3,7 @@
   <search @on-search="onSearch" :count="total"></search>
   <div class="pt30 pb20">
     <Row :gutter="32" type="flex" algin="middle">
-      <Col span="6" v-for="(item, index) in data" class="pb20" style="cursor: pointer;">
+      <Col span="6" v-for="(item, index) in data" :key="index" class="pb20" style="cursor: pointer;">
           <Card @click.native="toLink(item)" :padding="0">
             <img v-if="item.avatar" :src="item.avatar" style="width:100%" height="230px">
             <img v-else src="../../../static/img/user-icon-big.png" style="width:100%" height="230px">

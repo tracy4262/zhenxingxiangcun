@@ -1,7 +1,7 @@
 <template>
 <div class="dish-list-ivu">
    <Row class="mt20 pl20"  :gutter="18">
-          <Col span="6" v-for="(item, index) in data" class="pb20">
+          <Col span="6" v-for="(item, index) in data" class="pb20" :key="item">
             <Card >
               <div @click="handleDeatil(item)" style="height: 281px;">
                 <img :src="item.image" alt="" width="100%" height="184px">

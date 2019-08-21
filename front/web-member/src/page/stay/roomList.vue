@@ -45,7 +45,7 @@
               <Form  ref="data" :model="data" :label-width="80" :rules="ruleInline" label-position="left">
                 <FormItem  label="房间分类" prop="roomClassId">
                   <Select v-model="data.roomClassId" style="width:100%;" @on-change="roomClassChange">
-                      <Option v-for="(item, index) in typeList" :value="item.id" v-if="index">{{item.roomClassName}}</Option>
+                      <Option v-for="(item, index) in typeList" :key="index" :value="item.id" v-if="index">{{item.roomClassName}}</Option>
                   </Select>
                 </FormItem>
                  <FormItem  label="房间名称" prop="roomName">

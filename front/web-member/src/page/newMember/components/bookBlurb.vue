@@ -10,7 +10,7 @@
         <p class="book-title"><b>{{introduceDetail.title}}</b><span class="ml20">{{bookInfo.author}} 著</span></p>
         <p class="abstracts mt10">{{introduceDetail.abstracts}}</p>
         <div>
-          <span class="mr10">标签：</span><Tag type="border" color="#00c587" v-for="(item, index) in bookInfo.label">{{item}}</Tag>
+          <span class="mr10">标签：</span><Tag type="border" color="#00c587" v-for="(item, index) in bookInfo.label" :key="index">{{item}}</Tag>
         </div>
         <div class="pt15">
           <Button type="primary" @click="getId(introduceDetail.id)">开始阅读</Button>
@@ -55,10 +55,10 @@
     </div>
     <div class="pt30">
       <p class="head-line pl10 mb20" v-if="bookInfo.book_data"><b>目录({{bookInfo.book_data.length}}章)</b></p>
-      <div v-for="(item, index) in bookInfo.book_data" class="pl15 pr15">
+      <div v-for="(item, index) in bookInfo.book_data" :key="index" class="pl15 pr15">
         <p class="catalog"><b>第{{index+1}}章 {{item.title}}</b></p>
         <div class="pl20 sbuCatalog">
-          <p v-for="(list, i) in item.children">第{{i+1}}节：{{list.title}}</p>
+          <p v-for="(list, i) in item.children" :key="i">第{{i+1}}节：{{list.title}}</p>
         </div>
       </div>
     </div>

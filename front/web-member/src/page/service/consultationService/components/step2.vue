@@ -39,7 +39,7 @@
         <!-- 交通信息表单 -->
         <Form ref="data3" :model="data" :label-width="120"  label-position="left" :rules="ruleInline" >
             <FormItem label="公交路线指引">
-                <Row v-for="(item, index) in data.busLead" class="pb15">
+                <Row v-for="(item, index) in data.busLead" class="pb15" :key="index">
                     <Col span="18"><Input v-model="item.name"  :maxlength="200"/></Col>
                     <Col span="6" class="pl15">
                         <Button @click="delBusLead(index)" v-if="data.busLead.length > 1" class="mr5">删除</Button>
@@ -48,7 +48,7 @@
                 </Row>
             </FormItem>
              <FormItem label="自驾路线指引">
-                 <Row v-for="(item, index) in data.carLead"  class="pb15">
+                 <Row v-for="(item, index) in data.carLead" :key="index"  class="pb15">
                     <Col span="18"><Input v-model="item.name" :maxlength="200"/></Col>
                     <Col span="6" class="pl15">
                         <Button @click="delTrafficLead(index)" v-if="data.carLead.length > 1" class="mr5">删除</Button>

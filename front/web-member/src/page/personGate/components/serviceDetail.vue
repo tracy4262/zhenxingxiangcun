@@ -65,14 +65,14 @@
               <div class="pt20 vui-form-sm pb10" v-if="type > 1">
                 <Form :label-width="80">
                   <FormItem label="套餐：">
-                    <Button class="mr20 mb20" v-for="(item, index) in allPackageData" @click="handleCheckPackages(item)">
+                    <Button class="mr20 mb20" v-for="(item, index) in allPackageData" :key="item" @click="handleCheckPackages(item)">
                       {{item.setMealName}} ￥ {{item.setMealPrice}} (<span style="text-decoration: line-through;">￥{{item.totalPrice}}</span>)
                     </Button>
                     <!-- <Button type="default" class="mr20 mb20" @click="handleCheckPackage">套餐选择</Button> -->
                     <Button type="default" class="mb20" @click="handleCheckPackageOnline">在线选择</Button>
                   </FormItem>
                   <FormItem label="已选择：">
-                    <Button type="default" class="mr10 active-btn" style="margin-bottom: 10px;" v-for="(item, index) in checkedData" >
+                    <Button type="default" class="mr10 active-btn" style="margin-bottom: 10px;" v-for="(item, index) in checkedData" :key="item">
                       {{item.setMealName}} ￥ {{item.setMealPrice}} (<span style="text-decoration: line-through;">￥{{item.totalPrice}}</span>)
                     </Button>
                   </FormItem>
@@ -91,7 +91,7 @@
                       <div v-if="type == 0 && step3Info.timeCharging">
                         <p>按钓鱼时间</p>
                         <p class="t-grey">收费标准：
-                          <span v-for="(item, index) in step3Info.fishTimeCharge">
+                          <span v-for="(item, index) in step3Info.fishTimeCharge" :key="item">
                             <span v-if="item.discount">
                               {{item.fishDuration}} ￥ {{item.discount}}
                               <span style="text-decoration: line-through;">￥ {{item.durationPrice}}</span> ；
@@ -102,7 +102,7 @@
                           </span>
                         </p>
                         <p class="t-grey">可垂钓品种：
-                          <span v-for="(item, index) in step3Info.fishVarietyCharge">
+                          <span v-for="(item, index) in step3Info.fishVarietyCharge" :key="item">
                             {{item.productName}}、
                           </span>
                         </p>
@@ -110,7 +110,7 @@
                       <div v-if="step3Info.timeVariety">
                         <p v-if="type == 0">按钓鱼品种</p>
                         <p v-if="type == 1">按采摘品种</p>
-                        <p v-for="(item, index) in step3Info.fishVarietyCharge" class="t-grey">
+                        <p v-for="(item, index) in step3Info.fishVarietyCharge" :key="item" class="t-grey">
                           <span v-if="item.durationPrice">{{item.productName}}：{{item.durationPrice}}/{{item.unit}} <span style="text-decoration: line-through;">{{item.productPrice}}/{{item.unit}} </span> </span>
                           <span else>{{item.productName}}：{{item.productPrice}}/{{item.unit}} </span>
                         </p>
@@ -173,7 +173,7 @@
             <detail-title :name="sellerData.name" :avatar="sellerData.avatar" grey>
               <Button type="text" size="small" @click.stop="webimchat"><Icon type="md-text" class="t-green"  size="16"></Icon> 发起聊天</Button>
             </detail-title>
-            <div style="border-top: 1px solid #F4F4F4;" v-if="data.contact && data.contact.length" v-for="(item, index) in data.contact">
+            <div style="border-top: 1px solid #F4F4F4;" v-if="data.contact && data.contact.length" v-for="(item, index) in data.contact" :key="index">
               <div class="pd10">
                 <p style="line-height: 24px;"><span class="t-grey"><Icon type="ios-call" size="20"/> 座机电话：</span> {{item.seat_phone}}</p>
                 <p style="line-height: 24px;"><span class="t-grey"><Icon type="ios-phone-portrait" size="20"/> 手机号码：</span>{{item.phone}}</p>

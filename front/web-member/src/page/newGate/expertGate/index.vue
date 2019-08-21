@@ -5,7 +5,7 @@
         <div class="bg-white bd-4" >
           <div class="pd20">
             <Tabs :value="active" @on-click="handleClick">
-                <TabPane :label="item.name" :name="`${index}`" v-for="(item,index) in tabList"></TabPane>
+                <TabPane :label="item.name" :name="`${index}`" v-for="(item,index) in tabList" :key="index"></TabPane>
             </Tabs>
           <!-- </div>
           <div class="pl20 "> -->

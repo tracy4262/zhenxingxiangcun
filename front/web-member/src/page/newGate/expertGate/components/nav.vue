@@ -88,7 +88,7 @@
             <div class="nav-gate-expert" :class="active == '0/index' ? 'nav-gate-position' : ''">
                 <div class="nav-gate-layouts">
                     <Tabs :value="active" @on-click="clickTab">
-                        <TabPane :class="{'on': item.checked}" :label="item.columnName" :name="item.attributionId" v-for="(item,index) in data"></TabPane>
+                        <TabPane :class="{'on': item.checked}" :label="item.columnName" :name="item.attributionId" v-for="(item,index) in data" :key="index"></TabPane>
                     </Tabs>
                 </div>
             </div>

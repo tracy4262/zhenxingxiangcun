@@ -9,7 +9,7 @@
             </div>
           </div>
       </Col>
-      <Col span="4" v-for="(item, index) in data" class="mb5">
+      <Col span="4" v-for="(item, index) in data" :key="index" class="mb5">
         <div class="conent">
           <img src="../../../static/img/goods-list-no-picture1.png" alt="" v-if="!item.image.length" width="100%" height="100%">
           <img :src="item.image[0] ? item.image[0] : '../../../static/img/goods-list-no-picture1.png'" alt="" v-else width="100%" height="100%">

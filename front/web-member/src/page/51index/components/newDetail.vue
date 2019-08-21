@@ -1,6 +1,6 @@
 <template>
 <div>
-	<div class="pt20 pd20 information-new-detail" v-for="(item, index) in dataList">
+	<div class="pt20 pd20 information-new-detail" v-for="(item, index) in dataList" :key="index">
     <h3 class="ell pb10">  
       <a :href="item.isSrc">{{item.title}}</a> 
     </h3>

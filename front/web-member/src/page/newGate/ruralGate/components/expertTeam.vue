@@ -8,7 +8,7 @@
      :styles="{top: '20px'}">
      <div>
       <Row :gutter="16" class="mt10">
-        <Col span="6" v-for="(item, index) in expertTeam" class="tc pb15" @click.native="expertDetail(item)" style="cursor: pointer;">
+        <Col span="6" v-for="(item, index) in expertTeam" :key="index" class="tc pb15" @click.native="expertDetail(item)" style="cursor: pointer;">
             <img :src="item.personalPhoto" style="width: 100%; height: 125px;">
             <p style="font-size: 14px; color: #4A4A4A; line-height: 20px;" class="mt5 ell" :title="item.expertName">{{ item.expertName }}</p>
             <p style="color: #9B9B9B; line-height: 17px;" class="ell mt5" :title="item.title">{{ item.title }}</p>

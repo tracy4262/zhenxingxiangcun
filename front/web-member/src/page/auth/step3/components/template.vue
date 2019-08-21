@@ -1,7 +1,7 @@
 <template>
   <div class="pd20">
     <Row :gutter="32">
-      <Col span="6" v-for="(item, index) in data" class="tc" style="cursor: pointer;" >
+      <Col span="6" v-for="(item, index) in data" :key="index" class="tc" style="cursor: pointer;" >
       <!-- box-shadow: 0px 1px 14px #ccc;" -->
         <div style="width:128px; margin:0 auto; " :class="[item.type === active ? 'checked': 'no-checked']">
           <img src="../../../../img/country.png" alt="" width="100%" height="210px" @click="handleChecked(item)">
