@@ -22,7 +22,7 @@ let url = {};
 env.nodeENV === 'development' ? url = config.dev : url = config.prod;
 /* eslint-disable */
 env.nodeENV === 'development' ? require('~src/mock') : ''
-
+console.log('url: ', url);
 Vue.prototype.moment = moment;
 Vue.prototype.$api = api;
 Vue.prototype.$toMap = toMap;

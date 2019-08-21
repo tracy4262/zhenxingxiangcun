@@ -47,6 +47,7 @@ module.exports = {
     liveVideo: 'https://192.168.7.42/live',
     map: 'http://192.168.7.74:8080',
     socketUrl: '//192.168.7.42:30000',
+    state: 'dev'
   },
   prod: {
     upload: '//192.168.7.36:8087',
@@ -60,6 +61,7 @@ module.exports = {
     liveVideo: 'https://192.168.7.42/live',
     map: 'http://192.168.7.74:8080',
     socketUrl: '//192.168.7.42:30000',
+    state: 'prod'
   },
   upload: '//192.168.7.36:8087',
   uploadBase64: '//192.168.7.42:8085',

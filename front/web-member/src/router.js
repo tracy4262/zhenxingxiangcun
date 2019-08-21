@@ -433,12 +433,12 @@ const routers = new VueRouter({
         },
         {
           path: 'picking',
-          name: 'picking',
+          name: 'indexServicePicking',
           component: indexServicePicking
         },
         {
           path: 'stay',
-          name: 'stay',
+          name: 'indexServiceStay',
           component: indexServiceStay
         },
         {
@@ -532,7 +532,7 @@ const routers = new VueRouter({
       children: [
         {
           path: 'species',
-          name: 'species',
+          name: 'focusManagementSpecies',
           component: focusManagementSpecies
         }, {
           path: 'product',
@@ -540,7 +540,7 @@ const routers = new VueRouter({
           component: focusManagementProduct
         }, {
           path: 'service',
-          name: 'service',
+          name: 'focusManagementService',
           component: focusManagementService
         }, {
           path: 'member',
@@ -571,11 +571,11 @@ const routers = new VueRouter({
       children: [
         {
           path: 'species',
-          name: 'species',
+          name: 'nameLibrarySpecies',
           component: nameLibrarySpecies,
         }, {
           path: 'addSpecies',
-          name: 'species',
+          name: 'addSpecies',
           component: nameLibraryaddSpecies,
         },{
           path: 'variety',
@@ -583,7 +583,7 @@ const routers = new VueRouter({
           component: nameLibraryVariety,
         }, {
           path: 'addVariety',
-          name: 'variety',
+          name: 'addVariety',
           component: nameLibraryaddVariety,
         },{
           path: 'disease',
@@ -591,7 +591,7 @@ const routers = new VueRouter({
           component: nameLibraryDisease,
         }, {
           path: 'addDisease',
-          name: 'disease',
+          name: 'addDisease',
           component: nameLibraryaddDisease,
         },{
           path: 'pest',
@@ -599,7 +599,7 @@ const routers = new VueRouter({
           component: nameLibraryPest,
         }, {
           path: 'addPest',
-          name: 'pest',
+          name: 'addPest',
           component: nameLibraryaddPest,
         },{
           path: 'commodity',
@@ -607,15 +607,15 @@ const routers = new VueRouter({
           component: nameLibraryCommodity,
         }, {
           path: 'addCommodity',
-          name: 'commodity',
+          name: 'addCommodity',
           component: nameLibraryaddCommodity,
         }, {
           path: 'service',
-          name: 'service',
+          name: 'nameLibraryService',
           component: nameLibraryService,
         }, {
           path: 'addService',
-          name: 'service',
+          name: 'addService',
           component: nameLibraryaddService,
         }
       ]
@@ -1238,21 +1238,22 @@ const routers = new VueRouter({
     //垂钓goFishingIndex
     {
       path: '/fishing',
+      name: 'goFishingIndex',
       component: goFishingIndex,
       children: [
         {
           path: 'service',
-          name: 'service',
+          name: 'fishingService',
           component: fishingService
         },
         {
           path: 'productList',
-          name: 'productList',
+          name: 'fishingProductList',
           component: fishingProductList
         },
         {
           path: 'species',
-          name: 'species',
+          name: 'fishingSpecies',
           component: fishingSpecies
         }
       ]
@@ -1265,27 +1266,27 @@ const routers = new VueRouter({
       children: [
         {
           path: 'step1',
-          name: 'fishing',
+          name: 'addServiceSetp1',
           component: addServiceSetp1
         },
         {
           path: 'step2',
-          name: 'fishing',
+          name: 'addServiceSetp2',
           component: addServiceSetp2
         },
         {
           path: 'step3',
-          name: 'fishing',
+          name: 'addServiceSetp3',
           component: addServiceSetp3
         },
         {
           path: 'step4',
-          name: 'fishing',
+          name: 'addServiceSetp4',
           component: addServiceSetp4
         },
         {
           path: 'step5',
-          name: 'fishing',
+          name: 'addServiceSetp5',
           component: addServiceSetp5
         }
       ]
@@ -1293,21 +1294,22 @@ const routers = new VueRouter({
     // 采摘goPickingIndex
     {
       path: '/picking',
+      name: 'goPickingIndex',
       component: goPickingIndex,
       children: [
         {
           path: 'productList',
-          name: 'productList',
+          name: 'pickingProductList',
           component: pickingProductList
         },
         {
           path: 'species',
-          name: 'species',
+          name: 'pickingSpecies',
           component: pickingSpecies
         },
         {
           path: 'service',
-          name: 'service',
+          name: 'pickingService',
           component: pickingService
         },
       ]
@@ -1320,27 +1322,27 @@ const routers = new VueRouter({
       children: [
         {
           path: 'step1',
-          name: 'picking',
+          name: 'pickingAddServiceSetp1',
           component: pickingAddServiceSetp1
         },
         {
           path: 'step2',
-          name: 'picking',
+          name: 'pickingAddServiceSetp2',
           component: pickingAddServiceSetp2
         },
         {
           path: 'step3',
-          name: 'picking',
+          name: 'pickingAddServiceSetp3',
           component: pickingAddServiceSetp3
         },
         {
           path: 'step4',
-          name: 'picking',
+          name: 'pickingAddServiceSetp4',
           component: pickingAddServiceSetp4
         },
         {
           path: 'step5',
-          name: 'picking',
+          name: 'pickingAddServiceSetp5',
           component: pickingAddServiceSetp5
         }
       ]
@@ -1357,12 +1359,12 @@ const routers = new VueRouter({
         },
         {
           path: 'service',
-          name: 'service',
+          name: 'scenicSpotService',
           component: scenicSpotService
         },
         {
           path: 'order',
-          name: 'order',
+          name: 'scenicSpotOrder',
           component: scenicSpotOrder
         }
       ]
@@ -1374,6 +1376,7 @@ const routers = new VueRouter({
     // 住宿
     {
       path: '/stay',
+      name: 'stayIndex',
       component: stayIndex,
       children: [
         {
@@ -1388,12 +1391,12 @@ const routers = new VueRouter({
         },
         {
           path: 'service',
-          name: 'service',
+          name: 'stayService',
           component: stayService
         },
         {
           path: 'order',
-          name: 'order',
+          name: 'stayOrder',
           component: stayOrder
         }
       ]
@@ -1429,12 +1432,12 @@ const routers = new VueRouter({
         },
         {
           path: 'service',
-          name: 'service',
+          name: 'restaurantService',
           component: restaurantService
         },
         {
           path: 'order',
-          name: 'order',
+          name: 'restaurantOrder',
           component: restaurantOrder
         }
       ]
@@ -1500,27 +1503,27 @@ const routers = new VueRouter({
       children: [
         {
           path: 'step1',
-          name: 'stay',
+          name: 'staystep1',
           component: staystep1
         },
         {
           path: 'step2',
-          name: 'stay',
+          name: 'staystep2',
           component: staystep2
         },
         {
           path: 'step3',
-          name: 'stay',
+          name: 'staystep3',
           component: staystep3
         },
         {
           path: 'step4',
-          name: 'stay',
+          name: 'staystep4',
           component: staystep4
         },
         {
           path: 'step5',
-          name: 'stay',
+          name: 'staystep5',
           component: staystep5
         }
       ]
@@ -1532,27 +1535,27 @@ const routers = new VueRouter({
       children: [
         {
           path: 'step1',
-          name: 'scenicSpot',
+          name: 'scenicSpotstep1',
           component: scenicSpotstep1
         },
         {
           path: 'step2',
-          name: 'scenicSpot',
+          name: 'scenicSpotstep2',
           component: scenicSpotstep2
         },
         {
           path: 'step3',
-          name: 'scenicSpot',
+          name: 'scenicSpotstep3',
           component: scenicSpotstep3
         },
         {
           path: 'step4',
-          name: 'scenicSpot',
+          name: 'scenicSpotstep4',
           component: scenicSpotstep4
         },
         {
           path: 'step5',
-          name: 'scenicSpot',
+          name: 'scenicSpotstep5',
           component: scenicSpotstep5
         }
       ]
@@ -1564,27 +1567,27 @@ const routers = new VueRouter({
       children: [
         {
           path: 'step1',
-          name: 'restaurant',
+          name: 'restaurantAddServiceStep1',
           component: restaurantAddServiceStep1
         },
         {
           path: 'step2',
-          name: 'restaurant',
+          name: 'restaurantAddServiceStep2',
           component: restaurantAddServiceStep2
         },
         {
           path: 'step3',
-          name: 'restaurant',
+          name: 'restaurantAddServiceStep3',
           component: restaurantAddServiceStep3
         },
         {
           path: 'step4',
-          name: 'restaurant',
+          name: 'restaurantAddServiceStep4',
           component: restaurantAddServiceStep4
         },
         {
           path: 'step5',
-          name: 'restaurant',
+          name: 'restaurantAddServiceStep5',
           component: restaurantAddServiceStep5
         }
       ]
