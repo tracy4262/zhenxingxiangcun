@@ -13,12 +13,13 @@ import env from '~src/api/env';
 
 import moment from 'moment'; //日期格式化
 
-import url from '~src/api/conifg';
+import config from '~src/api/config';
 
 import api from '~api/index';
 import {toPortals, toMap, delMapData} from './utils/toPortals';
 
-
+let url = {};
+env.nodeENV === 'development' ? url = config.dev : url = config.prod;
 /* eslint-disable */
 env.nodeENV === 'development' ? require('~src/mock') : ''
 
