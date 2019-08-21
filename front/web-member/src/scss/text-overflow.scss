@@ -8,9 +8,8 @@
 		white-space: normal;
 		display: -webkit-box;
 		-webkit-line-clamp: $line-clamp; // number行数
-		/*! autoprefixer: off */
+    /*! autoprefixer: ignore next */
 		-webkit-box-orient: $box-orient;	//方向 vertical
-		/* autoprefixer: on */
 	} @else {
 		white-space: nowrap;
 		display:block;

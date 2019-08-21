@@ -8,7 +8,7 @@
       <div class="wechat-qrcode">
         <h5>微信扫一扫：分享</h5>
         
-        <canvas id="canvas" ref="canvas" class="qrcode" style="width:160px;height 160px;"></canvas>
+        <canvas id="canvas" ref="canvas" class="qrcode" style="width:160px;height: 160px;"></canvas>
         <!-- <qr-code :text="url" :size="150" class="qrcode"></qr-code> -->
         <div>微信里点“发现”，扫一下<br>二维码便可将本文分享至朋友圈。</div>
       </div>
@@ -17,7 +17,7 @@
 </template>
 <script>
 // import qrCode from 'vue-qrcode-component'
-import QRCode from 'qrCode'
+import QRCode from 'qrcode'
 export default {
   components: {
     QRCode

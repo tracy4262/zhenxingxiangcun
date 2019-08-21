@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-import QRCode from 'qrCode'
+import QRCode from 'qrcode'
 export default {
   components: {
     QRCode
