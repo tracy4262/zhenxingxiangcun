@@ -10,17 +10,17 @@
             </Carousel-item>
             <Carousel-item>
                 <div class="demo-carousel">
-                <img src="../../static/img/banner.jpg" alt=""  width="100%;" height="340px;">              
+                <img src="../../static/img/banner.jpg" alt="" width="100%;" height="340px;">
                 </div>
             </Carousel-item>
             <Carousel-item>              
                 <div class="demo-carousel">
-                <img src="../../static/img/banner.jpg" alt=""  width="100%;" height="340px;">              
+                <img src="../../static/img/banner.jpg" alt="" width="100%;" height="340px;">
                 </div>
             </Carousel-item>
             <Carousel-item>
                 <div class="demo-carousel">
-                <img src="../../static/img/banner.jpg" alt=""  width="100%;" height="340px;">              
+                <img src="../../static/img/banner.jpg" alt="" width="100%;" height="340px;">
                 </div>
             </Carousel-item>
         </Carousel>

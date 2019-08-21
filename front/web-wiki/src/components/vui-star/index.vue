@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { isColors } from './colorRE.js'
+import { isColors } from './colorRe.js'
 import 'animate.css/animate.min.css'
 export default {
   name: 'vui-star',
@@ -79,5 +79,5 @@ export default {
 </script>
 
 <style lang="scss">
- @import './scss/style.scss';
+ @import 'scss/style';
 </style>

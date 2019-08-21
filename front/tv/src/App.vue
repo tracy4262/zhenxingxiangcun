@@ -7,7 +7,7 @@
             <div style="width: 1200px; margin: auto;">
                 <Row>
                     <Col span="12">
-                        <Row><img src="../src/img/huiyuan-logo.png"></Row>
+                        <Row><img src="img/huiyuan-logo.png"></Row>
                         <Row>
                             <div class="foot-desc">
                                 本站作为一个公益性的服务性网站，受政府资助资金局限，我们不得不充分利用网络现有资源来实现我们的最初目标，由此可能对您的知识产权造成损害，
@@ -36,8 +36,8 @@
                         <Row type="flex" justify="end">
                             <Col span="21" class="tr">
                                 <div class="foot-copyright">
-                                    <img src="./img/Bitmap1.png">
-                                    <img src="./img/Bitmap2.png">
+                                    <img src="img/Bitmap1.png">
+                                    <img src="img/Bitmap2.png">
                                     浙公网安备：42011102000337号
                                 </div>
                             </Col>

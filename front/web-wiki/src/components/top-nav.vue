@@ -1,27 +1,25 @@
 <template>
   <div>
+    <!-- <div class="top-back">
+        <div class="top-title">感谢湖北省人民政府丨亚洲开发银行 支持惠民项目</div>
+    </div> -->
     <Affix class="new-top-affix">
-        <Row class="top-back">
-        <div class="vui-layout">
-            <span class="top-title">感谢湖北省人民政府丨亚洲开发银行 支持惠民项目</span>
-            </div>
-        </Row>
         <div style="background:#ffffff; border-bottom: 1px solid #ededed;">
             <div class="vui-layout">
                 <Row type="flex" align="middle" class="top-nav">
                     <Col span="3">
-                      <a :href="`${$url.toNswy}index`">
-                          <img src="../src/img/huiyuan-logo.png" alt="" width="98px" height="40px">
+                      <a :href="`${serverUrl}index`">
+                          <img src="../assets/imgs/banner-logo.png" alt="" width="98px" height="40px">
                       </a>
                     </Col>
                     <Col span="10" offset="7" class="ns-nav">
                         <Col span="4">
-                            <a :href="`${$url.toNswy}index`">
+                            <a :href="`${serverUrl}index`">
                                 无忧导航
                             </a>
                         </Col>
                         <Col span="4" offset="1">
-                            <a :href="`${$url.toNswy}51index`" >
+                            <a :href="`${serverUrl}51index`" >
                                 无忧首页
                             </a>
                         </Col>
@@ -31,7 +29,7 @@
                             </a>
                         </Col>
                         <Col span="4" offset="1">
-                            <a :href="`${$url.toNswy}mapNav`">
+                            <a :href="`${serverUrl}mapNav`">
                                 地图导航
                             </a>
                         </Col>
@@ -41,14 +39,14 @@
                             </a>
                         </Col>
                     </Col>
-                    <Col span="3" offset="1" v-if="!loginuserinfo" class="tr">
+                    <Col span="3" offset="1" v-if="!loginuserinfo">
                         <Button type="text" size="large" @click="loginuser">登录</Button>
                         <Button type="primary" size="large" class="ml10 mr10" @click="regist">注册</Button>
                     </Col>
                     <Col span="4" v-if="loginuserinfo" class="tr">
                         <a>
-                            <Avatar :src="`http:${avatar}`" v-if="avatar" class="cus" />
-                            <Avatar :src="`http://${$url.img}/static/img/user-icon-big.png`" class="cus" v-else />
+                            <Avatar :src="avatar" v-if="avatar" />
+                            <Avatar src="./static/imgs/user-icon-big.png" v-else />
                         </a>
                         <Dropdown style="vertical-align: middle; margin-left: 10px;">
                             <a href="javascript:void(0)">
@@ -75,7 +73,19 @@
                                 <DropdownItem>
                                     <a @click="editPassWord">修改密码</a>
                                 </DropdownItem>
-                                <DropdownItem divided>
+                                <!-- <DropdownItem>
+                                    <a @click="handleGate('personal')">我的资料</a>
+                                </DropdownItem> -->
+                                <!-- <DropdownItem>
+                                    <a href="javascript:void(0)" target="_blank">账户安全</a>
+                                </DropdownItem> -->
+                                <!-- <DropdownItem>
+                                    <a href="javascript:void(0)" target="_blank">收货地址</a>
+                                </DropdownItem>
+                                <DropdownItem>
+                                    <a href="javascript:void(0)" target="_blank">消费记录</a>
+                                </DropdownItem> -->
+                                <DropdownItem divided style="text-align: center;">
                                     <a @click="logout">
                                         &nbsp;&nbsp;&nbsp;&nbsp;退出
                                     </a>
@@ -91,98 +101,96 @@
   </div>
 </template>
 <script>
-  import loginRegister from './components/loginRegister/index'
-
+  import loginRegister from './loginRegister'
+  
   export default {
     components: {
       loginRegister
     },
     data () {
       return {
-        loginuserinfo: JSON.parse(sessionStorage.getItem(sessionStorage.getItem('key'))),
+        loginuserinfo: {},
         account: '',
-        loginAccount: false,
         displayName: '',
         avatar: '',
-        templateId: 0
+        templateId: '',
+        serverUrl: ''
       }
     },
     created () {
-        if(this.$route.query.account){
-            //说明是从会员中心跳转过来的，直接执行登录方法
-            this.$api.get('/member/login/findbyname/'+this.$route.query.account).then(res=>{
-                if(res.code == 200){
-                    this.loginAccount = res.data.loginAccount
-                    this.$refs['loginRegister'].$refs['login'].toLogin({username: res.data.loginAccount , pwd: res.data.loginPasswd})
-                }
-            })
-        }else{
-            //说明是退出的
-        }
-        if (this.loginuserinfo) {
-            this.account = this.$user.loginAccount
-            this.init()
-            this.$api.post('/member-reversion/user/userTemplateManage/find', {
-                    account: this.$user.loginAccount
-                }).then(response => {
-                    if (response.code === 200) {
-                        if (response.data.userTemplate) {
-                            this.templateId = response.data.userTemplate.templateId
-                        }
-                    }
-                })
-        }
+      this.serverUrl = window.location.origin
+      // 如果未登录则为 null
+      this.loginuserinfo = JSON.parse(sessionStorage.getItem(sessionStorage.getItem('key')))
+      if (this.loginuserinfo) {
+        this.account = this.loginuserinfo.loginAccount
+        this.init()
+      }
+      // 如果登录了则查询当前启用模板 的id 用于修改密码视时候的跳转
+      if (this.$user) {
+        this.$api.post('/member-reversion/user/userTemplateManage/find', {
+          account: this.$user.loginAccount
+        }).then(response => {
+          if (response.code === 200) {
+            if (response.data.userTemplate) {
+              this.templateId = response.data.userTemplate.templateId
+            }
+          }
+        })
+      }
     },
     methods: {
-        // 点击修改密码
-        editPassWord () {
-            if (this.$user) {
-                window.open(`${this.$url.toNswy}/auth/step7?templateId=${this.templateId}&active=networkInfo`)
-            } else {
-                this.loginuser()
-                this.$Message.error('请先登录！')
-            }
-        },
-        init () {
-            this.$api.post('/member/login/findCurrentUser', {
-                account: this.$user.loginAccount
-            }).then(response => {
-                if (response.data.displayName) {
-                    this.displayName = response.data.displayName
-                }
-                if (response.data.avatar) {
-                    this.avatar = response.data.avatar
-                }
-            })
-        },
-        // 登录成功的回调
-        handleSuccess (response) {
-            sessionStorage.setItem('key', response.data.key)
-            response.data.proxy.forEach(element => {
-                sessionStorage.setItem(element.account, JSON.stringify(element.session))
-            })
-            this.loginuserinfo = JSON.parse(sessionStorage.getItem(sessionStorage.getItem('key')))
-            // window.location.reload()
-            window.location.href = `${window.location.origin}${window.location.pathname}`
-        },
+      // 点击修改密码
+      editPassWord () {
+        if (this.$user) {
+          window.open(`${window.location.origin}/auth/step7?templateId=${this.templateId}&active=networkInfo`)
+        } else {
+          this.loginuser()
+          this.$Message.error('请先登录！')
+        }
+      },
+      init () {
+        this.$api.post('/member/login/findCurrentUser', {
+          account: this.$user.loginAccount
+        }).then(response => {
+          console.log('res123', response)
+          if (response.data.displayName) {
+            this.displayName = response.data.displayName
+          }
+          if (response.data.avatar) {
+            this.avatar = response.data.avatar
+          }
+        })
+      },
+      // 登录成功的回调
+      handleSuccess (response) {
+        sessionStorage.setItem('key', response.data.key)
+        response.data.proxy.forEach(element => {
+          sessionStorage.setItem(element.account, JSON.stringify(element.session))
+        })
+        this.loginuserinfo = JSON.parse(sessionStorage.getItem(sessionStorage.getItem('key')))
+        console.log(sessionStorage)
+        console.log('session', sessionStorage.getItem(sessionStorage.getItem('key')))
+        window.location.reload()
+      },
       handleGate (type) {
-        let login = this.loginuserinfo
-        if (login) {
-          // 我的门户
+        if (this.$user.loginAccount) {
           if (type === 'gate') {
-            // 查询用户是否实名
+            // 我的门户
             this.$toPortals(this.$user.loginAccount)
-            // window.location.href = `${this.$url.toNswy}portals/index?uid=${this.$user.loginAccount}`
+            // window.location.href = `${this.serverUrl}portals/index?uid=${this.$user.loginAccount}`
           } else if (type === 'personal') {
             // 我的资料
-            window.location.href = `${this.$url.toNswy}personalIndex/detail?uid=${this.loginAccount}`
+            window.location.href = `${this.serverUrl}personalIndex/detail?uid=${this.$user.loginAccount}`
           } else if (type === 'member') {
             // 会员中心
-            window.location.href = `${this.$url.toNswy}pro/member?uid=${this.loginAccount}`
+            window.location.href = `${this.serverUrl}pro/member?uid=${this.$user.loginAccount}`
           } else if (type === 'center') {
             // 应用中心
-            window.location.href = `${this.$url.toNswy}center`
+            window.location.href = `${this.serverUrl}center?uid=${this.$user.loginAccount}`
           }
+        } else {
+          this.$Message.error('请先登录')
+          this.loginuser()
         }
       },
       // 点击登录显示登录界面
@@ -199,23 +207,21 @@
         this.$Message.success('退出成功！')
         this.loginuserinfo = null
         this.userName = ''
-        window.location.href = `${window.location.origin}/live`
+        window.location.reload()
       }
     }
   }
 </script>
 <style lang="scss">
-.vui-layout{
-  width:1200px;
-  margin:0 auto;
-}
 .top-back {
-    background-color: #00c587;
-    padding:3px;
-    .top-title{
-        color: #ffffff;
-        font-size: 12px;
-    }
+  background-color: #00c587;
+  padding: 3px;
+}
+.top-title {
+  color: #ffffff;
+  font-size: 12px;
+  width: 1200px;
+  margin: auto;
 }
 
 .top-nav{
@@ -246,12 +252,6 @@
     }
     .ivu-dropdown-menu{
         min-width: auto
-    }
-    .cus.ivu-avatar {
-        width: 32px;
-        height: 32px;
-        line-height: 31px;
-        border-radius: 16px;
     }
 }
 </style>

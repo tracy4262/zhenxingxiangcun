@@ -194,7 +194,7 @@
 <script>
 import api from "../api";
 import roomClass from '../components/roomClass.vue'
-import vuiFilter from "../components/vuiFilter/filter"
+import vuiFilter from "../components/vuifilter/filter"
 // import top from "../top";
 import $ from 'jquery'
 import photoSelector from '../components/photoSelector'

@@ -63,7 +63,7 @@
   </div>
 </template>
 <script>
-import vuiCascander from '../vuiCascader/index'
+import vuiCascander from '../vuiCascader'
 export default {
   components: {
     vuiCascander
