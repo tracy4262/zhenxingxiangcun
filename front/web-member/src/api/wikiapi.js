@@ -1,6 +1,6 @@
 import axios from 'axios';
 // import qs from 'qs';
-import config from './configuration';
+import config from './config';
 import Vue from 'vue';
 import iView from 'iview';
 

@@ -5,7 +5,7 @@
 
 ## 部署注意事项
 
-1.运行git clone http://192.168.7.90/nswy/web-member.git 将代码clone到本地，运行之前需要手动复制src/api/configuration.js 文件到本机
+1.运行git clone http://192.168.7.90/nswy/web-member.git 将代码clone到本地，运行之前需要手动复制src/api/config.js 文件到本机
 
 2.本机安装node运行环境，并将node加入到系统PATH变量
 

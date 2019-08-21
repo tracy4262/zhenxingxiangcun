@@ -18,7 +18,7 @@ selenium-debug.log
 .project
 src/config/*.tmp
 src/config/env.js
-src/api/configuration.js
+src/api/config.js
 npm-debug.log
 index_prod.html
 .vscode

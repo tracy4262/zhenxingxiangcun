@@ -8,17 +8,19 @@ import store from './store/index.js'
 import Print from 'vue-print-nb'
 import '../theme/dist/iview.css';
 import './scss/WMlib.scss'
+// 实际打包时应该不引入mock
+import env from '~src/api/env';
 
 import moment from 'moment'; //日期格式化
 
-import url from '~src/api/configuration';
+import url from '~src/api/conifg';
+
 import api from '~api/index';
 import {toPortals, toMap, delMapData} from './utils/toPortals';
 
-// 实际打包时应该不引入mock
-import env from '~src/api/env'
+
 /* eslint-disable */
-env === 'development' ? require('~src/mock') : ''
+env.nodeENV === 'development' ? require('~src/mock') : ''
 
 Vue.prototype.moment = moment;
 Vue.prototype.$api = api;

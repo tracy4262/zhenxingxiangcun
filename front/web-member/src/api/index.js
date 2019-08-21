@@ -1,6 +1,8 @@
 import axios from 'axios';
 // import qs from 'qs';
-import config from './configuration';
+// import env from '~src/api/env';
+// let config = env.url;
+import config from './config';
 import Vue from 'vue';
 import iView from 'iview';
 

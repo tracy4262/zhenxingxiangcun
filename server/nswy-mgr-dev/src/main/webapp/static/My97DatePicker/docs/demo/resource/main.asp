@@ -22,7 +22,7 @@
       <li>My97DatePicker.htm�Ǳ����ļ�,<span class="STYLE1">����ɾ��(4.8�Ժ󲻴��ڴ��ļ�)</span></li>
       <li>��Ŀ¼���ļ�����;: <br />
         <span class="STYLE2">WdatePicker.js</span> �����ļ�,<span class="STYLE1">�ڵ��õĵط�����ʹ�ø��ļ�</span>,�ɶ������,��xx_WdatePicker.js��ʽ����<br />
-        <span class="STYLE2">configuration.js</span> ���Ժ�Ƥ�������ļ�,<span class="STYLE1">��������(4.8�Ժ�ϲ���WdatePicker.js)</span><br />
+        <span class="STYLE2">config.js</span> ���Ժ�Ƥ�������ļ�,<span class="STYLE1">��������(4.8�Ժ�ϲ���WdatePicker.js)</span><br />
         <span class="STYLE2">calendar.js</span> ���ڿ����ļ�,<span class="STYLE1">��������</span><br />
         <span class="STYLE2">My97DatePicker.htm</span> ��ʱҳ���ļ�,����ɾ��<span class="STYLE1">(4.8�Ժ󲻴��ڴ��ļ�)</span><br />
         <span class="STYLE2">Ŀ¼lang</span> ��������ļ�,����Ը�����Ҫ�������������ļ�<br />
