@@ -22,10 +22,10 @@ spring:
 fdfs:
   conf: ./fdfs_client.conf
   http:
-    uploadIp: 192.168.7.61
+    uploadIp: 106.14.65.102
 
 #open office
 open-office:
-  ip: 192.168.7.42
+  ip: 106.14.65.102
   port: 8100
   filePath: /Users/fuck/Downloads/

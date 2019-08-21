@@ -18,7 +18,7 @@ management:
 http:
   eureka:
     #serviceUrl: 127.0.0.1
-    serviceUrl: 192.168.7.42
+    serviceUrl: 106.14.65.102
 
 eureka:
   client:
