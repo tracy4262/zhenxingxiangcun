@@ -42,7 +42,7 @@
         <!--metrics-->
         <metrics.version>3.2.3</metrics.version>
         <!--fastjson-->
-        <fastjson.version>1.1.42</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <!--netty-transport-native-epoll-->
         <netty-transport-native-epoll.version>4.0.27.Final</netty-transport-native-epoll.version>
         <netty-transport-native-epoll.classifier>linux-x86_64</netty-transport-native-epoll.classifier>
